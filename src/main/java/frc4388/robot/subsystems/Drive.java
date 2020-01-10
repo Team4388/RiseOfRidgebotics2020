@@ -10,6 +10,7 @@ package frc4388.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -27,6 +28,7 @@ public class Drive extends SubsystemBase {
   public static WPI_TalonSRX m_rightFrontMotor = new WPI_TalonSRX(DriveConstants.DRIVE_RIGHT_FRONT_CAN_ID);
   public static WPI_TalonSRX m_leftBackMotor = new WPI_TalonSRX(DriveConstants.DRIVE_LEFT_BACK_CAN_ID);
   public static WPI_TalonSRX m_rightBackMotor = new WPI_TalonSRX(DriveConstants.DRIVE_RIGHT_BACK_CAN_ID);
+  public static PigeonIMU m_pigeon = new PigeonIMU(DriveConstants.PIGEON_ID);
 
   public static DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
 
@@ -39,6 +41,7 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.configFactoryDefault();
     m_leftBackMotor.configFactoryDefault();
     m_rightBackMotor.configFactoryDefault();
+    m_pigeon.configFactoryDefault();
 
     /* set back motors as followers */
     m_leftBackMotor.follow(m_leftFrontMotor);
@@ -62,5 +65,28 @@ public class Drive extends SubsystemBase {
    */
   public void driveWithInput(double move, double steer){
     m_driveTrain.arcadeDrive(move, steer);
+  }
+
+  public double getGyroYaw() {
+    double[] ypr = new double[3];
+    m_pigeon.getYawPitchRoll(ypr);
+    return ypr[0];
+  }
+
+  public double getGyroPitch() {
+    double[] ypr = new double[3];
+    m_pigeon.getYawPitchRoll(ypr);
+    return ypr[1];
+  }
+  
+  public double getGyroRoll() {
+    double[] ypr = new double[3];
+    m_pigeon.getYawPitchRoll(ypr);
+    return ypr[2];
+  }
+
+  public void resetGyroYaw() {
+    m_pigeon.setYaw(0);
+    m_pigeon.setAccumZAngle(0);
   }
 }
