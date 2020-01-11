@@ -9,6 +9,8 @@ package frc4388.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.BaseTalon;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
@@ -24,18 +26,36 @@ public class Drive extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  public static WPI_TalonSRX m_leftFrontMotor = new WPI_TalonSRX(DriveConstants.DRIVE_LEFT_FRONT_CAN_ID);
-  public static WPI_TalonSRX m_rightFrontMotor = new WPI_TalonSRX(DriveConstants.DRIVE_RIGHT_FRONT_CAN_ID);
-  public static WPI_TalonSRX m_leftBackMotor = new WPI_TalonSRX(DriveConstants.DRIVE_LEFT_BACK_CAN_ID);
-  public static WPI_TalonSRX m_rightBackMotor = new WPI_TalonSRX(DriveConstants.DRIVE_RIGHT_BACK_CAN_ID);
+
+  public static BaseTalon m_leftFrontMotor;
+  public static BaseTalon m_rightFrontMotor;
+  public static BaseTalon m_leftBackMotor;
+  public static BaseTalon m_rightBackMotor;
+
   public static PigeonIMU m_pigeon = new PigeonIMU(DriveConstants.PIGEON_ID);
 
-  public static DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
-
+  public static DifferentialDrive m_driveTrain;
+ 
   /**
    * Add your docs here.
    */
   public Drive(){
+    if (DriveConstants.IS_FALCON) {
+      m_leftFrontMotor = new WPI_TalonFX(DriveConstants.DRIVE_LEFT_FRONT_CAN_ID);
+      m_rightFrontMotor = new WPI_TalonFX(DriveConstants.DRIVE_RIGHT_FRONT_CAN_ID);
+      m_leftBackMotor = new WPI_TalonFX(DriveConstants.DRIVE_LEFT_BACK_CAN_ID);
+      m_rightBackMotor = new WPI_TalonFX(DriveConstants.DRIVE_RIGHT_BACK_CAN_ID);
+    
+      m_driveTrain = new DifferentialDrive((WPI_TalonFX) m_leftFrontMotor,(WPI_TalonFX) m_rightFrontMotor);
+    } else {
+      m_leftFrontMotor = new WPI_TalonSRX(DriveConstants.DRIVE_LEFT_FRONT_CAN_ID);
+      m_rightFrontMotor = new WPI_TalonSRX(DriveConstants.DRIVE_RIGHT_FRONT_CAN_ID);
+      m_leftBackMotor = new WPI_TalonSRX(DriveConstants.DRIVE_LEFT_BACK_CAN_ID);
+      m_rightBackMotor = new WPI_TalonSRX(DriveConstants.DRIVE_RIGHT_BACK_CAN_ID);
+
+      m_driveTrain = new DifferentialDrive((WPI_TalonSRX) m_leftFrontMotor,(WPI_TalonSRX) m_rightFrontMotor);
+    }
+
     /* factory default values */
     m_leftFrontMotor.configFactoryDefault();
     m_rightFrontMotor.configFactoryDefault();

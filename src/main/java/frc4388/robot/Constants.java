@@ -24,6 +24,8 @@ public final class Constants {
 	    public static final int DRIVE_LEFT_BACK_CAN_ID = 3;
         public static final int DRIVE_RIGHT_BACK_CAN_ID = 5;
         public static final int PIGEON_ID = 6;
+
+        public static final boolean IS_FALCON = true;
     }
 
     public static final class LEDConstants {
