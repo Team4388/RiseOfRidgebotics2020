@@ -73,6 +73,13 @@ public class Drive extends SubsystemBase {
     }
   }
 
+  public void setDriveTrainNeutralMode(NeutralMode mode) {
+    m_leftFrontMotor.setNeutralMode(mode);
+    m_rightFrontMotor.setNeutralMode(mode);
+    m_leftFrontMotor.setNeutralMode(mode);
+    m_rightFrontMotor.setNeutralMode(mode);
+  }
+
   /**
    * Add your docs here.
    */
