@@ -43,6 +43,7 @@ public class Drive extends SubsystemBase {
     m_leftBackMotor.configFactoryDefault();
     m_rightBackMotor.configFactoryDefault();
     m_pigeon.configFactoryDefault();
+    resetGyroYaw();
 
     /* set back motors as followers */
     m_leftBackMotor.follow(m_leftFrontMotor);
