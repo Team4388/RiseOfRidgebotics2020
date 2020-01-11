@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 
@@ -50,6 +51,7 @@ public class Drive extends ProfiledPIDSubsystem {
     m_leftBackMotor.configFactoryDefault();
     m_rightBackMotor.configFactoryDefault();
     m_pigeon.configFactoryDefault();
+    resetGyroYaw();
 
     /* set back motors as followers */
     m_leftBackMotor.follow(m_leftFrontMotor);
@@ -66,6 +68,19 @@ public class Drive extends ProfiledPIDSubsystem {
     m_rightFrontMotor.setInverted(false);
     m_leftBackMotor.setInverted(InvertType.FollowMaster);
     m_rightBackMotor.setInverted(InvertType.FollowMaster);
+  }
+
+  @Override
+  public void periodic() {
+    try {
+      SmartDashboard.putNumber("Pigeon Yaw", getGyroYaw());
+      SmartDashboard.putNumber("Pigeon Pitch", getGyroPitch());
+      SmartDashboard.putNumber("Pigeon Roll", getGyroRoll());
+      SmartDashboard.putNumber("Left Motor Velocity Raw", m_leftFrontMotor.getSelectedSensorVelocity());
+      SmartDashboard.putNumber("Right Motor Velocity Raw", m_rightFrontMotor.getSelectedSensorVelocity());
+    } catch (Exception e) {
+      System.err.println("The operation failed successfully.");
+    }
   }
 
   /**
