@@ -8,6 +8,7 @@
 package frc4388.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -48,6 +49,12 @@ public class RobotContainer {
             getDriverController().getRightXAxis()), m_robotDrive));
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
+
+        /* PID inline commands */
+        new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
+            .whenPressed(() -> m_robotDrive.setGoal(3), m_robotDrive);
+        new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
+            .whenPressed(() -> m_robotDrive.setGoal(0), m_robotDrive);
     }
 
     /**

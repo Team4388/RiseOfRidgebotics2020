@@ -24,6 +24,21 @@ public final class Constants {
 	    public static final int DRIVE_LEFT_BACK_CAN_ID = 3;
         public static final int DRIVE_RIGHT_BACK_CAN_ID = 5;
         public static final int PIGEON_ID = 6;
+
+        /* PID constants */
+        public static final double staticGain = 0.8;
+        public static final double staticVelocity = 0.8;
+        
+        public static final double goal = 5.0;
+
+        public static final double maxVelocity = 334.0568;
+        //public static final double maxAcceleration = ;
+
+        public static final double drivekP = 2.0; //Not calculated yet
+
+        /* Encoder Constants */
+        public static final double cyclesPerRevolution = 2048;
+        public static final double pulsesPerRevolution = cyclesPerRevolution/4;
     }
 
     public static final class LEDConstants {

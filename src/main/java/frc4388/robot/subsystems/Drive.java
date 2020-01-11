@@ -11,12 +11,16 @@ import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile.State;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
@@ -38,12 +42,17 @@ public class Drive extends ProfiledPIDSubsystem {
 
   public static DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
 
+  public final static Encoder m_encoderLeft = new Encoder(DriveConstants.DRIVE_LEFT_FRONT_CAN_ID, DriveConstants.DRIVE_RIGHT_FRONT_CAN_ID);
+  public final SimpleMotorFeedforward m_feedForward = new SimpleMotorFeedforward(DriveConstants.staticGain, DriveConstants.staticVelocity);
+
   /**
    * Add your docs here.
    */
   public Drive() {
     /*  */
-    super(new ProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(0, 0)), 0);
+    super(new ProfiledPIDController(DriveConstants.drivekP, 0, 0, new TrapezoidProfile.Constraints(DriveConstants.maxVelocity, 0)), 0);
+    m_encoderLeft.setDistancePerPulse(DriveConstants.pulsesPerRevolution);
+    setGoal(DriveConstants.goal);
 
     /* factory default values */
     m_leftFrontMotor.configFactoryDefault();
@@ -76,8 +85,8 @@ public class Drive extends ProfiledPIDSubsystem {
       SmartDashboard.putNumber("Pigeon Yaw", getGyroYaw());
       SmartDashboard.putNumber("Pigeon Pitch", getGyroPitch());
       SmartDashboard.putNumber("Pigeon Roll", getGyroRoll());
-      SmartDashboard.putNumber("Left Motor Velocity Raw", m_leftFrontMotor.getSelectedSensorVelocity());
-      SmartDashboard.putNumber("Right Motor Velocity Raw", m_rightFrontMotor.getSelectedSensorVelocity());
+      SmartDashboard.putNumber("Left Motor Velocity Raw", m_leftFrontMotor.getSelectedSensorVelocity()*0.00766990397);
+      SmartDashboard.putNumber("Right Motor Velocity Raw", m_rightFrontMotor.getSelectedSensorVelocity()*0.00766990397);
     } catch (Exception e) {
       System.err.println("The operation failed successfully.");
     }
@@ -115,13 +124,15 @@ public class Drive extends ProfiledPIDSubsystem {
 
   @Override
   protected void useOutput(double output, TrapezoidProfile.State setpoint) {
-    // TODO Auto-generated method stub
-    
+    double feedforward = m_feedForward.calculate(setpoint.position, setpoint.velocity);
+
+    m_leftFrontMotor.setVoltage(output + feedforward);
+    m_rightFrontMotor.setVoltage(output + feedforward);
   }
 
   @Override
   protected double getMeasurement() {
     // TODO Auto-generated method stub
-    return 0;
+    return m_encoderLeft.getDistance() + DriveConstants.goal /* offset radians */;
   }
 }
