@@ -70,7 +70,11 @@ public class RobotContainer {
             .whenPressed(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW))
             .whenReleased(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN));
     }
-
+    
+    /**
+     * Sets Motors to a NeutralMode.
+     * @param mode NeutralMode to set motors to
+     */
     public void setDriveNeutralMode(NeutralMode mode) {
         m_robotDrive.setDriveTrainNeutralMode(mode);
     }
