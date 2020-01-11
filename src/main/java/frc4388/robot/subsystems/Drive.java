@@ -58,10 +58,7 @@ public class Drive extends ProfiledPIDSubsystem {
     m_rightBackMotor.follow(m_rightFrontMotor);
 
     /* set neutral mode */
-    m_leftFrontMotor.setNeutralMode(NeutralMode.Brake);
-    m_rightFrontMotor.setNeutralMode(NeutralMode.Brake);
-    m_leftFrontMotor.setNeutralMode(NeutralMode.Brake);
-    m_rightFrontMotor.setNeutralMode(NeutralMode.Brake);
+    setDriveTrainNeutralMode(NeutralMode.Brake);
 
     /* flip input so forward becomes back, etc */
     m_leftFrontMotor.setInverted(false);
@@ -81,6 +78,17 @@ public class Drive extends ProfiledPIDSubsystem {
     } catch (Exception e) {
       System.err.println("The operation failed successfully.");
     }
+  }
+
+  /**
+   * Sets Motors to a NeutralMode.
+   * @param mode NeutralMode to set motors to
+   */
+  public void setDriveTrainNeutralMode(NeutralMode mode) {
+    m_leftFrontMotor.setNeutralMode(mode);
+    m_rightFrontMotor.setNeutralMode(mode);
+    m_leftFrontMotor.setNeutralMode(mode);
+    m_rightFrontMotor.setNeutralMode(mode);
   }
 
   /**
