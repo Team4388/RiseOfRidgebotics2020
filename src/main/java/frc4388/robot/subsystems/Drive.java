@@ -13,14 +13,18 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile.State;
+import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 
 import frc4388.robot.Constants.DriveConstants;
 
 /**
  * Add your docs here.
  */
-public class Drive extends SubsystemBase {
+public class Drive extends ProfiledPIDSubsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
@@ -35,7 +39,10 @@ public class Drive extends SubsystemBase {
   /**
    * Add your docs here.
    */
-  public Drive(){
+  public Drive() {
+    /*  */
+    super(new ProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(0, 0)), 0);
+
     /* factory default values */
     m_leftFrontMotor.configFactoryDefault();
     m_rightFrontMotor.configFactoryDefault();
@@ -78,7 +85,7 @@ public class Drive extends SubsystemBase {
     m_pigeon.getYawPitchRoll(ypr);
     return ypr[1];
   }
-  
+
   public double getGyroRoll() {
     double[] ypr = new double[3];
     m_pigeon.getYawPitchRoll(ypr);
@@ -88,5 +95,17 @@ public class Drive extends SubsystemBase {
   public void resetGyroYaw() {
     m_pigeon.setYaw(0);
     m_pigeon.setAccumZAngle(0);
+  }
+
+  @Override
+  protected void useOutput(double output, TrapezoidProfile.State setpoint) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  protected double getMeasurement() {
+    // TODO Auto-generated method stub
+    return 0;
   }
 }
