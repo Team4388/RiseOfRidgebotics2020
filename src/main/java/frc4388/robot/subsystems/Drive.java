@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc4388.robot.Constants.DriveConstants;
@@ -42,6 +43,7 @@ public class Drive extends SubsystemBase {
     m_leftBackMotor.configFactoryDefault();
     m_rightBackMotor.configFactoryDefault();
     m_pigeon.configFactoryDefault();
+    resetGyroYaw();
 
     /* set back motors as followers */
     m_leftBackMotor.follow(m_leftFrontMotor);
@@ -58,6 +60,17 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.setInverted(false);
     m_leftBackMotor.setInverted(InvertType.FollowMaster);
     m_rightBackMotor.setInverted(InvertType.FollowMaster);
+  }
+
+  @Override
+  public void periodic() {
+    try {
+      SmartDashboard.putNumber("Pigeon Yaw", getGyroYaw());
+      SmartDashboard.putNumber("Pigeon Pitch", getGyroPitch());
+      SmartDashboard.putNumber("Pigeon Roll", getGyroRoll());
+    } catch (Exception e) {
+      System.err.println("The operation failed successfully.");
+    }
   }
 
   /**
