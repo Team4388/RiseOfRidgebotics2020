@@ -68,6 +68,8 @@ public class Drive extends SubsystemBase {
       SmartDashboard.putNumber("Pigeon Yaw", getGyroYaw());
       SmartDashboard.putNumber("Pigeon Pitch", getGyroPitch());
       SmartDashboard.putNumber("Pigeon Roll", getGyroRoll());
+      SmartDashboard.putNumber("Left Motor Velocity Raw", m_leftFrontMotor.getSelectedSensorVelocity());
+      SmartDashboard.putNumber("Right Motor Velocity Raw", m_rightFrontMotor.getSelectedSensorVelocity());
     } catch (Exception e) {
       System.err.println("The operation failed successfully.");
     }
