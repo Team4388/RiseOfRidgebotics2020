@@ -68,8 +68,7 @@ public class Drive extends SubsystemBase {
       SmartDashboard.putNumber("Pigeon Pitch", getGyroPitch());
       SmartDashboard.putNumber("Pigeon Roll", getGyroRoll());
     } catch (Exception e) {
-      //TODO: handle exception
-      System.err.println();
+      System.err.println("The operation failed successfully.");
     }
   }
 
