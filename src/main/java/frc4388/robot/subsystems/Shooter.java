@@ -49,6 +49,10 @@ public class Shooter extends SubsystemBase {
 
     m_shooterTalon.setSelectedSensorPosition(0, ShooterConstants.SHOOTER_PID_LOOP_IDX, ShooterConstants.SHOOTER_TIMEOUT_MS);
 
+    SmartDashboard.putNumber("P Value Shooter", ShooterConstants.SHOOTER_GAINS.kP);
+    SmartDashboard.putNumber("I Value Shooter", ShooterConstants.SHOOTER_GAINS.kI);
+    SmartDashboard.putNumber("D Value Shooter", ShooterConstants.SHOOTER_GAINS.kD);
+    SmartDashboard.putNumber("F Value Shooter", ShooterConstants.SHOOTER_GAINS.kF);
   }
 
   @Override
@@ -56,10 +60,10 @@ public class Shooter extends SubsystemBase {
     // This method will be called once per scheduler run
     try {
     
-      SmartDashboard.putNumber("P Value Shooter", ShooterConstants.SHOOTER_GAINS.kP);
-      SmartDashboard.putNumber("I Value Shooter", ShooterConstants.SHOOTER_GAINS.kI);
-      SmartDashboard.putNumber("D Value Shooter", ShooterConstants.SHOOTER_GAINS.kD);
-      SmartDashboard.putNumber("F Value Shooter", ShooterConstants.SHOOTER_GAINS.kF);
+      SmartDashboard.getNumber("P Value Shooter", ShooterConstants.SHOOTER_GAINS.kP);
+      SmartDashboard.getNumber("I Value Shooter", ShooterConstants.SHOOTER_GAINS.kI);
+      SmartDashboard.getNumber("D Value Shooter", ShooterConstants.SHOOTER_GAINS.kD);
+      SmartDashboard.getNumber("F Value Shooter", ShooterConstants.SHOOTER_GAINS.kF);
 
   } catch (Exception e) {
 
