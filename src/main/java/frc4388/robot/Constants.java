@@ -24,6 +24,12 @@ public final class Constants {
 	    public static final int DRIVE_LEFT_BACK_CAN_ID = 3;
         public static final int DRIVE_RIGHT_BACK_CAN_ID = 5;
         public static final int PIGEON_ID = 6;
+
+        /* PID Constants Drive*/
+        public static final int DRIVE_SLOT_IDX = 0;
+        public static final int DRIVE_PID_LOOP_IDX = 0;
+        public static final int DRIVE_TIMEOUT_MS = 30;
+        static final Gains DRIVE_GAINS = new Gains(0.2, 0.0, 0.0, 0.2, 0, 1.0);
     }
 
     public static final class LEDConstants {
@@ -35,5 +41,15 @@ public final class Constants {
     public static final class OIConstants {
         public static final int XBOX_DRIVER_ID = 0;
         public static final int XBOX_OPERATOR_ID = 1;
+    }
+
+    public static final class ShooterConstants {
+        public static final int SHOOTER_CAN_ID = 7;
+
+        /* PID Constants Shooter*/
+        public static final int SHOOTER_SLOT_IDX = 0;
+        public static final int SHOOTER_PID_LOOP_IDX = 0;
+        public static final int SHOOTER_TIMEOUT_MS = 30;
+        public static final Gains SHOOTER_GAINS = new Gains(0.2, 0.0, 0.0, 0.2, 0, 1.0);
     }
 }
