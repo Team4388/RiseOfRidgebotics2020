@@ -113,10 +113,10 @@ public class Drive extends SubsystemBase {
       SmartDashboard.putNumber("Left Motor Velocity Raw", m_leftFrontMotor.getSelectedSensorVelocity());
       SmartDashboard.putNumber("Right Motor Velocity Raw", m_rightFrontMotor.getSelectedSensorVelocity());
 
-      SmartDashboard.putNumber("P Value", DriveConstants.DRIVE_GAINS.kP);
-      SmartDashboard.putNumber("I Value", DriveConstants.DRIVE_GAINS.kI);
-      SmartDashboard.putNumber("D Value", DriveConstants.DRIVE_GAINS.kD);
-      SmartDashboard.putNumber("F Value", DriveConstants.DRIVE_GAINS.kF);
+      SmartDashboard.putNumber("P Value Drive", DriveConstants.DRIVE_GAINS.kP);
+      SmartDashboard.putNumber("I Value Drive", DriveConstants.DRIVE_GAINS.kI);
+      SmartDashboard.putNumber("D Value Drive", DriveConstants.DRIVE_GAINS.kD);
+      SmartDashboard.putNumber("F Value Drive", DriveConstants.DRIVE_GAINS.kF);
 
     } catch (Exception e) {
 
