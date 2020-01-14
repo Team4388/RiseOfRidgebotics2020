@@ -7,6 +7,8 @@
 
 package frc4388.robot;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -58,6 +60,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
+    m_robotContainer.setDriveNeutralMode(NeutralMode.Coast);
   }
 
   @Override
@@ -71,6 +74,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
+    m_robotContainer.setDriveNeutralMode(NeutralMode.Brake);
     /*
      * String autoSelected = SmartDashboard.getString("Auto Selector",
      * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
@@ -93,6 +97,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    m_robotContainer.setDriveNeutralMode(NeutralMode.Brake);
+
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove

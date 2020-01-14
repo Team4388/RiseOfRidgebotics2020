@@ -7,6 +7,8 @@
 
 package frc4388.robot;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -74,6 +76,14 @@ public class RobotContainer {
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
             .whenPressed(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW))
             .whenReleased(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN));
+    }
+    
+    /**
+     * Sets Motors to a NeutralMode.
+     * @param mode NeutralMode to set motors to
+     */
+    public void setDriveNeutralMode(NeutralMode mode) {
+        m_robotDrive.setDriveTrainNeutralMode(mode);
     }
 
     /**
