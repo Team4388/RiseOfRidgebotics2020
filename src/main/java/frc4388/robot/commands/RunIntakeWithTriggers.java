@@ -16,7 +16,9 @@ public class RunIntakeWithTriggers extends CommandBase {
   private IHandController m_controller;
 
   /**
-   * Creates a new RunIntakeWithTriggers.
+   * Uses input from opperator triggers to control intake motor
+   * @param subsystem the intake subsystem
+   * @param controller the operator controller
    */
   public RunIntakeWithTriggers(Intake subsystem, IHandController controller) {
     // Use addRequirements() here to declare subsystem dependencies.

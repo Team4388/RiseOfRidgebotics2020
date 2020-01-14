@@ -51,7 +51,7 @@ public class RobotContainer {
         m_robotDrive.setDefaultCommand(new RunCommand(() -> m_robotDrive.driveWithInput(
             getDriverController().getLeftYAxis(),
             getDriverController().getRightXAxis()), m_robotDrive));
-        //
+        // drives motor with input from triggers on the opperator controller
         m_robotIntake.setDefaultCommand(new RunIntakeWithTriggers(m_robotIntake, getOperatorController()));
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
