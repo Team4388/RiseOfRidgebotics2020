@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
@@ -67,8 +68,39 @@ public class Drive extends SubsystemBase {
     m_rightBackMotor.setInverted(InvertType.FollowMaster);
 
     /* Motor Encoders */
-    m_leftFrontMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, DriveConstants.PID_LOOP_IDX, DriveConstants.TIMEOUT_MS);
-    m_rightFrontMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, DriveConstants.PID_LOOP_IDX, DriveConstants.TIMEOUT_MS);
+    m_leftFrontMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, DriveConstants.DRIVE_PID_LOOP_IDX, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, DriveConstants.DRIVE_PID_LOOP_IDX, DriveConstants.DRIVE_TIMEOUT_MS);
+  
+    m_leftFrontMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, DriveConstants.DRIVE_TIMEOUT_MS);
+
+    m_leftFrontMotor.configNominalOutputForward(0, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftFrontMotor.configNominalOutputReverse(0, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftFrontMotor.configPeakOutputForward(1, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftFrontMotor.configPeakOutputReverse(-1, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.configNominalOutputForward(0, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.configNominalOutputReverse(0, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.configPeakOutputForward(1, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.configPeakOutputReverse(-1, DriveConstants.DRIVE_TIMEOUT_MS);
+
+    m_leftFrontMotor.selectProfileSlot(DriveConstants.DRIVE_SLOT_IDX, DriveConstants.DRIVE_PID_LOOP_IDX);
+    m_leftFrontMotor.config_kF(DriveConstants.DRIVE_SLOT_IDX, DriveConstants.DRIVE_GAINS.kF, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftFrontMotor.config_kP(DriveConstants.DRIVE_SLOT_IDX, DriveConstants.DRIVE_GAINS.kP, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftFrontMotor.config_kI(DriveConstants.DRIVE_SLOT_IDX, DriveConstants.DRIVE_GAINS.kI, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftFrontMotor.config_kD(DriveConstants.DRIVE_SLOT_IDX, DriveConstants.DRIVE_GAINS.kD, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.selectProfileSlot(DriveConstants.DRIVE_SLOT_IDX, DriveConstants.DRIVE_PID_LOOP_IDX);
+    m_rightFrontMotor.config_kF(DriveConstants.DRIVE_SLOT_IDX, DriveConstants.DRIVE_GAINS.kF, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kP(DriveConstants.DRIVE_SLOT_IDX, DriveConstants.DRIVE_GAINS.kP, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kI(DriveConstants.DRIVE_SLOT_IDX, DriveConstants.DRIVE_GAINS.kI, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kD(DriveConstants.DRIVE_SLOT_IDX, DriveConstants.DRIVE_GAINS.kD, DriveConstants.DRIVE_TIMEOUT_MS);
+
+    m_leftFrontMotor.configMotionCruiseVelocity(15000, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftFrontMotor.configMotionAcceleration(6000, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.configMotionCruiseVelocity(15000, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.configMotionAcceleration(6000, DriveConstants.DRIVE_TIMEOUT_MS);
+
+    m_leftFrontMotor.setSelectedSensorPosition(0, DriveConstants.DRIVE_PID_LOOP_IDX, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.setSelectedSensorPosition(0, DriveConstants.DRIVE_PID_LOOP_IDX, DriveConstants.DRIVE_TIMEOUT_MS);
   }
 
   @Override

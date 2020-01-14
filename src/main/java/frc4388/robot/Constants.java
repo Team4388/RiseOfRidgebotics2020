@@ -25,14 +25,11 @@ public final class Constants {
         public static final int DRIVE_RIGHT_BACK_CAN_ID = 5;
         public static final int PIGEON_ID = 6;
 
-        /* PID Constants */
-        public static final int SLOT_IDX = 0;
-
-        public static final int PID_LOOP_IDX = 0;
-
-        public static final int TIMEOUT_MS = 30;
-
-        static final Gains kGains = new Gains(0.2, 0.0, 0.0, 0.2, 0, 1.0);    
+        /* PID Constants Drive*/
+        public static final int DRIVE_SLOT_IDX = 0;
+        public static final int DRIVE_PID_LOOP_IDX = 0;
+        public static final int DRIVE_TIMEOUT_MS = 30;
+        public static final Gains DRIVE_GAINS = new Gains(0.2, 0.0, 0.0, 0.2, 0, 1.0);    
         
         public static final double ENCODER_TICKS_PER_REV = 2048;
     }
