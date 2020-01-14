@@ -25,6 +25,10 @@ public final class Constants {
         public static final int DRIVE_RIGHT_BACK_CAN_ID = 5;
         public static final int PIGEON_ID = 6;
     }
+    
+    public static final class IntakeConstants {
+        public static final int INTAKE_SPARK_ID = 1;
+    }
 
     public static final class LEDConstants {
         public static final int LED_SPARK_ID = 0;

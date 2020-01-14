@@ -15,7 +15,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.*;
+import frc4388.robot.commands.RunIntakeWithTriggers;
 import frc4388.robot.subsystems.Drive;
+import frc4388.robot.subsystems.Intake;
 import frc4388.robot.subsystems.LED;
 import frc4388.utility.LEDPatterns;
 import frc4388.utility.controller.IHandController;
@@ -32,6 +34,7 @@ public class RobotContainer {
     /* Subsystems */
     private final Drive m_robotDrive = new Drive();
     private final LED m_robotLED = new LED();
+    private final Intake m_robotIntake = new Intake();
 
     /* Controllers */
     private final XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
@@ -48,6 +51,8 @@ public class RobotContainer {
         m_robotDrive.setDefaultCommand(new RunCommand(() -> m_robotDrive.driveWithInput(
             getDriverController().getLeftYAxis(),
             getDriverController().getRightXAxis()), m_robotDrive));
+        // drives motor with input from triggers on the opperator controller
+        m_robotIntake.setDefaultCommand(new RunIntakeWithTriggers(m_robotIntake, getOperatorController()));
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
     }
