@@ -7,6 +7,8 @@
 
 package frc4388.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -22,11 +24,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 
 import frc4388.robot.Constants.DriveConstants;
+import frc4388.utility.controller.XboxController;
 
 /**
  * Add your docs here.
  */
-public class Drive extends ProfiledPIDSubsystem {
+public class Drive extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
@@ -42,9 +45,6 @@ public class Drive extends ProfiledPIDSubsystem {
    * Add your docs here.
    */
   public Drive() {
-    /*  */
-    super(new ProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(0, 0)), 0);
-
     /* factory default values */
     m_leftFrontMotor.configFactoryDefault();
     m_rightFrontMotor.configFactoryDefault();
@@ -65,6 +65,10 @@ public class Drive extends ProfiledPIDSubsystem {
     m_rightFrontMotor.setInverted(false);
     m_leftBackMotor.setInverted(InvertType.FollowMaster);
     m_rightBackMotor.setInverted(InvertType.FollowMaster);
+
+    /* Motor Encoders */
+    m_leftFrontMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, DriveConstants.PID_LOOP_IDX, DriveConstants.TIMEOUT_MS);
+    m_rightFrontMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, DriveConstants.PID_LOOP_IDX, DriveConstants.TIMEOUT_MS);
   }
 
   @Override
@@ -121,15 +125,12 @@ public class Drive extends ProfiledPIDSubsystem {
     m_pigeon.setAccumZAngle(0);
   }
 
-  @Override
-  protected void useOutput(double output, TrapezoidProfile.State setpoint) {
-    // TODO Auto-generated method stub
-    
-  }
+  // Motion Magic Testing
+  public void goToTargetPos()
+  {
+    double targetPos = XboxController.RIGHT_Y_AXIS * DriveConstants.ENCODER_TICKS_PER_REV * 10.0;
 
-  @Override
-  protected double getMeasurement() {
-    // TODO Auto-generated method stub
-    return 0;
+    m_leftFrontMotor.set(ControlMode.MotionMagic, targetPos);
+    m_rightFrontMotor.set(ControlMode.MotionMagic, targetPos);
   }
 }
