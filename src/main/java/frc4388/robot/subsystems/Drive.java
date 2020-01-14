@@ -109,10 +109,19 @@ public class Drive extends SubsystemBase {
       SmartDashboard.putNumber("Pigeon Yaw", getGyroYaw());
       SmartDashboard.putNumber("Pigeon Pitch", getGyroPitch());
       SmartDashboard.putNumber("Pigeon Roll", getGyroRoll());
+
       SmartDashboard.putNumber("Left Motor Velocity Raw", m_leftFrontMotor.getSelectedSensorVelocity());
       SmartDashboard.putNumber("Right Motor Velocity Raw", m_rightFrontMotor.getSelectedSensorVelocity());
+
+      SmartDashboard.putNumber("P Value", DriveConstants.DRIVE_GAINS.kP);
+      SmartDashboard.putNumber("I Value", DriveConstants.DRIVE_GAINS.kI);
+      SmartDashboard.putNumber("D Value", DriveConstants.DRIVE_GAINS.kD);
+      SmartDashboard.putNumber("F Value", DriveConstants.DRIVE_GAINS.kF);
+
     } catch (Exception e) {
-      System.err.println("The operation failed successfully.");
+
+      System.err.println("The programming team has failed successfully in the Drive Subsystem.");
+    
     }
   }
 
