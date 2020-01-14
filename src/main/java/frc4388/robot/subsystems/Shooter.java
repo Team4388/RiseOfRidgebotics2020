@@ -12,6 +12,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.DriveConstants;
 import frc4388.robot.Constants.ShooterConstants;
@@ -53,6 +54,19 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    try {
+    
+      SmartDashboard.putNumber("P Value Shooter", ShooterConstants.SHOOTER_GAINS.kP);
+      SmartDashboard.putNumber("I Value Shooter", ShooterConstants.SHOOTER_GAINS.kI);
+      SmartDashboard.putNumber("D Value Shooter", ShooterConstants.SHOOTER_GAINS.kD);
+      SmartDashboard.putNumber("F Value Shooter", ShooterConstants.SHOOTER_GAINS.kF);
+
+  } catch (Exception e) {
+
+    System.err.println("The programming team failed successfully in the Shooter Subsystem.");
+    
+  }
+
   }
 
   public void getTargetPos() {
