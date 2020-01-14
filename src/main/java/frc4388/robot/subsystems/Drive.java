@@ -101,22 +101,35 @@ public class Drive extends SubsystemBase {
 
     m_leftFrontMotor.setSelectedSensorPosition(0, DriveConstants.DRIVE_PID_LOOP_IDX, DriveConstants.DRIVE_TIMEOUT_MS);
     m_rightFrontMotor.setSelectedSensorPosition(0, DriveConstants.DRIVE_PID_LOOP_IDX, DriveConstants.DRIVE_TIMEOUT_MS);
+
+    /* Smart Dashboard Initial Values */
+    SmartDashboard.putNumber("Pigeon Yaw", getGyroYaw());
+    SmartDashboard.putNumber("Pigeon Pitch", getGyroPitch());
+    SmartDashboard.putNumber("Pigeon Roll", getGyroRoll());
+
+    SmartDashboard.putNumber("Left Motor Velocity Raw", m_leftFrontMotor.getSelectedSensorVelocity());
+    SmartDashboard.putNumber("Right Motor Velocity Raw", m_rightFrontMotor.getSelectedSensorVelocity());
+
+    SmartDashboard.putNumber("P Value Drive", DriveConstants.DRIVE_GAINS.kP);
+    SmartDashboard.putNumber("I Value Drive", DriveConstants.DRIVE_GAINS.kI);
+    SmartDashboard.putNumber("D Value Drive", DriveConstants.DRIVE_GAINS.kD);
+    SmartDashboard.putNumber("F Value Drive", DriveConstants.DRIVE_GAINS.kF);
   }
 
   @Override
   public void periodic() {
     try {
-      SmartDashboard.putNumber("Pigeon Yaw", getGyroYaw());
-      SmartDashboard.putNumber("Pigeon Pitch", getGyroPitch());
-      SmartDashboard.putNumber("Pigeon Roll", getGyroRoll());
+      SmartDashboard.getNumber("Pigeon Yaw", getGyroYaw());
+      SmartDashboard.getNumber("Pigeon Pitch", getGyroPitch());
+      SmartDashboard.getNumber("Pigeon Roll", getGyroRoll());
 
-      SmartDashboard.putNumber("Left Motor Velocity Raw", m_leftFrontMotor.getSelectedSensorVelocity());
-      SmartDashboard.putNumber("Right Motor Velocity Raw", m_rightFrontMotor.getSelectedSensorVelocity());
+      SmartDashboard.getNumber("Left Motor Velocity Raw", m_leftFrontMotor.getSelectedSensorVelocity());
+      SmartDashboard.getNumber("Right Motor Velocity Raw", m_rightFrontMotor.getSelectedSensorVelocity());
 
-      SmartDashboard.putNumber("P Value Drive", DriveConstants.DRIVE_GAINS.kP);
-      SmartDashboard.putNumber("I Value Drive", DriveConstants.DRIVE_GAINS.kI);
-      SmartDashboard.putNumber("D Value Drive", DriveConstants.DRIVE_GAINS.kD);
-      SmartDashboard.putNumber("F Value Drive", DriveConstants.DRIVE_GAINS.kF);
+      SmartDashboard.getNumber("P Value Drive", DriveConstants.DRIVE_GAINS.kP);
+      SmartDashboard.getNumber("I Value Drive", DriveConstants.DRIVE_GAINS.kI);
+      SmartDashboard.getNumber("D Value Drive", DriveConstants.DRIVE_GAINS.kD);
+      SmartDashboard.getNumber("F Value Drive", DriveConstants.DRIVE_GAINS.kF);
 
     } catch (Exception e) {
 
