@@ -114,6 +114,12 @@ public class Drive extends SubsystemBase {
     SmartDashboard.putNumber("I Value Drive", DriveConstants.DRIVE_GAINS.kI);
     SmartDashboard.putNumber("D Value Drive", DriveConstants.DRIVE_GAINS.kD);
     SmartDashboard.putNumber("F Value Drive", DriveConstants.DRIVE_GAINS.kF);
+
+    int closedLoopTimeMs = 1;
+    m_leftFrontMotor.configClosedLoopPeriod(0, closedLoopTimeMs, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftFrontMotor.configClosedLoopPeriod(1, closedLoopTimeMs, DriveConstants.DRIVE_TIMEOUT_MS);
+    
+
   }
 
   @Override
@@ -185,6 +191,6 @@ public class Drive extends SubsystemBase {
     double targetPos = XboxController.RIGHT_Y_AXIS * DriveConstants.ENCODER_TICKS_PER_REV * 10.0;
 
     m_leftFrontMotor.set(ControlMode.MotionMagic, targetPos);
-    m_rightFrontMotor.set(ControlMode.MotionMagic, targetPos);
+    m_rightFrontMotor.follow(m_leftFrontMotor);
   }
 }

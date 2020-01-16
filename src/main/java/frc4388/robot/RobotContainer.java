@@ -70,6 +70,7 @@ public class RobotContainer {
             .whenPressed(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW))
             .whenReleased(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN));
 
+        /* PID Test Command */
         new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
             .whenPressed(() -> m_robotDrive.goToTargetPos());
     }
