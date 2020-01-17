@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
-
+import frc4388.robot.Gains;
 import frc4388.robot.Constants.DriveConstants;
 import frc4388.utility.controller.XboxController;
 
@@ -42,6 +42,8 @@ public class Drive extends SubsystemBase {
   public static PigeonIMU m_pigeon = new PigeonIMU(DriveConstants.PIGEON_ID);
 
   public static DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
+
+  public static Gains m_gains = DriveConstants.DRIVE_GAINS;
 
   /**
    * Add your docs here.
@@ -84,16 +86,7 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.configPeakOutputForward(1, DriveConstants.DRIVE_TIMEOUT_MS);
     m_rightFrontMotor.configPeakOutputReverse(-1, DriveConstants.DRIVE_TIMEOUT_MS);
 
-    m_leftFrontMotor.selectProfileSlot(DriveConstants.DRIVE_SLOT_IDX, DriveConstants.DRIVE_PID_LOOP_IDX);
-    m_leftFrontMotor.config_kF(DriveConstants.DRIVE_SLOT_IDX, DriveConstants.DRIVE_GAINS.kF, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_leftFrontMotor.config_kP(DriveConstants.DRIVE_SLOT_IDX, DriveConstants.DRIVE_GAINS.kP, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_leftFrontMotor.config_kI(DriveConstants.DRIVE_SLOT_IDX, DriveConstants.DRIVE_GAINS.kI, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_leftFrontMotor.config_kD(DriveConstants.DRIVE_SLOT_IDX, DriveConstants.DRIVE_GAINS.kD, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightFrontMotor.selectProfileSlot(DriveConstants.DRIVE_SLOT_IDX, DriveConstants.DRIVE_PID_LOOP_IDX);
-    m_rightFrontMotor.config_kF(DriveConstants.DRIVE_SLOT_IDX, DriveConstants.DRIVE_GAINS.kF, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightFrontMotor.config_kP(DriveConstants.DRIVE_SLOT_IDX, DriveConstants.DRIVE_GAINS.kP, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightFrontMotor.config_kI(DriveConstants.DRIVE_SLOT_IDX, DriveConstants.DRIVE_GAINS.kI, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightFrontMotor.config_kD(DriveConstants.DRIVE_SLOT_IDX, DriveConstants.DRIVE_GAINS.kD, DriveConstants.DRIVE_TIMEOUT_MS);
+    setDriveTrainGains();
 
     m_leftFrontMotor.configMotionCruiseVelocity(15000, DriveConstants.DRIVE_TIMEOUT_MS);
     m_leftFrontMotor.configMotionAcceleration(6000, DriveConstants.DRIVE_TIMEOUT_MS);
@@ -137,10 +130,12 @@ public class Drive extends SubsystemBase {
       SmartDashboard.putNumber("Left Motor Position Raw", m_leftFrontMotor.getSelectedSensorPosition());
       SmartDashboard.putNumber("Right Motor Position Raw", m_rightFrontMotor.getSelectedSensorPosition(0));
 
-      SmartDashboard.getNumber("P Value Drive", DriveConstants.DRIVE_GAINS.kP);
-      SmartDashboard.getNumber("I Value Drive", DriveConstants.DRIVE_GAINS.kI);
-      SmartDashboard.getNumber("D Value Drive", DriveConstants.DRIVE_GAINS.kD);
-      SmartDashboard.getNumber("F Value Drive", DriveConstants.DRIVE_GAINS.kF);
+      m_gains.kP = SmartDashboard.getNumber("P Value Drive", DriveConstants.DRIVE_GAINS.kP);
+      m_gains.kI = SmartDashboard.getNumber("I Value Drive", DriveConstants.DRIVE_GAINS.kI);
+      m_gains.kD = SmartDashboard.getNumber("D Value Drive", DriveConstants.DRIVE_GAINS.kD);
+      m_gains.kF = SmartDashboard.getNumber("F Value Drive", DriveConstants.DRIVE_GAINS.kF);
+
+      setDriveTrainGains();
 
     } catch (Exception e) {
 
@@ -158,6 +153,23 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.setNeutralMode(mode);
     m_leftFrontMotor.setNeutralMode(mode);
     m_rightFrontMotor.setNeutralMode(mode);
+  }
+
+  /**
+   * Add your docs here.
+   */
+  public void setDriveTrainGains(){
+    m_leftFrontMotor.selectProfileSlot(DriveConstants.DRIVE_SLOT_IDX, DriveConstants.DRIVE_PID_LOOP_IDX);
+    m_leftFrontMotor.config_kF(DriveConstants.DRIVE_SLOT_IDX, m_gains.kF, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftFrontMotor.config_kP(DriveConstants.DRIVE_SLOT_IDX, m_gains.kP, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftFrontMotor.config_kI(DriveConstants.DRIVE_SLOT_IDX, m_gains.kI, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftFrontMotor.config_kD(DriveConstants.DRIVE_SLOT_IDX, m_gains.kD, DriveConstants.DRIVE_TIMEOUT_MS);
+
+    m_rightFrontMotor.selectProfileSlot(DriveConstants.DRIVE_SLOT_IDX, DriveConstants.DRIVE_PID_LOOP_IDX);
+    m_rightFrontMotor.config_kF(DriveConstants.DRIVE_SLOT_IDX, m_gains.kF, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kP(DriveConstants.DRIVE_SLOT_IDX, m_gains.kP, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kI(DriveConstants.DRIVE_SLOT_IDX, m_gains.kI, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kD(DriveConstants.DRIVE_SLOT_IDX, m_gains.kD, DriveConstants.DRIVE_TIMEOUT_MS);
   }
 
   /**
