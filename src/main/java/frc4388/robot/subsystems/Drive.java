@@ -179,6 +179,14 @@ public class Drive extends SubsystemBase {
     m_driveTrain.arcadeDrive(move, steer);
   }
 
+  public void gotoPositionPID(WPI_TalonFX talon, double targetPos) {
+    talon.set(TalonFXControlMode.Position, targetPos);
+  }
+
+  public void gotoVelocityPID(WPI_TalonFX talon, double targetVel) {
+    talon.set(TalonFXControlMode.Velocity, targetVel);
+  }
+
   public double getGyroYaw() {
     double[] ypr = new double[3];
     m_pigeon.getYawPitchRoll(ypr);
@@ -200,15 +208,5 @@ public class Drive extends SubsystemBase {
   public void resetGyroYaw() {
     m_pigeon.setYaw(0);
     m_pigeon.setAccumZAngle(0);
-  }
-
-  // Motion Magic Testing
-  public void goToTargetPos()
-  {
-    //double targetPos = XboxController.RIGHT_Y_AXIS * DriveConstants.ENCODER_TICKS_PER_REV * 10.0;
-    double targetPos = 1000;
-
-    m_leftFrontMotor.set(TalonFXControlMode.Velocity, targetPos);
-    m_rightFrontMotor.set(TalonFXControlMode.Velocity, -targetPos);
   }
 }
