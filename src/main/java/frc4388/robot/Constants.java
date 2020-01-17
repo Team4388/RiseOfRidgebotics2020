@@ -29,7 +29,7 @@ public final class Constants {
         public static final int DRIVE_SLOT_IDX = 0;
         public static final int DRIVE_PID_LOOP_IDX = 0;
         public static final int DRIVE_TIMEOUT_MS = 30;
-        public static final Gains DRIVE_GAINS = new Gains(10.0, 0.0, 0.0, 0.2, 0, 1.0);
+        public static final Gains DRIVE_GAINS = new Gains(0.2, 0.0, 0.0, 0.2, 0, 1.0);
         
         public static final double ENCODER_TICKS_PER_REV = 2048;
     }

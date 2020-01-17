@@ -12,6 +12,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
@@ -68,8 +69,8 @@ public class Drive extends SubsystemBase {
     m_rightBackMotor.setInverted(InvertType.FollowMaster);
 
     /* Motor Encoders */
-    m_leftFrontMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, DriveConstants.DRIVE_PID_LOOP_IDX, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightFrontMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, DriveConstants.DRIVE_PID_LOOP_IDX, DriveConstants.DRIVE_TIMEOUT_MS);
+    //m_leftFrontMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, DriveConstants.DRIVE_PID_LOOP_IDX, DriveConstants.DRIVE_TIMEOUT_MS);
+    //m_rightFrontMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, DriveConstants.DRIVE_PID_LOOP_IDX, DriveConstants.DRIVE_TIMEOUT_MS);
   
     m_leftFrontMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, DriveConstants.DRIVE_TIMEOUT_MS);
     m_rightFrontMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, DriveConstants.DRIVE_TIMEOUT_MS);
@@ -107,8 +108,10 @@ public class Drive extends SubsystemBase {
     SmartDashboard.putNumber("Pigeon Pitch", getGyroPitch());
     SmartDashboard.putNumber("Pigeon Roll", getGyroRoll());
 
-    SmartDashboard.putNumber("Left Motor Velocity Raw", m_leftFrontMotor.getSelectedSensorVelocity());
+    SmartDashboard.putNumber("Left Motor Velocity Raw", m_leftFrontMotor.getSelectedSensorVelocity(0));
     SmartDashboard.putNumber("Right Motor Velocity Raw", m_rightFrontMotor.getSelectedSensorVelocity());
+    SmartDashboard.putNumber("Left Motor Position Raw", m_leftFrontMotor.getSelectedSensorPosition(0));
+    SmartDashboard.putNumber("Right Motor Position Raw", m_rightFrontMotor.getSelectedSensorPosition());
 
     SmartDashboard.putNumber("P Value Drive", DriveConstants.DRIVE_GAINS.kP);
     SmartDashboard.putNumber("I Value Drive", DriveConstants.DRIVE_GAINS.kI);
@@ -125,12 +128,14 @@ public class Drive extends SubsystemBase {
   @Override
   public void periodic() {
     try {
-      SmartDashboard.getNumber("Pigeon Yaw", getGyroYaw());
-      SmartDashboard.getNumber("Pigeon Pitch", getGyroPitch());
-      SmartDashboard.getNumber("Pigeon Roll", getGyroRoll());
+      SmartDashboard.putNumber("Pigeon Yaw", getGyroYaw());
+      SmartDashboard.putNumber("Pigeon Pitch", getGyroPitch());
+      SmartDashboard.putNumber("Pigeon Roll", getGyroRoll());
 
-      SmartDashboard.getNumber("Left Motor Velocity Raw", m_leftFrontMotor.getSelectedSensorVelocity());
-      SmartDashboard.getNumber("Right Motor Velocity Raw", m_rightFrontMotor.getSelectedSensorVelocity());
+      SmartDashboard.putNumber("Left Motor Velocity Raw", m_leftFrontMotor.getSelectedSensorVelocity(0));
+      SmartDashboard.putNumber("Right Motor Velocity Raw", m_rightFrontMotor.getSelectedSensorVelocity());
+      SmartDashboard.putNumber("Left Motor Position Raw", m_leftFrontMotor.getSelectedSensorPosition());
+      SmartDashboard.putNumber("Right Motor Position Raw", m_rightFrontMotor.getSelectedSensorPosition(0));
 
       SmartDashboard.getNumber("P Value Drive", DriveConstants.DRIVE_GAINS.kP);
       SmartDashboard.getNumber("I Value Drive", DriveConstants.DRIVE_GAINS.kI);
@@ -188,9 +193,10 @@ public class Drive extends SubsystemBase {
   // Motion Magic Testing
   public void goToTargetPos()
   {
-    double targetPos = XboxController.RIGHT_Y_AXIS * DriveConstants.ENCODER_TICKS_PER_REV * 10.0;
+    //double targetPos = XboxController.RIGHT_Y_AXIS * DriveConstants.ENCODER_TICKS_PER_REV * 10.0;
+    double targetPos = 1000;
 
-    m_leftFrontMotor.set(ControlMode.MotionMagic, targetPos);
-    m_rightFrontMotor.follow(m_leftFrontMotor);
+    m_leftFrontMotor.set(TalonFXControlMode.Velocity, targetPos);
+    m_rightFrontMotor.set(TalonFXControlMode.Velocity, -targetPos);
   }
 }

@@ -62,7 +62,7 @@ public class RobotContainer {
         /* Driver Buttons */
         // test command to spin the robot while pressing A on the driver controller
         new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-            .whileHeld(() -> m_robotDrive.driveWithInput(0, 1));
+            .whileHeld(() -> m_robotDrive.driveWithInput(0, 1), m_robotDrive);
 
         /* Operator Buttons */
         // activates "Lit Mode"
@@ -72,7 +72,7 @@ public class RobotContainer {
 
         /* PID Test Command */
         new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
-            .whenPressed(() -> m_robotDrive.goToTargetPos());
+            .whileHeld(() -> m_robotDrive.goToTargetPos(), m_robotDrive);
     }
     
     /**
