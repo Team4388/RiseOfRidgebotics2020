@@ -10,7 +10,7 @@ package frc4388.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.subsystems.Drive;
 
-public class DriveToDistancePID extends CommandBase {
+public class DriveToDistanceMM extends CommandBase {
   Drive m_drive;
   double m_distance;
   double m_leftTarget;
@@ -19,7 +19,7 @@ public class DriveToDistancePID extends CommandBase {
   /**
    * Creates a new DriveToDistancePID.
    */
-  public DriveToDistancePID(Drive subsystem, double distance) {
+  public DriveToDistanceMM(Drive subsystem, double distance) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = subsystem;
     m_distance = distance;
@@ -36,8 +36,8 @@ public class DriveToDistancePID extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drive.runPositionPID(m_drive.m_leftFrontMotor, m_leftTarget);
-    m_drive.runPositionPID(m_drive.m_rightFrontMotor, m_rightTarget);
+    m_drive.runMotionMagicPID(m_drive.m_leftFrontMotor, m_leftTarget);
+    m_drive.runMotionMagicPID(m_drive.m_rightFrontMotor, m_rightTarget);
   }
 
   // Called once the command ends or is interrupted.

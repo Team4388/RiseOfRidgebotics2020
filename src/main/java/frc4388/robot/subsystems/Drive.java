@@ -74,7 +74,7 @@ public class Drive extends SubsystemBase {
     //m_leftFrontMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, DriveConstants.DRIVE_PID_LOOP_IDX, DriveConstants.DRIVE_TIMEOUT_MS);
     //m_rightFrontMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, DriveConstants.DRIVE_PID_LOOP_IDX, DriveConstants.DRIVE_TIMEOUT_MS);
   
-    m_leftFrontMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, DriveConstants.DRIVE_TIMEOUT_MS);
+    /*m_leftFrontMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, DriveConstants.DRIVE_TIMEOUT_MS);
     m_rightFrontMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, DriveConstants.DRIVE_TIMEOUT_MS);
 
     m_leftFrontMotor.configNominalOutputForward(0, DriveConstants.DRIVE_TIMEOUT_MS);
@@ -84,7 +84,7 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.configNominalOutputForward(0, DriveConstants.DRIVE_TIMEOUT_MS);
     m_rightFrontMotor.configNominalOutputReverse(0, DriveConstants.DRIVE_TIMEOUT_MS);
     m_rightFrontMotor.configPeakOutputForward(1, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightFrontMotor.configPeakOutputReverse(-1, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.configPeakOutputReverse(-1, DriveConstants.DRIVE_TIMEOUT_MS);*/
 
     setDriveTrainGains();
 
@@ -179,12 +179,16 @@ public class Drive extends SubsystemBase {
     m_driveTrain.arcadeDrive(move, steer);
   }
 
-  public void gotoPositionPID(WPI_TalonFX talon, double targetPos) {
+  public void runPositionPID(WPI_TalonFX talon, double targetPos) {
     talon.set(TalonFXControlMode.Position, targetPos);
   }
 
-  public void gotoVelocityPID(WPI_TalonFX talon, double targetVel) {
+  public void runVelocityPID(WPI_TalonFX talon, double targetVel) {
     talon.set(TalonFXControlMode.Velocity, targetVel);
+  }
+
+  public void runMotionMagicPID(WPI_TalonFX talon, double targetPos){
+    talon.set(TalonFXControlMode.MotionMagic, targetPos);
   }
 
   public double getGyroYaw() {
