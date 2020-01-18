@@ -61,6 +61,9 @@ public class Drive extends SubsystemBase {
     m_leftBackMotor.setInverted(InvertType.FollowMaster);
     m_rightBackMotor.setInverted(InvertType.FollowMaster);
 
+    m_leftBackMotor.configNeutralDeadband(0.0); // DO NOT CHANGE
+    m_rightBackMotor.configNeutralDeadband(0.0); //Ensures motors run at the same speed
+
     /* Motor Encoders */
     //m_leftFrontMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, DriveConstants.DRIVE_PID_LOOP_IDX, DriveConstants.DRIVE_TIMEOUT_MS);
     //m_rightFrontMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, DriveConstants.DRIVE_PID_LOOP_IDX, DriveConstants.DRIVE_TIMEOUT_MS);
@@ -83,7 +86,7 @@ public class Drive extends SubsystemBase {
     m_leftFrontMotor.configMotionAcceleration(6000, DriveConstants.DRIVE_TIMEOUT_MS);
     m_rightFrontMotor.configMotionCruiseVelocity(15000, DriveConstants.DRIVE_TIMEOUT_MS);
     m_rightFrontMotor.configMotionAcceleration(6000, DriveConstants.DRIVE_TIMEOUT_MS);
-
+    
     m_leftFrontMotor.setSelectedSensorPosition(0, DriveConstants.DRIVE_PID_LOOP_IDX, DriveConstants.DRIVE_TIMEOUT_MS);
     m_rightFrontMotor.setSelectedSensorPosition(0, DriveConstants.DRIVE_PID_LOOP_IDX, DriveConstants.DRIVE_TIMEOUT_MS);
 
@@ -142,8 +145,8 @@ public class Drive extends SubsystemBase {
   public void setDriveTrainNeutralMode(NeutralMode mode) {
     m_leftFrontMotor.setNeutralMode(mode);
     m_rightFrontMotor.setNeutralMode(mode);
-    m_leftFrontMotor.setNeutralMode(mode);
-    m_rightFrontMotor.setNeutralMode(mode);
+    m_leftBackMotor.setNeutralMode(mode);
+    m_rightBackMotor.setNeutralMode(mode);
   }
 
   /**
