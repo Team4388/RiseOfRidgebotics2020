@@ -60,6 +60,9 @@ public class Drive extends ProfiledPIDSubsystem {
     /* set neutral mode */
     setDriveTrainNeutralMode(NeutralMode.Brake);
 
+    m_leftBackMotor.configNeutralDeadband(0.0); // DO NOT CHANGE
+    m_rightBackMotor.configNeutralDeadband(0.0); //Ensures motors run at the same speed    
+    
     /* flip input so forward becomes back, etc */
     m_leftFrontMotor.setInverted(false);
     m_rightFrontMotor.setInverted(false);
