@@ -20,6 +20,7 @@ import frc4388.robot.commands.DriveToDistanceMM;
 import frc4388.robot.commands.DriveToDistancePID;
 import frc4388.robot.commands.RunIntakeWithTriggers;
 import frc4388.robot.subsystems.Drive;
+import frc4388.robot.subsystems.Elevator;
 import frc4388.robot.subsystems.Intake;
 import frc4388.robot.subsystems.LED;
 import frc4388.utility.LEDPatterns;
@@ -38,6 +39,7 @@ public class RobotContainer {
     private final Drive m_robotDrive = new Drive();
     private final LED m_robotLED = new LED();
     private final Intake m_robotIntake = new Intake();
+    private final Elevator m_robotElevator = new Elevator();
 
     /* Controllers */
     private final XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
@@ -56,6 +58,10 @@ public class RobotContainer {
             getDriverController().getRightXAxis()), m_robotDrive));
         // drives motor with input from triggers on the opperator controller
         m_robotIntake.setDefaultCommand(new RunIntakeWithTriggers(m_robotIntake, getOperatorController()));
+        // moves elevator with one axis input from the driver controller
+        m_robotElevator.setDefaultCommand(new RunCommand(() -> m_robotElevator.moveElevator(
+            getOperatorController().getLeftYAxis()), m_robotElevator
+        ));
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
     }
