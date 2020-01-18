@@ -27,10 +27,24 @@ public final class Constants {
         public static final int PIGEON_ID = 6;
 
         /* PID Constants Drive*/
-        public static final int DRIVE_SLOT_IDX = 0;
-        public static final int DRIVE_PID_LOOP_IDX = 0;
         public static final int DRIVE_TIMEOUT_MS = 30;
         public static final Gains DRIVE_GAINS = new Gains(0.2, 0.0, 0.0, 0.2, 0, 1.0);
+        public static final int DRIVE_CRUISE_VELOCITY = 15000;
+        public static final int DRIVE_ACCELERATION = 6000;
+
+        /* Remote Sensors */
+        public final static int REMOTE_0 = 0;
+        public final static int REMOTE_1 = 1;
+        
+        /* PID Indexes */
+        public final static int PID_PRIMARY = 0;
+        public final static int PID_TURN = 1;
+        
+        /* PID SLOTS */
+        public final static int SLOT_DISTANCE = 0;
+	    public final static int SLOT_VELOCITY = 1;
+	    public final static int SLOT_TURNING = 2;
+	    public final static int SLOT_MOTION_MAGIC = 3;
         
         /* Drive Train Characteristics */
         public static final double TICKS_PER_MOTOR_REV = 2048;
