@@ -30,7 +30,7 @@ public class DriveToDistancePID extends CommandBase {
   @Override
   public void initialize() {
     m_leftTarget = m_drive.m_leftFrontMotor.getActiveTrajectoryPosition() + m_distance;
-    m_rightTarget = m_drive.m_rightFrontMotor.getActiveTrajectoryPosition() + m_distance;
+    m_rightTarget = -(m_drive.m_rightFrontMotor.getActiveTrajectoryPosition() + m_distance);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
