@@ -27,7 +27,8 @@ public final class Constants {
 
         /* PID Constants Drive*/
         public static final int DRIVE_SLOT_IDX = 0;
-        public static final int DRIVE_PID_LOOP_IDX = 0;
+        public static final int DRIVE_DISTANCE_PID_LOOP_IDX = 0;
+        public static final int DRIVE_GYRO_PID_LOOP_IDX = 1;
         public static final int DRIVE_TIMEOUT_MS = 30;
         public static final Gains DRIVE_GAINS = new Gains(0.2, 0.0, 0.0, 0.2, 0, 1.0);
         

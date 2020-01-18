@@ -19,6 +19,7 @@ import frc4388.robot.commands.DriveAtVelocityPID;
 import frc4388.robot.commands.DriveToDistanceMM;
 import frc4388.robot.commands.DriveToDistancePID;
 import frc4388.robot.commands.RunIntakeWithTriggers;
+import frc4388.robot.commands.TrackTarget;
 import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Intake;
 import frc4388.robot.subsystems.LED;
@@ -69,8 +70,8 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         // test command to spin the robot while pressing A on the driver controller
-        new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-            .whileHeld(() -> m_robotDrive.driveWithInput(0, 1), m_robotDrive);
+        //new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
+        //    .whileHeld(() -> m_robotDrive.driveWithInput(0, 1), m_robotDrive);
 
         /* Operator Buttons */
         // activates "Lit Mode"
@@ -87,6 +88,9 @@ public class RobotContainer {
 
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
             .whenPressed(new DriveAtVelocityPID(m_robotDrive, 2000));
+
+        new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
+            .whileHeld(new TrackTarget(m_robotDrive, m_driverXbox));
 
         //new JoystickButton(getDriverJoystick(), XboxController.LEFT_JOYSTICK_BUTTON)
             //.whenPressed(new InstantCommand(null, m_robotDrive));
