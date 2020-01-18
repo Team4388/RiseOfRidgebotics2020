@@ -39,8 +39,8 @@ public class DriveToDistancePID extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drive.runPositionPID(m_drive.m_leftFrontMotor, m_leftTarget);
-    m_drive.runPositionPID(m_drive.m_rightFrontMotor, m_rightTarget);
+    m_drive.runDrivePositionPID(m_drive.m_leftFrontMotor, m_leftTarget);
+    m_drive.runDrivePositionPID(m_drive.m_rightFrontMotor, m_rightTarget);
   }
 
   // Called once the command ends or is interrupted.
