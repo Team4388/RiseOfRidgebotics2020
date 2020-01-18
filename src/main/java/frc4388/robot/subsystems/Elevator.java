@@ -21,7 +21,7 @@ public class Elevator extends SubsystemBase {
   public WPI_TalonSRX m_talon1 = new WPI_TalonSRX(ElevatorConstants.TALON_1);
   public WPI_TalonSRX m_talon2 = new WPI_TalonSRX(ElevatorConstants.TALON_2);
 
-  public static Gains m_gains = ElevatorConstants.ELEVATOR_GAINS;
+  public static Gains m_elevatorGains = ElevatorConstants.ELEVATOR_GAINS;
   /**
    * Creates a new Elevator.
    */
@@ -41,6 +41,8 @@ public class Elevator extends SubsystemBase {
     m_talon1.setInverted(InvertType.FollowMaster);
     m_talon2.setInverted(InvertType.FollowMaster);
 
+    setElevatorGains();
+
     m_talon1.setSelectedSensorPosition(0, ElevatorConstants.ELEVATOR_PID_LOOP_IDX, ElevatorConstants.ELEVATOR_TIMEOUT_MS);
     m_talon2.setSelectedSensorPosition(0, ElevatorConstants.ELEVATOR_PID_LOOP_IDX, ElevatorConstants.ELEVATOR_TIMEOUT_MS);
   
@@ -59,16 +61,16 @@ public class Elevator extends SubsystemBase {
   }
   public void setElevatorGains(){
     m_talon1.selectProfileSlot(ElevatorConstants.ELEVATOR_SLOT_IDX, ElevatorConstants.ELEVATOR_PID_LOOP_IDX);
-    m_talon1.config_kF(ElevatorConstants.ELEVATOR_SLOT_IDX, m_gains.kF, ElevatorConstants.ELEVATOR_TIMEOUT_MS);
-    m_talon1.config_kP(ElevatorConstants.ELEVATOR_SLOT_IDX, m_gains.kP, ElevatorConstants.ELEVATOR_TIMEOUT_MS);
-    m_talon1.config_kI(ElevatorConstants.ELEVATOR_SLOT_IDX, m_gains.kI, ElevatorConstants.ELEVATOR_TIMEOUT_MS);
-    m_talon1.config_kD(ElevatorConstants.ELEVATOR_SLOT_IDX, m_gains.kD, ElevatorConstants.ELEVATOR_TIMEOUT_MS);
+    m_talon1.config_kF(ElevatorConstants.ELEVATOR_SLOT_IDX, m_elevatorGains.kF, ElevatorConstants.ELEVATOR_TIMEOUT_MS);
+    m_talon1.config_kP(ElevatorConstants.ELEVATOR_SLOT_IDX, m_elevatorGains.kP, ElevatorConstants.ELEVATOR_TIMEOUT_MS);
+    m_talon1.config_kI(ElevatorConstants.ELEVATOR_SLOT_IDX, m_elevatorGains.kI, ElevatorConstants.ELEVATOR_TIMEOUT_MS);
+    m_talon1.config_kD(ElevatorConstants.ELEVATOR_SLOT_IDX, m_elevatorGains.kD, ElevatorConstants.ELEVATOR_TIMEOUT_MS);
 
     m_talon2.selectProfileSlot(ElevatorConstants.ELEVATOR_SLOT_IDX, ElevatorConstants.ELEVATOR_PID_LOOP_IDX);
-    m_talon2.config_kF(ElevatorConstants.ELEVATOR_SLOT_IDX, m_gains.kF, ElevatorConstants.ELEVATOR_TIMEOUT_MS);
-    m_talon2.config_kP(ElevatorConstants.ELEVATOR_SLOT_IDX, m_gains.kP, ElevatorConstants.ELEVATOR_TIMEOUT_MS);
-    m_talon2.config_kI(ElevatorConstants.ELEVATOR_SLOT_IDX, m_gains.kI, ElevatorConstants.ELEVATOR_TIMEOUT_MS);
-    m_talon2.config_kD(ElevatorConstants.ELEVATOR_SLOT_IDX, m_gains.kD, ElevatorConstants.ELEVATOR_TIMEOUT_MS);
+    m_talon2.config_kF(ElevatorConstants.ELEVATOR_SLOT_IDX, m_elevatorGains.kF, ElevatorConstants.ELEVATOR_TIMEOUT_MS);
+    m_talon2.config_kP(ElevatorConstants.ELEVATOR_SLOT_IDX, m_elevatorGains.kP, ElevatorConstants.ELEVATOR_TIMEOUT_MS);
+    m_talon2.config_kI(ElevatorConstants.ELEVATOR_SLOT_IDX, m_elevatorGains.kI, ElevatorConstants.ELEVATOR_TIMEOUT_MS);
+    m_talon2.config_kD(ElevatorConstants.ELEVATOR_SLOT_IDX, m_elevatorGains.kD, ElevatorConstants.ELEVATOR_TIMEOUT_MS);
   }
   public void runElevatorPositionPID(WPI_TalonSRX talon, double targetPos) {
     talon.set(ControlMode.Position, targetPos);

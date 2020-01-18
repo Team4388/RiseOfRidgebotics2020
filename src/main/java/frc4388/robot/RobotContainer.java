@@ -24,6 +24,7 @@ import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Elevator;
 import frc4388.robot.subsystems.Intake;
 import frc4388.robot.subsystems.LED;
+import frc4388.robot.subsystems.Shooter;
 import frc4388.utility.LEDPatterns;
 import frc4388.utility.controller.IHandController;
 import frc4388.utility.controller.XboxController;
@@ -41,6 +42,7 @@ public class RobotContainer {
     private final LED m_robotLED = new LED();
     private final Intake m_robotIntake = new Intake();
     private final Elevator m_robotElevator = new Elevator();
+    private final Shooter m_robotShooter = new Shooter();
 
     /* Controllers */
     private final XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
@@ -57,12 +59,15 @@ public class RobotContainer {
         m_robotDrive.setDefaultCommand(new RunCommand(() -> m_robotDrive.driveWithInput(
             getDriverController().getLeftYAxis(),
             getDriverController().getRightXAxis()), m_robotDrive));
-        // drives motor with input from triggers on the opperator controller
+
+        // drives motor with input from triggers on the operator controller
         m_robotIntake.setDefaultCommand(new RunIntakeWithTriggers(m_robotIntake, getOperatorController()));
+
         // moves elevator with one-axis input from the driver controller
         m_robotElevator.setDefaultCommand(new RunCommand(() -> m_robotElevator.moveElevator(
             getOperatorController().getLeftYAxis()), m_robotElevator
         ));
+
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
     }
@@ -85,7 +90,6 @@ public class RobotContainer {
             .whenPressed(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW))
             .whenReleased(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN));
 
-        /* PID Test Command */
         new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
             .whenPressed(new DriveToDistancePID(m_robotDrive, 5000));
 
@@ -100,6 +104,9 @@ public class RobotContainer {
 
         new JoystickButton(getDriverJoystick(), XboxController.LEFT_JOYSTICK_BUTTON)
             .whenPressed(new InstantCommand(null, m_robotDrive));
+
+        new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
+            .whileHeld(() -> m_robotShooter.runDrumShooter(1), m_robotShooter);
     }
     
     /**
