@@ -38,6 +38,11 @@ public final class Constants {
         public static final int INTAKE_SPARK_ID = 1;
     }
 
+    public static final class ElevatorConstants {
+        public static final int TALON_1 = 7;
+        public static final int TALON_2 = 8;
+    }
+
     public static final class LEDConstants {
         public static final int LED_SPARK_ID = 0;
 
