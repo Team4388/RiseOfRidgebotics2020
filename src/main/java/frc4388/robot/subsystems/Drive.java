@@ -53,10 +53,7 @@ public class Drive extends SubsystemBase {
     m_rightBackMotor.follow(m_rightFrontMotor);
 
     /* set neutral mode */
-    setDriveTrainNeutralMode(NeutralMode.Brake);
-
-    m_leftBackMotor.configNeutralDeadband(0.0); // DO NOT CHANGE
-    m_rightBackMotor.configNeutralDeadband(0.0); //Ensures motors run at the same speed    
+    setDriveTrainNeutralMode(NeutralMode.Brake);  
     
     /* flip input so forward becomes back, etc */
     m_leftFrontMotor.setInverted(false);
