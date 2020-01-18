@@ -42,6 +42,13 @@ public final class Constants {
         public static final int TALON_1 = 7;
         public static final int TALON_2 = 8;
 
+        /* PID Constants Elevator*/
+        public static final int ELEVATOR_SLOT_IDX = 0;
+        public static final int ELEVATOR_PID_LOOP_IDX = 1;
+        public static final int ELEVATOR_TIMEOUT_MS = 30;
+        public static final Gains ELEVATOR_GAINS = new Gains(0.2, 0.0, 0.0, 0.2, 0, 1.0);
+        
+        public static final double ENCODER_TICKS_PER_REV = 2048; 
     }
 
     public static final class LEDConstants {

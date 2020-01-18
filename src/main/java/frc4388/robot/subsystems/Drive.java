@@ -170,15 +170,15 @@ public class Drive extends SubsystemBase {
     m_driveTrain.arcadeDrive(move, steer);
   }
 
-  public void runPositionPID(WPI_TalonFX talon, double targetPos) {
+  public void runDrivePositionPID(WPI_TalonFX talon, double targetPos) {
     talon.set(TalonFXControlMode.Position, targetPos);
   }
 
-  public void runVelocityPID(WPI_TalonFX talon, double targetVel) {
+  public void runDriveVelocityPID(WPI_TalonFX talon, double targetVel) {
     talon.set(TalonFXControlMode.Velocity, targetVel);
   }
 
-  public void runMotionMagicPID(WPI_TalonFX talon, double targetPos){
+  public void runDriveMotionMagicPID(WPI_TalonFX talon, double targetPos){
     talon.set(TalonFXControlMode.MotionMagic, targetPos);
   }
 
