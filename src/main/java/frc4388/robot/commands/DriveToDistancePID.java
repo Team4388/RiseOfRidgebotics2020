@@ -9,6 +9,7 @@ package frc4388.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc4388.robot.Constants.DriveConstants;
 import frc4388.robot.subsystems.Drive;
 
 public class DriveToDistancePID extends CommandBase {
@@ -19,12 +20,15 @@ public class DriveToDistancePID extends CommandBase {
   
   /**
    * Creates a new DriveToDistancePID.
+   * @param subsystem drive subsystem
+   * @param distance distance to travel in inches
    */
   public DriveToDistancePID(Drive subsystem, double distance) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = subsystem;
-    m_distance = distance;
+    m_distance = distance * DriveConstants.TICKS_PER_INCH;
     addRequirements(m_drive);
+    SmartDashboard.putNumber("Distance Target Inches", distance);
   }
 
   // Called when the command is initially scheduled.
@@ -32,8 +36,9 @@ public class DriveToDistancePID extends CommandBase {
   public void initialize() {
     m_leftTarget = m_drive.m_leftFrontMotor.getActiveTrajectoryPosition() + m_distance;
     m_rightTarget = -(m_drive.m_rightFrontMotor.getActiveTrajectoryPosition() + m_distance);
-    SmartDashboard.putNumber("Left Target", m_leftTarget);
-    SmartDashboard.putNumber("Right Target", m_rightTarget);
+    SmartDashboard.putNumber("Distance Target Ticks", m_distance);
+    SmartDashboard.putNumber("Left Target Ticks", m_leftTarget);
+    SmartDashboard.putNumber("Right Target Ticks", m_rightTarget);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

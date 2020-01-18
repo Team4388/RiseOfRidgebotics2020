@@ -8,6 +8,7 @@
 package frc4388.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc4388.robot.Constants.DriveConstants;
 import frc4388.robot.subsystems.Drive;
 
 public class DriveAtVelocityPID extends CommandBase {
@@ -17,11 +18,13 @@ public class DriveAtVelocityPID extends CommandBase {
   double m_rightTarget;
   /**
    * Creates a new DriveAtVelocityPID.
+   * @param subsystem drive subsystem
+   * @param distance target velocity in inches/second
    */
   public DriveAtVelocityPID(Drive subsystem, double targetVel) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = subsystem;
-    m_targetVel = targetVel;
+    m_targetVel = targetVel * DriveConstants.TICKS_PER_INCH/DriveConstants.SECONDS_TO_TICK_TIME;
     addRequirements(m_drive);
   }
 

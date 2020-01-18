@@ -8,6 +8,7 @@
 package frc4388.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc4388.robot.Constants.DriveConstants;
 import frc4388.robot.subsystems.Drive;
 
 public class DriveToDistanceMM extends CommandBase {
@@ -18,11 +19,13 @@ public class DriveToDistanceMM extends CommandBase {
   
   /**
    * Creates a new DriveToDistancePID.
+   * @param subsystem drive subsystem
+   * @param distance distance to travel in inches
    */
   public DriveToDistanceMM(Drive subsystem, double distance) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = subsystem;
-    m_distance = distance;
+    m_distance = distance * DriveConstants.TICKS_PER_INCH;
     addRequirements(m_drive);
   }
 
