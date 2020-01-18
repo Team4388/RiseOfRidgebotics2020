@@ -33,6 +33,10 @@ public final class Constants {
         
         public static final double ENCODER_TICKS_PER_REV = 2048;
     }
+    
+    public static final class IntakeConstants {
+        public static final int INTAKE_SPARK_ID = 1;
+    }
 
     public static final class LEDConstants {
         public static final int LED_SPARK_ID = 0;
