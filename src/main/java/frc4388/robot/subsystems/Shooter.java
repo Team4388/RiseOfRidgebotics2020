@@ -29,6 +29,14 @@ public class Shooter extends SubsystemBase {
     m_shooterFalcon.setNeutralMode(NeutralMode.Coast);
 
     m_shooterFalcon.setInverted(false);
+    
+    setShooterGains();
+    
+    m_shooterFalcon.setSelectedSensorPosition(0, ShooterConstants.SHOOTER_PID_LOOP_IDX, ShooterConstants.SHOOTER_TIMEOUT_MS);
+    
+    int closedLoopTimeMs = 1;
+    m_shooterFalcon.configClosedLoopPeriod(0, closedLoopTimeMs, ShooterConstants.SHOOTER_TIMEOUT_MS);
+    m_shooterFalcon.configClosedLoopPeriod(1, closedLoopTimeMs, ShooterConstants.SHOOTER_TIMEOUT_MS);
   }
 
   @Override
@@ -38,7 +46,7 @@ public class Shooter extends SubsystemBase {
 
   /**
    * Runs drum shooter motor.
-   * @param speed
+   * @param speed Speed to set the motor at
    */
   public void runDrumShooter(double speed) {
     m_shooterFalcon.set(speed);
@@ -53,5 +61,13 @@ public class Shooter extends SubsystemBase {
     m_shooterFalcon.config_kP(ShooterConstants.SHOOTER_SLOT_IDX, m_shooterGains.kP, ShooterConstants.SHOOTER_TIMEOUT_MS);
     m_shooterFalcon.config_kI(ShooterConstants.SHOOTER_SLOT_IDX, m_shooterGains.kI, ShooterConstants.SHOOTER_TIMEOUT_MS);
     m_shooterFalcon.config_kD(ShooterConstants.SHOOTER_SLOT_IDX, m_shooterGains.kD, ShooterConstants.SHOOTER_TIMEOUT_MS);
+  }
+  /**
+   * Runs drum shooter velocity PID.
+   * @param falcon Motor to use
+   * @param targetVel Target velocity to run motor at
+   */
+  public void runDrumShooterVelocityPID(WPI_TalonFX falcon, double targetVel) {
+    falcon.set(TalonFXControlMode.Velocity, targetVel);
   }
 }
