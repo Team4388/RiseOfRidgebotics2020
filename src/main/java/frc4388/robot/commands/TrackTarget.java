@@ -16,22 +16,23 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TrackTarget extends CommandBase {
+    //Setup Objects
   NetworkTableEntry xEntry;
+  Drive m_drive;
+  IHandController m_driverController;
+    //Aiming Variables
   double turnAmount = 0;
   double xAngle = 0;//Angle from center
   double yAngle = 0;//Angle from center
   double target = 0;//0 or 1
   double FOV = 29.8;//Field of view
-  double lastSeen = 1;//Left or right
-  Drive m_drive;
-  IHandController m_driverController;
-
     //Distance Calc Constants
   double TARGET_HEIGHT = 82.75;
   double LIME_ANGLE = 24.11;
   double distance;
+  
   /**
-   * Creates a new TrackTarget.
+   * Starts tracking the target
    */
   public TrackTarget(Drive driveSubsystem, IHandController driverController) {
     m_drive = driveSubsystem;

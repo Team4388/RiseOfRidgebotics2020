@@ -20,6 +20,7 @@ import frc4388.robot.commands.DriveToDistanceMM;
 import frc4388.robot.commands.DriveToDistancePID;
 import frc4388.robot.commands.RunIntakeWithTriggers;
 import frc4388.robot.commands.TrackTarget;
+import frc4388.robot.subsystems.Cameras;
 import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Intake;
 import frc4388.robot.subsystems.LED;
@@ -39,6 +40,7 @@ public class RobotContainer {
     private final Drive m_robotDrive = new Drive();
     private final LED m_robotLED = new LED();
     private final Intake m_robotIntake = new Intake();
+    private final Cameras m_robotCameras = new Cameras();
 
     /* Controllers */
     private final XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
