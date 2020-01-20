@@ -28,7 +28,10 @@ public final class Constants {
 
         /* PID Constants Drive*/
         public static final int DRIVE_TIMEOUT_MS = 30;
-        public static final Gains DRIVE_GAINS = new Gains(0.2, 0.0, 0.0, 0.2, 0, 1.0);
+        public static final Gains DRIVE_DISTANCE_GAINS = new Gains(0.2, 0.0, 0.0, 0.2, 0, 1.0);
+        public static final Gains DRIVE_VELOCITY_GAINS = new Gains(0.2, 0.0, 0.0, 0.2, 0, 1.0);
+        public static final Gains DRIVE_TURNING_GAINS = new Gains(0.2, 0.0, 0.0, 0.2, 0, 1.0);
+        public static final Gains DRIVE_MOTION_MAGIC_GAINS = new Gains(0.2, 0.0, 0.0, 0.2, 0, 1.0);
         public static final int DRIVE_CRUISE_VELOCITY = 15000;
         public static final int DRIVE_ACCELERATION = 6000;
 
