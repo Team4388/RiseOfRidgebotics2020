@@ -137,8 +137,8 @@ public class Drive extends SubsystemBase {
 		 * - sensor movement is very slow causing the derivative error to be near zero.
 		 */
     int closedLoopTimeMs = 1;
-    m_leftFrontMotor.configClosedLoopPeriod(0, closedLoopTimeMs, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_leftFrontMotor.configClosedLoopPeriod(1, closedLoopTimeMs, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftFrontMotor.configClosedLoopPeriod(DriveConstants.PID_PRIMARY, closedLoopTimeMs, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftFrontMotor.configClosedLoopPeriod(DriveConstants.PID_TURN, closedLoopTimeMs, DriveConstants.DRIVE_TIMEOUT_MS);
 
     /**
 		 * configAuxPIDPolarity(boolean invert, int timeoutMs)
