@@ -36,7 +36,11 @@ public class Drive extends SubsystemBase {
 
   public DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
 
-  public static Gains m_gains = DriveConstants.DRIVE_GAINS;
+  public static Gains m_gainsDistance = DriveConstants.DRIVE_DISTANCE_GAINS;
+  public static Gains m_gainsVelocity = DriveConstants.DRIVE_VELOCITY_GAINS;
+  public static Gains m_gainsTurning = DriveConstants.DRIVE_TURNING_GAINS;
+  public static Gains m_gainsMotionMagic = DriveConstants.DRIVE_MOTION_MAGIC_GAINS;
+
 
   /**
    * Add your docs here.
@@ -82,10 +86,25 @@ public class Drive extends SubsystemBase {
     SmartDashboard.putNumber("Left Motor Position Raw", m_leftFrontMotor.getSelectedSensorPosition(0));
     SmartDashboard.putNumber("Right Motor Position Raw", m_rightFrontMotor.getSelectedSensorPosition());
 
-    SmartDashboard.putNumber("P Value Drive", DriveConstants.DRIVE_GAINS.kP);
-    SmartDashboard.putNumber("I Value Drive", DriveConstants.DRIVE_GAINS.kI);
-    SmartDashboard.putNumber("D Value Drive", DriveConstants.DRIVE_GAINS.kD);
-    SmartDashboard.putNumber("F Value Drive", DriveConstants.DRIVE_GAINS.kF);
+    SmartDashboard.putNumber("P Value Drive Distance", DriveConstants.DRIVE_DISTANCE_GAINS.kP);
+    SmartDashboard.putNumber("I Value Drive Distance", DriveConstants.DRIVE_DISTANCE_GAINS.kI);
+    SmartDashboard.putNumber("D Value Drive Distance", DriveConstants.DRIVE_DISTANCE_GAINS.kD);
+    SmartDashboard.putNumber("F Value Drive Distance", DriveConstants.DRIVE_DISTANCE_GAINS.kF);
+
+    SmartDashboard.putNumber("P Value Drive Velocity", DriveConstants.DRIVE_VELOCITY_GAINS.kP);
+    SmartDashboard.putNumber("I Value Drive Velocity", DriveConstants.DRIVE_VELOCITY_GAINS.kI);
+    SmartDashboard.putNumber("D Value Drive Velocity", DriveConstants.DRIVE_VELOCITY_GAINS.kD);
+    SmartDashboard.putNumber("F Value Drive Velocity", DriveConstants.DRIVE_VELOCITY_GAINS.kF);
+
+    SmartDashboard.putNumber("P Value Drive Turning", DriveConstants.DRIVE_TURNING_GAINS.kP);
+    SmartDashboard.putNumber("I Value Drive Turning", DriveConstants.DRIVE_TURNING_GAINS.kI);
+    SmartDashboard.putNumber("D Value Drive Turning", DriveConstants.DRIVE_TURNING_GAINS.kD);
+    SmartDashboard.putNumber("F Value Drive Turning", DriveConstants.DRIVE_TURNING_GAINS.kF);
+
+    SmartDashboard.putNumber("P Value Drive Motion Magic", DriveConstants.DRIVE_MOTION_MAGIC_GAINS.kP);
+    SmartDashboard.putNumber("I Value Drive Motion Magic", DriveConstants.DRIVE_MOTION_MAGIC_GAINS.kI);
+    SmartDashboard.putNumber("D Value Drive Motion Magic", DriveConstants.DRIVE_MOTION_MAGIC_GAINS.kD);
+    SmartDashboard.putNumber("F Value Drive Motion Magic", DriveConstants.DRIVE_MOTION_MAGIC_GAINS.kF);
 
     int closedLoopTimeMs = 1;
     m_leftFrontMotor.configClosedLoopPeriod(0, closedLoopTimeMs, DriveConstants.DRIVE_TIMEOUT_MS);
@@ -104,10 +123,25 @@ public class Drive extends SubsystemBase {
       SmartDashboard.putNumber("Left Motor Position Raw", m_leftFrontMotor.getSelectedSensorPosition());
       SmartDashboard.putNumber("Right Motor Position Raw", m_rightFrontMotor.getSelectedSensorPosition(0));
 
-      m_gains.kP = SmartDashboard.getNumber("P Value Drive", DriveConstants.DRIVE_GAINS.kP);
-      m_gains.kI = SmartDashboard.getNumber("I Value Drive", DriveConstants.DRIVE_GAINS.kI);
-      m_gains.kD = SmartDashboard.getNumber("D Value Drive", DriveConstants.DRIVE_GAINS.kD);
-      m_gains.kF = SmartDashboard.getNumber("F Value Drive", DriveConstants.DRIVE_GAINS.kF);
+      m_gainsDistance.kP = SmartDashboard.getNumber("P Value Drive", DriveConstants.DRIVE_DISTANCE_GAINS.kP);
+      m_gainsDistance.kI = SmartDashboard.getNumber("I Value Drive", DriveConstants.DRIVE_DISTANCE_GAINS.kI);
+      m_gainsDistance.kD = SmartDashboard.getNumber("D Value Drive", DriveConstants.DRIVE_DISTANCE_GAINS.kD);
+      m_gainsDistance.kF = SmartDashboard.getNumber("F Value Drive", DriveConstants.DRIVE_DISTANCE_GAINS.kF);
+
+      m_gainsVelocity.kP = SmartDashboard.getNumber("P Value Drive Velocity", DriveConstants.DRIVE_VELOCITY_GAINS.kP);
+      m_gainsVelocity.kI = SmartDashboard.getNumber("I Value Drive Velocity", DriveConstants.DRIVE_VELOCITY_GAINS.kI);
+      m_gainsVelocity.kD = SmartDashboard.getNumber("D Value Drive Velocity", DriveConstants.DRIVE_VELOCITY_GAINS.kD);
+      m_gainsVelocity.kF = SmartDashboard.getNumber("F Value Drive Velocity", DriveConstants.DRIVE_VELOCITY_GAINS.kF);
+
+      m_gainsTurning.kP = SmartDashboard.getNumber("P Value Drive Turning", DriveConstants.DRIVE_TURNING_GAINS.kP);
+      m_gainsTurning.kI = SmartDashboard.getNumber("I Value Drive Turning", DriveConstants.DRIVE_TURNING_GAINS.kI);
+      m_gainsTurning.kD = SmartDashboard.getNumber("D Value Drive Turning", DriveConstants.DRIVE_TURNING_GAINS.kD);
+      m_gainsTurning.kF = SmartDashboard.getNumber("F Value Drive Turning", DriveConstants.DRIVE_TURNING_GAINS.kF);
+
+      m_gainsMotionMagic.kP = SmartDashboard.getNumber("P Value Drive Motion Magic", DriveConstants.DRIVE_MOTION_MAGIC_GAINS.kP);
+      m_gainsMotionMagic.kI = SmartDashboard.getNumber("I Value Drive Motion Magic", DriveConstants.DRIVE_MOTION_MAGIC_GAINS.kI);
+      m_gainsMotionMagic.kD = SmartDashboard.getNumber("D Value Drive Motion Magic", DriveConstants.DRIVE_MOTION_MAGIC_GAINS.kD);
+      m_gainsMotionMagic.kF = SmartDashboard.getNumber("F Value Drive Motion Magic", DriveConstants.DRIVE_MOTION_MAGIC_GAINS.kF);
 
       setDriveTrainGains();
 
@@ -134,15 +168,35 @@ public class Drive extends SubsystemBase {
    */
   public void setDriveTrainGains(){
     /* Distance */
-    m_leftFrontMotor.selectProfileSlot(DriveConstants.SLOT_DISTANCE, DriveConstants.PID_PRIMARY);
-    m_leftFrontMotor.config_kF(DriveConstants.SLOT_DISTANCE, m_gains.kF, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_leftFrontMotor.config_kP(DriveConstants.SLOT_DISTANCE, m_gains.kP, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_leftFrontMotor.config_kI(DriveConstants.SLOT_DISTANCE, m_gains.kI, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_leftFrontMotor.config_kD(DriveConstants.SLOT_DISTANCE, m_gains.kD, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_DISTANCE, DriveConstants.PID_PRIMARY);
+    m_rightFrontMotor.config_kF(DriveConstants.SLOT_DISTANCE, m_gainsDistance.kF, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kP(DriveConstants.SLOT_DISTANCE, m_gainsDistance.kP, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kI(DriveConstants.SLOT_DISTANCE, m_gainsDistance.kI, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kD(DriveConstants.SLOT_DISTANCE, m_gainsDistance.kD, DriveConstants.DRIVE_TIMEOUT_MS);
+
+    /* Velocity */
+    m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
+    m_rightFrontMotor.config_kF(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.kF, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kP(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.kP, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kI(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.kI, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kD(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.kD, DriveConstants.DRIVE_TIMEOUT_MS);
+    
+    /* Turning */
+    m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
+    m_rightFrontMotor.config_kF(DriveConstants.SLOT_TURNING, m_gainsTurning.kF, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kP(DriveConstants.SLOT_TURNING, m_gainsTurning.kP, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kI(DriveConstants.SLOT_TURNING, m_gainsTurning.kI, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kD(DriveConstants.SLOT_TURNING, m_gainsTurning.kD, DriveConstants.DRIVE_TIMEOUT_MS);
 
     /* Motion Magic */
-    m_leftFrontMotor.configMotionCruiseVelocity(DriveConstants.DRIVE_CRUISE_VELOCITY, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_leftFrontMotor.configMotionAcceleration(DriveConstants.DRIVE_ACCELERATION, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_MOTION_MAGIC, DriveConstants.PID_PRIMARY);
+    m_rightFrontMotor.config_kF(DriveConstants.SLOT_MOTION_MAGIC, m_gainsMotionMagic.kF, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kP(DriveConstants.SLOT_MOTION_MAGIC, m_gainsMotionMagic.kP, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kI(DriveConstants.SLOT_MOTION_MAGIC, m_gainsMotionMagic.kI, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kD(DriveConstants.SLOT_MOTION_MAGIC, m_gainsMotionMagic.kD, DriveConstants.DRIVE_TIMEOUT_MS);
+
+    m_rightFrontMotor.configMotionCruiseVelocity(DriveConstants.DRIVE_CRUISE_VELOCITY, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.configMotionAcceleration(DriveConstants.DRIVE_ACCELERATION, DriveConstants.DRIVE_TIMEOUT_MS);
   }
 
   /**
