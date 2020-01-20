@@ -10,7 +10,9 @@ package frc4388.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.motorcontrol.SensorTerm;
+import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
@@ -55,18 +57,57 @@ public class Drive extends SubsystemBase {
     m_rightBackMotor.follow(m_rightFrontMotor);
 
     /* set neutral mode */
-    setDriveTrainNeutralMode(NeutralMode.Brake);  
+    setDriveTrainNeutralMode(NeutralMode.Brake);
+
+    /* Setup Sensors for TalonFXs */
+    
+    /* Configure the left Talon's selected sensor as local QuadEncoder */
+		m_leftFrontMotor.configSelectedFeedbackSensor(  FeedbackDevice.IntegratedSensor,    // Local Feedback Source
+                                                    DriveConstants.PID_PRIMARY,				  // PID Index for Source [0, 1]
+                                                    DriveConstants.DRIVE_TIMEOUT_MS);	  // Configuration Timeout
+
+    /* Configure the Remote Talon's selected sensor as a remote sensor for the right Talon */
+		m_rightFrontMotor.configRemoteFeedbackFilter( m_leftFrontMotor.getDeviceID(),					      // Device ID of Source
+                                                  RemoteSensorSource.TalonSRX_SelectedSensor,   // Remote Feedback Source
+                                                  DriveConstants.REMOTE_0,							        // Source number [0, 1]
+                                                  DriveConstants.DRIVE_TIMEOUT_MS);						  // Configuration Timeout
+
+    /* Setup Sum signal to be used for Distance */
+    m_rightFrontMotor.configSensorTerm(SensorTerm.Sum0, FeedbackDevice.RemoteSensor0, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.configSensorTerm(SensorTerm.Sum1, FeedbackDevice.IntegratedSensor, DriveConstants.DRIVE_TIMEOUT_MS);
+
+    /* Configure Sum [Sum of both QuadEncoders] to be used for Primary PID Index */
+		m_rightFrontMotor.configSelectedFeedbackSensor(	FeedbackDevice.SensorSum, 
+                                                    DriveConstants.PID_PRIMARY,
+                                                    DriveConstants.DRIVE_TIMEOUT_MS);
+
+    /* Scale Feedback by 0.5 to half the sum of Distance */
+	  m_rightFrontMotor.configSelectedFeedbackCoefficient(  0.5, 						                    // Coefficient
+                                                          DriveConstants.PID_PRIMARY,		      // PID Slot of Source 
+                                                          DriveConstants.DRIVE_TIMEOUT_MS);   // Configuration Timeout
+
+    /* Scale the Feedback Sensor using a coefficient */
+	  m_rightFrontMotor.configSelectedFeedbackCoefficient(	1.0,
+                                                          DriveConstants.PID_TURN,
+                                                          DriveConstants.DRIVE_TIMEOUT_MS);
     
     /* flip input so forward becomes back, etc */
     m_leftFrontMotor.setInverted(false);
     m_rightFrontMotor.setInverted(false);
     m_leftBackMotor.setInverted(InvertType.FollowMaster);
     m_rightBackMotor.setInverted(InvertType.FollowMaster);
+    m_rightFrontMotor.setSensorPhase(false);
+    m_leftFrontMotor.setSensorPhase(false);
+
+    /* Set status frame periods to ensure we don't have stale data */
+		m_rightFrontMotor.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20, DriveConstants.DRIVE_TIMEOUT_MS);
+		m_rightFrontMotor.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20, DriveConstants.DRIVE_TIMEOUT_MS);
+		m_rightFrontMotor.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 20, DriveConstants.DRIVE_TIMEOUT_MS);
+		m_leftFrontMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, DriveConstants.DRIVE_TIMEOUT_MS);
 
     /* deadbands */
     m_leftBackMotor.configNeutralDeadband(0.0); // DO NOT CHANGE
     m_rightBackMotor.configNeutralDeadband(0.0); //Ensures motors run at the same speed
-
 
     setDriveTrainGains();   
     m_leftFrontMotor.setSelectedSensorPosition(0, DriveConstants.PID_PRIMARY, DriveConstants.DRIVE_TIMEOUT_MS);
@@ -87,9 +128,24 @@ public class Drive extends SubsystemBase {
     SmartDashboard.putNumber("D Value Drive", DriveConstants.DRIVE_GAINS.kD);
     SmartDashboard.putNumber("F Value Drive", DriveConstants.DRIVE_GAINS.kF);
 
+
+    /**
+		 * 1ms per loop.  PID loop can be slowed down if need be.
+		 * For example,
+		 * - if sensor updates are too slow
+		 * - sensor deltas are very small per update, so derivative error never gets large enough to be useful.
+		 * - sensor movement is very slow causing the derivative error to be near zero.
+		 */
     int closedLoopTimeMs = 1;
     m_leftFrontMotor.configClosedLoopPeriod(0, closedLoopTimeMs, DriveConstants.DRIVE_TIMEOUT_MS);
     m_leftFrontMotor.configClosedLoopPeriod(1, closedLoopTimeMs, DriveConstants.DRIVE_TIMEOUT_MS);
+
+    /**
+		 * configAuxPIDPolarity(boolean invert, int timeoutMs)
+		 * false means talon's local output is PID0 + PID1, and other side Talon is PID0 - PID1
+		 * true means talon's local output is PID0 - PID1, and other side Talon is PID0 + PID1
+		 */
+    m_rightFrontMotor.configAuxPIDPolarity(false, DriveConstants.DRIVE_TIMEOUT_MS);
   }
 
   @Override
