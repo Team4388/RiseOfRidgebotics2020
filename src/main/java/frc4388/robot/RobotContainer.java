@@ -101,16 +101,16 @@ public class RobotContainer {
             .whenPressed(new DriveAtVelocityPID(m_robotDrive, 2000));
 
         new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
-            .whileHeld(new ShooterVelocityControlPID(m_robotShooter, 2000));
+            .whileHeld(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(2300), m_robotShooter));
 
         new JoystickButton(getOperatorJoystick(), XboxController.LEFT_BUMPER_BUTTON)
             .whenPressed(new DistanceElevatorPID(m_robotElevator, 20000));
 
-        new JoystickButton(getDriverJoystick(), XboxController.LEFT_JOYSTICK_BUTTON)
-            .whenPressed(new InstantCommand(null, m_robotDrive));
+        /*new JoystickButton(getDriverJoystick(), XboxController.LEFT_JOYSTICK_BUTTON)
+            .whenPressed(new InstantCommand(null, m_robotDrive));*/
 
         new JoystickButton(getOperatorJoystick(), XboxController.B_BUTTON)
-            .whileHeld(() -> m_robotShooter.runDrumShooter(1), m_robotShooter);
+            .whileHeld(new RunCommand(() -> m_robotShooter.runDrumShooter(0.2), m_robotShooter));
     }
     
     /**

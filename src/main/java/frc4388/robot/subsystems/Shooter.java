@@ -11,13 +11,17 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Gains;
+import frc4388.robot.Constants.DriveConstants;
 import frc4388.robot.Constants.ShooterConstants;
 
 public class Shooter extends SubsystemBase {
 
   public WPI_TalonFX m_shooterFalcon = new WPI_TalonFX(ShooterConstants.SHOOTER_FALCON_ID);
+
+  private double m_targetVel = 2300;
 
   public static Gains m_shooterGains = ShooterConstants.SHOOTER_GAINS;
 
@@ -29,7 +33,7 @@ public class Shooter extends SubsystemBase {
 
     m_shooterFalcon.setNeutralMode(NeutralMode.Coast);
 
-    m_shooterFalcon.setInverted(false);
+    m_shooterFalcon.setInverted(true);
     
     setShooterGains();
     
@@ -38,11 +42,14 @@ public class Shooter extends SubsystemBase {
     int closedLoopTimeMs = 1;
     m_shooterFalcon.configClosedLoopPeriod(0, closedLoopTimeMs, ShooterConstants.SHOOTER_TIMEOUT_MS);
     m_shooterFalcon.configClosedLoopPeriod(1, closedLoopTimeMs, ShooterConstants.SHOOTER_TIMEOUT_MS);
+
+    SmartDashboard.putNumber("Shooter Velocity", m_targetVel);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    m_targetVel = SmartDashboard.getNumber("Shooter Velocity", m_targetVel);
   }
 
   /**
@@ -68,7 +75,7 @@ public class Shooter extends SubsystemBase {
    * @param falcon Motor to use
    * @param targetVel Target velocity to run motor at
    */
-  public void runDrumShooterVelocityPID(WPI_TalonFX falcon, double targetVel) {
-    falcon.set(TalonFXControlMode.Velocity, targetVel);
+  public void runDrumShooterVelocityPID(double targetVel) {
+    m_shooterFalcon.set(TalonFXControlMode.Velocity, m_targetVel*ShooterConstants.ENCODER_TICKS_PER_REV/600);
   }
 }
