@@ -20,6 +20,7 @@ import frc4388.robot.commands.DriveAtVelocityPID;
 import frc4388.robot.commands.DriveToDistanceMM;
 import frc4388.robot.commands.DriveToDistancePID;
 import frc4388.robot.commands.RunIntakeWithTriggers;
+import frc4388.robot.commands.ShooterVelocityControlPID;
 import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Elevator;
 import frc4388.robot.subsystems.Intake;
@@ -99,13 +100,16 @@ public class RobotContainer {
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
             .whenPressed(new DriveAtVelocityPID(m_robotDrive, 2000));
 
+        new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
+            .whileHeld(new ShooterVelocityControlPID(m_robotShooter, 2000));
+
         new JoystickButton(getOperatorJoystick(), XboxController.LEFT_BUMPER_BUTTON)
             .whenPressed(new DistanceElevatorPID(m_robotElevator, 20000));
 
         new JoystickButton(getDriverJoystick(), XboxController.LEFT_JOYSTICK_BUTTON)
             .whenPressed(new InstantCommand(null, m_robotDrive));
 
-        new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
+        new JoystickButton(getOperatorJoystick(), XboxController.B_BUTTON)
             .whileHeld(() -> m_robotShooter.runDrumShooter(1), m_robotShooter);
     }
     
