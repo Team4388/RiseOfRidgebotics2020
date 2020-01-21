@@ -16,17 +16,17 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TrackTarget extends CommandBase {
-    //Setup Objects
+    //Setup
   NetworkTableEntry xEntry;
   Drive m_drive;
   IHandController m_driverController;
-    //Aiming Variables
+    //Aiming
   double turnAmount = 0;
-  double xAngle = 0;//Angle from center
-  double yAngle = 0;//Angle from center
-  double target = 0;//0 or 1
-  double FOV = 29.8;//Field of view
-    //Distance Calc Constants
+  double xAngle = 0;
+  double yAngle = 0;
+  double target = 0;
+  double FOV = 29.8; //Field of view of limelight
+    //Distance Calc
   double TARGET_HEIGHT = 82.75;
   double LIME_ANGLE = 24.11;
   double distance;
@@ -43,6 +43,7 @@ public class TrackTarget extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+      //Vision Processing Mode
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0);
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
   }
@@ -57,22 +58,23 @@ public class TrackTarget extends CommandBase {
     if (target == 1.0){ //If target in view
         //Aiming Left/Right
       turnAmount = (xAngle/FOV)*0.65;
-      if (Math.abs(xAngle) < 1.3){turnAmount = 0;}//Deadzone
-      else if(turnAmount > 0 && turnAmount < 0.3){turnAmount = 0.3;}
+      if (Math.abs(xAngle) < 1.3){turnAmount = 0;} //Angle Error Zone
+        //Deadzones
+      else if(turnAmount > 0 && turnAmount < 0.3){turnAmount = 0.3;} 
       else if(turnAmount < 0 && turnAmount > -0.3){turnAmount = -0.3;}
       m_drive.driveWithInput(m_driverController.getLeftYAxis(), turnAmount);
 
         //Finding Distance
       distance = TARGET_HEIGHT/Math.tan((LIME_ANGLE + yAngle)*(Math.PI/180));
-      System.err.println("Measured: " + distance);
-      distance = ((distance*1.1279)-15.0684);
-      System.err.println("Calc: " + distance);
+      distance = ((distance*1.1279)-15.0684); //Adjust based on linear error
+      SmartDashboard.putNumber("Distance to Target", distance);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+      //Drive Camera Mode
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1);
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(0);
   }
