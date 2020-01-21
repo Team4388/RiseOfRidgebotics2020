@@ -43,13 +43,14 @@ public class Shooter extends SubsystemBase {
     m_shooterFalcon.configClosedLoopPeriod(0, closedLoopTimeMs, ShooterConstants.SHOOTER_TIMEOUT_MS);
     m_shooterFalcon.configClosedLoopPeriod(1, closedLoopTimeMs, ShooterConstants.SHOOTER_TIMEOUT_MS);
 
-    SmartDashboard.putNumber("Shooter Velocity", m_targetVel);
+    SmartDashboard.putNumber("Shooter Velocity Target", m_targetVel);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    m_targetVel = SmartDashboard.getNumber("Shooter Velocity", m_targetVel);
+    m_targetVel = SmartDashboard.getNumber("Shooter Velocity Target", m_targetVel);
+    SmartDashboard.putNumber("Shooter Velocity", m_shooterFalcon.getSelectedSensorVelocity()*600/ShooterConstants.ENCODER_TICKS_PER_REV);
   }
 
   /**
