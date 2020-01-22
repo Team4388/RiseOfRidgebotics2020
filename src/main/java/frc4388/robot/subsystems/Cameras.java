@@ -27,7 +27,6 @@ public class Cameras extends SubsystemBase {
 
     
     try{
-      
       CameraServer.getInstance().startAutomaticCapture(name, id);
     }
     catch(Exception e){

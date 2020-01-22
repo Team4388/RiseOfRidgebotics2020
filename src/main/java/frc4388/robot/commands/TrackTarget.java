@@ -26,10 +26,6 @@ public class TrackTarget extends CommandBase {
   double xAngle = 0;
   double yAngle = 0;
   double target = 0;
-  double FOV = 29.8; //Field of view of limelight
-    //Distance Calc
-  double TARGET_HEIGHT = 82.75;
-  double LIME_ANGLE = 24.11;
   double distance;
   
   /**
