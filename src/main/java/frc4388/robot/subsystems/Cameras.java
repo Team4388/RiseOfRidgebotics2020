@@ -7,20 +7,37 @@
 
 package frc4388.robot.subsystems;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoSource;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+
+
 public class Cameras extends SubsystemBase {
+
+  //UsbCamera thing = new UsbCamera("front", 0);
+  //UsbCamera thing1 = new UsbCamera("back", 1);
   /**
    * Creates and initiates the camera server
    */
-  public Cameras() {
-    CameraServer.getInstance().startAutomaticCapture("Front", 0);
-    CameraServer.getInstance().startAutomaticCapture("Back", 1);
+  public Cameras(String name, int id) {
+    //CameraServer.getInstance().startAutomaticCapture(thing);
+    //CameraServer.getInstance().startAutomaticCapture(thing1);
+
+    
+    try{
+      
+      CameraServer.getInstance().startAutomaticCapture(name, id);
+    }
+    catch(Exception e){
+      System.err.println("Camera broken, pls nerf");
+    }
+    
   }
 
   @Override
   public void periodic() {
-    
+
   }
 }
