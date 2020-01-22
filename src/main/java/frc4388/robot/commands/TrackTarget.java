@@ -7,6 +7,7 @@
 
 package frc4388.robot.commands;
 
+import frc4388.robot.Constants.VisionConstants;
 import frc4388.robot.subsystems.Drive;
 import frc4388.utility.controller.IHandController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -57,16 +58,16 @@ public class TrackTarget extends CommandBase {
     
     if (target == 1.0){ //If target in view
         //Aiming Left/Right
-      turnAmount = (xAngle/FOV)*0.65;
-      if (Math.abs(xAngle) < 1.3){turnAmount = 0;} //Angle Error Zone
+      turnAmount = (xAngle/VisionConstants.FOV)*VisionConstants.TURN_P_VALUE;
+      if (Math.abs(xAngle) < VisionConstants.X_ANGLE_ERROR){turnAmount = 0;} //Angle Error Zone 
         //Deadzones
-      else if(turnAmount > 0 && turnAmount < 0.3){turnAmount = 0.3;} 
-      else if(turnAmount < 0 && turnAmount > -0.3){turnAmount = -0.3;}
+      else if(turnAmount > 0 && turnAmount < VisionConstants.MOTOR_DEAD_ZONE){turnAmount = VisionConstants.MOTOR_DEAD_ZONE;} 
+      else if(turnAmount < 0 && turnAmount > -VisionConstants.MOTOR_DEAD_ZONE){turnAmount = -VisionConstants.MOTOR_DEAD_ZONE;}
       m_drive.driveWithInput(m_driverController.getLeftYAxis(), turnAmount);
 
         //Finding Distance
-      distance = TARGET_HEIGHT/Math.tan((LIME_ANGLE + yAngle)*(Math.PI/180));
-      distance = ((distance*1.1279)-15.0684); //Adjust based on linear error
+      distance = VisionConstants.TARGET_HEIGHT/Math.tan((VisionConstants.LIME_ANGLE + yAngle)*(Math.PI/180));
+      distance = ((distance*VisionConstants.DISTANCE_ERROR_EQUATION_M)+VisionConstants.DISTANCE_ERROR_EQUATION_B); //Adjust based on linear error
       SmartDashboard.putNumber("Distance to Target", distance);
     }
   }
