@@ -7,6 +7,8 @@
 
 package frc4388.robot.commands;
 
+import com.ctre.phoenix.motorcontrol.FollowerType;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.Constants.DriveConstants;
 import frc4388.robot.subsystems.Drive;
@@ -24,22 +26,23 @@ public class DriveAtVelocityPID extends CommandBase {
   public DriveAtVelocityPID(Drive subsystem, double targetVel) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = subsystem;
-    m_targetVel = targetVel * DriveConstants.TICKS_PER_INCH/DriveConstants.SECONDS_TO_TICK_TIME;
+    m_targetVel = targetVel /* DriveConstants.TICKS_PER_INCH/DriveConstants.SECONDS_TO_TICK_TIME;*/;
     addRequirements(m_drive);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_leftTarget = m_targetVel;
-    m_rightTarget = -m_targetVel;
+    m_leftTarget = -m_targetVel;
+    m_rightTarget = m_targetVel;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drive.runVelocityPID(m_drive.m_leftFrontMotor, m_leftTarget);
-    m_drive.runVelocityPID(m_drive.m_rightFrontMotor, m_rightTarget);
+    //m_drive.runVelocityPID(m_drive.m_rightFrontMotor, m_rightTarget);
+    //m_drive.runVelocityPID(m_drive.m_leftFrontMotor, m_leftTarget);
+    //m_drive.m_leftFrontMotor.follow(m_drive.m_rightFrontMotor, FollowerType.PercentOutput);
   }
 
   // Called once the command ends or is interrupted.
