@@ -15,19 +15,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 public class Cameras extends SubsystemBase {
-
-  //UsbCamera thing = new UsbCamera("front", 0);
-  //UsbCamera thing1 = new UsbCamera("back", 1);
   /**
    * Creates and initiates the camera server
    */
-  public Cameras(String name, int id) {
-    //CameraServer.getInstance().startAutomaticCapture(thing);
-    //CameraServer.getInstance().startAutomaticCapture(thing1);
-
-    
+  public Cameras(int id) {
     try{
-      CameraServer.getInstance().startAutomaticCapture(name, id);
+      VideoSource cam = CameraServer.getInstance().startAutomaticCapture(id);
+      cam.setResolution(220,140);
+      cam.setFPS(10);
     }
     catch(Exception e){
       System.err.println("Camera broken, pls nerf");
@@ -37,6 +32,5 @@ public class Cameras extends SubsystemBase {
 
   @Override
   public void periodic() {
-
   }
 }

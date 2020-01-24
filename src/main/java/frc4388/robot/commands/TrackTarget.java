@@ -63,7 +63,6 @@ public class TrackTarget extends CommandBase {
 
         //Finding Distance
       distance = VisionConstants.TARGET_HEIGHT/Math.tan((VisionConstants.LIME_ANGLE + yAngle)*(Math.PI/180));
-      distance = ((distance*VisionConstants.DISTANCE_ERROR_EQUATION_M)+VisionConstants.DISTANCE_ERROR_EQUATION_B); //Adjust based on linear error
       SmartDashboard.putNumber("Distance to Target", distance);
     }
   }

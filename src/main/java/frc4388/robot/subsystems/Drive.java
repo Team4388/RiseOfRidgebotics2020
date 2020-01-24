@@ -67,13 +67,13 @@ public class Drive extends SubsystemBase {
     m_rightBackMotor.configNeutralDeadband(0.0); //Ensures motors run at the same speed
 
     /* Config PID Slot 1 (Encoder) */
-    setDriveTrainGains(DriveConstants.DRIVE_DISTANCE_PID_LOOP_IDX, m_gains);
+    //setDriveTrainGains(DriveConstants.DRIVE_DISTANCE_PID_LOOP_IDX, m_gains);
     m_leftFrontMotor.configMotionCruiseVelocity(15000, DriveConstants.DRIVE_TIMEOUT_MS);
     m_leftFrontMotor.configMotionAcceleration(6000, DriveConstants.DRIVE_TIMEOUT_MS);
     m_rightFrontMotor.configMotionCruiseVelocity(15000, DriveConstants.DRIVE_TIMEOUT_MS);
     m_rightFrontMotor.configMotionAcceleration(6000, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_leftFrontMotor.setSelectedSensorPosition(0, DriveConstants.DRIVE_DISTANCE_PID_LOOP_IDX, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightFrontMotor.setSelectedSensorPosition(0, DriveConstants.DRIVE_DISTANCE_PID_LOOP_IDX, DriveConstants.DRIVE_TIMEOUT_MS);
+    //m_leftFrontMotor.setSelectedSensorPosition(0, DriveConstants.DRIVE_DISTANCE_PID_LOOP_IDX, DriveConstants.DRIVE_TIMEOUT_MS);
+    //m_rightFrontMotor.setSelectedSensorPosition(0, DriveConstants.DRIVE_DISTANCE_PID_LOOP_IDX, DriveConstants.DRIVE_TIMEOUT_MS);
 
     /* Config PID Slot 2 (Pigeon) */
     //m_leftFrontMotor.configRemoteFeedbackFilter(m_pigeon.getDeviceID(), RemoteSensorSource.Pigeon_Yaw, DriveConstants.DRIVE_GYRO_PID_LOOP_IDX, DriveConstants.DRIVE_TIMEOUT_MS);
@@ -118,7 +118,7 @@ public class Drive extends SubsystemBase {
       m_gains.kD = SmartDashboard.getNumber("D Value Drive", DriveConstants.DRIVE_GAINS.kD);
       m_gains.kF = SmartDashboard.getNumber("F Value Drive", DriveConstants.DRIVE_GAINS.kF);
 
-      setDriveTrainGains(DriveConstants.DRIVE_DISTANCE_PID_LOOP_IDX, m_gains);
+      //setDriveTrainGains(DriveConstants.DRIVE_DISTANCE_PID_LOOP_IDX, m_gains);
 
     } catch (Exception e) {
 
