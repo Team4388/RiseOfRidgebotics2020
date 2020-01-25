@@ -40,9 +40,9 @@ public class DriveAtVelocityPID extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //m_drive.runVelocityPID(m_drive.m_rightFrontMotor, m_rightTarget);
-    //m_drive.runVelocityPID(m_drive.m_leftFrontMotor, m_leftTarget);
-    //m_drive.m_leftFrontMotor.follow(m_drive.m_rightFrontMotor, FollowerType.PercentOutput);
+    m_drive.runVelocityPID(m_rightTarget);
+    m_drive.runVelocityPID(m_leftTarget);
+    m_drive.m_leftFrontMotor.follow(m_drive.m_rightFrontMotor, FollowerType.PercentOutput);
   }
 
   // Called once the command ends or is interrupted.

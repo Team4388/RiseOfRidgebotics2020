@@ -311,7 +311,7 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
     m_rightFrontMotor.set(TalonFXControlMode.Velocity, 0, DemandType.AuxPID, targetAngle);
     //m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
-    m_rightFrontMotor.set(DemandType.AuxPID, 0);
+    //m_rightFrontMotor.set(DemandType.AuxPID, 0);
   }
 
   public double getGyroYaw() {
