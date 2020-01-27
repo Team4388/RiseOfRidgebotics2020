@@ -40,8 +40,8 @@ public class RobotContainer {
     private final Drive m_robotDrive = new Drive();
     private final LED m_robotLED = new LED();
     private final Intake m_robotIntake = new Intake();
-    private final Cameras m_robotCameraFront = new Cameras(0);
-    private final Cameras m_robotCameraBack = new Cameras(1);
+    private final Cameras m_robotCameraFront = new Cameras("front",0,160,120,20);
+    private final Cameras m_robotCameraBack = new Cameras("back",1,160,120,50);
 
     /* Controllers */
     private final XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
