@@ -16,6 +16,7 @@ import frc4388.robot.subsystems.Drive;
 
 public class DriveAtVelocityPID extends CommandBase {
   Drive m_drive;
+  double m_targetGyro;
   double m_targetVel;
   double m_leftTarget;
   double m_rightTarget;
@@ -38,15 +39,18 @@ public class DriveAtVelocityPID extends CommandBase {
   public void initialize() {
     m_leftTarget =  m_targetVel;
     m_rightTarget = m_targetVel;
+    m_targetGyro = m_drive.m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_TURN);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drive.runVelocityPID(m_targetVel);
+    m_drive.runVelocityPID(m_targetVel, 0);
 
     SmartDashboard.putNumber("Input Target Velocity", m_copiedTargetVel);
     SmartDashboard.putNumber("Output Target Velocity", m_targetVel);
+
+    SmartDashboard.putNumber("Target Angle", m_targetGyro);
     //m_drive.runVelocityPID(m_leftTarget);
     //m_drive.m_leftFrontMotor.follow(m_drive.m_rightFrontMotor, FollowerType.PercentOutput);
   }
