@@ -35,6 +35,7 @@ public class TrackTarget extends CommandBase {
     m_drive = driveSubsystem;
     addRequirements(m_drive);
     m_driverController = driverController;
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1);
   }
 
   // Called when the command is initially scheduled.

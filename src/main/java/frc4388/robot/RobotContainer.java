@@ -77,10 +77,6 @@ public class RobotContainer {
         //    .whileHeld(() -> m_robotDrive.driveWithInput(0, 1), m_robotDrive);
 
         /* Operator Buttons */
-        // activates "Lit Mode"
-        new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
-            .whenPressed(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW))
-            .whenReleased(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN));
 
         /* PID Test Command */
         new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
@@ -92,7 +88,7 @@ public class RobotContainer {
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
             .whenPressed(new DriveAtVelocityPID(m_robotDrive, 2000));
 
-        new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
+        new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
             .whileHeld(new TrackTarget(m_robotDrive, m_driverXbox));
 
         //new JoystickButton(getDriverJoystick(), XboxController.LEFT_JOYSTICK_BUTTON)
