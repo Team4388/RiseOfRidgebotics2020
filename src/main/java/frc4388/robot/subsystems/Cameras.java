@@ -25,10 +25,9 @@ public class Cameras extends SubsystemBase {
       UsbCamera cam = new UsbCamera(name, id);
       cam.setResolution(width, height);
       cam.setBrightness(brightness);
-      cam.setFPS(20);
+      cam.setFPS(10);
       VideoSource camera = cam;
       camServ.startAutomaticCapture(camera);
-      //VideoSource cam = CameraServer.getInstance().startAutomaticCapture(id);
     } 
     catch(Exception e){
       System.err.println("Camera broken, pls nerf");
