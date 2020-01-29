@@ -18,6 +18,7 @@ import frc4388.robot.Constants.*;
 import frc4388.robot.commands.DriveAtVelocityPID;
 import frc4388.robot.commands.DriveToDistanceMM;
 import frc4388.robot.commands.DriveToDistancePID;
+import frc4388.robot.commands.DriveWithJoystick;
 import frc4388.robot.commands.RunIntakeWithTriggers;
 import frc4388.robot.commands.TrackTarget;
 import frc4388.robot.subsystems.Cameras;
@@ -55,9 +56,7 @@ public class RobotContainer {
 
         /* Default Commands */
         // drives the robot with a two-axis input from the driver controller
-        m_robotDrive.setDefaultCommand(new RunCommand(() -> m_robotDrive.driveWithInput(
-            getDriverController().getLeftYAxis(),
-            getDriverController().getRightXAxis()), m_robotDrive));
+        m_robotDrive.setDefaultCommand(new DriveWithJoystick(m_robotDrive, getDriverController()));
         // drives motor with input from triggers on the opperator controller
         m_robotIntake.setDefaultCommand(new RunIntakeWithTriggers(m_robotIntake, getOperatorController()));
         // continually sends updates to the Blinkin LED controller to keep the lights on
