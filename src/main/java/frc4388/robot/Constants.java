@@ -29,6 +29,10 @@ public final class Constants {
     public static final class IntakeConstants {
         public static final int INTAKE_SPARK_ID = 1;
     }
+    
+    public static final class ClimberConstants {
+        public static final int CLIMBER_SPARK_ID = 10;
+    }
 
     public static final class LEDConstants {
         public static final int LED_SPARK_ID = 0;
