@@ -8,6 +8,7 @@
 package frc4388.robot.commands;
 
 import com.ctre.phoenix.motorcontrol.FollowerType;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -40,12 +41,13 @@ public class DriveAtVelocityPID extends CommandBase {
     m_leftTarget =  m_targetVel;
     m_rightTarget = m_targetVel;
     m_targetGyro = m_drive.m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_TURN);
+    m_drive.setDriveTrainNeutralMode(NeutralMode.Coast);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drive.runVelocityPID(m_targetVel, 0);
+    m_drive.runVelocityPID(m_targetVel, m_targetGyro+1000);
 
     SmartDashboard.putNumber("Input Target Velocity", m_copiedTargetVel);
     SmartDashboard.putNumber("Output Target Velocity", m_targetVel);
@@ -58,6 +60,7 @@ public class DriveAtVelocityPID extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_drive.setDriveTrainNeutralMode(NeutralMode.Brake);
   }
 
   // Returns true when the command should end.

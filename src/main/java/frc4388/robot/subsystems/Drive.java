@@ -98,19 +98,19 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.configSensorTerm(SensorTerm.Sum1, FeedbackDevice.IntegratedSensor, DriveConstants.DRIVE_TIMEOUT_MS);
 
     /* Configure Sum [Sum of both QuadEncoders] to be used for Primary PID Index */
-		m_rightFrontMotor.configSelectedFeedbackSensor(	FeedbackDevice.SensorSum, 
+		m_rightFrontMotor.configSelectedFeedbackSensor(	FeedbackDevice.IntegratedSensor, 
                                                     DriveConstants.PID_PRIMARY,
                                                     DriveConstants.DRIVE_TIMEOUT_MS);
 
     /* Scale Feedback by 0.5 to half the sum of Distance */
-	  m_rightFrontMotor.configSelectedFeedbackCoefficient(  0.5, 						                    // Coefficient
+	  m_rightFrontMotor.configSelectedFeedbackCoefficient(  1.0, 						                    // Coefficient
                                                           DriveConstants.PID_PRIMARY,		      // PID Slot of Source 
                                                           DriveConstants.DRIVE_TIMEOUT_MS);   // Configuration Timeout
 
     m_rightFrontMotor.configSensorTerm(SensorTerm.Diff0, FeedbackDevice.RemoteSensor0, DriveConstants.DRIVE_TIMEOUT_MS);
     m_rightFrontMotor.configSensorTerm(SensorTerm.Diff1, FeedbackDevice.IntegratedSensor, DriveConstants.DRIVE_TIMEOUT_MS);
 
-    m_rightFrontMotor.configSelectedFeedbackSensor(	FeedbackDevice.SensorDifference, 
+    m_rightFrontMotor.configSelectedFeedbackSensor(	FeedbackDevice.RemoteSensor1, 
                                                     DriveConstants.PID_TURN,
                                                     DriveConstants.DRIVE_TIMEOUT_MS);
     
@@ -133,10 +133,6 @@ public class Drive extends SubsystemBase {
      m_rightFrontMotor.setInverted(false);
      m_leftBackMotor.setInverted(InvertType.FollowMaster);
      m_rightBackMotor.setInverted(InvertType.FollowMaster);
-     m_rightFrontMotor.setSensorPhase(false);
-     m_leftFrontMotor.setSensorPhase(false);
-     /*m_rightBackMotor.setSensorPhase(true);
-     m_leftBackMotor.setSensorPhase(true);*/
 
     /* Set status frame periods to ensure we don't have stale data */
 		m_rightFrontMotor.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20, DriveConstants.DRIVE_TIMEOUT_MS);
@@ -174,10 +170,10 @@ public class Drive extends SubsystemBase {
 
       /* PID */
     Gains gains = m_chooser.getSelected();
-    SmartDashboard.putNumber("P Value Drive", gains.kP);
-    SmartDashboard.putNumber("I Value Drive", gains.kI);
-    SmartDashboard.putNumber("D Value Drive", gains.kD);
-    SmartDashboard.putNumber("F Value Drive", gains.kF);
+    Shuffleboard.getTab("PID").add("P Value Drive", gains.kP);
+    Shuffleboard.getTab("PID").add("I Value Drive", gains.kI);
+    Shuffleboard.getTab("PID").add("D Value Drive", gains.kD);
+    Shuffleboard.getTab("PID").add("F Value Drive", gains.kF);
 
     /**
 		 * Max out the peak output (for all modes).  
@@ -310,7 +306,7 @@ public class Drive extends SubsystemBase {
    * Add your docs here.
    */
   public void driveWithInput(double move, double steer){
-    m_leftFrontMotor.setInverted(false);
+    m_rightFrontMotor.setInverted(false);
     m_driveTrain.arcadeDrive(move, steer);
   }
 
@@ -321,13 +317,10 @@ public class Drive extends SubsystemBase {
 
   public void runVelocityPID(double targetVel, double targetGyro) {
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
-    //m_leftFrontMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
-    //m_leftFrontMotor.set(TalonFXControlMode.Velocity, targetVelLeft, DemandType.AuxPID, 0);
-    //m_leftFrontMotor.setInverted(true);
-    m_rightFrontMotor.set(TalonFXControlMode.Velocity, targetVel, DemandType.AuxPID, targetGyro);
+    m_rightFrontMotor.setInverted(false);
+    m_rightFrontMotor.set(TalonFXControlMode.PercentOutput, targetVel, DemandType.AuxPID, targetGyro);
     m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
-    //m_leftFrontMotor.set(TalonFXControlMode.Velocity, targetVel, DemandType.AuxPID, 0);
   }
 
   public void runMotionMagicPID(WPI_TalonFX talon, double targetPos){

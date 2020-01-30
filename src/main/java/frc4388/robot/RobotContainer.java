@@ -79,16 +79,16 @@ public class RobotContainer {
 
         /* PID Test Command */
         new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
-            .whileHeld(new DriveAtVelocityPID(m_robotDrive, 20));
+            .whenPressed(new DriveAtVelocityPID(m_robotDrive, 0));
 
         new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
             .whenPressed(new InstantCommand(() -> m_robotDrive.resetGyroYaw(), m_robotDrive));
 
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
-            .whileHeld(new RunCommand(() -> m_robotDrive.runTurningPID(0), m_robotDrive));
+            .whileHeld(new RunCommand(() -> m_robotDrive.driveWithInput(0, 0.3), m_robotDrive));
 
         new JoystickButton(getDriverJoystick(), XboxController.LEFT_JOYSTICK_BUTTON)
-            .whenPressed(new InstantCommand(() -> System.err.print("interrupt"), m_robotDrive));
+            .whenPressed(new InstantCommand(() -> m_robotDrive.getCurrentCommand().cancel(), m_robotDrive));
     }
     
     /**
