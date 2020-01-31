@@ -5,7 +5,7 @@ import frc4388.utility.controller.XboxController;
 
 /**
  * Mapping for the Xbox controller triggers to allow triggers to be defined as
- * buttons in {@link frc4388.robot.OI}. Checks to see if the given trigger 
+ * buttons in {@link frc4388.robot.RobotContainer RobotContainer}. Checks to see if the given trigger 
  * exceeds a tolerance defined in {@link XboxController}.
  */
 public class XboxTriggerButton extends Button {
