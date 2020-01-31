@@ -130,7 +130,8 @@ public class Drive extends SubsystemBase {
 
      /* flip input so forward becomes back, etc */
      m_leftFrontMotor.setInverted(false);
-     m_rightFrontMotor.setInverted(false);
+     m_rightFrontMotor.setInverted(true);
+     m_driveTrain.setRightSideInverted(true);
      m_leftBackMotor.setInverted(InvertType.FollowMaster);
      m_rightBackMotor.setInverted(InvertType.FollowMaster);
 
@@ -306,7 +307,7 @@ public class Drive extends SubsystemBase {
    * Add your docs here.
    */
   public void driveWithInput(double move, double steer){
-    m_rightFrontMotor.setInverted(false);
+    //m_rightFrontMotor.setInverted(false);
     m_driveTrain.arcadeDrive(move, steer);
   }
 
@@ -318,7 +319,7 @@ public class Drive extends SubsystemBase {
   public void runVelocityPID(double targetVel, double targetGyro) {
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
-    m_rightFrontMotor.setInverted(false);
+    //m_rightFrontMotor.setInverted(false);
     m_rightFrontMotor.set(TalonFXControlMode.PercentOutput, targetVel, DemandType.AuxPID, targetGyro);
     m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
   }
