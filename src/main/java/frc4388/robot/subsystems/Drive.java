@@ -77,9 +77,10 @@ public class Drive extends SubsystemBase {
 		m_leftFrontMotor.configSelectedFeedbackSensor(  FeedbackDevice.IntegratedSensor,    // Local Feedback Source
                                                     DriveConstants.PID_PRIMARY,				  // PID Index for Source [0, 1]
                                                     DriveConstants.DRIVE_TIMEOUT_MS);	  // Configuration Timeout
-    /*m_rightFrontMotor.configSelectedFeedbackSensor(  FeedbackDevice.IntegratedSensor,    // Local Feedback Source
+                                                    
+    /*m_rightFrontMotor.configSelectedFeedbackSensor(  FeedbackDevice.IntegratedSensor, // Local Feedback Source
                                                     DriveConstants.PID_PRIMARY,				  // PID Index for Source [0, 1]
-                                                    DriveConstants.DRIVE_TIMEOUT_MS);*/	  // Configuration Timeout
+                                                    DriveConstants.DRIVE_TIMEOUT_MS);*/	// Configuration Timeout
 
     /* Configure the Remote Talon's selected sensor as a remote sensor for the right Talon */
 		m_rightFrontMotor.configRemoteFeedbackFilter( m_leftFrontMotor.getDeviceID(),					      // Device ID of Source
@@ -113,10 +114,6 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.configSelectedFeedbackSensor(	FeedbackDevice.RemoteSensor1, 
                                                     DriveConstants.PID_TURN,
                                                     DriveConstants.DRIVE_TIMEOUT_MS);
-    
-    /*m_rightFrontMotor.configSelectedFeedbackSensor(	FeedbackDevice.RemoteSensor1, 
-                                                          DriveConstants.PID_TURN,
-                                                          DriveConstants.DRIVE_TIMEOUT_MS);*/
 
     /* Don't scale the Feedback Sensor (use 1 for 1:1 ratio) */
     m_rightFrontMotor.configSelectedFeedbackCoefficient(	1,
@@ -342,8 +339,6 @@ public class Drive extends SubsystemBase {
     double[] ypr = new double[3];
     m_pigeon.getYawPitchRoll(ypr);
     return ypr[0];
-    //m_pigeon.(ypr);
-    //return ypr[0];
   }
 
   public double getGyroPitch() {
