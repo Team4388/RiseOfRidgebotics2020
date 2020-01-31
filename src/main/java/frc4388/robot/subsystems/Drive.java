@@ -329,12 +329,13 @@ public class Drive extends SubsystemBase {
     talon.set(TalonFXControlMode.MotionMagic, targetPos);
   }
 
+  /**
+   * Runs a Turning PID to rotate a to a target angle
+   * @param targetAngle target angle in degrees
+   */
   public void runTurningPID(double targetAngle){
-    //m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
-    m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
-    m_rightFrontMotor.set(TalonFXControlMode.Velocity, 0, DemandType.AuxPID, targetAngle);
-    //m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
-    //m_rightFrontMotor.set(DemandType.AuxPID, 0);
+    double targetGyro = (targetAngle/360)*DriveConstants.TICKS_PER_GYRO_REV;
+    runVelocityPID(0, targetGyro);
   }
 
   public double getGyroYaw() {

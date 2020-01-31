@@ -53,6 +53,7 @@ public final class Constants {
         public static final double TICKS_PER_MOTOR_REV = 2048;
         public static final double MOTOR_TO_WHEEL_GEAR_RATIO = 12.5;
         public static final double WHEEL_DIAMETER_INCHES = 6;
+        public static final double TICKS_PER_GYRO_REV = 8192;
         
         /* Ratio Calculation */
         public static final double TICK_TIME_TO_SECONDS = 0.1;
