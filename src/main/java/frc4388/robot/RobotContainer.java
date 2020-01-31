@@ -94,14 +94,16 @@ public class RobotContainer {
     }
 
     /**
-     * Add your docs here.
+     * Used for analog inputs like triggers and axises.
+     * @return IHandController interface for the Driver Controller.
      */
     public IHandController getDriverController() {
         return m_driverXbox;
     }
     
     /**
-     * Add your docs here.
+     * Used for analog inputs like triggers and axises.
+     * @return The IHandController interface for the Operator Controller.
      */
     public IHandController getOperatorController()
     {
@@ -109,7 +111,9 @@ public class RobotContainer {
     }
     
     /**
-     * Add your docs here.
+     * Gets the {@link edu.wpi.first.wpilibj.GenericHID#GenericHID(int) Generic HID} for the Operator Xbox Controller.
+     * Generic HIDs/Joysticks can be used to set up JoystickButtons.
+     * @return The IHandController interface for the Operator Controller.
      */
     public Joystick getOperatorJoystick()
     {
@@ -117,7 +121,9 @@ public class RobotContainer {
     }
     
     /**
-     * Add your docs here.
+     * Gets the {@link edu.wpi.first.wpilibj.GenericHID#GenericHID(int) Generic HID} for the Driver Xbox Controller.
+     * Generic HIDs/Joysticks can be used to set up JoystickButtons.
+     * @return The IHandController interface for the Driver Controller.
      */
     public Joystick getDriverJoystick()
     {
