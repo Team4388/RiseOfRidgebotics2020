@@ -16,9 +16,12 @@ public class RunIntakeWithTriggers extends CommandBase {
   private IHandController m_controller;
 
   /**
-   * Uses input from opperator triggers to control intake motor
-   * @param subsystem the intake subsystem
-   * @param controller the operator controller
+   * Uses input from opperator triggers to control intake motor.
+   * The right trigger will run the intake in and the left trigger will run it out.
+   * @param subsystem pass the Intake subsystem from {@link frc4388.robot.RobotContainer#RobotContainer() RobotContainer}
+   * @param controller pass the Operator {@link frc4388.utility.controller.IHandController#getClass() IHandController} using the
+   * {@link frc4388.robot.RobotContainer#getOperatorJoystick() getOperatorJoystick()} method in
+   * {@link frc4388.robot.RobotContainer#RobotContainer() RobotContainer}
    */
   public RunIntakeWithTriggers(Intake subsystem, IHandController controller) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -43,7 +46,7 @@ public class RunIntakeWithTriggers extends CommandBase {
         output = rightTrigger;
       }
       if (leftTrigger > rightTrigger) {
-        output = leftTrigger;
+        output = -leftTrigger;
       }
     } else {
       output = rightTrigger;
