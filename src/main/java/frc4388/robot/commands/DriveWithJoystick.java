@@ -16,7 +16,12 @@ public class DriveWithJoystick extends CommandBase {
   private IHandController m_controller;
 
   /**
-   * Creates a new DriveWithJoystick.
+   * Creates a new DriveWithJoystick to control the drivetrain with an Xbox controller.
+   * Applies a curved ramp to the input from the controllers to make the robot less "touchy".
+   * @param subsystem pass the Drive subsystem from {@link frc4388.robot.RobotContainer#RobotContainer() RobotContainer}
+   * @param controller pass the Driver {@link frc4388.utility.controller.IHandController#getClass() IHandController} using the
+   * {@link frc4388.robot.RobotContainer#getDriverJoystick() getDriverJoystick()} method in
+   * {@link frc4388.robot.RobotContainer#RobotContainer() RobotContainer}
    */
   public DriveWithJoystick(Drive subsystem, IHandController controller) {
     // Use addRequirements() here to declare subsystem dependencies.
