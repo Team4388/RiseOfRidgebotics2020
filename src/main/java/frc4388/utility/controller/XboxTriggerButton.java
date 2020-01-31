@@ -31,7 +31,6 @@ public class XboxTriggerButton extends Button {
 		m_trigger = trigger;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean get() {
 		if (m_trigger == RIGHT_TRIGGER) {
