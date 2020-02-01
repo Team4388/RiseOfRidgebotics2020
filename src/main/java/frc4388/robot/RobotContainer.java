@@ -79,7 +79,7 @@ public class RobotContainer {
             .whenReleased(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN));
 
         new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
-            .whileHeld(new ShooterVelocityControlPID(m_robotShooter, 13200));
+            .whileHeld(new ShooterVelocityControlPID(m_robotShooter, 8200));
 
         /*new JoystickButton(getDriverJoystick(), XboxController.LEFT_JOYSTICK_BUTTON)
             .whenPressed(new InstantCommand(null, m_robotDrive));*/

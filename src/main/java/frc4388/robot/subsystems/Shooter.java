@@ -21,8 +21,6 @@ public class Shooter extends SubsystemBase {
 
   public WPI_TalonFX m_shooterFalcon = new WPI_TalonFX(ShooterConstants.SHOOTER_FALCON_ID);
 
-  private double m_targetVel = 2300;
-
   public static Gains m_shooterGains = ShooterConstants.SHOOTER_GAINS;
 
   double velP;
@@ -43,14 +41,11 @@ public class Shooter extends SubsystemBase {
     int closedLoopTimeMs = 1;
     m_shooterFalcon.configClosedLoopPeriod(0, closedLoopTimeMs, ShooterConstants.SHOOTER_TIMEOUT_MS);
     m_shooterFalcon.configClosedLoopPeriod(1, closedLoopTimeMs, ShooterConstants.SHOOTER_TIMEOUT_MS);
-
-    SmartDashboard.putNumber("Shooter Velocity Target", m_targetVel);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    m_targetVel = SmartDashboard.getNumber("Shooter Velocity Target", m_targetVel);
     SmartDashboard.putNumber("Shooter Velocity", m_shooterFalcon.getSelectedSensorVelocity()*600/ShooterConstants.ENCODER_TICKS_PER_REV);
   }
 
@@ -79,10 +74,15 @@ public class Shooter extends SubsystemBase {
    */
   public void runDrumShooterVelocityPID(double targetVel, double actualVel) {
     velP = actualVel/targetVel;
-    double runSpeed = actualVel + (20000*velP);
+    double runSpeed = actualVel + (12000*velP);
     if (runSpeed > targetVel) {runSpeed = targetVel;}
-    System.err.println(velP + " " + runSpeed);
     SmartDashboard.putNumber("shoot", actualVel);
-    m_shooterFalcon.set(TalonFXControlMode.Velocity, runSpeed);
+    
+    if (actualVel < targetVel - 7000){
+      m_shooterFalcon.set(TalonFXControlMode.Velocity, runSpeed);
+    }
+    else{
+      m_shooterFalcon.set(TalonFXControlMode.Velocity, targetVel);
+    }
   }
 }
