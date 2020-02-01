@@ -60,7 +60,7 @@ public class RobotContainer {
         m_robotIntake.setDefaultCommand(new RunIntakeWithTriggers(m_robotIntake, getOperatorController()));
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
-        m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runDrumShooter(0), m_robotShooter));
+        m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runDrumShooter(0.2), m_robotShooter));
     }
 
     /**
@@ -91,7 +91,7 @@ public class RobotContainer {
             .whenPressed(new DriveAtVelocityPID(m_robotDrive, 2000));
 
         new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
-            .whileHeld(new ShooterVelocityControlPID(m_robotShooter, 3200));
+            .whileHeld(new ShooterVelocityControlPID(m_robotShooter, 13200));
 
         /*new JoystickButton(getDriverJoystick(), XboxController.LEFT_JOYSTICK_BUTTON)
             .whenPressed(new InstantCommand(null, m_robotDrive));*/
