@@ -78,9 +78,10 @@ public class Drive extends SubsystemBase {
 		m_leftFrontMotor.configSelectedFeedbackSensor(  FeedbackDevice.IntegratedSensor,    // Local Feedback Source
                                                     DriveConstants.PID_PRIMARY,				  // PID Index for Source [0, 1]
                                                     DriveConstants.DRIVE_TIMEOUT_MS);	  // Configuration Timeout
-    /*m_rightFrontMotor.configSelectedFeedbackSensor(  FeedbackDevice.IntegratedSensor,    // Local Feedback Source
+                                                    
+    /*m_rightFrontMotor.configSelectedFeedbackSensor(  FeedbackDevice.IntegratedSensor, // Local Feedback Source
                                                     DriveConstants.PID_PRIMARY,				  // PID Index for Source [0, 1]
-                                                    DriveConstants.DRIVE_TIMEOUT_MS);*/	  // Configuration Timeout
+                                                    DriveConstants.DRIVE_TIMEOUT_MS);*/	// Configuration Timeout
 
     /* Configure the Remote Talon's selected sensor as a remote sensor for the right Talon */
 		m_rightFrontMotor.configRemoteFeedbackFilter( m_leftFrontMotor.getDeviceID(),					      // Device ID of Source
@@ -114,10 +115,6 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.configSelectedFeedbackSensor(	FeedbackDevice.RemoteSensor1, 
                                                     DriveConstants.PID_TURN,
                                                     DriveConstants.DRIVE_TIMEOUT_MS);
-    
-    /*m_rightFrontMotor.configSelectedFeedbackSensor(	FeedbackDevice.RemoteSensor1, 
-                                                          DriveConstants.PID_TURN,
-                                                          DriveConstants.DRIVE_TIMEOUT_MS);*/
 
     /* Don't scale the Feedback Sensor (use 1 for 1:1 ratio) */
     m_rightFrontMotor.configSelectedFeedbackCoefficient(	1,
@@ -131,7 +128,8 @@ public class Drive extends SubsystemBase {
 
      /* flip input so forward becomes back, etc */
      m_leftFrontMotor.setInverted(false);
-     m_rightFrontMotor.setInverted(false);
+     m_rightFrontMotor.setInverted(true);
+     m_driveTrain.setRightSideInverted(true);
      m_leftBackMotor.setInverted(InvertType.FollowMaster);
      m_rightBackMotor.setInverted(InvertType.FollowMaster);
 
@@ -310,7 +308,7 @@ public class Drive extends SubsystemBase {
    * Add your docs here.
    */
   public void driveWithInput(double move, double steer){
-    m_rightFrontMotor.setInverted(false);
+    //m_rightFrontMotor.setInverted(false);
     m_driveTrain.arcadeDrive(move, steer);
   }
 
@@ -322,7 +320,7 @@ public class Drive extends SubsystemBase {
   public void runVelocityPID(double targetVel, double targetGyro) {
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
-    m_rightFrontMotor.setInverted(true);
+    //m_rightFrontMotor.setInverted(true);
     m_rightFrontMotor.set(TalonFXControlMode.Velocity, 20000, DemandType.AuxPID, targetGyro);
     //m_rightFrontMotor.set(ControlMode.PercentOutput, 0.2);
     //m_leftFrontMotor.follow(m_rightFrontMotor);
@@ -337,20 +335,19 @@ public class Drive extends SubsystemBase {
     m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
   }
 
+  /**
+   * Runs a Turning PID to rotate a to a target angle
+   * @param targetAngle target angle in degrees
+   */
   public void runTurningPID(double targetAngle){
-    //m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
-    m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
-    m_rightFrontMotor.set(TalonFXControlMode.Velocity, 0, DemandType.AuxPID, targetAngle);
-    //m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
-    //m_rightFrontMotor.set(DemandType.AuxPID, 0);
+    double targetGyro = (targetAngle/360)*DriveConstants.TICKS_PER_GYRO_REV;
+    runVelocityPID(0, targetGyro);
   }
 
   public double getGyroYaw() {
     double[] ypr = new double[3];
     m_pigeon.getYawPitchRoll(ypr);
     return ypr[0];
-    //m_pigeon.(ypr);
-    //return ypr[0];
   }
 
   public double getGyroPitch() {
