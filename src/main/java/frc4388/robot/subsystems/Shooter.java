@@ -83,7 +83,7 @@ public class Shooter extends SubsystemBase {
       velP = 0.1;
     }
     double runSpeed = velP*(1-velP);
-    System.err.println(runSpeed);
+    //System.err.println(runSpeed);
     m_shooterFalcon.set(TalonFXControlMode.PercentOutput, runSpeed/*ShooterConstants.ENCODER_TICKS_PER_REV/600*/);
   }
 }
