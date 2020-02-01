@@ -18,7 +18,6 @@ import com.ctre.phoenix.motorcontrol.SensorTerm;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
@@ -38,13 +37,13 @@ public class Drive extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  public TalonFX m_leftFrontMotor = new TalonFX(DriveConstants.DRIVE_LEFT_FRONT_CAN_ID);
-  public TalonFX m_rightFrontMotor = new TalonFX(DriveConstants.DRIVE_RIGHT_FRONT_CAN_ID);
-  public TalonFX m_leftBackMotor = new TalonFX(DriveConstants.DRIVE_LEFT_BACK_CAN_ID);
-  public TalonFX m_rightBackMotor = new TalonFX(DriveConstants.DRIVE_RIGHT_BACK_CAN_ID);
+  public WPI_TalonFX m_leftFrontMotor = new WPI_TalonFX(DriveConstants.DRIVE_LEFT_FRONT_CAN_ID);
+  public WPI_TalonFX m_rightFrontMotor = new WPI_TalonFX(DriveConstants.DRIVE_RIGHT_FRONT_CAN_ID);
+  public WPI_TalonFX m_leftBackMotor = new WPI_TalonFX(DriveConstants.DRIVE_LEFT_BACK_CAN_ID);
+  public WPI_TalonFX m_rightBackMotor = new WPI_TalonFX(DriveConstants.DRIVE_RIGHT_BACK_CAN_ID);
   public static PigeonIMU m_pigeon = new PigeonIMU(DriveConstants.PIGEON_ID);
 
-  //public DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
+  public DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
 
   SendableChooser<Gains> m_chooser = new SendableChooser<Gains>();
   public static Gains m_gainsDistance = DriveConstants.DRIVE_DISTANCE_GAINS;
@@ -65,8 +64,8 @@ public class Drive extends SubsystemBase {
     resetGyroYaw();
 
     /* set back motors as followers */
-    //m_leftBackMotor.follow(m_leftFrontMotor);
-    //m_rightBackMotor.follow(m_rightFrontMotor);
+    m_leftBackMotor.follow(m_leftFrontMotor);
+    m_rightBackMotor.follow(m_rightFrontMotor);
 
     m_rightFrontMotor.setNeutralMode(NeutralMode.Coast);
 
@@ -84,7 +83,7 @@ public class Drive extends SubsystemBase {
     /* set neutral mode */
     setDriveTrainNeutralMode(NeutralMode.Coast);
 
-    /* Setup Sensors for TalonFXs */
+    /* Setup Sensors for WPI_TalonFXs */
     m_leftFrontMotor.setSelectedSensorPosition(0, DriveConstants.PID_PRIMARY, DriveConstants.DRIVE_TIMEOUT_MS);
     m_rightFrontMotor.setSelectedSensorPosition(0, DriveConstants.PID_PRIMARY, DriveConstants.DRIVE_TIMEOUT_MS);
     
@@ -143,9 +142,9 @@ public class Drive extends SubsystemBase {
      /* flip input so forward becomes back, etc */
      m_leftFrontMotor.setInverted(false);
      m_rightFrontMotor.setInverted(true);
-     //m_driveTrain.setRightSideInverted(true);
      m_leftBackMotor.setInverted(InvertType.FollowMaster);
      m_rightBackMotor.setInverted(InvertType.FollowMaster);
+     m_driveTrain.setRightSideInverted(false);
 
     /* Set status frame periods to ensure we don't have stale data */
 		m_rightFrontMotor.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20, DriveConstants.DRIVE_TIMEOUT_MS);
@@ -322,34 +321,39 @@ public class Drive extends SubsystemBase {
    */
   public void driveWithInput(double move, double steer){
     //m_rightFrontMotor.setInverted(false);
-    //m_driveTrain.arcadeDrive(move, steer);
+    m_driveTrain.arcadeDrive(move, steer);
+
+    m_driveTrain.feedWatchdog();
   }
 
   public void runPositionPID(WPI_TalonFX talon, double targetPos) {
     talon.selectProfileSlot(DriveConstants.SLOT_DISTANCE , DriveConstants.PID_PRIMARY);
     talon.set(TalonFXControlMode.Position, targetPos);
+
+    m_driveTrain.feedWatchdog();
   }
 
   long last = 0;
   public void runVelocityPID(double targetVel, double targetGyro) {
     //m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
     //m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
-    //m_rightFrontMotor.setInverted(true);
-    m_rightFrontMotor.set(TalonFXControlMode.Velocity, 20000);//, DemandType.AuxPID, targetGyro);
+    m_rightBackMotor.follow(m_rightFrontMotor);
+    m_rightFrontMotor.set(TalonFXControlMode.Velocity, 1000);//, DemandType.AuxPID, targetGyro);
     long now = System.nanoTime();
     SmartDashboard.putNumber("Loop Time", (now-last)/1000000);
     last = now;
-    //m_rightFrontMotor.set(ControlMode.PercentOutput, 0.2);
-    //m_leftFrontMotor.follow(m_rightFrontMotor);
+    m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.PercentOutput);
     //m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
+    m_driveTrain.feedWatchdog();
   }
 
   public void runMotionMagicPID(double targetPos){
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_MOTION_MAGIC, DriveConstants.PID_PRIMARY);
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
-    m_rightFrontMotor.setInverted(true);
     m_rightFrontMotor.set(TalonFXControlMode.MotionMagic, targetPos);
     m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
+
+    m_driveTrain.feedWatchdog();
   }
 
   /**
