@@ -15,12 +15,18 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 
-public class Cameras extends SubsystemBase {
+public class Camera extends SubsystemBase {
   CameraServer camServ = CameraServer.getInstance();
   /**
-   * Creates and initiates the camera server
+   * Creates a new Camera.
+   * Makes a Camera and sends the stream to a CameraServer, to be viewed in Shuffle Board.
+   * @param name Name of the Camera in Shuffle Board.
+   * @param id USB Id of the Camera.
+   * @param width Resolution width.
+   * @param height Resolution height.
+   * @param brightness Percent brightness of the stream.
    */
-  public Cameras(String name, int id, int width, int height, int brightness) {
+  public Camera(String name, int id, int width, int height, int brightness) {
     try{
       UsbCamera cam = new UsbCamera(name, id);
       cam.setResolution(width, height);
