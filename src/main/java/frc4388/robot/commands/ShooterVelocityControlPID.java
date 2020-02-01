@@ -31,10 +31,11 @@ public class ShooterVelocityControlPID extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (m_shooter.m_shooterFalcon.getActiveTrajectoryVelocity() < 1000){
+    if (/*m_shooter.m_shooterFalcon.getActiveTrajectoryVelocity() < 1000*/false){
       m_shooter.runDrumShooter(0.5);
+      System.err.println("Less than 1000: " + m_shooter.m_shooterFalcon.getActiveTrajectoryVelocity());
     } else {
-      m_shooter.runDrumShooterVelocityPID(m_targetVel);
+      m_shooter.runDrumShooterVelocityPID(m_targetVel, m_shooter.m_shooterFalcon.getActiveTrajectoryVelocity());
     }
   }
 

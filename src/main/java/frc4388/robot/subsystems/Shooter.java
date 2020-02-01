@@ -25,6 +25,7 @@ public class Shooter extends SubsystemBase {
 
   public static Gains m_shooterGains = ShooterConstants.SHOOTER_GAINS;
 
+  double velP;
   /**
    * Creates a new Shooter.
    */
@@ -76,7 +77,13 @@ public class Shooter extends SubsystemBase {
    * @param falcon Motor to use
    * @param targetVel Target velocity to run motor at
    */
-  public void runDrumShooterVelocityPID(double targetVel) {
-    m_shooterFalcon.set(TalonFXControlMode.Velocity, m_targetVel*ShooterConstants.ENCODER_TICKS_PER_REV/600);
+  public void runDrumShooterVelocityPID(double targetVel, double actualVel) {
+    velP = actualVel/targetVel;
+    if(velP < 0.1){
+      velP = 0.1;
+    }
+    double runSpeed = velP*(1-velP);
+    System.err.println(runSpeed);
+    m_shooterFalcon.set(TalonFXControlMode.PercentOutput, runSpeed/*ShooterConstants.ENCODER_TICKS_PER_REV/600*/);
   }
 }
