@@ -15,9 +15,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.*;
-import frc4388.robot.commands.DriveAtVelocityPID;
-import frc4388.robot.commands.DriveToDistanceMM;
-import frc4388.robot.commands.DriveToDistancePID;
 import frc4388.robot.commands.DriveWithJoystick;
 import frc4388.robot.commands.RunIntakeWithTriggers;
 import frc4388.robot.commands.ShooterVelocityControlPID;
@@ -80,15 +77,6 @@ public class RobotContainer {
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
             .whenPressed(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW))
             .whenReleased(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN));
-
-        new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
-            .whenPressed(new DriveToDistancePID(m_robotDrive, 5000));
-
-        new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
-            .whenPressed(new DriveToDistanceMM(m_robotDrive, 5000));
-
-        new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
-            .whenPressed(new DriveAtVelocityPID(m_robotDrive, 2000));
 
         new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
             .whileHeld(new ShooterVelocityControlPID(m_robotShooter, 13200));
