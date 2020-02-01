@@ -29,7 +29,7 @@ public class TrackTarget extends CommandBase {
   double distance;
   
   /**
-   * Starts tracking the target
+   * Uses the Limelight to track the target
    */
   public TrackTarget(Drive driveSubsystem, IHandController driverController) {
     m_drive = driveSubsystem;
