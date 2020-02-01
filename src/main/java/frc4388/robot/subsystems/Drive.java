@@ -18,6 +18,7 @@ import com.ctre.phoenix.motorcontrol.SensorTerm;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
@@ -37,13 +38,13 @@ public class Drive extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  public WPI_TalonFX m_leftFrontMotor = new WPI_TalonFX(DriveConstants.DRIVE_LEFT_FRONT_CAN_ID);
-  public WPI_TalonFX m_rightFrontMotor = new WPI_TalonFX(DriveConstants.DRIVE_RIGHT_FRONT_CAN_ID);
-  public WPI_TalonFX m_leftBackMotor = new WPI_TalonFX(DriveConstants.DRIVE_LEFT_BACK_CAN_ID);
-  public WPI_TalonFX m_rightBackMotor = new WPI_TalonFX(DriveConstants.DRIVE_RIGHT_BACK_CAN_ID);
+  public TalonFX m_leftFrontMotor = new TalonFX(DriveConstants.DRIVE_LEFT_FRONT_CAN_ID);
+  public TalonFX m_rightFrontMotor = new TalonFX(DriveConstants.DRIVE_RIGHT_FRONT_CAN_ID);
+  public TalonFX m_leftBackMotor = new TalonFX(DriveConstants.DRIVE_LEFT_BACK_CAN_ID);
+  public TalonFX m_rightBackMotor = new TalonFX(DriveConstants.DRIVE_RIGHT_BACK_CAN_ID);
   public static PigeonIMU m_pigeon = new PigeonIMU(DriveConstants.PIGEON_ID);
 
-  public DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
+  //public DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
 
   SendableChooser<Gains> m_chooser = new SendableChooser<Gains>();
   public static Gains m_gainsDistance = DriveConstants.DRIVE_DISTANCE_GAINS;
@@ -64,8 +65,21 @@ public class Drive extends SubsystemBase {
     resetGyroYaw();
 
     /* set back motors as followers */
-    m_leftBackMotor.follow(m_leftFrontMotor);
-    m_rightBackMotor.follow(m_rightFrontMotor);
+    //m_leftBackMotor.follow(m_leftFrontMotor);
+    //m_rightBackMotor.follow(m_rightFrontMotor);
+
+    m_rightFrontMotor.setNeutralMode(NeutralMode.Coast);
+
+    m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
+      m_rightFrontMotor.config_kF(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.kF, DriveConstants.DRIVE_TIMEOUT_MS);
+      m_rightFrontMotor.config_kP(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.kP, DriveConstants.DRIVE_TIMEOUT_MS);
+      m_rightFrontMotor.config_kI(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.kI, DriveConstants.DRIVE_TIMEOUT_MS);
+      m_rightFrontMotor.config_kD(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.kD, DriveConstants.DRIVE_TIMEOUT_MS);
+      m_rightFrontMotor.configClosedLoopPeakOutput(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.kPeakOutput, DriveConstants.DRIVE_TIMEOUT_MS);
+  }
+
+  void nada(){
+    
 
     /* set neutral mode */
     setDriveTrainNeutralMode(NeutralMode.Coast);
@@ -129,7 +143,7 @@ public class Drive extends SubsystemBase {
      /* flip input so forward becomes back, etc */
      m_leftFrontMotor.setInverted(false);
      m_rightFrontMotor.setInverted(true);
-     m_driveTrain.setRightSideInverted(true);
+     //m_driveTrain.setRightSideInverted(true);
      m_leftBackMotor.setInverted(InvertType.FollowMaster);
      m_rightBackMotor.setInverted(InvertType.FollowMaster);
 
@@ -202,32 +216,32 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.configAuxPIDPolarity(false, DriveConstants.DRIVE_TIMEOUT_MS);
   }
 
-  Gains gainsOld;
+  Gains gainsOld = m_chooser.getSelected();
   @Override
   public void periodic() {
     try {
-      SmartDashboard.putNumber("Pigeon Yaw", getGyroYaw());
-      SmartDashboard.putNumber("Pigeon Pitch", getGyroPitch());
-      SmartDashboard.putNumber("Pigeon Roll", getGyroRoll());
+      //SmartDashboard.putNumber("Pigeon Yaw", getGyroYaw());
+      //SmartDashboard.putNumber("Pigeon Pitch", getGyroPitch());
+      //SmartDashboard.putNumber("Pigeon Roll", getGyroRoll());
 
-      SmartDashboard.putNumber("Left Motor Velocity Raw", m_leftFrontMotor.getSelectedSensorVelocity(0));
-      SmartDashboard.putNumber("Right Motor Velocity Raw", m_rightFrontMotor.getSelectedSensorVelocity());
-      SmartDashboard.putNumber("Left Motor Position Raw", m_leftFrontMotor.getSelectedSensorPosition());
-      SmartDashboard.putNumber("Right Motor Position Raw", m_rightFrontMotor.getSelectedSensorPosition(0));
+      //SmartDashboard.putNumber("Left Motor Velocity Raw", m_leftFrontMotor.getSelectedSensorVelocity(0));
+      //SmartDashboard.putNumber("Right Motor Velocity Raw", m_rightFrontMotor.getSelectedSensorVelocity());
+      //SmartDashboard.putNumber("Left Motor Position Raw", m_leftFrontMotor.getSelectedSensorPosition());
+      //SmartDashboard.putNumber("Right Motor Position Raw", m_rightFrontMotor.getSelectedSensorPosition(0));
 
-      SmartDashboard.putNumber("Right Front Motor Current", m_rightFrontMotor.getSupplyCurrent());
-      SmartDashboard.putNumber("Left Front Motor Current", m_leftFrontMotor.getSupplyCurrent());
-      SmartDashboard.putNumber("Right Back Motor Current", m_rightFrontMotor.getSupplyCurrent());
-      SmartDashboard.putNumber("Left Back Motor Current", m_leftFrontMotor.getSupplyCurrent());
+      //SmartDashboard.putNumber("Right Front Motor Current", m_rightFrontMotor.getSupplyCurrent());
+      //SmartDashboard.putNumber("Left Front Motor Current", m_leftFrontMotor.getSupplyCurrent());
+      //SmartDashboard.putNumber("Right Back Motor Current", m_rightFrontMotor.getSupplyCurrent());
+      //SmartDashboard.putNumber("Left Back Motor Current", m_leftFrontMotor.getSupplyCurrent());
 
-      ////SmartDashboard.putNumber("PID 0 Error", m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_PRIMARY));
+      //SmartDashboard.putNumber("PID 0 Error", m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_PRIMARY));
       //SmartDashboard.putNumber("PID 1 Error", m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_TURN));
       //SmartDashboard.putNumber("PID 0 Target", m_rightFrontMotor.getClosedLoopTarget(DriveConstants.PID_PRIMARY));
       //SmartDashboard.putNumber("PID 1 Target", m_rightFrontMotor.getClosedLoopTarget(DriveConstants.PID_TURN));
       //SmartDashboard.putNumber("PID 0 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_PRIMARY));
       //SmartDashboard.putNumber("PID 1 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_TURN));
 
-      Gains gains = m_chooser.getSelected();
+      /*Gains gains = m_chooser.getSelected();
       if (gains.equals(gainsOld)) {
         SmartDashboard.putNumber("P Value Drive", gains.kP);
         SmartDashboard.putNumber("I Value Drive", gains.kI);
@@ -239,12 +253,11 @@ public class Drive extends SubsystemBase {
       gains.kD = SmartDashboard.getNumber("D Value Drive", gains.kD);
       gains.kF = SmartDashboard.getNumber("F Value Drive", gains.kF);
       setDriveTrainGains(m_chooser.getName(), gains);
-      gainsOld = gains;
+      gainsOld = gains;*/
 
     } catch (Exception e) {
-
-      System.err.println("The programming team has failed successfully in the Drive Subsystem.");
-    
+      System.err.println("Error in the Drive Subsystem");
+      //e.printStackTrace(System.err);
     }
   }
 
@@ -309,7 +322,7 @@ public class Drive extends SubsystemBase {
    */
   public void driveWithInput(double move, double steer){
     //m_rightFrontMotor.setInverted(false);
-    m_driveTrain.arcadeDrive(move, steer);
+    //m_driveTrain.arcadeDrive(move, steer);
   }
 
   public void runPositionPID(WPI_TalonFX talon, double targetPos) {
@@ -317,11 +330,15 @@ public class Drive extends SubsystemBase {
     talon.set(TalonFXControlMode.Position, targetPos);
   }
 
+  long last = 0;
   public void runVelocityPID(double targetVel, double targetGyro) {
-    m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
-    m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
+    //m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
+    //m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
     //m_rightFrontMotor.setInverted(true);
-    m_rightFrontMotor.set(TalonFXControlMode.Velocity, 20000, DemandType.AuxPID, targetGyro);
+    m_rightFrontMotor.set(TalonFXControlMode.Velocity, 20000);//, DemandType.AuxPID, targetGyro);
+    long now = System.nanoTime();
+    SmartDashboard.putNumber("Loop Time", (now-last)/1000000);
+    last = now;
     //m_rightFrontMotor.set(ControlMode.PercentOutput, 0.2);
     //m_leftFrontMotor.follow(m_rightFrontMotor);
     //m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
