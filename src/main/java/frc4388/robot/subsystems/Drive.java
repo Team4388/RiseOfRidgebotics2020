@@ -7,6 +7,7 @@
 
 package frc4388.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.FollowerType;
@@ -67,7 +68,7 @@ public class Drive extends SubsystemBase {
     m_rightBackMotor.follow(m_rightFrontMotor);
 
     /* set neutral mode */
-    setDriveTrainNeutralMode(NeutralMode.Brake);
+    setDriveTrainNeutralMode(NeutralMode.Coast);
 
     /* Setup Sensors for TalonFXs */
     m_leftFrontMotor.setSelectedSensorPosition(0, DriveConstants.PID_PRIMARY, DriveConstants.DRIVE_TIMEOUT_MS);
@@ -216,14 +217,17 @@ public class Drive extends SubsystemBase {
       SmartDashboard.putNumber("Left Motor Position Raw", m_leftFrontMotor.getSelectedSensorPosition());
       SmartDashboard.putNumber("Right Motor Position Raw", m_rightFrontMotor.getSelectedSensorPosition(0));
 
-      SmartDashboard.putNumber("Right Motor Output", m_rightFrontMotor.getMotorOutputPercent());
-      SmartDashboard.putNumber("Left Motor Output", m_leftFrontMotor.getMotorOutputPercent());
-      SmartDashboard.putNumber("PID 0 Error", m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_PRIMARY));
-      SmartDashboard.putNumber("PID 1 Error", m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_TURN));
-      SmartDashboard.putNumber("PID 0 Target", m_rightFrontMotor.getClosedLoopTarget(DriveConstants.PID_PRIMARY));
-      SmartDashboard.putNumber("PID 1 Target", m_rightFrontMotor.getClosedLoopTarget(DriveConstants.PID_TURN));
-      SmartDashboard.putNumber("PID 0 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_PRIMARY));
-      SmartDashboard.putNumber("PID 1 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_TURN));
+      SmartDashboard.putNumber("Right Front Motor Current", m_rightFrontMotor.getSupplyCurrent());
+      SmartDashboard.putNumber("Left Front Motor Current", m_leftFrontMotor.getSupplyCurrent());
+      SmartDashboard.putNumber("Right Back Motor Current", m_rightFrontMotor.getSupplyCurrent());
+      SmartDashboard.putNumber("Left Back Motor Current", m_leftFrontMotor.getSupplyCurrent());
+
+      ////SmartDashboard.putNumber("PID 0 Error", m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_PRIMARY));
+      //SmartDashboard.putNumber("PID 1 Error", m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_TURN));
+      //SmartDashboard.putNumber("PID 0 Target", m_rightFrontMotor.getClosedLoopTarget(DriveConstants.PID_PRIMARY));
+      //SmartDashboard.putNumber("PID 1 Target", m_rightFrontMotor.getClosedLoopTarget(DriveConstants.PID_TURN));
+      //SmartDashboard.putNumber("PID 0 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_PRIMARY));
+      //SmartDashboard.putNumber("PID 1 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_TURN));
 
       Gains gains = m_chooser.getSelected();
       if (gains.equals(gainsOld)) {
@@ -318,14 +322,19 @@ public class Drive extends SubsystemBase {
   public void runVelocityPID(double targetVel, double targetGyro) {
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
-    m_rightFrontMotor.setInverted(false);
-    m_rightFrontMotor.set(TalonFXControlMode.PercentOutput, targetVel, DemandType.AuxPID, targetGyro);
-    m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
+    m_rightFrontMotor.setInverted(true);
+    m_rightFrontMotor.set(TalonFXControlMode.Velocity, 20000, DemandType.AuxPID, targetGyro);
+    //m_rightFrontMotor.set(ControlMode.PercentOutput, 0.2);
+    //m_leftFrontMotor.follow(m_rightFrontMotor);
+    //m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
   }
 
-  public void runMotionMagicPID(WPI_TalonFX talon, double targetPos){
-    talon.selectProfileSlot(DriveConstants.SLOT_MOTION_MAGIC, DriveConstants.PID_PRIMARY);
-    talon.set(TalonFXControlMode.MotionMagic, targetPos);
+  public void runMotionMagicPID(double targetPos){
+    m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_MOTION_MAGIC, DriveConstants.PID_PRIMARY);
+    m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
+    m_rightFrontMotor.setInverted(true);
+    m_rightFrontMotor.set(TalonFXControlMode.MotionMagic, targetPos);
+    m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
   }
 
   public void runTurningPID(double targetAngle){

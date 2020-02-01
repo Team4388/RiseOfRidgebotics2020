@@ -42,12 +42,13 @@ public class DriveAtVelocityPID extends CommandBase {
     m_rightTarget = m_targetVel;
     m_targetGyro = m_drive.m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_TURN);
     m_drive.setDriveTrainNeutralMode(NeutralMode.Coast);
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drive.runVelocityPID(m_targetVel, m_targetGyro+1000);
+    m_drive.runVelocityPID(-20000, m_targetGyro);
 
     SmartDashboard.putNumber("Input Target Velocity", m_copiedTargetVel);
     SmartDashboard.putNumber("Output Target Velocity", m_targetVel);
@@ -60,7 +61,7 @@ public class DriveAtVelocityPID extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_drive.setDriveTrainNeutralMode(NeutralMode.Brake);
+    m_drive.setDriveTrainNeutralMode(NeutralMode.Coast);
   }
 
   // Returns true when the command should end.

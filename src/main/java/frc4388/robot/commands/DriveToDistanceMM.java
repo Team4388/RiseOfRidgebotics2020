@@ -39,8 +39,8 @@ public class DriveToDistanceMM extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drive.runMotionMagicPID(m_drive.m_leftFrontMotor, m_leftTarget);
-    m_drive.runMotionMagicPID(m_drive.m_rightFrontMotor, m_rightTarget);
+    //m_drive.runMotionMagicPID(m_drive.m_leftFrontMotor, m_leftTarget);
+    //m_drive.runMotionMagicPID(m_drive.m_rightFrontMotor, m_rightTarget);
   }
 
   // Called once the command ends or is interrupted.
