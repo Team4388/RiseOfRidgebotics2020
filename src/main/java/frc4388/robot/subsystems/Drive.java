@@ -340,12 +340,11 @@ public class Drive extends SubsystemBase {
     m_driveTrain.feedWatchdog();
   }
 
-  public void runMotionMagicPID(double targetPos){
+  public void runMotionMagicPID(double targetPos, double targetGyro){
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_MOTION_MAGIC, DriveConstants.PID_PRIMARY);
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
-    m_rightFrontMotor.set(TalonFXControlMode.MotionMagic, targetPos);
+    m_rightFrontMotor.set(TalonFXControlMode.MotionMagic, targetPos, DemandType.AuxPID, targetGyro);
     m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
-
     m_driveTrain.feedWatchdog();
   }
 
