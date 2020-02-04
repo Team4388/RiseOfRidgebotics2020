@@ -1,7 +1,7 @@
 package frc4388.utility.controller;
 
 /**
- * Add your docs here.
+ * Interface for the {@link XboxController}.
  */
 public interface IHandController {
 
