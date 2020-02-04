@@ -86,7 +86,7 @@ public class RobotContainer {
             .whenPressed(new InstantCommand(() -> m_robotDrive.resetGyroYaw(), m_robotDrive));
 
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
-            .whenPressed(new RunCommand(() -> m_robotDrive.runMotionMagicPID(5000), m_robotDrive));
+            .whenPressed(new RunCommand(() -> m_robotDrive.runMotionMagicPID(5000, 0), m_robotDrive));
 
         new JoystickButton(getDriverJoystick(), XboxController.LEFT_JOYSTICK_BUTTON)
             .whenPressed(new InstantCommand(() -> System.out.print("Gamer"), m_robotDrive));
