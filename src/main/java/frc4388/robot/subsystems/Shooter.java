@@ -35,6 +35,8 @@ public class Shooter extends SubsystemBase {
     m_shooterFalcon.setInverted(true);
     
     setShooterGains();
+
+    m_shooterFalcon.configPeakOutputReverse(0, ShooterConstants.SHOOTER_TIMEOUT_MS);
     
     m_shooterFalcon.setSelectedSensorPosition(0, ShooterConstants.SHOOTER_PID_LOOP_IDX, ShooterConstants.SHOOTER_TIMEOUT_MS);
     
@@ -73,16 +75,16 @@ public class Shooter extends SubsystemBase {
    * @param targetVel Target velocity to run motor at
    */
   public void runDrumShooterVelocityPID(double targetVel, double actualVel) {
-    velP = actualVel/targetVel;
-    double runSpeed = actualVel + (12000*velP);
-    if (runSpeed > targetVel) {runSpeed = targetVel;}
+    velP = actualVel/targetVel; //Percent of target
+    double runSpeed = actualVel + (12000*velP); //Ramp up equation
+    //if (runSpeed > targetVel) {runSpeed = targetVel;}
     SmartDashboard.putNumber("shoot", actualVel);
-    
-    if (actualVel < targetVel - 7000){
-      m_shooterFalcon.set(TalonFXControlMode.Velocity, runSpeed);
+    runSpeed = runSpeed/targetVel; //Convert to percent
+    if (actualVel < targetVel - 1000){
+      m_shooterFalcon.set(TalonFXControlMode.PercentOutput, runSpeed);
     }
     else{
-      m_shooterFalcon.set(TalonFXControlMode.Velocity, targetVel);
+      m_shooterFalcon.set(TalonFXControlMode.Velocity, targetVel); //Init PID
     }
   }
 }
