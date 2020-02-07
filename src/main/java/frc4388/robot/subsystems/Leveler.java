@@ -7,19 +7,26 @@
 
 package frc4388.robot.subsystems;
 
-import edu.wpi.first.wpilibj.Spark;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc4388.robot.Constants.IntakeConstants;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-public class Intake extends SubsystemBase {
-  Spark m_intakeMotor = new Spark(IntakeConstants.INTAKE_SPARK_ID);
-  
+import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc4388.robot.Constants.LevelerConstants;
+
+public class Leveler extends SubsystemBase {
+  WPI_TalonSRX m_levelerMotor = new WPI_TalonSRX(LevelerConstants.LEVELER_TALON_ID);
+
   /**
-   * Creates a new Intake.
+   * Creates a new Leveler.
    */
-  public Intake() {
-    
-    m_intakeMotor.setInverted(false);
+  public Leveler() {
+    m_levelerMotor.configFactoryDefault();
+
+    m_levelerMotor.setNeutralMode(NeutralMode.Brake);
+
+    m_levelerMotor.setInverted(false);
   }
 
   @Override
@@ -31,7 +38,7 @@ public class Intake extends SubsystemBase {
    * Runs intake motor
    * @param input the percent output to run motor at
    */
-  public void runIntake(double input) {
-    m_intakeMotor.set(input);
+  public void runLeveler(double input) {
+    m_levelerMotor.set(input);
   }
 }
