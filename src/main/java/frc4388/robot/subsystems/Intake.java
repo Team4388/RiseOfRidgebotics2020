@@ -28,7 +28,7 @@ public class Intake extends SubsystemBase {
 
   /**
    * Runs intake motor
-   * @param input the voltage to run motor at
+   * @param input the percent output to run motor at
    */
   public void runIntake(double input) {
     m_intakeMotor.set(input);

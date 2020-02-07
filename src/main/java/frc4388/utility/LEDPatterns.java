@@ -1,7 +1,8 @@
 package frc4388.utility;
 
 /**
- * Add your docs here.
+ * Enum to hold all the different patterns for a Blinkin LED Driver.
+ * Use in place of a double when setting the Blinkin output.
  */
 public enum LEDPatterns {
   /* PALLETTE PATTERNS */

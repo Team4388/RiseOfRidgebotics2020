@@ -14,17 +14,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.LEDConstants;
 import frc4388.utility.LEDPatterns;
 
-/**
- * Allows for the control of a 5v LED Strip using a Rev Robotics Blinkin LED
- * Driver
- */
 public class LED extends SubsystemBase {
 
   public static float currentLED;
   public static Spark LEDController;
 
   /**
-   * Add your docs here.
+   * Creates a new LED to run a 5v LED Strip using a Rev 
+   * Robotics Blinkin LED Driver
    */
   public LED(){
     LEDController = new Spark(LEDConstants.LED_SPARK_ID);
@@ -34,14 +31,17 @@ public class LED extends SubsystemBase {
   }
 
   /**
-   * Add your docs here.
+   * Sends an update to the LED Driver with the current LED value.
+   * This method should be run continously to keep the lights on.
    */
   public void updateLED(){
     LEDController.set(currentLED);
   }
 
   /**
-   * Add your docs here.
+   * Sets the current LED pattern. This method should only be run
+   * whenever you want to change the current LED.
+   * @param pattern LEDPattern to set the Blinkin to.
    */
   public void setPattern(LEDPatterns pattern){
     currentLED = pattern.getValue();
