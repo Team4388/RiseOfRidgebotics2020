@@ -67,8 +67,8 @@ public class RobotContainer {
     */
     private void configureButtonBindings() {
         /* Driver Buttons */
-        new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-            .whenPressed(new DriveStraightToPositionPID(m_robotDrive, 36));
+        //new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
+        //    .whenPressed(new DriveStraightToPositionPID(m_robotDrive, 36));
 
         /* Operator Buttons */
         // activates "Lit Mode"
@@ -84,8 +84,8 @@ public class RobotContainer {
         new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
             .whenPressed(new InstantCommand(() -> m_robotDrive.resetGyroYaw(), m_robotDrive));
 
-        new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
-            .whenPressed(new RunCommand(() -> m_robotDrive.runMotionMagicPID(5000, 0), m_robotDrive));
+        //new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
+        //    .whenPressed(new RunCommand(() -> m_robotDrive.runMotionMagicPID(5000, 0), m_robotDrive));
 
         new JoystickButton(getDriverJoystick(), XboxController.LEFT_JOYSTICK_BUTTON)
             .whenPressed(new InstantCommand(() -> System.out.print("Gamer"), m_robotDrive));
