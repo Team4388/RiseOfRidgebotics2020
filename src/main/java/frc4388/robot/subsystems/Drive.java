@@ -93,7 +93,14 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.config_kP(DriveConstants.SLOT_TURNING, m_gainsTurning.kP, DriveConstants.DRIVE_TIMEOUT_MS);
     m_rightFrontMotor.config_kI(DriveConstants.SLOT_TURNING, m_gainsTurning.kI, DriveConstants.DRIVE_TIMEOUT_MS);
     m_rightFrontMotor.config_kD(DriveConstants.SLOT_TURNING, m_gainsTurning.kD, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightFrontMotor.configClosedLoopPeakOutput(DriveConstants.SLOT_TURNING, m_gainsTurning.kPeakOutput, DriveConstants.DRIVE_TIMEOUT_MS);    
+    m_rightFrontMotor.configClosedLoopPeakOutput(DriveConstants.SLOT_TURNING, m_gainsTurning.kPeakOutput, DriveConstants.DRIVE_TIMEOUT_MS);
+    
+    m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_DISTANCE, DriveConstants.PID_PRIMARY);
+    m_rightFrontMotor.config_kF(DriveConstants.SLOT_DISTANCE, m_gainsDistance.kF, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kP(DriveConstants.SLOT_DISTANCE, m_gainsDistance.kP, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kI(DriveConstants.SLOT_DISTANCE, m_gainsDistance.kI, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kD(DriveConstants.SLOT_DISTANCE, m_gainsDistance.kD, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.configClosedLoopPeakOutput(DriveConstants.SLOT_DISTANCE, m_gainsDistance.kPeakOutput, DriveConstants.DRIVE_TIMEOUT_MS);    
 
     /* Setup Sensors for WPI_TalonFXs */
     m_leftFrontMotor.setSelectedSensorPosition(0, DriveConstants.PID_PRIMARY, DriveConstants.DRIVE_TIMEOUT_MS);
@@ -313,21 +320,25 @@ public class Drive extends SubsystemBase {
     m_driveTrain.arcadeDrive(move, steer);
   }
 
-  public void runPositionPID(WPI_TalonFX talon, double targetPos) {
-    talon.selectProfileSlot(DriveConstants.SLOT_DISTANCE , DriveConstants.PID_PRIMARY);
-    talon.set(TalonFXControlMode.Position, targetPos);
+  public void runDriveStraightPositionPID(double targetPos, double targetGyro) {
+    m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_DISTANCE, DriveConstants.PID_PRIMARY);
+    m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
+
+    targetPos *= 2;
+    m_rightFrontMotor.set(TalonFXControlMode.Position, targetPos, DemandType.AuxPID, targetGyro);
+    m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
 
     m_driveTrain.feedWatchdog();
   }
 
-  long last = 0;
-  public void runVelocityPID(double targetVel, double targetGyro) {
+  public void runDriveStraightVelocityPID(double targetVel, double targetGyro) {
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
+
     targetVel *= 2;
     m_rightFrontMotor.set(TalonFXControlMode.Velocity, targetVel, DemandType.AuxPID, targetGyro);
-    //m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.PercentOutput);
     m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
+
     m_driveTrain.feedWatchdog();
   }
 
@@ -345,7 +356,7 @@ public class Drive extends SubsystemBase {
    */
   public void runTurningPID(double targetAngle){
     double targetGyro = (targetAngle/360)*DriveConstants.TICKS_PER_GYRO_REV;
-    runVelocityPID(0, targetGyro);
+    runDriveStraightVelocityPID(0, targetGyro);
   }
 
   public double getGyroYaw() {

@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.*;
-import frc4388.robot.commands.DriveAtVelocityPID;
 import frc4388.robot.commands.DriveToDistanceMM;
 import frc4388.robot.commands.DriveStraightToPositionPID;
 import frc4388.robot.commands.DriveStraightAtVelocityPID;
@@ -68,9 +67,8 @@ public class RobotContainer {
     */
     private void configureButtonBindings() {
         /* Driver Buttons */
-        // test command to spin the robot while pressing A on the driver controller
         new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-            .whileHeld(() -> m_robotDrive.driveWithInput(0, 1), m_robotDrive);
+            .whenPressed(new DriveStraightToPositionPID(m_robotDrive, 36));
 
         /* Operator Buttons */
         // activates "Lit Mode"
@@ -80,7 +78,7 @@ public class RobotContainer {
 
         /* PID Test Command */
         new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
-            .whenPressed(new DriveStraightAtVelocityPID(m_robotDrive, 1000))
+            .whenPressed(new DriveStraightAtVelocityPID(m_robotDrive, 500))
             .whenReleased(new InstantCommand(() -> System.out.print("Gamer"), m_robotDrive));
 
         new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
