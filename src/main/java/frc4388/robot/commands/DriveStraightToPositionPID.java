@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.Constants.DriveConstants;
 import frc4388.robot.subsystems.Drive;
 
-public class DriveToDistancePID extends CommandBase {
+public class DriveStraightToPositionPID extends CommandBase {
   Drive m_drive;
   double m_distance;
   double m_leftTarget;
@@ -23,7 +23,7 @@ public class DriveToDistancePID extends CommandBase {
    * @param subsystem drive subsystem
    * @param distance distance to travel in inches
    */
-  public DriveToDistancePID(Drive subsystem, double distance) {
+  public DriveStraightToPositionPID(Drive subsystem, double distance) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = subsystem;
     m_distance = distance * DriveConstants.TICKS_PER_INCH;

@@ -29,8 +29,8 @@ public final class Constants {
         /* PID Constants Drive*/
         public static final int DRIVE_TIMEOUT_MS = 30;
         public static final Gains DRIVE_DISTANCE_GAINS = new Gains(0.2, 0.0, 0.0, 0.0, 0, 0.3);
-        public static final Gains DRIVE_VELOCITY_GAINS = new Gains(0.0, 0.0, 0.0, 0.0448767878, 0, 1.0);
-        public static final Gains DRIVE_TURNING_GAINS = new Gains(0.0, 0.0, 0.0, 0.0, 0, 0.0);
+        public static final Gains DRIVE_VELOCITY_GAINS = new Gains(0.0, 0.0, 0.0, 0.1, 0, 1.0);
+        public static final Gains DRIVE_TURNING_GAINS = new Gains(0.4, 0.0, 0.0, 0.0, 0, 0.3);
         public static final Gains DRIVE_MOTION_MAGIC_GAINS = new Gains(0.2, 0.0, 0.0, 0.0, 0, 1.0);
         public static final int DRIVE_CRUISE_VELOCITY = 2000;
         public static final int DRIVE_ACCELERATION = 1000;
@@ -50,7 +50,7 @@ public final class Constants {
 	    public final static int SLOT_MOTION_MAGIC = 3;
         
         /* Drive Train Characteristics */
-        public static final double TICKS_PER_MOTOR_REV = 2048;
+        public static final double TICKS_PER_MOTOR_REV = 2048*2;
         public static final double MOTOR_TO_WHEEL_GEAR_RATIO = 12.5;
         public static final double WHEEL_DIAMETER_INCHES = 6;
         public static final double TICKS_PER_GYRO_REV = 8192;

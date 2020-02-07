@@ -17,7 +17,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.*;
 import frc4388.robot.commands.DriveAtVelocityPID;
 import frc4388.robot.commands.DriveToDistanceMM;
-import frc4388.robot.commands.DriveToDistancePID;
+import frc4388.robot.commands.DriveStraightToPositionPID;
+import frc4388.robot.commands.DriveStraightAtVelocityPID;
 import frc4388.robot.commands.DriveWithJoystick;
 import frc4388.robot.commands.RunIntakeWithTriggers;
 import frc4388.robot.subsystems.Drive;
@@ -79,7 +80,7 @@ public class RobotContainer {
 
         /* PID Test Command */
         new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
-            .whenPressed(new DriveAtVelocityPID(m_robotDrive, 150))
+            .whenPressed(new DriveStraightAtVelocityPID(m_robotDrive, 1000))
             .whenReleased(new InstantCommand(() -> System.out.print("Gamer"), m_robotDrive));
 
         new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)

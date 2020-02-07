@@ -88,109 +88,117 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.config_kD(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.kD, DriveConstants.DRIVE_TIMEOUT_MS);
     m_rightFrontMotor.configClosedLoopPeakOutput(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.kPeakOutput, DriveConstants.DRIVE_TIMEOUT_MS);
 
-      //Beginning of nada
+    m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
+    m_rightFrontMotor.config_kF(DriveConstants.SLOT_TURNING, m_gainsTurning.kF, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kP(DriveConstants.SLOT_TURNING, m_gainsTurning.kP, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kI(DriveConstants.SLOT_TURNING, m_gainsTurning.kI, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kD(DriveConstants.SLOT_TURNING, m_gainsTurning.kD, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.configClosedLoopPeakOutput(DriveConstants.SLOT_TURNING, m_gainsTurning.kPeakOutput, DriveConstants.DRIVE_TIMEOUT_MS);    
+
     /* Setup Sensors for WPI_TalonFXs */
-    //m_leftFrontMotor.setSelectedSensorPosition(0, DriveConstants.PID_PRIMARY, DriveConstants.DRIVE_TIMEOUT_MS);
-    //m_rightFrontMotor.setSelectedSensorPosition(0, DriveConstants.PID_PRIMARY, DriveConstants.DRIVE_TIMEOUT_MS);
-    
+    m_leftFrontMotor.setSelectedSensorPosition(0, DriveConstants.PID_PRIMARY, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.setSelectedSensorPosition(0, DriveConstants.PID_PRIMARY, DriveConstants.DRIVE_TIMEOUT_MS);
+
     /* Configure the left Talon's selected sensor as local QuadEncoder */
-		//m_leftFrontMotor.configSelectedFeedbackSensor(  FeedbackDevice.IntegratedSensor,    // Local Feedback Source
-    //                                                DriveConstants.PID_PRIMARY,				  // PID Index for Source [0, 1]
-    //                                                DriveConstants.DRIVE_TIMEOUT_MS);	  // Configuration Timeout
+		m_leftFrontMotor.configSelectedFeedbackSensor(  FeedbackDevice.IntegratedSensor,    // Local Feedback Source
+                                                    DriveConstants.PID_PRIMARY,				  // PID Index for Source [0, 1]
+                                                    DriveConstants.DRIVE_TIMEOUT_MS);	  // Configuration Timeout
                                                     
     /*m_rightFrontMotor.configSelectedFeedbackSensor(  FeedbackDevice.IntegratedSensor, // Local Feedback Source
                                                     DriveConstants.PID_PRIMARY,				  // PID Index for Source [0, 1]
                                                     DriveConstants.DRIVE_TIMEOUT_MS);*/	// Configuration Timeout
 
     /* Configure the Remote Talon's selected sensor as a remote sensor for the right Talon */
-		//m_rightFrontMotor.configRemoteFeedbackFilter( m_leftFrontMotor.getDeviceID(),					      // Device ID of Source
-    //                                              RemoteSensorSource.TalonSRX_SelectedSensor,
-    //                                              DriveConstants.REMOTE_0,							        // Source number [0, 1]
-    //                                              DriveConstants.DRIVE_TIMEOUT_MS);				  // Configuration Timeout
+		m_rightFrontMotor.configRemoteFeedbackFilter( m_leftFrontMotor.getDeviceID(),					      // Device ID of Source
+                                                  RemoteSensorSource.TalonSRX_SelectedSensor,
+                                                  DriveConstants.REMOTE_0,							        // Source number [0, 1]
+                                                  DriveConstants.DRIVE_TIMEOUT_MS);				  // Configuration Timeout
 
     /* Configure the Pigeon IMU to the other Remote Slot available on the right Talon */
-		//m_rightFrontMotor.configRemoteFeedbackFilter( m_pigeon.getDeviceID(),
-    //                                              RemoteSensorSource.Pigeon_Yaw,
-    //                                              DriveConstants.REMOTE_1,	
-    //                                              DriveConstants.DRIVE_TIMEOUT_MS);
+		m_rightFrontMotor.configRemoteFeedbackFilter( m_pigeon.getDeviceID(),
+                                                  RemoteSensorSource.Pigeon_Yaw,
+                                                  DriveConstants.REMOTE_1,	
+                                                  DriveConstants.DRIVE_TIMEOUT_MS);
 
     /* Setup Sum signal to be used for Distance */
-    //m_rightFrontMotor.configSensorTerm(SensorTerm.Sum0, FeedbackDevice.RemoteSensor0, DriveConstants.DRIVE_TIMEOUT_MS);
-    //m_rightFrontMotor.configSensorTerm(SensorTerm.Sum1, FeedbackDevice.IntegratedSensor, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.configSensorTerm(SensorTerm.Sum0, FeedbackDevice.RemoteSensor0, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.configSensorTerm(SensorTerm.Sum1, FeedbackDevice.IntegratedSensor, DriveConstants.DRIVE_TIMEOUT_MS);
 
-    /* Configure Sum [Sum of both QuadEncoders] to be used for Primary PID Index */
-		//m_rightFrontMotor.configSelectedFeedbackSensor(	FeedbackDevice.IntegratedSensor, 
-    //                                                DriveConstants.PID_PRIMARY,
-    //                                                DriveConstants.DRIVE_TIMEOUT_MS);
-
-    /* Scale Feedback by 0.5 to half the sum of Distance */
-	  /*m_rightFrontMotor.configSelectedFeedbackCoefficient(  1.0, 						                    // Coefficient
-                                                          DriveConstants.PID_PRIMARY,		      // PID Slot of Source 
-                                                          DriveConstants.DRIVE_TIMEOUT_MS);   // Configuration Timeout
-    
+    /* Diff Signal */
     m_rightFrontMotor.configSensorTerm(SensorTerm.Diff0, FeedbackDevice.RemoteSensor0, DriveConstants.DRIVE_TIMEOUT_MS);
     m_rightFrontMotor.configSensorTerm(SensorTerm.Diff1, FeedbackDevice.IntegratedSensor, DriveConstants.DRIVE_TIMEOUT_MS);
+
+    /* Configure Sum [Sum of both QuadEncoders] to be used for Primary PID Index */
+		m_rightFrontMotor.configSelectedFeedbackSensor(	FeedbackDevice.SensorDifference,
+                                                    DriveConstants.PID_PRIMARY,
+                                                    DriveConstants.DRIVE_TIMEOUT_MS);
+ 
+    /* Scale Feedback by 0.5 to half the sum of Distance */
+	  m_rightFrontMotor.configSelectedFeedbackCoefficient(  1, 						                    // Coefficient
+                                                          DriveConstants.PID_PRIMARY,		      // PID Slot of Source 
+                                                          DriveConstants.DRIVE_TIMEOUT_MS);   // Configuration Timeout
 
     m_rightFrontMotor.configSelectedFeedbackSensor(	FeedbackDevice.RemoteSensor1, 
                                                     DriveConstants.PID_TURN,
                                                     DriveConstants.DRIVE_TIMEOUT_MS);
 
     /* Don't scale the Feedback Sensor (use 1 for 1:1 ratio) */
-    /*m_rightFrontMotor.configSelectedFeedbackCoefficient(	1,
+    m_rightFrontMotor.configSelectedFeedbackCoefficient(  1,
                                                           DriveConstants.PID_TURN,
                                                           DriveConstants.DRIVE_TIMEOUT_MS);
 
-    /* Scale the Feedback Sensor using a coefficient */
-	  /*m_leftFrontMotor.configSelectedFeedbackCoefficient(	1.0,
+    /* Don't scale the Feedback Sensor (use 1 for 1:1 ratio) */
+	  m_leftFrontMotor.configSelectedFeedbackCoefficient( 1,
                                                         DriveConstants.PID_PRIMARY,
                                                         DriveConstants.DRIVE_TIMEOUT_MS);
-                                                        */
+                                                        
    /* Set status frame periods to ensure we don't have stale data */
-		//m_rightFrontMotor.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20, DriveConstants.DRIVE_TIMEOUT_MS);
-		//m_rightFrontMotor.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20, DriveConstants.DRIVE_TIMEOUT_MS);
-		//m_rightFrontMotor.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 20, DriveConstants.DRIVE_TIMEOUT_MS);
-    //m_leftFrontMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, DriveConstants.DRIVE_TIMEOUT_MS);
-    //m_pigeon.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR, 5, DriveConstants.DRIVE_TIMEOUT_MS);
-    
+		m_rightFrontMotor.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20, DriveConstants.DRIVE_TIMEOUT_MS);
+		m_rightFrontMotor.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20, DriveConstants.DRIVE_TIMEOUT_MS);
+		m_rightFrontMotor.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 20, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftFrontMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_pigeon.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR, 5, DriveConstants.DRIVE_TIMEOUT_MS);
+
     /* Smart Dashboard Initial Values */
 
       /* Set up Chooser */
-    //m_chooser.setDefaultOption("Distance PID", m_gainsDistance);
+    m_chooser.setDefaultOption("Distance PID", m_gainsDistance);
     //setDriveTrainGains("Distance PID", m_gainsDistance);
-    //m_chooser.addOption("Velocity PID", m_gainsVelocity);
+    m_chooser.addOption("Velocity PID", m_gainsVelocity);
     //setDriveTrainGains("Velocity PID", m_gainsVelocity);
-    //m_chooser.addOption("Turning PID", m_gainsTurning);
+    m_chooser.addOption("Turning PID", m_gainsTurning);
     //setDriveTrainGains("Turning PID", m_gainsTurning);
-    //m_chooser.addOption("Motion Magic PID", m_gainsMotionMagic);
+    m_chooser.addOption("Motion Magic PID", m_gainsMotionMagic);
     //setDriveTrainGains("Motion Magic PID", m_gainsMotionMagic);
-    //Shuffleboard.getTab("PID").add(m_chooser);
+    Shuffleboard.getTab("PID").add(m_chooser);
 
       /* Gyro */
-    //SmartDashboard.putNumber("Pigeon Yaw", getGyroYaw());
-    //SmartDashboard.putNumber("Pigeon Pitch", getGyroPitch());
-    //SmartDashboard.putNumber("Pigeon Roll", getGyroRoll());
+    SmartDashboard.putNumber("Pigeon Yaw", getGyroYaw());
+    SmartDashboard.putNumber("Pigeon Pitch", getGyroPitch());
+    SmartDashboard.putNumber("Pigeon Roll", getGyroRoll());
 
       /* Sensor Values */
-    //SmartDashboard.putNumber("Left Motor Velocity Raw", m_leftFrontMotor.getSelectedSensorVelocity(0));
-    //SmartDashboard.putNumber("Right Motor Velocity Raw", m_rightFrontMotor.getSelectedSensorVelocity());
-    //SmartDashboard.putNumber("Left Motor Position Raw", m_leftFrontMotor.getSelectedSensorPosition(0));
-    //SmartDashboard.putNumber("Right Motor Position Raw", m_rightFrontMotor.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Left Motor Velocity Raw", m_leftFrontMotor.getSelectedSensorVelocity(0));
+    SmartDashboard.putNumber("Right Motor Velocity Raw", m_rightFrontMotor.getSelectedSensorVelocity());
+    SmartDashboard.putNumber("Left Motor Position Raw", m_leftFrontMotor.getSelectedSensorPosition(0));
+    SmartDashboard.putNumber("Right Motor Position Raw", m_rightFrontMotor.getSelectedSensorPosition());
 
       /* PID */
-    //Gains gains = m_chooser.getSelected();
-    //Shuffleboard.getTab("PID").add("P Value Drive", gains.kP);
-    //Shuffleboard.getTab("PID").add("I Value Drive", gains.kI);
-    //Shuffleboard.getTab("PID").add("D Value Drive", gains.kD);
-    //Shuffleboard.getTab("PID").add("F Value Drive", gains.kF);
+    Gains gains = m_chooser.getSelected();
+    Shuffleboard.getTab("PID").add("P Value Drive", gains.kP);
+    Shuffleboard.getTab("PID").add("I Value Drive", gains.kI);
+    Shuffleboard.getTab("PID").add("D Value Drive", gains.kD);
+    Shuffleboard.getTab("PID").add("F Value Drive", gains.kF);
 
-    /**
+        
+   /**
 		 * Max out the peak output (for all modes).  
 		 * However you can limit the output of a given PID object with configClosedLoopPeakOutput().
 		 */
-		//m_leftFrontMotor.configPeakOutputForward(+1, DriveConstants.DRIVE_TIMEOUT_MS);
-		//m_leftFrontMotor.configPeakOutputReverse(-1, DriveConstants.DRIVE_TIMEOUT_MS);
-		//m_rightFrontMotor.configPeakOutputForward(+1, DriveConstants.DRIVE_TIMEOUT_MS);
-		//m_rightFrontMotor.configPeakOutputReverse(-1, DriveConstants.DRIVE_TIMEOUT_MS);
+		m_leftFrontMotor.configPeakOutputForward(+1, DriveConstants.DRIVE_TIMEOUT_MS);
+		m_leftFrontMotor.configPeakOutputReverse(-1, DriveConstants.DRIVE_TIMEOUT_MS);
+		m_rightFrontMotor.configPeakOutputForward(+1, DriveConstants.DRIVE_TIMEOUT_MS);
+		m_rightFrontMotor.configPeakOutputReverse(-1, DriveConstants.DRIVE_TIMEOUT_MS);
 
     /**
 		 * 1ms per loop.  PID loop can be slowed down if need be.
@@ -199,56 +207,42 @@ public class Drive extends SubsystemBase {
 		 * - sensor deltas are very small per update, so derivative error never gets large enough to be useful.
 		 * - sensor movement is very slow causing the derivative error to be near zero.
 		 */
-    //int closedLoopTimeMs = 1;
-    //m_rightFrontMotor.configClosedLoopPeriod(DriveConstants.PID_PRIMARY, closedLoopTimeMs, DriveConstants.DRIVE_TIMEOUT_MS);
-    //m_rightFrontMotor.configClosedLoopPeriod(DriveConstants.PID_TURN, closedLoopTimeMs, DriveConstants.DRIVE_TIMEOUT_MS);
-
+    int closedLoopTimeMs = 1;
+    m_rightFrontMotor.configClosedLoopPeriod(DriveConstants.PID_PRIMARY, closedLoopTimeMs, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.configClosedLoopPeriod(DriveConstants.PID_TURN, closedLoopTimeMs, DriveConstants.DRIVE_TIMEOUT_MS);
     /**
 		 * configAuxPIDPolarity(boolean invert, int timeoutMs)
 		 * false means talon's local output is PID0 + PID1, and other side Talon is PID0 - PID1
 		 * true means talon's local output is PID0 - PID1, and other side Talon is PID0 + PID1
 		 */
-    //m_rightFrontMotor.configAuxPIDPolarity(false, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.configAuxPIDPolarity(false, DriveConstants.DRIVE_TIMEOUT_MS);
   }
 
-  Gains gainsOld = m_chooser.getSelected();
   @Override
   public void periodic() {
     try {
-      //SmartDashboard.putNumber("Pigeon Yaw", getGyroYaw());
-      //SmartDashboard.putNumber("Pigeon Pitch", getGyroPitch());
-      //SmartDashboard.putNumber("Pigeon Roll", getGyroRoll());
+      SmartDashboard.putNumber("Pigeon Yaw", getGyroYaw());
+      SmartDashboard.putNumber("Pigeon Pitch", getGyroPitch());
+      SmartDashboard.putNumber("Pigeon Roll", getGyroRoll());
 
-      //SmartDashboard.putNumber("Left Motor Velocity Raw", m_leftFrontMotor.getSelectedSensorVelocity(0));
-      //SmartDashboard.putNumber("Right Motor Velocity Raw", m_rightFrontMotor.getSelectedSensorVelocity());
-      //SmartDashboard.putNumber("Left Motor Position Raw", m_leftFrontMotor.getSelectedSensorPosition());
-      //SmartDashboard.putNumber("Right Motor Position Raw", m_rightFrontMotor.getSelectedSensorPosition(0));
+      SmartDashboard.putNumber("Left Motor Velocity Raw", m_leftFrontMotor.getSelectedSensorVelocity(0));
+      SmartDashboard.putNumber("Right Motor Velocity Raw", m_rightFrontMotor.getSelectedSensorVelocity());
+      SmartDashboard.putNumber("Left Motor Position Raw", m_leftFrontMotor.getSelectedSensorPosition());
+      SmartDashboard.putNumber("Right Motor Position Raw", m_rightFrontMotor.getSelectedSensorPosition(0));
+      SmartDashboard.putNumber("Right Motor Velocity Int Sensor", m_rightFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
+      SmartDashboard.putNumber("Left Motor Velocity Int Sensor", m_leftFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
 
-      //SmartDashboard.putNumber("Right Front Motor Current", m_rightFrontMotor.getSupplyCurrent());
-      //SmartDashboard.putNumber("Left Front Motor Current", m_leftFrontMotor.getSupplyCurrent());
-      //SmartDashboard.putNumber("Right Back Motor Current", m_rightFrontMotor.getSupplyCurrent());
-      //SmartDashboard.putNumber("Left Back Motor Current", m_leftFrontMotor.getSupplyCurrent());
+      SmartDashboard.putNumber("Right Front Motor Current", m_rightFrontMotor.getSupplyCurrent());
+      SmartDashboard.putNumber("Left Front Motor Current", m_leftFrontMotor.getSupplyCurrent());
+      SmartDashboard.putNumber("Right Back Motor Current", m_rightFrontMotor.getSupplyCurrent());
+      SmartDashboard.putNumber("Left Back Motor Current", m_leftFrontMotor.getSupplyCurrent());
 
-      //SmartDashboard.putNumber("PID 0 Error", m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_PRIMARY));
-      //SmartDashboard.putNumber("PID 1 Error", m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_TURN));
-      //SmartDashboard.putNumber("PID 0 Target", m_rightFrontMotor.getClosedLoopTarget(DriveConstants.PID_PRIMARY));
-      //SmartDashboard.putNumber("PID 1 Target", m_rightFrontMotor.getClosedLoopTarget(DriveConstants.PID_TURN));
-      //SmartDashboard.putNumber("PID 0 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_PRIMARY));
-      //SmartDashboard.putNumber("PID 1 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_TURN));
-
-      /*Gains gains = m_chooser.getSelected();
-      if (gains.equals(gainsOld)) {
-        SmartDashboard.putNumber("P Value Drive", gains.kP);
-        SmartDashboard.putNumber("I Value Drive", gains.kI);
-        SmartDashboard.putNumber("D Value Drive", gains.kD);
-        SmartDashboard.putNumber("F Value Drive", gains.kF);
-      }
-      gains.kP = SmartDashboard.getNumber("P Value Drive", gains.kP);
-      gains.kI = SmartDashboard.getNumber("I Value Drive", gains.kI);
-      gains.kD = SmartDashboard.getNumber("D Value Drive", gains.kD);
-      gains.kF = SmartDashboard.getNumber("F Value Drive", gains.kF);
-      setDriveTrainGains(m_chooser.getName(), gains);
-      gainsOld = gains;*/
+      SmartDashboard.putNumber("PID 0 Error", m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_PRIMARY));
+      SmartDashboard.putNumber("PID 1 Error", m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_TURN));
+      SmartDashboard.putNumber("PID 0 Target", m_rightFrontMotor.getClosedLoopTarget(DriveConstants.PID_PRIMARY));
+      SmartDashboard.putNumber("PID 1 Target", m_rightFrontMotor.getClosedLoopTarget(DriveConstants.PID_TURN));
+      SmartDashboard.putNumber("PID 0 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_PRIMARY));
+      SmartDashboard.putNumber("PID 1 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_TURN));
 
     } catch (Exception e) {
       System.err.println("Error in the Drive Subsystem");
@@ -328,15 +322,12 @@ public class Drive extends SubsystemBase {
 
   long last = 0;
   public void runVelocityPID(double targetVel, double targetGyro) {
-    //m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
-    //m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
-    m_rightBackMotor.follow(m_rightFrontMotor);
-    m_rightFrontMotor.set(TalonFXControlMode.Velocity, 1000);//, DemandType.AuxPID, targetGyro);
-    long now = System.nanoTime();
-    SmartDashboard.putNumber("Loop Time", (now-last)/1000000);
-    last = now;
-    m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.PercentOutput);
-    //m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
+    m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
+    m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
+    targetVel *= 2;
+    m_rightFrontMotor.set(TalonFXControlMode.Velocity, targetVel, DemandType.AuxPID, targetGyro);
+    //m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.PercentOutput);
+    m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
     m_driveTrain.feedWatchdog();
   }
 
