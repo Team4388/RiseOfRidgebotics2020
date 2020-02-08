@@ -64,7 +64,7 @@ public class Drive extends SubsystemBase {
     m_pigeon.configFactoryDefault();
     resetGyroYaw();
 
-    speedShift = new DoubleSolenoid(1,0,1);
+    speedShift = new DoubleSolenoid(7,0,1);
 
     /* set back motors as followers */
     m_leftBackMotor.follow(m_leftFrontMotor);
