@@ -67,6 +67,7 @@ public final class Constants {
     
     public static final class IntakeConstants {
         public static final int INTAKE_SPARK_ID = 9;
+        public static final int EXTENDER_SPARK_ID = 10;
     }
     
     public static final class ClimberConstants {
