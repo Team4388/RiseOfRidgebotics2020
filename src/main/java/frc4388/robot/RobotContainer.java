@@ -77,16 +77,17 @@ public class RobotContainer {
             .whenReleased(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN));
 
         /* PID Test Command */
+        // runs velocity PID while driving straight
         new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
             .whenPressed(new DriveStraightAtVelocityPID(m_robotDrive, 500))
             .whenReleased(new InstantCommand(() -> System.out.print("Gamer"), m_robotDrive));
-
+        // resets the yaw of the pigeon
         new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
             .whenPressed(new InstantCommand(() -> m_robotDrive.resetGyroYaw(), m_robotDrive));
 
         //new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
         //    .whenPressed(new RunCommand(() -> m_robotDrive.runMotionMagicPID(5000, 0), m_robotDrive));
-
+        // interrupts any running command
         new JoystickButton(getDriverJoystick(), XboxController.LEFT_JOYSTICK_BUTTON)
             .whenPressed(new InstantCommand(() -> System.out.print("Gamer"), m_robotDrive));
     }

@@ -16,7 +16,9 @@ public class DriveStraightAtVelocityPID extends CommandBase {
   double m_targetVel;
   double m_targetGyro;
   /**
-   * Creates a new DriveVelocityControlPID.
+   * Creates a new DriveStraightAtVelocityPID.
+   * @param subsystem The drive subsystem
+   * @param targetVel The target velocity for the motors in units
    */
   public DriveStraightAtVelocityPID(Drive subsystem, double targetVel) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -34,7 +36,7 @@ public class DriveStraightAtVelocityPID extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.err.println(m_drive.m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_TURN));
+    //System.err.println(m_drive.m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_TURN));
     m_drive.runDriveStraightVelocityPID(-m_targetVel, m_targetGyro);
   }
 

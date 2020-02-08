@@ -39,7 +39,7 @@ public class DriveStraightToPositionPID extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.err.println(m_drive.m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_TURN));
+    //System.err.println(m_drive.m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_TURN));
     m_drive.runDriveStraightPositionPID(m_targetPos, m_targetGyro);
   }
 

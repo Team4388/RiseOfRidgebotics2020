@@ -60,8 +60,8 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.configFactoryDefault();
     m_leftBackMotor.configFactoryDefault();
     m_rightBackMotor.configFactoryDefault();
-    //m_pigeon.configFactoryDefault();
-    //resetGyroYaw();
+    m_pigeon.configFactoryDefault();
+    resetGyroYaw();
 
     /* set back motors as followers */
     m_leftBackMotor.follow(m_leftFrontMotor);
@@ -82,25 +82,25 @@ public class Drive extends SubsystemBase {
 
 
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
-    m_rightFrontMotor.config_kF(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.kF, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightFrontMotor.config_kP(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.kP, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightFrontMotor.config_kI(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.kI, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightFrontMotor.config_kD(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.kD, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightFrontMotor.configClosedLoopPeakOutput(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.kPeakOutput, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kF(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.m_kF, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kP(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.m_kP, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kI(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.m_kI, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kD(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.m_kD, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.configClosedLoopPeakOutput(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.m_kPeakOutput, DriveConstants.DRIVE_TIMEOUT_MS);
 
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
-    m_rightFrontMotor.config_kF(DriveConstants.SLOT_TURNING, m_gainsTurning.kF, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightFrontMotor.config_kP(DriveConstants.SLOT_TURNING, m_gainsTurning.kP, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightFrontMotor.config_kI(DriveConstants.SLOT_TURNING, m_gainsTurning.kI, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightFrontMotor.config_kD(DriveConstants.SLOT_TURNING, m_gainsTurning.kD, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightFrontMotor.configClosedLoopPeakOutput(DriveConstants.SLOT_TURNING, m_gainsTurning.kPeakOutput, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kF(DriveConstants.SLOT_TURNING, m_gainsTurning.m_kF, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kP(DriveConstants.SLOT_TURNING, m_gainsTurning.m_kP, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kI(DriveConstants.SLOT_TURNING, m_gainsTurning.m_kI, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kD(DriveConstants.SLOT_TURNING, m_gainsTurning.m_kD, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.configClosedLoopPeakOutput(DriveConstants.SLOT_TURNING, m_gainsTurning.m_kPeakOutput, DriveConstants.DRIVE_TIMEOUT_MS);
     
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_DISTANCE, DriveConstants.PID_PRIMARY);
-    m_rightFrontMotor.config_kF(DriveConstants.SLOT_DISTANCE, m_gainsDistance.kF, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightFrontMotor.config_kP(DriveConstants.SLOT_DISTANCE, m_gainsDistance.kP, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightFrontMotor.config_kI(DriveConstants.SLOT_DISTANCE, m_gainsDistance.kI, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightFrontMotor.config_kD(DriveConstants.SLOT_DISTANCE, m_gainsDistance.kD, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightFrontMotor.configClosedLoopPeakOutput(DriveConstants.SLOT_DISTANCE, m_gainsDistance.kPeakOutput, DriveConstants.DRIVE_TIMEOUT_MS);    
+    m_rightFrontMotor.config_kF(DriveConstants.SLOT_DISTANCE, m_gainsDistance.m_kF, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kP(DriveConstants.SLOT_DISTANCE, m_gainsDistance.m_kP, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kI(DriveConstants.SLOT_DISTANCE, m_gainsDistance.m_kI, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kD(DriveConstants.SLOT_DISTANCE, m_gainsDistance.m_kD, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.configClosedLoopPeakOutput(DriveConstants.SLOT_DISTANCE, m_gainsDistance.m_kPeakOutput, DriveConstants.DRIVE_TIMEOUT_MS);    
 
     /* Setup Sensors for WPI_TalonFXs */
     m_leftFrontMotor.setSelectedSensorPosition(0, DriveConstants.PID_PRIMARY, DriveConstants.DRIVE_TIMEOUT_MS);
@@ -140,7 +140,7 @@ public class Drive extends SubsystemBase {
                                                     DriveConstants.PID_PRIMARY,
                                                     DriveConstants.DRIVE_TIMEOUT_MS);
  
-    /* Scale Feedback by 0.5 to half the sum of Distance */
+    /* Don't scale the Feedback Sensor (use 1 for 1:1 ratio) */
 	  m_rightFrontMotor.configSelectedFeedbackCoefficient(  1, 						                    // Coefficient
                                                           DriveConstants.PID_PRIMARY,		      // PID Slot of Source 
                                                           DriveConstants.DRIVE_TIMEOUT_MS);   // Configuration Timeout
@@ -192,10 +192,10 @@ public class Drive extends SubsystemBase {
 
       /* PID */
     Gains gains = m_chooser.getSelected();
-    Shuffleboard.getTab("PID").add("P Value Drive", gains.kP);
-    Shuffleboard.getTab("PID").add("I Value Drive", gains.kI);
-    Shuffleboard.getTab("PID").add("D Value Drive", gains.kD);
-    Shuffleboard.getTab("PID").add("F Value Drive", gains.kF);
+    Shuffleboard.getTab("PID").add("P Value Drive", gains.m_kP);
+    Shuffleboard.getTab("PID").add("I Value Drive", gains.m_kI);
+    Shuffleboard.getTab("PID").add("D Value Drive", gains.m_kD);
+    Shuffleboard.getTab("PID").add("F Value Drive", gains.m_kF);
 
         
    /**
@@ -277,38 +277,38 @@ public class Drive extends SubsystemBase {
     /* Distance */
     if (slot.equals("Distance PID")) {
       m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_DISTANCE, DriveConstants.PID_PRIMARY);
-      m_rightFrontMotor.config_kF(DriveConstants.SLOT_DISTANCE, gains.kF, DriveConstants.DRIVE_TIMEOUT_MS);
-      m_rightFrontMotor.config_kP(DriveConstants.SLOT_DISTANCE, gains.kP, DriveConstants.DRIVE_TIMEOUT_MS);
-      m_rightFrontMotor.config_kI(DriveConstants.SLOT_DISTANCE, gains.kI, DriveConstants.DRIVE_TIMEOUT_MS);
-      m_rightFrontMotor.config_kD(DriveConstants.SLOT_DISTANCE, gains.kD, DriveConstants.DRIVE_TIMEOUT_MS);
+      m_rightFrontMotor.config_kF(DriveConstants.SLOT_DISTANCE, gains.m_kF, DriveConstants.DRIVE_TIMEOUT_MS);
+      m_rightFrontMotor.config_kP(DriveConstants.SLOT_DISTANCE, gains.m_kP, DriveConstants.DRIVE_TIMEOUT_MS);
+      m_rightFrontMotor.config_kI(DriveConstants.SLOT_DISTANCE, gains.m_kI, DriveConstants.DRIVE_TIMEOUT_MS);
+      m_rightFrontMotor.config_kD(DriveConstants.SLOT_DISTANCE, gains.m_kD, DriveConstants.DRIVE_TIMEOUT_MS);
     }
 
     /* Velocity */
     if (slot.equals("Velocity PID")) {
       m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
-      m_rightFrontMotor.config_kF(DriveConstants.SLOT_VELOCITY, gains.kF, DriveConstants.DRIVE_TIMEOUT_MS);
-      m_rightFrontMotor.config_kP(DriveConstants.SLOT_VELOCITY, gains.kP, DriveConstants.DRIVE_TIMEOUT_MS);
-      m_rightFrontMotor.config_kI(DriveConstants.SLOT_VELOCITY, gains.kI, DriveConstants.DRIVE_TIMEOUT_MS);
-      m_rightFrontMotor.config_kD(DriveConstants.SLOT_VELOCITY, gains.kD, DriveConstants.DRIVE_TIMEOUT_MS);
-      m_rightFrontMotor.configClosedLoopPeakOutput(DriveConstants.SLOT_VELOCITY, gains.kPeakOutput, DriveConstants.DRIVE_TIMEOUT_MS);
+      m_rightFrontMotor.config_kF(DriveConstants.SLOT_VELOCITY, gains.m_kF, DriveConstants.DRIVE_TIMEOUT_MS);
+      m_rightFrontMotor.config_kP(DriveConstants.SLOT_VELOCITY, gains.m_kP, DriveConstants.DRIVE_TIMEOUT_MS);
+      m_rightFrontMotor.config_kI(DriveConstants.SLOT_VELOCITY, gains.m_kI, DriveConstants.DRIVE_TIMEOUT_MS);
+      m_rightFrontMotor.config_kD(DriveConstants.SLOT_VELOCITY, gains.m_kD, DriveConstants.DRIVE_TIMEOUT_MS);
+      m_rightFrontMotor.configClosedLoopPeakOutput(DriveConstants.SLOT_VELOCITY, gains.m_kPeakOutput, DriveConstants.DRIVE_TIMEOUT_MS);
     }
     /* Turning */
     if (slot.equals("Turning PID")) {
       m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
-      m_rightFrontMotor.config_kF(DriveConstants.SLOT_TURNING, gains.kF, DriveConstants.DRIVE_TIMEOUT_MS);
-      m_rightFrontMotor.config_kP(DriveConstants.SLOT_TURNING, gains.kP, DriveConstants.DRIVE_TIMEOUT_MS);
-      m_rightFrontMotor.config_kI(DriveConstants.SLOT_TURNING, gains.kI, DriveConstants.DRIVE_TIMEOUT_MS);
-      m_rightFrontMotor.config_kD(DriveConstants.SLOT_TURNING, gains.kD, DriveConstants.DRIVE_TIMEOUT_MS);
-      m_rightFrontMotor.configClosedLoopPeakOutput(DriveConstants.SLOT_TURNING, gains.kPeakOutput, DriveConstants.DRIVE_TIMEOUT_MS);
+      m_rightFrontMotor.config_kF(DriveConstants.SLOT_TURNING, gains.m_kF, DriveConstants.DRIVE_TIMEOUT_MS);
+      m_rightFrontMotor.config_kP(DriveConstants.SLOT_TURNING, gains.m_kP, DriveConstants.DRIVE_TIMEOUT_MS);
+      m_rightFrontMotor.config_kI(DriveConstants.SLOT_TURNING, gains.m_kI, DriveConstants.DRIVE_TIMEOUT_MS);
+      m_rightFrontMotor.config_kD(DriveConstants.SLOT_TURNING, gains.m_kD, DriveConstants.DRIVE_TIMEOUT_MS);
+      m_rightFrontMotor.configClosedLoopPeakOutput(DriveConstants.SLOT_TURNING, gains.m_kPeakOutput, DriveConstants.DRIVE_TIMEOUT_MS);
     }
 
     /* Motion Magic */
     if (slot.equals("Motion Magic PID")) {
       m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_MOTION_MAGIC, DriveConstants.PID_PRIMARY);
-      m_rightFrontMotor.config_kF(DriveConstants.SLOT_MOTION_MAGIC, gains.kF, DriveConstants.DRIVE_TIMEOUT_MS);
-      m_rightFrontMotor.config_kP(DriveConstants.SLOT_MOTION_MAGIC, gains.kP, DriveConstants.DRIVE_TIMEOUT_MS);
-      m_rightFrontMotor.config_kI(DriveConstants.SLOT_MOTION_MAGIC, gains.kI, DriveConstants.DRIVE_TIMEOUT_MS);
-      m_rightFrontMotor.config_kD(DriveConstants.SLOT_MOTION_MAGIC, gains.kD, DriveConstants.DRIVE_TIMEOUT_MS);
+      m_rightFrontMotor.config_kF(DriveConstants.SLOT_MOTION_MAGIC, gains.m_kF, DriveConstants.DRIVE_TIMEOUT_MS);
+      m_rightFrontMotor.config_kP(DriveConstants.SLOT_MOTION_MAGIC, gains.m_kP, DriveConstants.DRIVE_TIMEOUT_MS);
+      m_rightFrontMotor.config_kI(DriveConstants.SLOT_MOTION_MAGIC, gains.m_kI, DriveConstants.DRIVE_TIMEOUT_MS);
+      m_rightFrontMotor.config_kD(DriveConstants.SLOT_MOTION_MAGIC, gains.m_kD, DriveConstants.DRIVE_TIMEOUT_MS);
     
       m_rightFrontMotor.configMotionCruiseVelocity(DriveConstants.DRIVE_CRUISE_VELOCITY, DriveConstants.DRIVE_TIMEOUT_MS);
       m_rightFrontMotor.configMotionAcceleration(DriveConstants.DRIVE_ACCELERATION, DriveConstants.DRIVE_TIMEOUT_MS);
@@ -321,6 +321,7 @@ public class Drive extends SubsystemBase {
   public void driveWithInput(double move, double steer){
     m_driveTrain.arcadeDrive(move, steer);
   }
+
   /**
    * Runs a position PID while driving straight (has not been tested)
    * @param targetPos The position to drive to in units
@@ -336,6 +337,7 @@ public class Drive extends SubsystemBase {
 
     m_driveTrain.feedWatchdog();
   }
+
   /**
    * Runs velocity PID while driving straight
    * @param targetVel The velocity to drive at in units
@@ -351,6 +353,7 @@ public class Drive extends SubsystemBase {
 
     m_driveTrain.feedWatchdog();
   }
+
   /**
    * Runs motion magic PID while driving straight (has not been tested)
    * @param targetPos The position to drive to in units
@@ -359,8 +362,10 @@ public class Drive extends SubsystemBase {
   public void runMotionMagicPID(double targetPos, double targetGyro){
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_MOTION_MAGIC, DriveConstants.PID_PRIMARY);
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
+    
     m_rightFrontMotor.set(TalonFXControlMode.MotionMagic, targetPos, DemandType.AuxPID, targetGyro);
     m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
+    
     m_driveTrain.feedWatchdog();
   }
 
@@ -370,27 +375,43 @@ public class Drive extends SubsystemBase {
    */
   public void runTurningPID(double targetAngle){
     double targetGyro = (targetAngle/360)*DriveConstants.TICKS_PER_GYRO_REV;
+    
     runDriveStraightVelocityPID(0, targetGyro);
   }
 
+  /**
+   * Returns the current yaw of the pigeon
+   */
   public double getGyroYaw() {
     double[] ypr = new double[3];
+    
     m_pigeon.getYawPitchRoll(ypr);
     return ypr[0];
   }
 
+  /**
+   * Returns the current pitch of the pigeon
+   */
   public double getGyroPitch() {
     double[] ypr = new double[3];
+    
     m_pigeon.getYawPitchRoll(ypr);
     return ypr[1];
   }
 
+  /**
+   * Returns the current roll of the pigeon
+   */
   public double getGyroRoll() {
     double[] ypr = new double[3];
+    
     m_pigeon.getYawPitchRoll(ypr);
     return ypr[2];
   }
 
+  /**
+   * Resets the yaw of the pigeon
+   */
   public void resetGyroYaw() {
     m_pigeon.setYaw(0);
     m_pigeon.setAccumZAngle(0);

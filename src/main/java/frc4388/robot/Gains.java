@@ -11,20 +11,29 @@ package frc4388.robot;
  * Add your docs here.
  */
 public class Gains {
-    public double kP;
-    public double kI;
-    public double kD;
-    public double kF;
-    public int kIzone;
-    public double kPeakOutput;
+    public double m_kP;
+    public double m_kI;
+    public double m_kD;
+    public double m_kF;
+    public int m_kIzone;
+    public double m_kPeakOutput;
 
-    public Gains(double _kP, double _kI, double _kD, double _kF, int _kIzone, double _kPeakOutput)
+    /**
+     * Creates Gains object for PIDs
+     * @param kP The P value.
+     * @param kI The I value.
+     * @param kD The D value.
+     * @param kF The F value.
+     * @param kIzone The zone of the I value.
+     * @param kPeakOutput The peak output setting the motors to run the gains at.
+     */
+    public Gains(double kP, double kI, double kD, double kF, int kIzone, double kPeakOutput)
     {
-        kP = _kP;
-        kI = _kI;
-        kD = _kD;
-        kF = _kF;
-        kIzone = _kIzone;
-        kPeakOutput = _kPeakOutput;
+        m_kP = kP;
+        m_kI = kI;
+        m_kD = kD;
+        m_kF = kF;
+        m_kIzone = kIzone;
+        m_kPeakOutput = kPeakOutput;
     }
 }
