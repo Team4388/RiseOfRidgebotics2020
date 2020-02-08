@@ -269,7 +269,9 @@ public class Drive extends SubsystemBase {
   }
 
   /**
-   * Add your docs here.
+   * Initializes the drive train gains kP, kI, kD, and kF
+   * @param slot Either "Distance PID", "Velocity PID", "Motion Magic PID", or "Turning PID"
+   * @param gains A gains object which is the gains that are set for the slot
    */
   public void setDriveTrainGains(String slot, Gains gains){
     /* Distance */
@@ -319,7 +321,11 @@ public class Drive extends SubsystemBase {
   public void driveWithInput(double move, double steer){
     m_driveTrain.arcadeDrive(move, steer);
   }
-
+  /**
+   * Runs a position PID while driving straight (has not been tested)
+   * @param targetPos The position to drive to in units
+   * @param targetGyro The angle to drive at in units
+   */
   public void runDriveStraightPositionPID(double targetPos, double targetGyro) {
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_DISTANCE, DriveConstants.PID_PRIMARY);
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
@@ -330,7 +336,11 @@ public class Drive extends SubsystemBase {
 
     m_driveTrain.feedWatchdog();
   }
-
+  /**
+   * Runs velocity PID while driving straight
+   * @param targetVel The velocity to drive at in units
+   * @param targetGyro The angle to drive at in units
+   */
   public void runDriveStraightVelocityPID(double targetVel, double targetGyro) {
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
@@ -341,7 +351,11 @@ public class Drive extends SubsystemBase {
 
     m_driveTrain.feedWatchdog();
   }
-
+  /**
+   * Runs motion magic PID while driving straight (has not been tested)
+   * @param targetPos The position to drive to in units
+   * @param targetGyro The angle to drive at in units
+   */
   public void runMotionMagicPID(double targetPos, double targetGyro){
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_MOTION_MAGIC, DriveConstants.PID_PRIMARY);
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
