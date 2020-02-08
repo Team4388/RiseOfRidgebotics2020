@@ -30,13 +30,13 @@ public final class Constants {
         public static final int INTAKE_SPARK_ID = 1;
     }
     public static final class StorageConstants {
-        public static final int STORAGE_CAN_ID = 10;
+        public static final int STORAGE_CAN_ID = 9;
         public static final int BEAM_SENSOR_DIO_0 = 0;
         public static final int BEAM_SENSOR_DIO_1 = 1;
         public static final int BEAM_SENSOR_DIO_2 = 2;
         public static final int BEAM_SENSOR_DIO_3 = 3;
-        public static final int BEAM_SENSOR_DIO_4 = 0;
-        public static final int BEAM_SENSOR_DIO_5 = 0;
+        public static final int BEAM_SENSOR_DIO_4 = 4;
+        public static final int BEAM_SENSOR_DIO_5 = 5;
     }
     public static final class LEDConstants {
         public static final int LED_SPARK_ID = 0;
