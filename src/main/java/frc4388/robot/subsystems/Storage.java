@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.StorageConstants;
 
 public class Storage extends SubsystemBase {
-  private WPI_TalonSRX m_storageMotor = new WPI_TalonSRX(StorageConstants.STORAGE_TALON_ID);
+  private CANSparkMax m_storageMotor = new CANSparkMax(StorageConstants.STORAGE_CAN_ID, MotorType.kBrushless);
   private DigitalInput[] m_beamSensors = new DigitalInput[6];
   /**
    * Creates a new Storage.

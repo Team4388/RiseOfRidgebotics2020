@@ -30,7 +30,7 @@ public final class Constants {
         public static final int INTAKE_SPARK_ID = 1;
     }
     public static final class StorageConstants {
-        public static final int STORAGE_TALON_ID = 9;
+        public static final int STORAGE_CAN_ID = 10;
         public static final int BEAM_SENSOR_DIO_0 = 0;
         public static final int BEAM_SENSOR_DIO_1 = 1;
         public static final int BEAM_SENSOR_DIO_2 = 2;
