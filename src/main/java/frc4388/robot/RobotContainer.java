@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.*;
+import frc4388.robot.commands.DriveStraightAtVelocityPID;
 import frc4388.robot.commands.DriveWithJoystick;
 import frc4388.robot.commands.RunIntakeWithTriggers;
 import frc4388.robot.commands.RunLevelerWithJoystick;
@@ -22,6 +23,7 @@ import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Intake;
 import frc4388.robot.subsystems.LED;
 import frc4388.robot.subsystems.Leveler;
+import frc4388.robot.subsystems.Storage;
 import frc4388.utility.LEDPatterns;
 import frc4388.utility.controller.IHandController;
 import frc4388.utility.controller.XboxController;
@@ -39,6 +41,7 @@ public class RobotContainer {
     private final LED m_robotLED = new LED();
     private final Intake m_robotIntake = new Intake();
     private final Leveler m_robotLeveler = new Leveler();
+    private final Storage m_robotStorage = new Storage();
 
     /* Controllers */
     private final XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
@@ -59,6 +62,8 @@ public class RobotContainer {
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
         // drives the robot with an axis input from the driver controller
         m_robotLeveler.setDefaultCommand(new RunLevelerWithJoystick(m_robotLeveler, getDriverController()));
+        // runs storage motor at 50 percent
+        m_robotStorage.setDefaultCommand(new RunCommand(() -> m_robotStorage.runStorage(0.0), m_robotStorage));
     }
 
     /**
@@ -69,17 +74,31 @@ public class RobotContainer {
     */
     private void configureButtonBindings() {
         /* Driver Buttons */
-        // test command to spin the robot while pressing A on the driver controller
-        new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-            .whileHeld(() -> m_robotDrive.driveWithInput(0, 1));
+        //new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
+        //    .whenPressed(new DriveStraightToPositionPID(m_robotDrive, 36));
 
         /* Operator Buttons */
         // activates "Lit Mode"
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
             .whenPressed(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW))
             .whenReleased(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN));
+
+        /* PID Test Command */
+        // runs velocity PID while driving straight
+        new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
+            .whenPressed(new DriveStraightAtVelocityPID(m_robotDrive, 500))
+            .whenReleased(new InstantCommand(() -> System.out.print("Gamer"), m_robotDrive));
+        // resets the yaw of the pigeon
+        new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
+            .whenPressed(new InstantCommand(() -> m_robotDrive.resetGyroYaw(), m_robotDrive));
+
+        //new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
+        //    .whenPressed(new RunCommand(() -> m_robotDrive.runMotionMagicPID(5000, 0), m_robotDrive));
+        // interrupts any running command
+        new JoystickButton(getDriverJoystick(), XboxController.LEFT_JOYSTICK_BUTTON)
+            .whenPressed(new InstantCommand(() -> System.out.print("Gamer"), m_robotDrive));
     }
-    
+      
     /**
      * Sets Motors to a NeutralMode.
      * @param mode NeutralMode to set motors to
