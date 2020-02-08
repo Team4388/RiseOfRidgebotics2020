@@ -14,8 +14,10 @@ import frc4388.robot.subsystems.Drive;
 
 public class DriveStraightToPositionPID extends CommandBase {
   Drive m_drive;
-  double m_targetPos;
+  double m_targetPosIn;
+  double m_targetPosOut;
   double m_targetGyro;
+  int i;
   
   /**
    * Creates a new DriveToDistancePID.
@@ -25,22 +27,27 @@ public class DriveStraightToPositionPID extends CommandBase {
   public DriveStraightToPositionPID(Drive subsystem, double targetPos) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = subsystem;
-    m_targetPos = targetPos * DriveConstants.TICKS_PER_INCH;
+    m_targetPosIn = targetPos * DriveConstants.TICKS_PER_INCH;
     addRequirements(m_drive);
-    SmartDashboard.putNumber("Distance Target Inches", targetPos);
+    //SmartDashboard.putNumber("Distance Target Inches", targetPos);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    //System.err.println("PID START \n | \n |");
     m_targetGyro = m_drive.m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_TURN);
+    m_targetPosOut = m_targetPosIn + m_drive.m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_PRIMARY);
+    i = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //System.err.println(m_drive.m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_TURN));
-    m_drive.runDriveStraightPositionPID(m_targetPos, m_targetGyro);
+    //System.err.println("| \n Sensor Pos \n" + m_drive.m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_PRIMARY));
+    //System.err.println("Sensor Error \n" + m_drive.m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_PRIMARY));
+    //System.err.println("Sensor Target \n" + m_drive.m_rightFrontMotor.getClosedLoopTarget(DriveConstants.PID_PRIMARY));
+    m_drive.runDriveStraightPositionPID(m_targetPosOut, m_targetGyro);
   }
 
   // Called once the command ends or is interrupted.
@@ -51,9 +58,11 @@ public class DriveStraightToPositionPID extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (Math.abs(m_drive.m_leftFrontMotor.getActiveTrajectoryPosition() - m_targetPos) < 500){
+    if (Math.abs((int)m_drive.m_rightFrontMotor.getSelectedSensorVelocity(DriveConstants.PID_PRIMARY)) < 5 && i > 5){
       return true;
     } else {
+      i++;
+      //System.err.println(i);
       return false;
     }
   }
