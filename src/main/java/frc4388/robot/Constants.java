@@ -68,6 +68,10 @@ public final class Constants {
     public static final class IntakeConstants {
         public static final int INTAKE_SPARK_ID = 9;
     }
+    
+    public static final class ClimberConstants {
+        public static final int CLIMBER_SPARK_ID = 10;
+    }
   
     public static final class LevelerConstants {
         public static final int LEVELER_CAN_ID = -1;
