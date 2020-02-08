@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.*;
 import frc4388.robot.commands.DriveStraightAtVelocityPID;
+import frc4388.robot.commands.DriveStraightToPositionMM;
 import frc4388.robot.commands.DriveStraightToPositionPID;
 import frc4388.robot.commands.DriveWithJoystick;
 import frc4388.robot.commands.RunIntakeWithTriggers;
@@ -74,7 +75,7 @@ public class RobotContainer {
             .whenReleased(new InstantCommand(() -> System.out.print("Gamer"), m_robotDrive));
         // resets the yaw of the pigeon
         new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
-            .whenPressed(new InstantCommand(() -> m_robotDrive.resetGyroYaw(), m_robotDrive));
+            .whenPressed(new DriveStraightToPositionMM(m_robotDrive, 400));
         // turn 45 degrees
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
             .whenPressed(new RunCommand(() -> m_robotDrive.runTurningPID(45), m_robotDrive));
