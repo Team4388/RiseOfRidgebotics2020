@@ -75,7 +75,7 @@ public class RobotContainer {
             .whenReleased(new InstantCommand(() -> System.out.print("Gamer"), m_robotDrive));
         // resets the yaw of the pigeon
         new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
-            .whenPressed(new DriveStraightToPositionMM(m_robotDrive, 400));
+            .whenPressed(new DriveStraightToPositionMM(m_robotDrive, 72));
         // turn 45 degrees
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
             .whenPressed(new RunCommand(() -> m_robotDrive.runTurningPID(45), m_robotDrive));

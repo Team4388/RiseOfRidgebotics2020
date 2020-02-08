@@ -44,9 +44,9 @@ public class DriveStraightToPositionMM extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.err.println("| \n Sensor Pos \n" + m_drive.m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_TURN));
-    System.err.println("Sensor Error \n" + m_drive.m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_TURN));
-    System.err.println("Sensor Target \n" + m_drive.m_rightFrontMotor.getClosedLoopTarget(DriveConstants.PID_TURN));
+    //System.err.println("| \n Sensor Pos \n" + m_drive.m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_TURN));
+    //System.err.println("Sensor Error \n" + m_drive.m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_TURN));
+    //System.err.println("Sensor Target \n" + m_drive.m_rightFrontMotor.getClosedLoopTarget(DriveConstants.PID_TURN));
     m_drive.runMotionMagicPID(m_targetPosOut, m_targetGyro);
   }
 
