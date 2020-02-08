@@ -19,6 +19,7 @@ import frc4388.robot.commands.DriveStraightAtVelocityPID;
 import frc4388.robot.commands.DriveStraightToPositionMM;
 import frc4388.robot.commands.DriveStraightToPositionPID;
 import frc4388.robot.commands.DriveWithJoystick;
+import frc4388.robot.commands.DriveWithJoystickAuxPID;
 import frc4388.robot.commands.RunIntakeWithTriggers;
 import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Intake;
@@ -73,6 +74,9 @@ public class RobotContainer {
         new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
             .whenPressed(new DriveStraightAtVelocityPID(m_robotDrive, 500))
             .whenReleased(new InstantCommand(() -> System.out.print("Gamer"), m_robotDrive));
+        
+        new JoystickButton(getDriverJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
+            .whileHeld(new DriveWithJoystickAuxPID(m_robotDrive, getDriverController()));
         // resets the yaw of the pigeon
         new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
             .whenPressed(new DriveStraightToPositionMM(m_robotDrive, 72));

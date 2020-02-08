@@ -330,6 +330,15 @@ public class Drive extends SubsystemBase {
     m_driveTrain.arcadeDrive(move, steer);
   }
 
+  public void driveWithInputAux(double move, double targetGyro) {
+    m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
+
+    m_rightFrontMotor.set(TalonFXControlMode.PercentOutput, move, DemandType.AuxPID, targetGyro);
+    m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
+
+    m_driveTrain.feedWatchdog();
+  }
+
   /**
    * Runs a position PID while driving straight
    * @param targetPos The position to drive to in units
