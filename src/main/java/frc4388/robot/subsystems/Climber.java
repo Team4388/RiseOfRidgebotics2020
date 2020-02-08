@@ -27,8 +27,8 @@ public class Climber extends SubsystemBase {
     m_forwardLimit = m_climberMotor.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyClosed);
     m_reverseLimit = m_climberMotor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyClosed);
 
-    m_forwardLimit.enableLimitSwitch(true);
-    m_reverseLimit.enableLimitSwitch(true);
+    m_forwardLimit.enableLimitSwitch(false);
+    m_reverseLimit.enableLimitSwitch(false);
   }
 
   @Override
