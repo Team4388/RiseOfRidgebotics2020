@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.*;
+import frc4388.robot.commands.DriveStraightAtVelocityPID;
 import frc4388.robot.commands.DriveWithJoystick;
 import frc4388.robot.commands.RunIntakeWithTriggers;
 import frc4388.robot.subsystems.Drive;
@@ -64,17 +65,31 @@ public class RobotContainer {
     */
     private void configureButtonBindings() {
         /* Driver Buttons */
-        // test command to spin the robot while pressing A on the driver controller
-        new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-            .whileHeld(() -> m_robotDrive.driveWithInput(0, 1));
+        //new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
+        //    .whenPressed(new DriveStraightToPositionPID(m_robotDrive, 36));
 
         /* Operator Buttons */
         // activates "Lit Mode"
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
             .whenPressed(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW))
             .whenReleased(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN));
+
+        /* PID Test Command */
+        // runs velocity PID while driving straight
+        new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
+            .whenPressed(new DriveStraightAtVelocityPID(m_robotDrive, 500))
+            .whenReleased(new InstantCommand(() -> System.out.print("Gamer"), m_robotDrive));
+        // resets the yaw of the pigeon
+        new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
+            .whenPressed(new InstantCommand(() -> m_robotDrive.resetGyroYaw(), m_robotDrive));
+
+        //new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
+        //    .whenPressed(new RunCommand(() -> m_robotDrive.runMotionMagicPID(5000, 0), m_robotDrive));
+        // interrupts any running command
+        new JoystickButton(getDriverJoystick(), XboxController.LEFT_JOYSTICK_BUTTON)
+            .whenPressed(new InstantCommand(() -> System.out.print("Gamer"), m_robotDrive));
     }
-    
+      
     /**
      * Sets Motors to a NeutralMode.
      * @param mode NeutralMode to set motors to
