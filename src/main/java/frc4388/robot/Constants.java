@@ -70,11 +70,11 @@ public final class Constants {
     }
   
     public static final class LevelerConstants {
-        public static final int LEVELER_TALON_ID = 9;
+        public static final int LEVELER_CAN_ID = 9;
     }
   
     public static final class StorageConstants {
-        public static final int STORAGE_CAN_ID = 9;
+        public static final int STORAGE_CAN_ID = -1;
         public static final int BEAM_SENSOR_DIO_0 = 0;
         public static final int BEAM_SENSOR_DIO_1 = 1;
         public static final int BEAM_SENSOR_DIO_2 = 2;
