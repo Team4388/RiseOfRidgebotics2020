@@ -17,6 +17,7 @@ import com.ctre.phoenix.motorcontrol.SensorTerm;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.music.Orchestra;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 
@@ -40,6 +41,7 @@ public class Drive extends SubsystemBase {
   public WPI_TalonFX m_leftBackMotor = new WPI_TalonFX(DriveConstants.DRIVE_LEFT_BACK_CAN_ID);
   public WPI_TalonFX m_rightBackMotor = new WPI_TalonFX(DriveConstants.DRIVE_RIGHT_BACK_CAN_ID);
   public static PigeonIMU m_pigeon = new PigeonIMU(DriveConstants.PIGEON_ID);
+  public Orchestra m_Orchestra = new Orchestra();
 
   public DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
 
@@ -221,6 +223,12 @@ public class Drive extends SubsystemBase {
 		 * true means talon's local output is PID0 - PID1, and other side Talon is PID0 + PID1
 		 */
     m_rightFrontMotor.configAuxPIDPolarity(false, DriveConstants.DRIVE_TIMEOUT_MS);
+
+    m_Orchestra.addInstrument(m_leftBackMotor);
+    m_Orchestra.addInstrument(m_leftFrontMotor);
+    m_Orchestra.addInstrument(m_rightBackMotor);
+    m_Orchestra.addInstrument(m_rightFrontMotor);
+
   }
 
   @Override
@@ -413,5 +421,15 @@ public class Drive extends SubsystemBase {
   public void resetGyroYaw() {
     m_pigeon.setYaw(0);
     m_pigeon.setAccumZAngle(0);
+  }
+
+/**
+ * Plays Music!
+ * @param song The name of the song to be played
+ */
+  public void playSong(String song) {
+    String toPlay = song + ".chrp";
+    m_Orchestra.loadMusic(toPlay);
+    m_Orchestra.play();
   }
 }
