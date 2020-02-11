@@ -25,13 +25,18 @@ public class PlaySongDrive extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_drive.playSong();
+    m_drive.m_rightFrontMotor.set(0);
+    m_drive.m_leftFrontMotor.set(0);
+    m_drive.m_rightBackMotor.set(0);
+    m_drive.m_leftBackMotor.set(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.err.println("Playing " + m_drive.m_orchestra.isPlaying());
+    m_drive.playSong();
+    //System.err.println("Playing " + m_drive.m_orchestra.isPlaying());
+    //m_drive.m_driveTrain.feedWatchdog();
   }
 
   // Called once the command ends or is interrupted.

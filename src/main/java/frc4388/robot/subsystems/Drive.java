@@ -56,7 +56,7 @@ public class Drive extends SubsystemBase {
   public static PigeonIMU m_pigeon = new PigeonIMU(DriveConstants.PIGEON_ID);
   public Orchestra m_orchestra = new Orchestra();
 
-  public DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
+  //public DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
 
   SendableChooser<Gains> m_chooser = new SendableChooser<Gains>();
   public static Gains m_gainsDistance = DriveConstants.DRIVE_DISTANCE_GAINS;
@@ -91,7 +91,7 @@ public class Drive extends SubsystemBase {
     /* flip input so forward becomes back, etc */
     m_leftFrontMotor.setInverted(false);
     m_rightFrontMotor.setInverted(true);
-    m_driveTrain.setRightSideInverted(false);
+    //m_driveTrain.setRightSideInverted(false);
     m_leftBackMotor.setInverted(InvertType.FollowMaster);
     m_rightBackMotor.setInverted(InvertType.FollowMaster);
 
@@ -239,10 +239,10 @@ public class Drive extends SubsystemBase {
 		 */
     m_rightFrontMotor.configAuxPIDPolarity(false, DriveConstants.DRIVE_TIMEOUT_MS);
 
-    //m_orchestra.addInstrument(m_leftBackMotor);
-    //m_orchestra.addInstrument(m_leftFrontMotor);
-    //m_orchestra.addInstrument(m_rightBackMotor);
+    m_orchestra.addInstrument(m_leftBackMotor);
     m_orchestra.addInstrument(m_rightFrontMotor);
+    m_orchestra.addInstrument(m_rightBackMotor);
+    m_orchestra.addInstrument(m_leftFrontMotor);
 
     File songsDir = new File(Filesystem.getDeployDirectory().getAbsolutePath() + "/songs");
     System.err.println(songsDir.getPath());
@@ -253,6 +253,7 @@ public class Drive extends SubsystemBase {
     Shuffleboard.getTab("Songs").add(m_songChooser);
   }
 
+  String currentSong = "";
   @Override
   public void periodic() {
     try {
@@ -279,7 +280,11 @@ public class Drive extends SubsystemBase {
       SmartDashboard.putNumber("PID 0 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_PRIMARY));
       SmartDashboard.putNumber("PID 1 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_TURN));
 
-      selectSong(m_songChooser.getSelected());
+      if (currentSong != m_songChooser.getSelected()){
+        currentSong = m_songChooser.getSelected();
+        selectSong(currentSong);
+        System.err.println(currentSong);
+      }
     } catch (Exception e) {
       System.err.println("Error in the Drive Subsystem");
       //e.printStackTrace(System.err);
@@ -348,7 +353,7 @@ public class Drive extends SubsystemBase {
    * Add your docs here.
    */
   public void driveWithInput(double move, double steer){
-    m_driveTrain.arcadeDrive(move, steer);
+    //m_driveTrain.arcadeDrive(move, steer);
   }
 
   /**
@@ -364,7 +369,7 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.set(TalonFXControlMode.Position, targetPos, DemandType.AuxPID, targetGyro);
     m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
 
-    m_driveTrain.feedWatchdog();
+    //m_driveTrain.feedWatchdog();
   }
 
   /**
@@ -380,7 +385,7 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.set(TalonFXControlMode.Velocity, targetVel, DemandType.AuxPID, targetGyro);
     m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
 
-    m_driveTrain.feedWatchdog();
+    //m_driveTrain.feedWatchdog();
   }
 
   /**
@@ -395,7 +400,7 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.set(TalonFXControlMode.MotionMagic, targetPos, DemandType.AuxPID, targetGyro);
     m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
     
-    m_driveTrain.feedWatchdog();
+    //m_driveTrain.feedWatchdog();
   }
 
   /**

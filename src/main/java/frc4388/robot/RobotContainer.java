@@ -99,7 +99,7 @@ public class RobotContainer {
             .whenPressed(new InstantCommand(() -> m_robotDrive.resetGyroYaw(), m_robotDrive));
 
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
-            .whileHeld(new PlaySongDrive(m_robotDrive));
+            .whenPressed(new PlaySongDrive(m_robotDrive));
 
         //new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
         //    .whenPressed(new RunCommand(() -> m_robotDrive.runMotionMagicPID(5000, 0), m_robotDrive));
