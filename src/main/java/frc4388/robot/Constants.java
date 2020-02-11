@@ -66,12 +66,42 @@ public final class Constants {
     }
     
     public static final class IntakeConstants {
-        public static final int INTAKE_SPARK_ID = 1;
+        public static final int INTAKE_SPARK_ID = 9;
+        public static final int EXTENDER_SPARK_ID = 10;
     }
+  
+    public static final class ShooterConstants {
+        public static final int SHOOTER_FALCON_ID = 8;
 
+        /* PID Constants Shooter */
+        public static final int SHOOTER_SLOT_IDX = 0;
+        public static final int SHOOTER_PID_LOOP_IDX = 1;
+        public static final int SHOOTER_TIMEOUT_MS = 30;
+        public static final Gains SHOOTER_GAINS = new Gains(0.4, 0.0005, 13, 0.05, 0, 1.0);
+        
+        public static final double ENCODER_TICKS_PER_REV = 2048;
+    }
+    
+    public static final class ClimberConstants {
+        public static final int CLIMBER_SPARK_ID = 10;
+    }
+  
+    public static final class LevelerConstants {
+        public static final int LEVELER_CAN_ID = -1;
+    }
+  
+    public static final class StorageConstants {
+        public static final int STORAGE_CAN_ID = -1;
+        public static final int BEAM_SENSOR_DIO_0 = 0;
+        public static final int BEAM_SENSOR_DIO_1 = 1;
+        public static final int BEAM_SENSOR_DIO_2 = 2;
+        public static final int BEAM_SENSOR_DIO_3 = 3;
+        public static final int BEAM_SENSOR_DIO_4 = 4;
+        public static final int BEAM_SENSOR_DIO_5 = 5;
+    }
+  
     public static final class LEDConstants {
         public static final int LED_SPARK_ID = 0;
-
         public static final LEDPatterns DEFAULT_PATTERN = LEDPatterns.FOREST_WAVES;
     }
 

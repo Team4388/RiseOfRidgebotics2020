@@ -21,6 +21,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -50,6 +51,8 @@ public class Drive extends SubsystemBase {
   public static Gains m_gainsTurning = DriveConstants.DRIVE_TURNING_GAINS;
   public static Gains m_gainsMotionMagic = DriveConstants.DRIVE_MOTION_MAGIC_GAINS;
 
+  public DoubleSolenoid speedShift;
+
   /**
    * Add your docs here.
    */
@@ -61,6 +64,8 @@ public class Drive extends SubsystemBase {
     m_rightBackMotor.configFactoryDefault();
     m_pigeon.configFactoryDefault();
     resetGyroYaw();
+
+    speedShift = new DoubleSolenoid(7,0,1);
 
     /* set back motors as followers */
     m_leftBackMotor.follow(m_leftFrontMotor);
@@ -78,7 +83,6 @@ public class Drive extends SubsystemBase {
     m_driveTrain.setRightSideInverted(false);
     m_leftBackMotor.setInverted(InvertType.FollowMaster);
     m_rightBackMotor.setInverted(InvertType.FollowMaster);
-
 
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
     m_rightFrontMotor.config_kF(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.m_kF, DriveConstants.DRIVE_TIMEOUT_MS);
@@ -244,6 +248,7 @@ public class Drive extends SubsystemBase {
       SmartDashboard.putNumber("Right Motor Velocity Raw", m_rightFrontMotor.getSelectedSensorVelocity());
       SmartDashboard.putNumber("Left Motor Position Raw", m_leftFrontMotor.getSelectedSensorPosition());
       SmartDashboard.putNumber("Right Motor Position Raw", m_rightFrontMotor.getSelectedSensorPosition(0));
+
       SmartDashboard.putNumber("Right Motor Velocity Int Sensor", m_rightFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
       SmartDashboard.putNumber("Left Motor Velocity Int Sensor", m_leftFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
 
@@ -429,5 +434,18 @@ public class Drive extends SubsystemBase {
   public void resetGyroYaw() {
     m_pigeon.setYaw(0);
     m_pigeon.setAccumZAngle(0);
+  }
+
+  /**
+   * Set to high or low gear based on boolean state, true = high, false = low
+   * @param state Chooses between high or low gear
+   */
+  public void setShiftState(boolean state) {
+    if (state == true) {
+			speedShift.set(DoubleSolenoid.Value.kForward);
+		}
+		if (state == false) {
+			speedShift.set(DoubleSolenoid.Value.kReverse);
+		}
   }
 }
