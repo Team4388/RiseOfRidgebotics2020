@@ -102,6 +102,10 @@ public class RobotContainer {
         // interrupts any running command
         new JoystickButton(getDriverJoystick(), XboxController.LEFT_JOYSTICK_BUTTON)
             .whenPressed(new InstantCommand(() -> System.out.print("Gamer"), m_robotDrive));
+
+        /* Storage Neo PID Test */
+        new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
+            .whenPressed(new InstantCommand(() -> m_robotStorage.runStoragePositionPID(20, 0.1, 1e-4, 1.0, 0.0, 0.0, 1, -1)));
     }
       
     /**
