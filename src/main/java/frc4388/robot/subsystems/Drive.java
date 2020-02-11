@@ -20,6 +20,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -49,6 +50,8 @@ public class Drive extends SubsystemBase {
   public static Gains m_gainsTurning = DriveConstants.DRIVE_TURNING_GAINS;
   public static Gains m_gainsMotionMagic = DriveConstants.DRIVE_MOTION_MAGIC_GAINS;
 
+  public DoubleSolenoid speedShift;
+
   /**
    * Add your docs here.
    */
@@ -60,6 +63,8 @@ public class Drive extends SubsystemBase {
     m_rightBackMotor.configFactoryDefault();
     m_pigeon.configFactoryDefault();
     resetGyroYaw();
+
+    speedShift = new DoubleSolenoid(7,0,1);
 
     /* set back motors as followers */
     m_leftBackMotor.follow(m_leftFrontMotor);
@@ -413,5 +418,18 @@ public class Drive extends SubsystemBase {
   public void resetGyroYaw() {
     m_pigeon.setYaw(0);
     m_pigeon.setAccumZAngle(0);
+  }
+
+  /**
+   * Set to high or low gear based on boolean state, true = high, false = low
+   * @param state Chooses between high or low gear
+   */
+  public void setShiftState(boolean state) {
+    if (state == true) {
+			speedShift.set(DoubleSolenoid.Value.kForward);
+		}
+		if (state == false) {
+			speedShift.set(DoubleSolenoid.Value.kReverse);
+		}
   }
 }

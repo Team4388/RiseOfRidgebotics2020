@@ -97,6 +97,14 @@ public class RobotContainer {
         new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
             .whenPressed(new InstantCommand(() -> m_robotDrive.resetGyroYaw(), m_robotDrive));
 
+        // sets solenoids into high gear
+        new JoystickButton(getDriverJoystick(), XboxController.START_BUTTON)
+            .whenPressed(new InstantCommand(() -> m_robotDrive.setShiftState(true), m_robotDrive));
+
+        // sets solenoids into low gear
+        new JoystickButton(getDriverJoystick(), XboxController.BACK_BUTTON)
+            .whenPressed(new InstantCommand(() -> m_robotDrive.setShiftState(false), m_robotDrive));
+
         //new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
         //    .whenPressed(new RunCommand(() -> m_robotDrive.runMotionMagicPID(5000, 0), m_robotDrive));
         // interrupts any running command
