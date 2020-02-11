@@ -8,26 +8,22 @@
 package frc4388.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc4388.robot.subsystems.Intake;
+import frc4388.robot.subsystems.Climber;
 import frc4388.utility.controller.IHandController;
 
-public class RunIntakeWithTriggers extends CommandBase {
-  private Intake m_intake;
+public class RunClimberWithTriggers extends CommandBase {
+  private Climber m_climber;
   private IHandController m_controller;
 
   /**
-   * Uses input from opperator triggers to control intake motor.
-   * The right trigger will run the intake in and the left trigger will run it out.
-   * @param subsystem pass the Intake subsystem from {@link frc4388.robot.RobotContainer#RobotContainer() RobotContainer}
-   * @param controller pass the Operator {@link frc4388.utility.controller.IHandController#getClass() IHandController} using the
-   * {@link frc4388.robot.RobotContainer#getOperatorJoystick() getOperatorJoystick()} method in
-   * {@link frc4388.robot.RobotContainer#RobotContainer() RobotContainer}
+   * Uses input from opperator triggers to control climber motor
+   * @param subsystem the climber subsystem
+   * @param controller the driver controller
    */
-  public RunIntakeWithTriggers(Intake subsystem, IHandController controller) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    m_intake = subsystem;
+  public RunClimberWithTriggers(Climber subsystem, IHandController controller) {
+    m_climber = subsystem;
     m_controller = controller;
-    addRequirements(m_intake);
+    addRequirements(m_climber);
   }
 
   // Called when the command is initially scheduled.
@@ -51,7 +47,7 @@ public class RunIntakeWithTriggers extends CommandBase {
     } else {
       output = rightTrigger;
     }
-    m_intake.runIntake(output);
+    m_climber.runClimber(output);
   }
 
   // Called once the command ends or is interrupted.
