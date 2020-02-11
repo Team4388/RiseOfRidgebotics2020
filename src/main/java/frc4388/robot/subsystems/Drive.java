@@ -423,13 +423,19 @@ public class Drive extends SubsystemBase {
     m_pigeon.setAccumZAngle(0);
   }
 
-/**
- * Plays Music!
- * @param song The name of the song to be played
- */
-  public void playSong(String song) {
+  /**
+   * Plays Music!
+   */
+  public void playSong() {
+    m_Orchestra.play();
+  }
+
+  /**
+   * Selects a song to play!
+   * @param song The name of the song to be played
+   */
+  public void selectSong(String song) {
     String toPlay = song + ".chrp";
     m_Orchestra.loadMusic(toPlay);
-    m_Orchestra.play();
   }
 }
