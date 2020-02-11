@@ -9,6 +9,14 @@ package frc4388.robot.subsystems;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -236,10 +244,10 @@ public class Drive extends SubsystemBase {
     m_orchestra.addInstrument(m_rightBackMotor);
     m_orchestra.addInstrument(m_rightFrontMotor);
 
-    File songsDir = new File(Filesystem.getDeployDirectory().getAbsolutePath() + "/songs");
+    File songsDir = new File(Filesystem.getDeployDirectory().getAbsolutePath() + "\\songs");
     String[] songsStrings = songsDir.list();
     for (String songString : songsStrings){
-      m_songChooser.addOption(songString, songsDir.getAbsolutePath() + songString);
+      m_songChooser.addOption(songString, songsDir.getAbsolutePath() + "\\" + songString);
     }
     Shuffleboard.getTab("Songs").add(m_songChooser);
   }
@@ -449,7 +457,7 @@ public class Drive extends SubsystemBase {
    * @param song The name of the song to be played
    */
   public void selectSong(String song) {
-    //String toPlay = song + ".chrp";
+    SmartDashboard.putString("Selected Song", song);
     m_orchestra.loadMusic(song);
   }
 }
