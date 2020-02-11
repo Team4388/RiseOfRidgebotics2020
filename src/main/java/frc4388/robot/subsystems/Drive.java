@@ -7,6 +7,9 @@
 
 package frc4388.robot.subsystems;
 
+import java.io.File;
+import java.io.FilenameFilter;
+
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.FollowerType;
@@ -21,7 +24,9 @@ import com.ctre.phoenix.music.Orchestra;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -50,6 +55,8 @@ public class Drive extends SubsystemBase {
   public static Gains m_gainsVelocity = DriveConstants.DRIVE_VELOCITY_GAINS;
   public static Gains m_gainsTurning = DriveConstants.DRIVE_TURNING_GAINS;
   public static Gains m_gainsMotionMagic = DriveConstants.DRIVE_MOTION_MAGIC_GAINS;
+
+  SendableChooser<String> m_songChooser = new SendableChooser<String>();
 
   /**
    * Add your docs here.
@@ -229,6 +236,12 @@ public class Drive extends SubsystemBase {
     m_orchestra.addInstrument(m_rightBackMotor);
     m_orchestra.addInstrument(m_rightFrontMotor);
 
+    File songsDir = new File(Filesystem.getDeployDirectory().getAbsolutePath() + "/songs");
+    String[] songsStrings = songsDir.list();
+    for (String songString : songsStrings){
+      m_songChooser.addOption(songString, songsDir.getAbsolutePath() + songString);
+    }
+    Shuffleboard.getTab("Songs").add(m_songChooser);
   }
 
   @Override
@@ -257,6 +270,7 @@ public class Drive extends SubsystemBase {
       SmartDashboard.putNumber("PID 0 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_PRIMARY));
       SmartDashboard.putNumber("PID 1 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_TURN));
 
+      selectSong(m_songChooser.getSelected());
     } catch (Exception e) {
       System.err.println("Error in the Drive Subsystem");
       //e.printStackTrace(System.err);
@@ -435,7 +449,7 @@ public class Drive extends SubsystemBase {
    * @param song The name of the song to be played
    */
   public void selectSong(String song) {
-    String toPlay = song + ".chrp";
-    m_orchestra.loadMusic(toPlay);
+    //String toPlay = song + ".chrp";
+    m_orchestra.loadMusic(song);
   }
 }
