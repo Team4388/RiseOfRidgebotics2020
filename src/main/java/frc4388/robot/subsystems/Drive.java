@@ -321,23 +321,6 @@ public class Drive extends SubsystemBase {
   /**
    * Add your docs here.
    */
-  public void setDriveTrainGains(){
-    m_leftFrontMotor.selectProfileSlot(DriveConstants.DRIVE_SLOT_IDX, DriveConstants.DRIVE_PID_LOOP_IDX);
-    m_leftFrontMotor.config_kF(DriveConstants.DRIVE_SLOT_IDX, m_driveGains.kF, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_leftFrontMotor.config_kP(DriveConstants.DRIVE_SLOT_IDX, m_driveGains.kP, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_leftFrontMotor.config_kI(DriveConstants.DRIVE_SLOT_IDX, m_driveGains.kI, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_leftFrontMotor.config_kD(DriveConstants.DRIVE_SLOT_IDX, m_driveGains.kD, DriveConstants.DRIVE_TIMEOUT_MS);
-
-    m_rightFrontMotor.selectProfileSlot(DriveConstants.DRIVE_SLOT_IDX, DriveConstants.DRIVE_PID_LOOP_IDX);
-    m_rightFrontMotor.config_kF(DriveConstants.DRIVE_SLOT_IDX, m_driveGains.kF, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightFrontMotor.config_kP(DriveConstants.DRIVE_SLOT_IDX, m_driveGains.kP, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightFrontMotor.config_kI(DriveConstants.DRIVE_SLOT_IDX, m_driveGains.kI, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightFrontMotor.config_kD(DriveConstants.DRIVE_SLOT_IDX, m_driveGains.kD, DriveConstants.DRIVE_TIMEOUT_MS);
-  }
-
-  /**
-   * Add your docs here.
-   */
   public void driveWithInput(double move, double steer){
     m_driveTrain.arcadeDrive(move, steer);
   }

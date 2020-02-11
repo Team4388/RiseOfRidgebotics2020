@@ -64,10 +64,10 @@ public class Shooter extends SubsystemBase {
    */
   public void setShooterGains() {
     m_shooterFalcon.selectProfileSlot(ShooterConstants.SHOOTER_SLOT_IDX, ShooterConstants.SHOOTER_PID_LOOP_IDX);
-    m_shooterFalcon.config_kF(ShooterConstants.SHOOTER_SLOT_IDX, m_shooterGains.kF, ShooterConstants.SHOOTER_TIMEOUT_MS);
-    m_shooterFalcon.config_kP(ShooterConstants.SHOOTER_SLOT_IDX, m_shooterGains.kP, ShooterConstants.SHOOTER_TIMEOUT_MS);
-    m_shooterFalcon.config_kI(ShooterConstants.SHOOTER_SLOT_IDX, m_shooterGains.kI, ShooterConstants.SHOOTER_TIMEOUT_MS);
-    m_shooterFalcon.config_kD(ShooterConstants.SHOOTER_SLOT_IDX, m_shooterGains.kD, ShooterConstants.SHOOTER_TIMEOUT_MS);
+    m_shooterFalcon.config_kF(ShooterConstants.SHOOTER_SLOT_IDX, m_shooterGains.m_kF, ShooterConstants.SHOOTER_TIMEOUT_MS);
+    m_shooterFalcon.config_kP(ShooterConstants.SHOOTER_SLOT_IDX, m_shooterGains.m_kP, ShooterConstants.SHOOTER_TIMEOUT_MS);
+    m_shooterFalcon.config_kI(ShooterConstants.SHOOTER_SLOT_IDX, m_shooterGains.m_kI, ShooterConstants.SHOOTER_TIMEOUT_MS);
+    m_shooterFalcon.config_kD(ShooterConstants.SHOOTER_SLOT_IDX, m_shooterGains.m_kD, ShooterConstants.SHOOTER_TIMEOUT_MS);
   }
   /**
    * Runs drum shooter velocity PID.
