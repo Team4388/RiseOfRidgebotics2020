@@ -17,8 +17,8 @@ public class RunExtenderOutIn extends CommandBase {
   private long startTime;
 
   /**
-   * Uses input from opperator triggers to control intake motor.
-   * The right trigger will run the intake in and the left trigger will run it out.
+   * Uses input from opperator to run the extender motor.
+   * The left bumper will run the extender in and out.
    * @param subsystem pass the Intake subsystem from {@link frc4388.robot.RobotContainer#RobotContainer() RobotContainer}
    */
   public RunExtenderOutIn(Intake subsystem) {
