@@ -508,4 +508,10 @@ public class Drive extends SubsystemBase {
   public double ticksToInches(double ticks) {
     return ticks * DriveConstants.INCHES_PER_TICK;
   }
+
+  public void tankDriveVolts(double leftVolts, double rightVolts) {
+    m_leftFrontMotor.setVoltage(leftVolts);
+    m_rightFrontMotor.setVoltage(-rightVolts);
+    m_driveTrain.feedWatchdog();
+  }
 }
