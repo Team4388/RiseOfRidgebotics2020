@@ -41,7 +41,7 @@ public class Drive extends SubsystemBase {
   public WPI_TalonFX m_leftBackMotor = new WPI_TalonFX(DriveConstants.DRIVE_LEFT_BACK_CAN_ID);
   public WPI_TalonFX m_rightBackMotor = new WPI_TalonFX(DriveConstants.DRIVE_RIGHT_BACK_CAN_ID);
   public static PigeonIMU m_pigeon = new PigeonIMU(DriveConstants.PIGEON_ID);
-  public Orchestra m_Orchestra = new Orchestra();
+  public Orchestra m_orchestra = new Orchestra();
 
   public DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
 
@@ -224,10 +224,10 @@ public class Drive extends SubsystemBase {
 		 */
     m_rightFrontMotor.configAuxPIDPolarity(false, DriveConstants.DRIVE_TIMEOUT_MS);
 
-    m_Orchestra.addInstrument(m_leftBackMotor);
-    m_Orchestra.addInstrument(m_leftFrontMotor);
-    m_Orchestra.addInstrument(m_rightBackMotor);
-    m_Orchestra.addInstrument(m_rightFrontMotor);
+    m_orchestra.addInstrument(m_leftBackMotor);
+    m_orchestra.addInstrument(m_leftFrontMotor);
+    m_orchestra.addInstrument(m_rightBackMotor);
+    m_orchestra.addInstrument(m_rightFrontMotor);
 
   }
 
@@ -427,7 +427,7 @@ public class Drive extends SubsystemBase {
    * Plays Music!
    */
   public void playSong() {
-    m_Orchestra.play();
+    m_orchestra.play();
   }
 
   /**
@@ -436,6 +436,6 @@ public class Drive extends SubsystemBase {
    */
   public void selectSong(String song) {
     String toPlay = song + ".chrp";
-    m_Orchestra.loadMusic(toPlay);
+    m_orchestra.loadMusic(toPlay);
   }
 }
