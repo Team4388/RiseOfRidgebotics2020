@@ -9,7 +9,9 @@ package frc4388.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
 import com.revrobotics.SparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -21,6 +23,9 @@ import frc4388.robot.Constants.StorageConstants;
 public class Storage extends SubsystemBase {
   private CANSparkMax m_storageMotor = new CANSparkMax(StorageConstants.STORAGE_CAN_ID, MotorType.kBrushless);
   private DigitalInput[] m_beamSensors = new DigitalInput[6];
+
+  CANPIDController m_storagePIDController = m_storageMotor.getPIDController();
+
   /**
    * Creates a new Storage.
    */
@@ -40,17 +45,32 @@ public class Storage extends SubsystemBase {
 
   /**
    * Runs storage motor
+   * 
    * @param input the voltage to run motor at
    */
-  public void runStorage(double input) {
+  public void runStorage(final double input) {
     m_storageMotor.set(input);
-    boolean beam_on = m_beamSensors[0].get();
+    final boolean beam_on = m_beamSensors[0].get();
 
     if (beam_on) {
       System.err.println("Beam on");
     } else {
       System.err.println("Beam off");
     }
-    
+
+  }
+
+  /* Storage PID Control */
+  public void runStoragePositionPID(double targetPos, double kP, double kI, double kD, double kIz, double kF, double kmaxOutput, double kminOutput)
+  {
+    // Set PID Coefficients
+    m_storagePIDController.setP(kP);
+    m_storagePIDController.setI(kI);
+    m_storagePIDController.setD(kD);
+    m_storagePIDController.setIZone(kIz);
+    m_storagePIDController.setFF(kF);
+    m_storagePIDController.setOutputRange(kminOutput, kmaxOutput);
+
+    m_storagePIDController.setReference(targetPos, ControlType.kPosition);
   }
 }
