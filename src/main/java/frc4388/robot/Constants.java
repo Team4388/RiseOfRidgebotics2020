@@ -50,16 +50,16 @@ public final class Constants {
 	    public final static int SLOT_MOTION_MAGIC = 3;
         
         /* Drive Train Characteristics */
-        public static final double TICKS_PER_MOTOR_REV = 2048*2;
-        public static final double MOTOR_TO_WHEEL_GEAR_RATIO = 12.5;
+        public static final double TICKS_PER_MOTOR_REV = 2048;
+        public static final double MOTOR_ROT_PER_WHEEL_ROT = 5.13;
         public static final double WHEEL_DIAMETER_INCHES = 6;
         public static final double TICKS_PER_GYRO_REV = 8192;
         
         /* Ratio Calculation */
         public static final double TICK_TIME_TO_SECONDS = 0.1;
         public static final double SECONDS_TO_TICK_TIME = 1/TICK_TIME_TO_SECONDS;
-        public static final double WHEEL_TO_MOTOR_GEAR_RATIO = 1/MOTOR_TO_WHEEL_GEAR_RATIO;
-        public static final double TICKS_PER_WHEEL_REV = TICKS_PER_MOTOR_REV * MOTOR_TO_WHEEL_GEAR_RATIO;
+        public static final double WHEEL_ROT_PER_MOTOR_ROT = 1/MOTOR_ROT_PER_WHEEL_ROT;
+        public static final double TICKS_PER_WHEEL_REV = TICKS_PER_MOTOR_REV * MOTOR_ROT_PER_WHEEL_ROT;
         public static final double INCHES_PER_WHEEL_REV = WHEEL_DIAMETER_INCHES * Math.PI;
         public static final double TICKS_PER_INCH = TICKS_PER_WHEEL_REV/INCHES_PER_WHEEL_REV;
         public static final double INCHES_PER_TICK = 1/TICKS_PER_INCH;
