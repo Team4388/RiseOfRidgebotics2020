@@ -14,16 +14,14 @@ import frc4388.utility.controller.IHandController;
 public class RunExtenderOutIn extends CommandBase {
   private Intake m_intake;
   private boolean isOut = false;
+  private long startTime;
 
   /**
    * Uses input from opperator triggers to control intake motor.
    * The right trigger will run the intake in and the left trigger will run it out.
    * @param subsystem pass the Intake subsystem from {@link frc4388.robot.RobotContainer#RobotContainer() RobotContainer}
-   * @param controller pass the Operator {@link frc4388.utility.controller.IHandController#getClass() IHandController} using the
-   * {@link frc4388.robot.RobotContainer#getOperatorJoystick() getOperatorJoystick()} method in
-   * {@link frc4388.robot.RobotContainer#RobotContainer() RobotContainer}
    */
-  public RunExtenderOutIn(Intake subsystem, IHandController controller) {
+  public RunExtenderOutIn(Intake subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_intake = subsystem;
     addRequirements(m_intake);
@@ -33,6 +31,7 @@ public class RunExtenderOutIn extends CommandBase {
   @Override
   public void initialize() {
     isOut = !isOut;
+    startTime = System.currentTimeMillis();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -49,11 +48,15 @@ public class RunExtenderOutIn extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_intake.runExtender(0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (startTime + 3000 < System.currentTimeMillis()) {
+      return true;
+    }
     return false;
   }
 }

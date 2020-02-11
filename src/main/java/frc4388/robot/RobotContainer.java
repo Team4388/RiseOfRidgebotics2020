@@ -18,6 +18,7 @@ import frc4388.robot.Constants.*;
 import frc4388.robot.commands.DriveStraightAtVelocityPID;
 import frc4388.robot.commands.DriveWithJoystick;
 import frc4388.robot.commands.RunClimberWithTriggers;
+import frc4388.robot.commands.RunExtenderOutIn;
 import frc4388.robot.commands.RunIntakeWithTriggers;
 import frc4388.robot.subsystems.Climber;
 import frc4388.robot.commands.RunLevelerWithJoystick;
@@ -87,6 +88,9 @@ public class RobotContainer {
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
             .whenPressed(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW))
             .whenReleased(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN));
+        
+        new JoystickButton(getOperatorJoystick(), XboxController.LEFT_BUMPER_BUTTON)
+            .whenPressed(new RunExtenderOutIn(m_robotIntake));
 
         /* PID Test Command */
         // runs velocity PID while driving straight
