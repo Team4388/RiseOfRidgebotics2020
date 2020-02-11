@@ -78,7 +78,7 @@ public final class Constants {
     }
   
     public static final class StorageConstants {
-        public static final int STORAGE_CAN_ID = -1;
+        public static final int STORAGE_CAN_ID = 10;
 
         /* Ball Indexes */
         public static final int BEAM_SENSOR_DIO_0 = 0;

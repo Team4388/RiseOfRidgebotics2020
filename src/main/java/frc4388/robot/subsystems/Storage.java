@@ -9,6 +9,7 @@ package frc4388.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
@@ -16,6 +17,7 @@ import com.revrobotics.SparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc4388.robot.Constants.StorageConstants;
@@ -26,10 +28,14 @@ public class Storage extends SubsystemBase {
 
   CANPIDController m_storagePIDController = m_storageMotor.getPIDController();
 
+  CANEncoder m_encoder = m_storageMotor.getEncoder();
+
   /**
    * Creates a new Storage.
    */
   public Storage() {
+    resetEncoder();
+
     m_beamSensors[0] = new DigitalInput(StorageConstants.BEAM_SENSOR_DIO_0);
     m_beamSensors[1] = new DigitalInput(StorageConstants.BEAM_SENSOR_DIO_1);
     m_beamSensors[2] = new DigitalInput(StorageConstants.BEAM_SENSOR_DIO_2);
@@ -60,6 +66,11 @@ public class Storage extends SubsystemBase {
 
   }
 
+  public void resetEncoder()
+  {
+    m_encoder.setPosition(0);
+  }
+
   /* Storage PID Control */
   public void runStoragePositionPID(double targetPos, double kP, double kI, double kD, double kIz, double kF, double kmaxOutput, double kminOutput)
   {
@@ -72,5 +83,10 @@ public class Storage extends SubsystemBase {
     m_storagePIDController.setOutputRange(kminOutput, kmaxOutput);
 
     m_storagePIDController.setReference(targetPos, ControlType.kPosition);
+  }
+
+  public void getEncoderPos()
+  {
+    m_encoder.getPosition();
   }
 }
