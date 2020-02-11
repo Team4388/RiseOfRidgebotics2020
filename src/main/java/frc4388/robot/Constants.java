@@ -21,7 +21,7 @@ public final class Constants {
     public static final class DriveConstants {
         /* Drive Train IDs */
         public static final int DRIVE_LEFT_FRONT_CAN_ID = 2;
-        public static final int DRIVE_RIGHT_FRONT_CAN_ID = 4;
+        public static final int DRIVE_RIGHT_FRONT_CAN_ID = 8;
 	    public static final int DRIVE_LEFT_BACK_CAN_ID = 3;
         public static final int DRIVE_RIGHT_BACK_CAN_ID = 5;
         public static final int PIGEON_ID = 6;

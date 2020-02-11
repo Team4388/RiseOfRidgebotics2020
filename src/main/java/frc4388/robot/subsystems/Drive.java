@@ -239,15 +239,16 @@ public class Drive extends SubsystemBase {
 		 */
     m_rightFrontMotor.configAuxPIDPolarity(false, DriveConstants.DRIVE_TIMEOUT_MS);
 
-    m_orchestra.addInstrument(m_leftBackMotor);
-    m_orchestra.addInstrument(m_leftFrontMotor);
-    m_orchestra.addInstrument(m_rightBackMotor);
+    //m_orchestra.addInstrument(m_leftBackMotor);
+    //m_orchestra.addInstrument(m_leftFrontMotor);
+    //m_orchestra.addInstrument(m_rightBackMotor);
     m_orchestra.addInstrument(m_rightFrontMotor);
 
-    File songsDir = new File(Filesystem.getDeployDirectory().getAbsolutePath() + "\\songs");
+    File songsDir = new File(Filesystem.getDeployDirectory().getAbsolutePath() + "/songs");
+    System.err.println(songsDir.getPath());
     String[] songsStrings = songsDir.list();
     for (String songString : songsStrings){
-      m_songChooser.addOption(songString, songsDir.getAbsolutePath() + "\\" + songString);
+      m_songChooser.addOption(songString, songsDir.getAbsolutePath() + "/" + songString);
     }
     Shuffleboard.getTab("Songs").add(m_songChooser);
   }

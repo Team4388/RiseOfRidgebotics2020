@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.*;
 import frc4388.robot.commands.DriveStraightAtVelocityPID;
 import frc4388.robot.commands.DriveWithJoystick;
+import frc4388.robot.commands.PlaySongDrive;
 import frc4388.robot.commands.RunClimberWithTriggers;
 import frc4388.robot.commands.RunIntakeWithTriggers;
 import frc4388.robot.subsystems.Climber;
@@ -98,7 +99,7 @@ public class RobotContainer {
             .whenPressed(new InstantCommand(() -> m_robotDrive.resetGyroYaw(), m_robotDrive));
 
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
-            .whileHeld(new RunCommand(() -> m_robotDrive.playSong(), m_robotDrive));
+            .whileHeld(new PlaySongDrive(m_robotDrive));
 
         //new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
         //    .whenPressed(new RunCommand(() -> m_robotDrive.runMotionMagicPID(5000, 0), m_robotDrive));
