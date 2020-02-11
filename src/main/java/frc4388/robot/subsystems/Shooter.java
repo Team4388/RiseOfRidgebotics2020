@@ -25,7 +25,7 @@ public class Shooter extends SubsystemBase {
 
   double velP;
   /**
-   * Creates a new Shooter.
+   * Creates a new Shooter subsystem.
    */
   public Shooter() {
     m_shooterFalcon.configFactoryDefault();
@@ -80,10 +80,10 @@ public class Shooter extends SubsystemBase {
     //if (runSpeed > targetVel) {runSpeed = targetVel;}
     SmartDashboard.putNumber("shoot", actualVel);
     runSpeed = runSpeed/targetVel; //Convert to percent
-    if (actualVel < targetVel - 1000){
+    if (actualVel < targetVel - 1000){ //PID Based on ramp up amount
       m_shooterFalcon.set(TalonFXControlMode.PercentOutput, runSpeed);
     }
-    else{
+    else{ //PID Based on targetVel
       m_shooterFalcon.set(TalonFXControlMode.Velocity, targetVel); //Init PID
     }
   }
