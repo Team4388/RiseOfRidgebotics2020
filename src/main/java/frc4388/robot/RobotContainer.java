@@ -134,6 +134,13 @@ public class RobotContainer {
         // interrupts any running command
         new JoystickButton(getDriverJoystick(), XboxController.LEFT_JOYSTICK_BUTTON)
             .whenPressed(new InstantCommand(() -> System.out.print("Gamer"), m_robotDrive));
+
+        /* TEST shooter rotate PIDs */
+        new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
+            .whileHeld(new RunCommand(() -> m_robotShooter.runAngleAdjustPID(360, 0.2, 0.0, 0.0, 0.0, 0.0, 1, -1)));
+        new JoystickButton(getOperatorJoystick(), XboxController.B_BUTTON)
+            .whileHeld(new RunCommand(() -> m_robotShooter.runshooterRotatePID(360, 0.2, 0.0, 0.0, 0.0, 0.0, 1, -1)));
+        /* TEST for both commands above */
     }
       
     /**

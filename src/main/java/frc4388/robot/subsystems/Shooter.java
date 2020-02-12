@@ -10,18 +10,31 @@ package frc4388.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.revrobotics.CANEncoder;
+import com.revrobotics.CANPIDController;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Gains;
-import frc4388.robot.Constants.DriveConstants;
 import frc4388.robot.Constants.ShooterConstants;
 
 public class Shooter extends SubsystemBase {
 
   public WPI_TalonFX m_shooterFalcon = new WPI_TalonFX(ShooterConstants.SHOOTER_FALCON_ID);
+  public CANSparkMax m_angleAdjustMotor = new CANSparkMax(ShooterConstants.SHOOTER_ANGLE_ADJUST_ID, MotorType.kBrushless);
+  public CANSparkMax m_shooterRotateMotor = new CANSparkMax(ShooterConstants.SHOOTER_ROTATE_ID, MotorType.kBrushless);
 
   public static Gains m_shooterGains = ShooterConstants.SHOOTER_GAINS;
+
+  // Configure PID Controllers
+  CANPIDController m_angleAdjustPIDController = m_angleAdjustMotor.getPIDController();
+  CANPIDController m_shooterRotatePIDController = m_shooterRotateMotor.getPIDController();
+
+  CANEncoder m_angleEncoder = m_angleAdjustMotor.getEncoder();
+  CANEncoder m_shooterRotateEncoder = m_shooterRotateMotor.getEncoder();
 
   double velP;
   /**
@@ -86,5 +99,39 @@ public class Shooter extends SubsystemBase {
     else{ //PID Based on targetVel
       m_shooterFalcon.set(TalonFXControlMode.Velocity, targetVel); //Init PID
     }
+  }
+
+  /* Angle Adjustment PID Control */
+  public void runAngleAdjustPID(double targetAngle, double kP, double kI, double kD, double kIz, double kF, double kmaxOutput, double kminOutput)
+  {
+    // Set PID Coefficients
+    m_angleAdjustPIDController.setP(kP);
+    m_angleAdjustPIDController.setI(kI);
+    m_angleAdjustPIDController.setD(kD);
+    m_angleAdjustPIDController.setIZone(kIz);
+    m_angleAdjustPIDController.setFF(kF);
+    m_angleAdjustPIDController.setOutputRange(kminOutput, kmaxOutput); 
+
+    // Convert input angle in degrees to rotations of the motor
+    targetAngle = targetAngle/ShooterConstants.DEGREES_PER_ROT;
+
+    m_angleAdjustPIDController.setReference(targetAngle, ControlType.kPosition);
+  }
+
+  /* Rotate Shooter PID Control */
+  public void runshooterRotatePID(double targetAngle, double kP, double kI, double kD, double kIz, double kF, double kmaxOutput, double kminOutput)
+  {
+    // Set PID Coefficients
+    m_shooterRotatePIDController.setP(kP);
+    m_shooterRotatePIDController.setI(kI);
+    m_shooterRotatePIDController.setD(kD);
+    m_shooterRotatePIDController.setIZone(kIz);
+    m_shooterRotatePIDController.setFF(kF);
+    m_shooterRotatePIDController.setOutputRange(kminOutput, kmaxOutput); 
+
+    // Convert input angle in degrees to rotations of the motor
+    targetAngle = targetAngle/ShooterConstants.DEGREES_PER_ROT;
+
+    m_shooterRotatePIDController.setReference(targetAngle, ControlType.kPosition);
   }
 }
