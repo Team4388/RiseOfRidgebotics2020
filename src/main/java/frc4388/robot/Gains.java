@@ -17,6 +17,8 @@ public class Gains {
     public double m_kF;
     public int m_kIzone;
     public double m_kPeakOutput;
+    public double m_kmaxOutput;
+    public double m_kminOutput;
 
     /**
      * Creates Gains object for PIDs
