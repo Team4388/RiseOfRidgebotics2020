@@ -32,8 +32,8 @@ public final class Constants {
         public static final Gains DRIVE_VELOCITY_GAINS = new Gains(0.0, 0.0, 0.0, 0.1, 0, 1.0);
         public static final Gains DRIVE_TURNING_GAINS = new Gains(0.4, 0.0, 0.0, 0.0, 0, 0.3);
         public static final Gains DRIVE_MOTION_MAGIC_GAINS = new Gains(0.2, 0.0, 0.0, 0.0, 0, 1.0);
-        public static final int DRIVE_CRUISE_VELOCITY = 2000;
-        public static final int DRIVE_ACCELERATION = 1000;
+        public static final int DRIVE_CRUISE_VELOCITY = 20000;
+        public static final int DRIVE_ACCELERATION = 7000;
 
         /* Remote Sensors */
         public final static int REMOTE_0 = 0;
@@ -66,7 +66,20 @@ public final class Constants {
     }
     
     public static final class IntakeConstants {
-        public static final int INTAKE_SPARK_ID = 1;
+        public static final int INTAKE_SPARK_ID = 9;
+        public static final int EXTENDER_SPARK_ID = 10;
+    }
+  
+    public static final class ShooterConstants {
+        public static final int SHOOTER_FALCON_ID = 8;
+
+        /* PID Constants Shooter */
+        public static final int SHOOTER_SLOT_IDX = 0;
+        public static final int SHOOTER_PID_LOOP_IDX = 1;
+        public static final int SHOOTER_TIMEOUT_MS = 30;
+        public static final Gains SHOOTER_GAINS = new Gains(0.4, 0.0005, 13, 0.05, 0, 1.0);
+        
+        public static final double ENCODER_TICKS_PER_REV = 2048;
     }
     
     public static final class ClimberConstants {
@@ -74,7 +87,7 @@ public final class Constants {
     }
   
     public static final class LevelerConstants {
-        public static final int LEVELER_CAN_ID = 9;
+        public static final int LEVELER_CAN_ID = -1;
     }
   
     public static final class StorageConstants {
