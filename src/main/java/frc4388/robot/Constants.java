@@ -91,13 +91,30 @@ public final class Constants {
     }
   
     public static final class StorageConstants {
-        public static final int STORAGE_CAN_ID = -1;
+        public static final int STORAGE_CAN_ID = 10;
+
+        /* Ball Indexes */
         public static final int BEAM_SENSOR_DIO_0 = 0;
         public static final int BEAM_SENSOR_DIO_1 = 1;
         public static final int BEAM_SENSOR_DIO_2 = 2;
         public static final int BEAM_SENSOR_DIO_3 = 3;
         public static final int BEAM_SENSOR_DIO_4 = 4;
         public static final int BEAM_SENSOR_DIO_5 = 5;
+
+        /* PID Values */
+        public static final int SLOT_DISTANCE = 0;
+
+        /* PID Indexes */
+        public static final int PID_PRIMARY = 0;
+
+        /* PID Gains */
+        public static final double storP = 0.1;
+        public static final double storI = 1e-4;
+        public static final double storD = 1.0;
+        public static final double storIz = 0.0;
+        public static final double storF = 0.0;
+        public static final double storkmaxOutput = 1.0;
+        public static final double storkminOutput = -1.0;
     }
   
     public static final class LEDConstants {
