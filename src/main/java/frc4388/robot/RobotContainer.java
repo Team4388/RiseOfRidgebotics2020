@@ -137,7 +137,7 @@ public class RobotContainer {
 
         /* Storage Neo PID Test */
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
-            .whileHeld(new RunCommand(() -> m_robotStorage.runStoragePositionPID(0.5, 0.2, 0.0, 0.0, 0.0, 0.0, 1, -1)));
+            .whileHeld(new RunCommand(() -> m_robotStorage.runStoragePositionPID(0.5)));
     }
       
     /**

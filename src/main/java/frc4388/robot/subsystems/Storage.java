@@ -19,7 +19,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc4388.robot.Gains;
 import frc4388.robot.Constants.StorageConstants;
 
 public class Storage extends SubsystemBase {
@@ -29,6 +29,8 @@ public class Storage extends SubsystemBase {
   CANPIDController m_storagePIDController = m_storageMotor.getPIDController();
 
   CANEncoder m_encoder = m_storageMotor.getEncoder();
+
+  Gains storageGains = StorageConstants.STORAGE_GAINS;
 
   /**
    * Creates a new Storage.
@@ -72,15 +74,15 @@ public class Storage extends SubsystemBase {
   }
 
   /* Storage PID Control */
-  public void runStoragePositionPID(double targetPos, double kP, double kI, double kD, double kIz, double kF, double kmaxOutput, double kminOutput)
+  public void runStoragePositionPID(double targetPos)
   {
     // Set PID Coefficients
-    m_storagePIDController.setP(kP);
-    m_storagePIDController.setI(kI);
-    m_storagePIDController.setD(kD);
-    m_storagePIDController.setIZone(kIz);
-    m_storagePIDController.setFF(kF);
-    m_storagePIDController.setOutputRange(kminOutput, kmaxOutput);
+    m_storagePIDController.setP(storageGains.m_kP);
+    m_storagePIDController.setI(storageGains.m_kI);
+    m_storagePIDController.setD(storageGains.m_kD);
+    m_storagePIDController.setIZone(storageGains.m_kIzone);
+    m_storagePIDController.setFF(storageGains.m_kF);
+    m_storagePIDController.setOutputRange(StorageConstants.STORAGE_MIN_OUTPUT, storageGains.m_kPeakOutput);
 
     m_storagePIDController.setReference(targetPos, ControlType.kPosition);
   }
@@ -94,7 +96,7 @@ public class Storage extends SubsystemBase {
    * Prepares storage for shooting
    */
   public void storageAim() {
-
+    //runStoragePositionPID(targetPos, kP, kI, kD, kIz, kF, kmaxOutput, kminOutput);
   }
     /*
     *If shooting move storage motor until top sensor is tripped
