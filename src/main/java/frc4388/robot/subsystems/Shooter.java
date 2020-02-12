@@ -31,8 +31,7 @@ public class Shooter extends SubsystemBase {
     m_shooterFalcon.configFactoryDefault();
 
     m_shooterFalcon.setNeutralMode(NeutralMode.Coast);
-
-    m_shooterFalcon.setInverted(true);
+    m_shooterFalcon.setInverted(false);
     
     setShooterGains();
 
