@@ -8,26 +8,24 @@
 package frc4388.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc4388.robot.subsystems.Drive;
+import frc4388.robot.subsystems.Leveler;
 import frc4388.utility.controller.IHandController;
 
-public class DriveWithJoystick extends CommandBase {
-  private Drive m_drive;
+public class RunLevelerWithJoystick extends CommandBase {
+  private Leveler m_leveler;
   private IHandController m_controller;
 
   /**
-   * Creates a new DriveWithJoystick to control the drivetrain with an Xbox controller.
-   * Applies a curved ramp to the input from the controllers to make the robot less "touchy".
+   * Creates a new RunLevelerWithJoystick to control the leveler with an Xbox controller.
    * @param subsystem pass the Drive subsystem from {@link frc4388.robot.RobotContainer#RobotContainer() RobotContainer}
    * @param controller pass the Driver {@link frc4388.utility.controller.IHandController#getClass() IHandController} using the
    * {@link frc4388.robot.RobotContainer#getDriverJoystick() getDriverJoystick()} method in
    * {@link frc4388.robot.RobotContainer#RobotContainer() RobotContainer}
    */
-  public DriveWithJoystick(Drive subsystem, IHandController controller) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    m_drive = subsystem;
+  public RunLevelerWithJoystick(Leveler subsystem, IHandController controller) {
+    m_leveler = subsystem;
     m_controller = controller;
-    addRequirements(m_drive);
+    addRequirements(m_leveler);
   }
 
   // Called when the command is initially scheduled.
@@ -38,25 +36,8 @@ public class DriveWithJoystick extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double moveInput = m_controller.getLeftYAxis();
-    double steerInput = m_controller.getRightXAxis();
-    double moveOutput = 0;
-    double steerOutput = 0;
-    if (moveInput >= 0){
-      moveOutput = -Math.cos(1.571*moveInput)+1;
-    } else {
-      moveOutput = Math.cos(1.571*moveInput)-1;
-    }
-
-    double cosMultiplier = .45;
-    double deadzone = .2;
-    if (steerInput > 0){
-      steerOutput = -cosMultiplier*Math.cos(1.571*steerInput)+(cosMultiplier+deadzone);
-    } else {
-      steerOutput = cosMultiplier*Math.cos(1.571*steerInput)-(cosMultiplier+deadzone);
-    }
-
-    m_drive.driveWithInput(moveOutput, steerOutput);
+    double input = m_controller.getLeftXAxis();
+    m_leveler.runLeveler(input);
   }
 
   // Called once the command ends or is interrupted.

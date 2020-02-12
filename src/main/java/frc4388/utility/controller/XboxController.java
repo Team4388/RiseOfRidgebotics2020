@@ -3,7 +3,7 @@ package frc4388.utility.controller;
 import edu.wpi.first.wpilibj.Joystick;
 
 /**
- * This is a wrapper for the WPILib Joystick class that represents an XBox 
+ * This is a wrapper for the WPILib Joystick class that represents an Xbox 
  * controller.
  * @author frc1675
  */
@@ -53,14 +53,15 @@ public class XboxController implements IHandController
 	private Joystick m_stick;
 
 	/**
-     * Add your docs here.
-     */
+	 * Creates a new Xbox Controller
+	 * @param portNumber ID of Xbox Controller
+	 */
 	public XboxController(int portNumber){
 		m_stick = new Joystick(portNumber);
 	}
 
 	/**
-     * Add your docs here.
+     * @return Joystick for Xbox Controller
      */
 	public Joystick getJoyStick() {
 		return m_stick;

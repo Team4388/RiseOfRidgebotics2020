@@ -7,18 +7,38 @@
 
 package frc4388.robot.subsystems;
 
+import com.revrobotics.CANDigitalInput;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
-  Spark m_intakeMotor = new Spark(IntakeConstants.INTAKE_SPARK_ID);
-  
+  CANSparkMax m_intakeMotor = new CANSparkMax(IntakeConstants.INTAKE_SPARK_ID, MotorType.kBrushless);
+  CANSparkMax m_extenderMotor = new CANSparkMax(IntakeConstants.EXTENDER_SPARK_ID, MotorType.kBrushless);
+  CANDigitalInput m_extenderForwardLimit;
+  CANDigitalInput m_extenderReverseLimit;
+
   /**
    * Creates a new Intake.
    */
   public Intake() {
+    m_intakeMotor.restoreFactoryDefaults();
+    m_extenderMotor.restoreFactoryDefaults();
+
+    m_intakeMotor.setIdleMode(IdleMode.kCoast);
+    m_extenderMotor.setIdleMode(IdleMode.kBrake);
     m_intakeMotor.setInverted(false);
+    m_extenderMotor.setInverted(false);
+    
+    m_extenderForwardLimit = m_extenderMotor.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyClosed);
+    m_extenderReverseLimit = m_extenderMotor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyClosed);
+    m_extenderForwardLimit.enableLimitSwitch(false);
+    m_extenderReverseLimit.enableLimitSwitch(false);
   }
 
   @Override
@@ -28,9 +48,17 @@ public class Intake extends SubsystemBase {
 
   /**
    * Runs intake motor
-   * @param input the voltage to run motor at
+   * @param input the percent output to run motor at
    */
   public void runIntake(double input) {
     m_intakeMotor.set(input);
+  }
+  
+   /**
+   * Runs extender motor
+   * @param input the percent output to run motor at
+   */
+  public void runExtender(double input) {
+    m_extenderMotor.set(input);
   }
 }
