@@ -101,7 +101,7 @@ public class Drive extends ProfiledPIDSubsystem {
     m_driveTrain.arcadeDrive(move, steer);
   }
 
-  public double getGyroYaw() {
+public double getGyroYaw() {
     double[] ypr = new double[3];
     m_pigeon.getYawPitchRoll(ypr);
     return ypr[0];

@@ -45,4 +45,16 @@ public class Storage extends SubsystemBase {
     m_storageMotor.set(input);
     boolean beam_on = m_beamSensors[0].get();
   }
+
+  /**
+   * Prepares storage for shooting
+   */
+  public void storageAim() {
+
+  }
+    /*
+    *If shooting move storage motor until top sensor is tripped
+    *If intaking move storage motor until bottom sensor is tripped
+    *
+    */
 }
