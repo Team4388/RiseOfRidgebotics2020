@@ -168,8 +168,6 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
 
-        var wheelSpeeds = new ChassisSpeeds();
-
         // Create config for trajectory
         TrajectoryConfig config = new TrajectoryConfig( DriveConstants.kMaxSpeedMetersPerSecond,
                                                         DriveConstants.kMaxAccelerationMetersPerSecondSquared)
