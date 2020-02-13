@@ -63,6 +63,7 @@ public final class Constants {
         public static final double INCHES_PER_WHEEL_REV = WHEEL_DIAMETER_INCHES * Math.PI;
         public static final double TICKS_PER_INCH = TICKS_PER_WHEEL_REV/INCHES_PER_WHEEL_REV;
         public static final double INCHES_PER_TICK = 1/TICKS_PER_INCH;
+        public static final double INCHES_PER_METER = 39.370;
     }
     
     public static final class IntakeConstants {

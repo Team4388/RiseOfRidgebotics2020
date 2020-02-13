@@ -283,10 +283,9 @@ public class Drive extends SubsystemBase {
       // e.printStackTrace(System.err);
     }
 
-    m_odometry.update(Rotation2d.fromDegrees(getHeading()),
-        m_leftFrontMotor.getSensorCollection().getIntegratedSensorPosition(),
-        m_rightFrontMotor.getSensorCollection().getIntegratedSensorPosition());
-
+    m_odometry.update(Rotation2d.fromDegrees( getHeading()),
+                                              inchesToMeters(getDistanceInches(m_leftFrontMotor)),
+                                              inchesToMeters(getDistanceInches(m_rightFrontMotor)));
   }
 
   /**
@@ -472,7 +471,6 @@ public class Drive extends SubsystemBase {
 
   /**
    * Returns the heading of the robot
-   * 
    * @return The robot's heading in degrees, from -180 to 180
    */
   public double getHeading() {
@@ -492,8 +490,8 @@ public class Drive extends SubsystemBase {
    * @return The current wheel speeds.
    */
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(  m_leftFrontMotor.getSensorCollection().getIntegratedSensorVelocity(), 
-                                              m_rightFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
+    return new DifferentialDriveWheelSpeeds(  inchesToMeters(getVelocityInchesPerSecond(m_leftFrontMotor)), 
+                                              inchesToMeters(getVelocityInchesPerSecond(m_rightFrontMotor)));
   }
 
   /**
@@ -524,12 +522,30 @@ public class Drive extends SubsystemBase {
   }
 
   /**
+   * Gets the encoder value (velocity) of a motor
+   * @param falcon The motor to get the velocity of
+   * @return The velocity of the motor in inches per second
+   */
+  public double getVelocityInchesPerSecond(WPI_TalonFX falcon) {
+    return ticksToInches(falcon.getSensorCollection().getIntegratedSensorPosition()/DriveConstants.TICK_TIME_TO_SECONDS);
+  }
+
+  /**
    * Converts a value in ticks to inches.
    * @param ticks The value in ticks to convert
    * @return The converted value in inches
    */
   public double ticksToInches(double ticks) {
     return ticks * DriveConstants.INCHES_PER_TICK;
+  }
+
+  /**
+   * Converts a value in inches to meters.
+   * @param inches The value in inches to convert
+   * @return The converted value in meters
+   */
+  public double inchesToMeters(double inches) {
+    return inches / DriveConstants.INCHES_PER_METER;
   }
   
   /*
