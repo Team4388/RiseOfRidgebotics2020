@@ -7,6 +7,7 @@
 
 package frc4388.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.FollowerType;
@@ -20,6 +21,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -52,8 +54,10 @@ public class Drive extends SubsystemBase {
   public static Gains m_gainsVelocity = DriveConstants.DRIVE_VELOCITY_GAINS;
   public static Gains m_gainsTurning = DriveConstants.DRIVE_TURNING_GAINS;
   public static Gains m_gainsMotionMagic = DriveConstants.DRIVE_MOTION_MAGIC_GAINS;
-
+  
   public final DifferentialDriveOdometry m_odometry;
+  
+  public DoubleSolenoid speedShift;
 
   /**
    * Add your docs here.
@@ -68,6 +72,8 @@ public class Drive extends SubsystemBase {
     resetGyroYaw();
 
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
+
+    speedShift = new DoubleSolenoid(7,0,1);
 
     /* set back motors as followers */
     m_leftBackMotor.follow(m_leftFrontMotor);
@@ -111,6 +117,15 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.configClosedLoopPeakOutput(DriveConstants.SLOT_DISTANCE, m_gainsDistance.m_kPeakOutput,
         DriveConstants.DRIVE_TIMEOUT_MS);
 
+    m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_MOTION_MAGIC, DriveConstants.PID_PRIMARY);
+    m_rightFrontMotor.config_kF(DriveConstants.SLOT_MOTION_MAGIC, m_gainsMotionMagic.m_kF, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kP(DriveConstants.SLOT_MOTION_MAGIC, m_gainsMotionMagic.m_kP, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kI(DriveConstants.SLOT_MOTION_MAGIC, m_gainsMotionMagic.m_kI, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kD(DriveConstants.SLOT_MOTION_MAGIC, m_gainsMotionMagic.m_kD, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.configMotionCruiseVelocity(DriveConstants.DRIVE_CRUISE_VELOCITY, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.configMotionAcceleration(DriveConstants.DRIVE_ACCELERATION, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.configMotionSCurveStrength(0, DriveConstants.DRIVE_TIMEOUT_MS);
+
     /* Setup Sensors for WPI_TalonFXs */
     resetEncoders();
 
@@ -147,9 +162,8 @@ public class Drive extends SubsystemBase {
         DriveConstants.DRIVE_TIMEOUT_MS);
 
     /* Diff Signal */
-    m_rightFrontMotor.configSensorTerm(SensorTerm.Diff0, FeedbackDevice.RemoteSensor0, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightFrontMotor.configSensorTerm(SensorTerm.Diff1, FeedbackDevice.IntegratedSensor,
-        DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.configSensorTerm(SensorTerm.Diff1, FeedbackDevice.RemoteSensor0, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.configSensorTerm(SensorTerm.Diff0, FeedbackDevice.IntegratedSensor, DriveConstants.DRIVE_TIMEOUT_MS);
 
     /* Configure Sum [Sum of both QuadEncoders] to be used for Primary PID Index */
     m_rightFrontMotor.configSelectedFeedbackSensor(FeedbackDevice.SensorDifference, DriveConstants.PID_PRIMARY,
@@ -249,10 +263,8 @@ public class Drive extends SubsystemBase {
       SmartDashboard.putNumber("Right Motor Velocity Raw", m_rightFrontMotor.getSelectedSensorVelocity());
       SmartDashboard.putNumber("Left Motor Position Raw", m_leftFrontMotor.getSelectedSensorPosition());
       SmartDashboard.putNumber("Right Motor Position Raw", m_rightFrontMotor.getSelectedSensorPosition(0));
-      SmartDashboard.putNumber("Right Motor Velocity Int Sensor",
-          m_rightFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
-      SmartDashboard.putNumber("Left Motor Velocity Int Sensor",
-          m_leftFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
+      SmartDashboard.putNumber("Right Motor Velocity Int Sensor", m_rightFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
+      SmartDashboard.putNumber("Left Motor Velocity Int Sensor", m_leftFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
 
       SmartDashboard.putNumber("Right Front Motor Current", m_rightFrontMotor.getSupplyCurrent());
       SmartDashboard.putNumber("Left Front Motor Current", m_leftFrontMotor.getSupplyCurrent());
@@ -342,23 +354,33 @@ public class Drive extends SubsystemBase {
   }
 
   /**
-   * Add your docs here.
+   * Runs percent output control on the moving and steering of the drive train,
+   * using the Differential Drive class to manage the two inputs
    */
   public void driveWithInput(double move, double steer) {
     m_driveTrain.arcadeDrive(move, steer);
   }
 
   /**
-   * Runs a position PID while driving straight (has not been tested)
-   * 
-   * @param targetPos  The position to drive to in units
+   * Runs percent output control on the drive train while using an AUX PID for rotation
+   * @param targetPos The position to drive to in units
+   * @param targetGyro The angle to drive at in units
+   */
+  public void driveWithInputAux(double move, double targetGyro) {
+    m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
+
+    m_rightFrontMotor.set(TalonFXControlMode.PercentOutput, move, DemandType.AuxPID, targetGyro);
+    m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
+
+    m_driveTrain.feedWatchdog();
+  }
+
    * @param targetGyro The angle to drive at in units
    */
   public void runDriveStraightPositionPID(double targetPos, double targetGyro) {
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_DISTANCE, DriveConstants.PID_PRIMARY);
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
 
-    targetPos *= 2;
     m_rightFrontMotor.set(TalonFXControlMode.Position, targetPos, DemandType.AuxPID, targetGyro);
     m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
 
@@ -374,8 +396,6 @@ public class Drive extends SubsystemBase {
   public void runDriveStraightVelocityPID(double targetVel, double targetGyro) {
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
-
-    targetVel *= 2;
     m_rightFrontMotor.set(TalonFXControlMode.Velocity, targetVel, DemandType.AuxPID, targetGyro);
     m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
 
@@ -383,16 +403,15 @@ public class Drive extends SubsystemBase {
   }
 
   /**
-   * Runs motion magic PID while driving straight (has not been tested)
-   * 
-   * @param targetPos  The position to drive to in units
+   * Runs motion magic PID while driving straight
+   * @param targetPos The position to drive to in units
    * @param targetGyro The angle to drive at in units
    */
   public void runMotionMagicPID(double targetPos, double targetGyro) {
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_MOTION_MAGIC, DriveConstants.PID_PRIMARY);
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
 
-    m_rightFrontMotor.set(TalonFXControlMode.MotionMagic, targetPos, DemandType.AuxPID, targetGyro);
+    m_rightFrontMotor.set(ControlMode.MotionMagic, targetPos, DemandType.AuxPID, targetGyro);
     m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
 
     m_driveTrain.feedWatchdog();
@@ -507,5 +526,18 @@ public class Drive extends SubsystemBase {
    */
   public double ticksToInches(double ticks) {
     return ticks * DriveConstants.INCHES_PER_TICK;
+  }
+  
+  /*
+   * Set to high or low gear based on boolean state, true = high, false = low
+   * @param state Chooses between high or low gear
+   */
+  public void setShiftState(boolean state) {
+    if (state == true) {
+			speedShift.set(DoubleSolenoid.Value.kForward);
+		}
+		if (state == false) {
+			speedShift.set(DoubleSolenoid.Value.kReverse);
+		}
   }
 }
