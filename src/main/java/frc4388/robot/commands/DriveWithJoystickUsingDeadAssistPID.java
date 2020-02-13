@@ -21,7 +21,13 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
   boolean isAuxPIDEnabled = false;
 
   /**
-   * Creates a new DriveWithJoystickUsingDeadAssist.
+   * Creates a new DriveWithJoystickUsingDeadAssistPID to control the drivetrain with an Xbox controller.
+   * Applies a curved ramp to the input from the controllers to make the robot less "touchy".
+   * Also uses PIDs to keep the robot on course when given a "dead" or 0 input.
+   * @param subsystem pass the Drive subsystem from {@link frc4388.robot.RobotContainer#RobotContainer() RobotContainer}
+   * @param controller pass the Driver {@link frc4388.utility.controller.IHandController#getClass() IHandController} using the
+   * {@link frc4388.robot.RobotContainer#getDriverJoystick() getDriverJoystick()} method in
+   * {@link frc4388.robot.RobotContainer#RobotContainer() RobotContainer}
    */
   public DriveWithJoystickUsingDeadAssistPID(Drive subsystem, IHandController controller) {
     // Use addRequirements() here to declare subsystem dependencies.    
