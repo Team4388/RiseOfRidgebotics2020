@@ -30,6 +30,8 @@ import frc4388.robot.commands.RunLevelerWithJoystick;
 import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Intake;
 import frc4388.robot.subsystems.LED;
+import frc4388.robot.commands.TrackTarget;
+import frc4388.robot.subsystems.Camera;
 import frc4388.robot.subsystems.Leveler;
 import frc4388.robot.subsystems.Storage;
 import frc4388.utility.LEDPatterns;
@@ -52,6 +54,10 @@ public class RobotContainer {
     private final Climber m_robotClimber = new Climber();
     private final Leveler m_robotLeveler = new Leveler();
     private final Storage m_robotStorage = new Storage();
+
+    /* Cameras */
+    private final Camera m_robotCameraFront = new Camera("front",0,160,120,40);
+    private final Camera m_robotCameraBack = new Camera("back",1,160,120,40);
 
     /* Controllers */
     private final XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
@@ -102,6 +108,9 @@ public class RobotContainer {
       
         new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
             .whileHeld(new ShooterVelocityControlPID(m_robotShooter, 4000));
+            
+        new JoystickButton(getOperatorJoystick(), XboxController.Y_BUTTON)
+            .whileHeld(new TrackTarget(m_robotDrive, m_driverXbox));
         
         new JoystickButton(getOperatorJoystick(), XboxController.LEFT_BUMPER_BUTTON)
             .whenPressed(new RunExtenderOutIn(m_robotIntake));
