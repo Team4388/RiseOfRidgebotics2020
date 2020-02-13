@@ -59,6 +59,10 @@ public class Drive extends SubsystemBase {
   
   public DoubleSolenoid speedShift;
 
+  public long m_lastTime, m_deltaTime; //in milliseconds
+
+  public double m_lastAngleYaw, m_currentAngleYaw;
+
   /**
    * Add your docs here.
    */
@@ -222,10 +226,17 @@ public class Drive extends SubsystemBase {
      * local output is PID0 - PID1, and other side Talon is PID0 + PID1
      */
     m_rightFrontMotor.configAuxPIDPolarity(false, DriveConstants.DRIVE_TIMEOUT_MS);
+
+    m_lastTime = System.currentTimeMillis();
   }
 
   @Override
   public void periodic() {
+    m_deltaTime = System.currentTimeMillis() - m_lastTime;
+    m_lastTime = System.currentTimeMillis();
+    m_lastAngleYaw = m_currentAngleYaw;
+    m_currentAngleYaw = getGyroYaw();
+    
     try {
       SmartDashboard.putNumber("Pigeon Yaw", getGyroYaw());
       //SmartDashboard.putNumber("Pigeon Pitch", getGyroPitch());
@@ -250,7 +261,7 @@ public class Drive extends SubsystemBase {
       //SmartDashboard.putNumber("PID 0 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_PRIMARY));
       //SmartDashboard.putNumber("PID 1 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_TURN));
 
-      SmartDashboard.putString("Odometry Values", getPose().toString());
+      SmartDashboard.putString("Odometry Values Meters", getPose().toString());
 
     } catch (Exception e) {
       System.err.println("Error in the Drive Subsystem");
@@ -389,6 +400,8 @@ public class Drive extends SubsystemBase {
   public void resetGyroYaw() {
     m_pigeon.setYaw(0);
     m_pigeon.setAccumZAngle(0);
+    m_lastAngleYaw = 0;
+    m_currentAngleYaw = 0;
   }
 
   /**
@@ -397,6 +410,16 @@ public class Drive extends SubsystemBase {
    */
   public double getHeading() {
     return Math.IEEEremainder(getGyroYaw(), 360);
+  }
+
+  /**
+   * Returns the turn rate of the robot.
+   *
+   * @return The turn rate of the robot, in degrees per second
+   */
+  public double getTurnRate() {
+    double deltaYaw = m_currentAngleYaw - m_lastAngleYaw;
+    return deltaYaw / (m_deltaTime/1000);
   }
 
   /**

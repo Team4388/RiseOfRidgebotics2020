@@ -7,6 +7,7 @@
 
 package frc4388.robot;
 
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import frc4388.utility.LEDPatterns;
 
 /**
@@ -34,6 +35,12 @@ public final class Constants {
         public static final Gains DRIVE_MOTION_MAGIC_GAINS = new Gains(0.2, 0.0, 0.0, 0.0, 0, 1.0);
         public static final int DRIVE_CRUISE_VELOCITY = 20000;
         public static final int DRIVE_ACCELERATION = 7000;
+
+        /* Trajectory Constants */
+        public static final double kMaxSpeedMetersPerSecond = 3;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+        public static final double kTrackwidthMeters = 0.69; ///TODO: SET THIS SOON!
+        public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters);
 
         /* Remote Sensors */
         public final static int REMOTE_0 = 0;
