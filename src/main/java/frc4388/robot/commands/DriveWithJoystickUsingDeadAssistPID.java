@@ -61,7 +61,7 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
                                       currentGyro-(DriveConstants.TICKS_PER_GYRO_REV/4),
                                       currentGyro+(DriveConstants.TICKS_PER_GYRO_REV/4));
     }
-    /* Otherwise set target angle to current angle */
+    /* Otherwise set target angle to current angle (prevents buildup of gyro error) */
     else {
       m_targetGyro = currentGyro;
     }
