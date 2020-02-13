@@ -375,6 +375,10 @@ public class Drive extends SubsystemBase {
     m_driveTrain.feedWatchdog();
   }
 
+  /**
+   * Runs position PID while driving straight.
+   * Position is absolute and displacement should be handled on the command side.
+   * @param targetPos  The position to drive to in units
    * @param targetGyro The angle to drive at in units
    */
   public void runDriveStraightPositionPID(double targetPos, double targetGyro) {
