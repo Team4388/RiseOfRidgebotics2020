@@ -7,13 +7,26 @@
 
 package frc4388.robot;
 
+import java.util.List;
+import java.util.function.BiConsumer;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.*;
@@ -146,14 +159,49 @@ public class RobotContainer {
         m_robotDrive.setDriveTrainNeutralMode(mode);
     }
 
+    public void resetOdometry() {
+        m_robotDrive.resetGyroAngles();
+        m_robotDrive.setOdometry(new Pose2d());
+    }
+
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        // no auto
-        return new InstantCommand();
+
+        var wheelSpeeds = new ChassisSpeeds();
+
+        // Create config for trajectory
+        TrajectoryConfig config = new TrajectoryConfig( DriveConstants.kMaxSpeedMetersPerSecond,
+                                                        DriveConstants.kMaxAccelerationMetersPerSecondSquared)
+                                                        // Add kinematics to ensure max speed is actually obeyed
+                                                        .setKinematics(DriveConstants.kDriveKinematics);
+        
+        Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing the +X direction
+            new Pose2d(0, 0, new Rotation2d(0)),
+            // Pass through these two interior waypoints, making an 's' curve path
+            List.of(
+                new Translation2d(1, 1),
+                new Translation2d(2, -1)
+            ),
+            // End 3 meters straight ahead of where we started, facing forward
+            new Pose2d(3, 0, new Rotation2d(0)),
+            // Pass config
+            config);
+
+        RamseteCommand ramseteCommand = new RamseteCommand(
+            exampleTrajectory,
+            m_robotDrive::getPose,
+            new RamseteController(), 
+            DriveConstants.kDriveKinematics,
+            m_robotDrive::tankDriveVelocity,
+            m_robotDrive);
+
+        // Run path following command, then stop at the end.
+        return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
     }
 
     /**

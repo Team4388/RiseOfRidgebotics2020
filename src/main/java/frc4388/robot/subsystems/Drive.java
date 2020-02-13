@@ -25,12 +25,14 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
 import frc4388.robot.Constants.DriveConstants;
 import frc4388.robot.Gains;
 
@@ -61,7 +63,7 @@ public class Drive extends SubsystemBase {
 
   public long m_lastTime, m_deltaTime; //in milliseconds
 
-  public double m_lastAngleYaw, m_currentAngleYaw;
+  public double m_lastAngleYaw, m_currentAngleYaw, m_kinematicsTargetAngle;
 
   /**
    * Add your docs here.
@@ -365,6 +367,29 @@ public class Drive extends SubsystemBase {
   }
 
   /**
+   * Controls the left and right sides of the drive with velocity targets.
+   *
+   * @param leftSpeed  the commanded left output
+   * @param rightSpeed the commanded right output
+   */
+  public void tankDriveVelocity(double leftSpeed, double rightSpeed) {
+    DifferentialDriveWheelSpeeds wheelSpeeds = new DifferentialDriveWheelSpeeds(leftSpeed, rightSpeed);
+    ChassisSpeeds chassisSpeeds = DriveConstants.kDriveKinematics.toChassisSpeeds(wheelSpeeds);
+    double moveVelMPS = chassisSpeeds.vxMetersPerSecond;
+    double angleVelRad = chassisSpeeds.omegaRadiansPerSecond;
+    double angleVelDeg = Math.toDegrees(angleVelRad);
+
+    m_kinematicsTargetAngle += angleVelDeg * (m_deltaTime/1000);
+    m_kinematicsTargetAngle = MathUtil.clamp( m_kinematicsTargetAngle, 
+                                              m_currentAngleYaw-(360),
+                                              m_currentAngleYaw+(360));
+    double targetGyro = (m_kinematicsTargetAngle / 360) * DriveConstants.TICKS_PER_GYRO_REV;
+    double moveVel = inchesToMeters(metersToInches(moveVelMPS))/DriveConstants.SECONDS_TO_TICK_TIME;
+
+    runDriveStraightVelocityPID(moveVel, targetGyro);
+  }
+
+  /**
    * Returns the current yaw of the pigeon
    */
   public double getGyroYaw() {
@@ -400,8 +425,16 @@ public class Drive extends SubsystemBase {
   public void resetGyroYaw() {
     m_pigeon.setYaw(0);
     m_pigeon.setAccumZAngle(0);
+    resetGyroAngles();
+  }
+
+  /**
+   * Add docs here
+   */
+  public void resetGyroAngles() {
     m_lastAngleYaw = 0;
     m_currentAngleYaw = 0;
+    m_kinematicsTargetAngle = 0;
   }
 
   /**
@@ -485,12 +518,30 @@ public class Drive extends SubsystemBase {
   }
 
   /**
+   * Converts a value in inches to ticks.
+   * @param inches The value in inches to convert
+   * @return The converted value in ticks
+   */
+  public double inchesToTicks(double inches) {
+    return inches * DriveConstants.TICKS_PER_INCH;
+  }
+
+  /**
    * Converts a value in inches to meters.
    * @param inches The value in inches to convert
    * @return The converted value in meters
    */
   public double inchesToMeters(double inches) {
     return inches / DriveConstants.INCHES_PER_METER;
+  }
+
+  /**
+   * Converts a value in meters to inches.
+   * @param meters The value in meters to convert
+   * @return The converted value in inches
+   */
+  public double metersToInches(double meters) {
+    return meters * DriveConstants.INCHES_PER_METER;
   }
   
   /*
