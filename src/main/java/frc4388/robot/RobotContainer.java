@@ -76,11 +76,11 @@ public class RobotContainer {
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
         // runs the drum shooter in idle mode
-        m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runDrumShooter(0.15), m_robotShooter));
+    //    m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runDrumShooter(0.15), m_robotShooter));
         // drives the leveler with an axis input from the driver controller
-        m_robotLeveler.setDefaultCommand(new RunLevelerWithJoystick(m_robotLeveler, getDriverController()));
+    //    m_robotLeveler.setDefaultCommand(new RunLevelerWithJoystick(m_robotLeveler, getDriverController()));
         // runs storage motor at 50 percent
-        m_robotStorage.setDefaultCommand(new RunCommand(() -> m_robotStorage.runStorage(0.0), m_robotStorage));
+    //    m_robotStorage.setDefaultCommand(new RunCommand(() -> m_robotStorage.runStorage(0.0), m_robotStorage));
     }
 
     /**
@@ -136,8 +136,8 @@ public class RobotContainer {
             .whenPressed(new InstantCommand(() -> System.out.print("Gamer"), m_robotDrive));
 
         /* TEST shooter rotate PIDs */
-        new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
-            .whileHeld(new RunCommand(() -> m_robotShooter.runAngleAdjustPID(360, 0.2, 0.0, 0.0, 0.0, 0.0, 1, -1)));
+        new JoystickButton(getOperatorJoystick(), XboxController.Y_BUTTON)
+            .whileHeld(new RunCommand(() -> m_robotShooter.runAngleAdjustPID(1, 0.2, 0.0, 0.0, 0.0, 0.0, 1, -1)));
         new JoystickButton(getOperatorJoystick(), XboxController.B_BUTTON)
             .whileHeld(new RunCommand(() -> m_robotShooter.runshooterRotatePID(360, 0.2, 0.0, 0.0, 0.0, 0.0, 1, -1)));
         /* TEST for both commands above */

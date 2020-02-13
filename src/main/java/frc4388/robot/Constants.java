@@ -66,15 +66,15 @@ public final class Constants {
     }
     
     public static final class IntakeConstants {
-        public static final int INTAKE_SPARK_ID = 9;
-        public static final int EXTENDER_SPARK_ID = 10;
+        public static final int INTAKE_SPARK_ID = -9;
+        public static final int EXTENDER_SPARK_ID = -10;
     }
   
     public static final class ShooterConstants {
         /* Motor IDs */
         public static final int SHOOTER_FALCON_ID = 8;
-        public static final int SHOOTER_ANGLE_ADJUST_ID = -1;
-        public static final int SHOOTER_ROTATE_ID = -2;
+        public static final int SHOOTER_ANGLE_ADJUST_ID = 9;
+        public static final int SHOOTER_ROTATE_ID = 10;
 
         /* PID Constants Shooter */
         public static final int SHOOTER_SLOT_IDX = 0;
@@ -88,7 +88,7 @@ public final class Constants {
     }
     
     public static final class ClimberConstants {
-        public static final int CLIMBER_SPARK_ID = 10;
+        public static final int CLIMBER_SPARK_ID = -1;
     }
   
     public static final class LevelerConstants {
