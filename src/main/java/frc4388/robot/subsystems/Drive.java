@@ -182,34 +182,16 @@ public class Drive extends SubsystemBase {
 
     /* Smart Dashboard Initial Values */
 
-    /* Set up Chooser */
-    m_chooser.setDefaultOption("Distance PID", m_gainsDistance);
-    // setDriveTrainGains("Distance PID", m_gainsDistance);
-    m_chooser.addOption("Velocity PID", m_gainsVelocity);
-    // setDriveTrainGains("Velocity PID", m_gainsVelocity);
-    m_chooser.addOption("Turning PID", m_gainsTurning);
-    // setDriveTrainGains("Turning PID", m_gainsTurning);
-    m_chooser.addOption("Motion Magic PID", m_gainsMotionMagic);
-    // setDriveTrainGains("Motion Magic PID", m_gainsMotionMagic);
-    Shuffleboard.getTab("PID").add(m_chooser);
-
     /* Gyro */
     SmartDashboard.putNumber("Pigeon Yaw", getGyroYaw());
-    SmartDashboard.putNumber("Pigeon Pitch", getGyroPitch());
-    SmartDashboard.putNumber("Pigeon Roll", getGyroRoll());
+    //SmartDashboard.putNumber("Pigeon Pitch", getGyroPitch());
+    //SmartDashboard.putNumber("Pigeon Roll", getGyroRoll());
 
     /* Sensor Values */
-    SmartDashboard.putNumber("Left Motor Velocity Raw", m_leftFrontMotor.getSelectedSensorVelocity(0));
-    SmartDashboard.putNumber("Right Motor Velocity Raw", m_rightFrontMotor.getSelectedSensorVelocity());
-    SmartDashboard.putNumber("Left Motor Position Raw", m_leftFrontMotor.getSelectedSensorPosition(0));
-    SmartDashboard.putNumber("Right Motor Position Raw", m_rightFrontMotor.getSelectedSensorPosition());
-
-    /* PID */
-    Gains gains = m_chooser.getSelected();
-    Shuffleboard.getTab("PID").add("P Value Drive", gains.m_kP);
-    Shuffleboard.getTab("PID").add("I Value Drive", gains.m_kI);
-    Shuffleboard.getTab("PID").add("D Value Drive", gains.m_kD);
-    Shuffleboard.getTab("PID").add("F Value Drive", gains.m_kF);
+    //SmartDashboard.putNumber("Left Motor Velocity Raw", m_leftFrontMotor.getSelectedSensorVelocity(0));
+    //SmartDashboard.putNumber("Right Motor Velocity Raw", m_rightFrontMotor.getSelectedSensorVelocity());
+    //SmartDashboard.putNumber("Left Motor Position Raw", m_leftFrontMotor.getSelectedSensorPosition(0));
+    //SmartDashboard.putNumber("Right Motor Position Raw", m_rightFrontMotor.getSelectedSensorPosition());
 
     /**
      * Max out the peak output (for all modes). However you can limit the output of
@@ -290,58 +272,6 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.setNeutralMode(mode);
     m_leftBackMotor.setNeutralMode(mode);
     m_rightBackMotor.setNeutralMode(mode);
-  }
-
-  /**
-   * Initializes the drive train gains kP, kI, kD, and kF
-   * 
-   * @param slot  Either "Distance PID", "Velocity PID", "Motion Magic PID", or
-   *              "Turning PID"
-   * @param gains A gains object which is the gains that are set for the slot
-   */
-  public void setDriveTrainGains(String slot, Gains gains) {
-    /* Distance */
-    if (slot.equals("Distance PID")) {
-      m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_DISTANCE, DriveConstants.PID_PRIMARY);
-      m_rightFrontMotor.config_kF(DriveConstants.SLOT_DISTANCE, gains.m_kF, DriveConstants.DRIVE_TIMEOUT_MS);
-      m_rightFrontMotor.config_kP(DriveConstants.SLOT_DISTANCE, gains.m_kP, DriveConstants.DRIVE_TIMEOUT_MS);
-      m_rightFrontMotor.config_kI(DriveConstants.SLOT_DISTANCE, gains.m_kI, DriveConstants.DRIVE_TIMEOUT_MS);
-      m_rightFrontMotor.config_kD(DriveConstants.SLOT_DISTANCE, gains.m_kD, DriveConstants.DRIVE_TIMEOUT_MS);
-    }
-
-    /* Velocity */
-    if (slot.equals("Velocity PID")) {
-      m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
-      m_rightFrontMotor.config_kF(DriveConstants.SLOT_VELOCITY, gains.m_kF, DriveConstants.DRIVE_TIMEOUT_MS);
-      m_rightFrontMotor.config_kP(DriveConstants.SLOT_VELOCITY, gains.m_kP, DriveConstants.DRIVE_TIMEOUT_MS);
-      m_rightFrontMotor.config_kI(DriveConstants.SLOT_VELOCITY, gains.m_kI, DriveConstants.DRIVE_TIMEOUT_MS);
-      m_rightFrontMotor.config_kD(DriveConstants.SLOT_VELOCITY, gains.m_kD, DriveConstants.DRIVE_TIMEOUT_MS);
-      m_rightFrontMotor.configClosedLoopPeakOutput(DriveConstants.SLOT_VELOCITY, gains.m_kPeakOutput,
-          DriveConstants.DRIVE_TIMEOUT_MS);
-    }
-    /* Turning */
-    if (slot.equals("Turning PID")) {
-      m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
-      m_rightFrontMotor.config_kF(DriveConstants.SLOT_TURNING, gains.m_kF, DriveConstants.DRIVE_TIMEOUT_MS);
-      m_rightFrontMotor.config_kP(DriveConstants.SLOT_TURNING, gains.m_kP, DriveConstants.DRIVE_TIMEOUT_MS);
-      m_rightFrontMotor.config_kI(DriveConstants.SLOT_TURNING, gains.m_kI, DriveConstants.DRIVE_TIMEOUT_MS);
-      m_rightFrontMotor.config_kD(DriveConstants.SLOT_TURNING, gains.m_kD, DriveConstants.DRIVE_TIMEOUT_MS);
-      m_rightFrontMotor.configClosedLoopPeakOutput(DriveConstants.SLOT_TURNING, gains.m_kPeakOutput,
-          DriveConstants.DRIVE_TIMEOUT_MS);
-    }
-
-    /* Motion Magic */
-    if (slot.equals("Motion Magic PID")) {
-      m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_MOTION_MAGIC, DriveConstants.PID_PRIMARY);
-      m_rightFrontMotor.config_kF(DriveConstants.SLOT_MOTION_MAGIC, gains.m_kF, DriveConstants.DRIVE_TIMEOUT_MS);
-      m_rightFrontMotor.config_kP(DriveConstants.SLOT_MOTION_MAGIC, gains.m_kP, DriveConstants.DRIVE_TIMEOUT_MS);
-      m_rightFrontMotor.config_kI(DriveConstants.SLOT_MOTION_MAGIC, gains.m_kI, DriveConstants.DRIVE_TIMEOUT_MS);
-      m_rightFrontMotor.config_kD(DriveConstants.SLOT_MOTION_MAGIC, gains.m_kD, DriveConstants.DRIVE_TIMEOUT_MS);
-
-      m_rightFrontMotor.configMotionCruiseVelocity(DriveConstants.DRIVE_CRUISE_VELOCITY,
-          DriveConstants.DRIVE_TIMEOUT_MS);
-      m_rightFrontMotor.configMotionAcceleration(DriveConstants.DRIVE_ACCELERATION, DriveConstants.DRIVE_TIMEOUT_MS);
-    }
   }
 
   /**
