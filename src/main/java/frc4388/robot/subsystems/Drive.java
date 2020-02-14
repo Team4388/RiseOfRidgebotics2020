@@ -58,7 +58,7 @@ public class Drive extends SubsystemBase {
   public static PigeonIMU m_pigeon = new PigeonIMU(DriveConstants.PIGEON_ID);
   public Orchestra m_orchestra = new Orchestra();
 
-  //public DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
+  public DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
 
   SendableChooser<Gains> m_chooser = new SendableChooser<Gains>();
   public static Gains m_gainsDistance = DriveConstants.DRIVE_DISTANCE_GAINS;
