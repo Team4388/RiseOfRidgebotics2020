@@ -86,19 +86,30 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
           steerOutput = cosMultiplier*Math.cos(1.571*steerInput)-(cosMultiplier+deadzone);
         }
         m_drive.driveWithInput(moveOutput, steerOutput);
+        System.out.println("Driving With Input");
         isAuxPIDEnabled = false;
       }
       /* If only the move stick is being used */
       else {
         m_drive.driveWithInputAux(moveOutput, m_targetGyro);
+        System.out.println("Driving with Input Aux with Target: " + m_targetGyro);
         isAuxPIDEnabled = true;
       }
     }
     /* If the move stick is not being used */
     else {
       m_drive.runDriveStraightVelocityPID(0, m_targetGyro);
+      System.out.println("Driving with Velocity PID with Target: " + m_targetGyro);
       isAuxPIDEnabled = true;
     }
+  }
+
+  private void updateGyroTarget() {
+
+  }
+
+  private void resetGyroTarget() {
+
   }
 
   // Called once the command ends or is interrupted.
