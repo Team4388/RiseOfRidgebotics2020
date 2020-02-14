@@ -65,7 +65,7 @@ public class Storage extends SubsystemBase {
     } else {
       System.err.println("Beam off");
     }
-
+    
   }
 
   public void resetEncoder()
@@ -96,11 +96,26 @@ public class Storage extends SubsystemBase {
    * Prepares storage for shooting
    */
   public void storageAim() {
-    //runStoragePositionPID(targetPos, kP, kI, kD, kIz, kF, kmaxOutput, kminOutput);
+    if (m_beamSensors[0].get() == false){
+      m_storageMotor.set(0.5);
+    }
+    else{
+      m_storageMotor.set(0);
+    }
+  }
+
+public void storageIntake() {
+  if (m_beamSensors[2].get() == false){
+    m_storageMotor.set(-0.5);
+  }
+  else{
+    m_storageMotor.set(0);
+
   }
     /*
     *If shooting move storage motor until top sensor is tripped
     *If intaking move storage motor until bottom sensor is tripped
     *
     */
+}
 }
