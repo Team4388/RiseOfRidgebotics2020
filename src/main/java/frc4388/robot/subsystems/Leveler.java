@@ -26,7 +26,8 @@ public class Leveler extends SubsystemBase {
    */
   public Leveler() {
     m_levelerMotor.restoreFactoryDefaults();
-    m_levelerMotor.setIdleMode(IdleMode.kCoast);
+
+    m_levelerMotor.setIdleMode(IdleMode.kBrake);
     m_levelerMotor.setInverted(false);
   }
 
