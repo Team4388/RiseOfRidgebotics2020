@@ -162,8 +162,7 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.configSensorTerm(SensorTerm.Diff0, FeedbackDevice.IntegratedSensor, DriveConstants.DRIVE_TIMEOUT_MS);
 
     /* Configure Sum [Sum of both QuadEncoders] to be used for Primary PID Index */
-    m_rightFrontMotor.configSelectedFeedbackSensor( FeedbackDevice.SensorDifference, DriveConstants.PID_PRIMARY,
-                                                    DriveConstants.DRIVE_TIMEOUT_MS);
+    configMotorSensor(FeedbackDevice.SensorDifference);
 
     /* Don't scale the Feedback Sensor (use 1 for 1:1 ratio) */
     m_rightFrontMotor.configSelectedFeedbackCoefficient(  1, // Coefficient
@@ -387,6 +386,15 @@ public class Drive extends SubsystemBase {
     double moveVel = inchesToMeters(metersToInches(moveVelMPS))/DriveConstants.SECONDS_TO_TICK_TIME;
 
     runDriveStraightVelocityPID(moveVel, targetGyro);
+  }
+
+  /**
+   * Selects the feedback device for the motors.
+   * @param feedbackDevice The feedback device to set it to, usually SensorDifference or
+   */
+  public void configMotorSensor(FeedbackDevice type) {
+    m_rightFrontMotor.configSelectedFeedbackSensor( type, DriveConstants.PID_PRIMARY,
+                                                    DriveConstants.DRIVE_TIMEOUT_MS);
   }
 
   /**

@@ -9,6 +9,7 @@ package frc4388.robot;
 
 import java.util.List;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -154,6 +155,10 @@ public class RobotContainer {
      */
     public void setDriveNeutralMode(NeutralMode mode) {
         m_robotDrive.setDriveTrainNeutralMode(mode);
+    }
+
+    public void configDriveTrainSensors(FeedbackDevice type) {
+        m_robotDrive.configMotorSensor(type);
     }
 
     public void resetOdometry() {
