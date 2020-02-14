@@ -41,6 +41,10 @@ public class Shooter extends SubsystemBase {
    * Creates a new Shooter subsystem.
    */
   public Shooter() {
+    //Testing purposes reseting gyros
+    resetGyroAngleAdj();
+    resetGyroShooterRotate();
+
     m_shooterFalcon.configFactoryDefault();
 
     m_shooterFalcon.setNeutralMode(NeutralMode.Coast);
@@ -133,5 +137,17 @@ public class Shooter extends SubsystemBase {
     targetAngle = targetAngle/ShooterConstants.DEGREES_PER_ROT;
 
     m_shooterRotatePIDController.setReference(targetAngle, ControlType.kPosition);
+  }
+
+  /* For Testing Purposes, reseting gyro for angle adjuster */
+  public void resetGyroAngleAdj()
+  {
+    m_angleEncoder.setPosition(0);
+  }
+
+  /* For Testing Purposes, reseting gyro for shooter rotation */
+  public void resetGyroShooterRotate()
+  {
+    m_shooterRotateEncoder.setPosition(0);
   }
 }
