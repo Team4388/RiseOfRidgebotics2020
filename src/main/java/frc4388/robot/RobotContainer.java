@@ -137,11 +137,14 @@ public class RobotContainer {
 
         /* TEST shooter rotate PIDs */
         new JoystickButton(getOperatorJoystick(), XboxController.Y_BUTTON)
-            .whileHeld(new RunCommand(() -> m_robotShooter.runAngleAdjustPID(360, 0.2, 0.0, 0.0, 0.0, 0.0, 1, -1)));
+            .whileHeld(new RunCommand(() -> m_robotShooter.runAngleAdjustPID(360)));
+
         new JoystickButton(getOperatorJoystick(), XboxController.B_BUTTON)
-            .whileHeld(new RunCommand(() -> m_robotShooter.runshooterRotatePID(360, 0.2, 0.0, 0.0, 0.0, 0.0, 1, -1)));
+            .whileHeld(new RunCommand(() -> m_robotShooter.runshooterRotatePID(360)));
+
         new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
-            .whileHeld(new RunCommand(() -> m_robotShooter.runshooterRotatePID(720, 0.2, 0.0, 0.0, 0.0, 0.0, 1, -1)));
+            .whileHeld(new RunCommand(() -> m_robotShooter.runshooterRotatePID(720)));
+            
         /* TEST for both commands above */
     }
       

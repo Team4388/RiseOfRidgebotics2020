@@ -27,7 +27,7 @@ public class Shooter extends SubsystemBase {
   public CANSparkMax m_angleAdjustMotor = new CANSparkMax(ShooterConstants.SHOOTER_ANGLE_ADJUST_ID, MotorType.kBrushless);
   public CANSparkMax m_shooterRotateMotor = new CANSparkMax(ShooterConstants.SHOOTER_ROTATE_ID, MotorType.kBrushless);
 
-  public static Gains m_shooterGains = ShooterConstants.SHOOTER_GAINS;
+  public static Gains m_shooterGains = ShooterConstants.DRUM_SHOOTER_GAINS;
 
   // Configure PID Controllers
   CANPIDController m_angleAdjustPIDController = m_angleAdjustMotor.getPIDController();
@@ -106,15 +106,15 @@ public class Shooter extends SubsystemBase {
   }
 
   /* Angle Adjustment PID Control */
-  public void runAngleAdjustPID(double targetAngle, double kP, double kI, double kD, double kIz, double kF, double kmaxOutput, double kminOutput)
+  public void runAngleAdjustPID(double targetAngle)
   {
     // Set PID Coefficients
-    m_angleAdjustPIDController.setP(kP);
-    m_angleAdjustPIDController.setI(kI);
-    m_angleAdjustPIDController.setD(kD);
-    m_angleAdjustPIDController.setIZone(kIz);
-    m_angleAdjustPIDController.setFF(kF);
-    m_angleAdjustPIDController.setOutputRange(kminOutput, kmaxOutput); 
+    m_angleAdjustPIDController.setP(m_shooterGains.m_kP);
+    m_angleAdjustPIDController.setI(m_shooterGains.m_kI);
+    m_angleAdjustPIDController.setD(m_shooterGains.m_kD);
+    m_angleAdjustPIDController.setIZone(m_shooterGains.m_kIzone);
+    m_angleAdjustPIDController.setFF(m_shooterGains.m_kF);
+    m_angleAdjustPIDController.setOutputRange(ShooterConstants.SHOOTER_TURRET_MIN, m_shooterGains.m_kPeakOutput); 
 
     // Convert input angle in degrees to rotations of the motor
     targetAngle = targetAngle/ShooterConstants.DEGREES_PER_ROT;
@@ -123,15 +123,15 @@ public class Shooter extends SubsystemBase {
   }
 
   /* Rotate Shooter PID Control */
-  public void runshooterRotatePID(double targetAngle, double kP, double kI, double kD, double kIz, double kF, double kmaxOutput, double kminOutput)
+  public void runshooterRotatePID(double targetAngle)
   {
     // Set PID Coefficients
-    m_shooterRotatePIDController.setP(kP);
-    m_shooterRotatePIDController.setI(kI);
-    m_shooterRotatePIDController.setD(kD);
-    m_shooterRotatePIDController.setIZone(kIz);
-    m_shooterRotatePIDController.setFF(kF);
-    m_shooterRotatePIDController.setOutputRange(kminOutput, kmaxOutput); 
+    m_shooterRotatePIDController.setP(m_shooterGains.m_kP);
+    m_shooterRotatePIDController.setI(m_shooterGains.m_kI);
+    m_shooterRotatePIDController.setD(m_shooterGains.m_kD);
+    m_shooterRotatePIDController.setFF(m_shooterGains.m_kF);
+    m_shooterRotatePIDController.setIZone(m_shooterGains.m_kIzone);
+    m_shooterRotatePIDController.setOutputRange(ShooterConstants.SHOOTER_TURRET_MIN, m_shooterGains.m_kPeakOutput); 
 
     // Convert input angle in degrees to rotations of the motor
     targetAngle = targetAngle/ShooterConstants.DEGREES_PER_ROT;

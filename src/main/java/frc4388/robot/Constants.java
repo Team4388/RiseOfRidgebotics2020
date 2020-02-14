@@ -80,8 +80,10 @@ public final class Constants {
         public static final int SHOOTER_SLOT_IDX = 0;
         public static final int SHOOTER_PID_LOOP_IDX = 1;
         public static final int SHOOTER_TIMEOUT_MS = 30;
-        public static final Gains SHOOTER_GAINS = new Gains(0.4, 0.0005, 13, 0.05, 0, 1.0);
+        public static final Gains DRUM_SHOOTER_GAINS = new Gains(0.4, 0.0005, 13, 0.05, 0, 1.0);
         
+        public static final Gains SHOOTER_TURRET_GAINS = new Gains(0.2, 0.0, 0.0, 0.0, 0, 1.0);
+        public static final double SHOOTER_TURRET_MIN = -1.0;
         public static final double ENCODER_TICKS_PER_REV = 2048;
         public static final double NEO_UNITS_PER_REV = 42;
         public static final double DEGREES_PER_ROT = 360;
