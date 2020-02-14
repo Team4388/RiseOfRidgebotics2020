@@ -77,7 +77,7 @@ public class Drive extends SubsystemBase {
     m_pigeon.configFactoryDefault();
     resetGyroYaw();
 
-    m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
+    m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()), new Pose2d(0, 0, new Rotation2d()));
 
     speedShift = new DoubleSolenoid(7,0,1);
 
@@ -263,6 +263,7 @@ public class Drive extends SubsystemBase {
       //SmartDashboard.putNumber("PID 1 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_TURN));
 
       SmartDashboard.putString("Odometry Values Meters", getPose().toString());
+      SmartDashboard.putNumber("Odometry Heading", getHeading());
 
     } catch (Exception e) {
       System.err.println("Error in the Drive Subsystem");
@@ -271,7 +272,7 @@ public class Drive extends SubsystemBase {
 
     m_odometry.update(Rotation2d.fromDegrees( getHeading()),
                                               inchesToMeters(getDistanceInches(m_leftFrontMotor)),
-                                              inchesToMeters(getDistanceInches(m_rightFrontMotor)));
+                                              inchesToMeters(-getDistanceInches(m_rightFrontMotor)));
   }
 
   /**
