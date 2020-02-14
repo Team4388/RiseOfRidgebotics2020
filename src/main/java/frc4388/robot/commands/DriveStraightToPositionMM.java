@@ -12,19 +12,19 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.Constants.DriveConstants;
 import frc4388.robot.subsystems.Drive;
 
-public class DriveStraightToPositionPID extends CommandBase {
+public class DriveStraightToPositionMM extends CommandBase {
   Drive m_drive;
   double m_targetPosIn;
   double m_targetPosOut;
   double m_targetGyro;
-  int i;
+  boolean isGoneFast;
   
   /**
    * Creates a new DriveToDistancePID.
    * @param subsystem drive subsystem
    * @param targetPos distance to travel in inches
    */
-  public DriveStraightToPositionPID(Drive subsystem, double targetPos) {
+  public DriveStraightToPositionMM(Drive subsystem, double targetPos) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = subsystem;
     m_targetPosIn = targetPos * DriveConstants.TICKS_PER_INCH;
@@ -35,19 +35,19 @@ public class DriveStraightToPositionPID extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //System.err.println("PID START \n | \n |");
+    System.err.println("PID START \n | \n |");
     m_targetGyro = m_drive.m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_TURN);
     m_targetPosOut = m_targetPosIn + m_drive.m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_PRIMARY);
-    i = 0;
+    isGoneFast = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //System.err.println("| \n Sensor Pos \n" + m_drive.m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_PRIMARY));
-    //System.err.println("Sensor Error \n" + m_drive.m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_PRIMARY));
-    //System.err.println("Sensor Target \n" + m_drive.m_rightFrontMotor.getClosedLoopTarget(DriveConstants.PID_PRIMARY));
-    m_drive.runDriveStraightPositionPID(m_targetPosOut, m_targetGyro);
+    //System.err.println("| \n Sensor Pos \n" + m_drive.m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_TURN));
+    //System.err.println("Sensor Error \n" + m_drive.m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_TURN));
+    //System.err.println("Sensor Target \n" + m_drive.m_rightFrontMotor.getClosedLoopTarget(DriveConstants.PID_TURN));
+    m_drive.runMotionMagicPID(m_targetPosOut, m_targetGyro);
   }
 
   // Called once the command ends or is interrupted.
@@ -58,11 +58,12 @@ public class DriveStraightToPositionPID extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (Math.abs((int)m_drive.m_rightFrontMotor.getSelectedSensorVelocity(DriveConstants.PID_PRIMARY)) < 5 && i > 5){
+    if (Math.abs((int)m_drive.m_rightFrontMotor.getSelectedSensorVelocity(DriveConstants.PID_PRIMARY)) < 5 && isGoneFast){
       return true;
     } else {
-      i++;
-      //System.err.println(i);
+      if (m_drive.m_rightFrontMotor.getSelectedSensorVelocity(DriveConstants.PID_PRIMARY) > 100) {
+        isGoneFast = true;
+      }
       return false;
     }
   }

@@ -8,39 +8,31 @@
 package frc4388.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc4388.robot.Constants.DriveConstants;
-import frc4388.robot.subsystems.Drive;
+import frc4388.robot.subsystems.Shooter;
 
-public class DriveToDistanceMM extends CommandBase {
-  Drive m_drive;
-  double m_distance;
-  double m_leftTarget;
-  double m_rightTarget;
-  
+public class ShooterVelocityControlPID extends CommandBase {
+  Shooter m_shooter;
+  double m_targetVel;
   /**
-   * Creates a new DriveToDistancePID.
-   * @param subsystem drive subsystem
-   * @param distance distance to travel in inches
+   * Creates a new ShooterVelocityControlPID.
    */
-  public DriveToDistanceMM(Drive subsystem, double distance) {
+  public ShooterVelocityControlPID(Shooter subsystem, double targetVel) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_drive = subsystem;
-    m_distance = distance * DriveConstants.TICKS_PER_INCH;
-    addRequirements(m_drive);
+    m_shooter = subsystem;
+    m_targetVel = targetVel;
+    addRequirements(m_shooter);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_leftTarget = m_drive.m_leftFrontMotor.getActiveTrajectoryPosition() + m_distance;
-    m_rightTarget = -(m_drive.m_rightFrontMotor.getActiveTrajectoryPosition() + m_distance);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //m_drive.runMotionMagicPID(m_drive.m_leftFrontMotor, m_leftTarget);
-    //m_drive.runMotionMagicPID(m_drive.m_rightFrontMotor, m_rightTarget);
+    System.err.println(m_shooter.m_shooterFalcon.getSelectedSensorVelocity());
+    m_shooter.runDrumShooterVelocityPID(m_targetVel, m_shooter.m_shooterFalcon.getSelectedSensorVelocity());
   }
 
   // Called once the command ends or is interrupted.
@@ -51,10 +43,6 @@ public class DriveToDistanceMM extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (Math.abs(m_drive.m_leftFrontMotor.getActiveTrajectoryPosition() - m_leftTarget) < 100){
-      return true;
-    } else {
-      return false;
-    }
+    return false;
   }
 }
