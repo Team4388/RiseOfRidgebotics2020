@@ -39,7 +39,7 @@ public final class Constants {
         /* Trajectory Constants */
         public static final double MAX_SPEED_METERS_PER_SECOND = 3;
         public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 3;
-        public static final double TRACK_WIDTH_METERS = 0.648; ///TODO: SET THIS SOON!
+        public static final double TRACK_WIDTH_METERS = 0.648;
         public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
  
         /* Remote Sensors */
@@ -71,6 +71,7 @@ public final class Constants {
         public static final double TICKS_PER_INCH = TICKS_PER_WHEEL_REV/INCHES_PER_WHEEL_REV;
         public static final double INCHES_PER_TICK = 1/TICKS_PER_INCH;
         public static final double INCHES_PER_METER = 39.370;
+        public static final double METERS_PER_INCH = 1/INCHES_PER_METER;
     }
     
     public static final class IntakeConstants {

@@ -544,7 +544,7 @@ public class Drive extends SubsystemBase {
    * @return The converted value in meters
    */
   public double inchesToMeters(double inches) {
-    return inches / DriveConstants.INCHES_PER_METER;
+    return inches * DriveConstants.METERS_PER_INCH;
   }
 
   /**
