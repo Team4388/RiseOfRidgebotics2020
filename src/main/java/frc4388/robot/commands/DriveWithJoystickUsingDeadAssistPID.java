@@ -46,7 +46,7 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
   @Override
   public void execute() {
     double currentGyro = m_drive.m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_TURN);
-    double moveInput = m_controller.getLeftYAxis();
+    double moveInput = -m_controller.getLeftYAxis();
     double steerInput = m_controller.getRightXAxis();
     double moveOutput = 0;
     double steerOutput = 0;
