@@ -96,7 +96,7 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
     }
     /* If the move stick is not being used */
     else {
-      m_drive.runDriveStraightVelocityPID(0, m_targetGyro);
+      m_drive.runDriveVelocityPID(0, m_targetGyro);
       isAuxPIDEnabled = true;
     }
   }

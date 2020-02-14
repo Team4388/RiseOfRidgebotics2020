@@ -309,12 +309,12 @@ public class Drive extends SubsystemBase {
   }
 
   /**
-   * Runs position PID while driving straight.
+   * Runs position PID.
    * Position is absolute and displacement should be handled on the command side.
    * @param targetPos  The position to drive to in units
    * @param targetGyro The angle to drive at in units
    */
-  public void runDriveStraightPositionPID(double targetPos, double targetGyro) {
+  public void runDrivePositionPID(double targetPos, double targetGyro) {
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_DISTANCE, DriveConstants.PID_PRIMARY);
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
 
@@ -325,12 +325,12 @@ public class Drive extends SubsystemBase {
   }
 
   /**
-   * Runs velocity PID while driving straight
+   * Runs velocity PID
    * 
    * @param targetVel  The velocity to drive at in units
    * @param targetGyro The angle to drive at in units
    */
-  public void runDriveStraightVelocityPID(double targetVel, double targetGyro) {
+  public void runDriveVelocityPID(double targetVel, double targetGyro) {
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
     m_rightFrontMotor.set(TalonFXControlMode.Velocity, targetVel, DemandType.AuxPID, targetGyro);
@@ -362,7 +362,7 @@ public class Drive extends SubsystemBase {
   public void runTurningPID(double targetAngle) {
     double targetGyro = (targetAngle / 360) * DriveConstants.TICKS_PER_GYRO_REV;
 
-    runDriveStraightVelocityPID(0, targetGyro);
+    runDriveVelocityPID(0, targetGyro);
   }
 
   /**
