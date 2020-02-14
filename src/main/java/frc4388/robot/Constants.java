@@ -37,11 +37,11 @@ public final class Constants {
         public static final int DRIVE_ACCELERATION = 7000;
 
         /* Trajectory Constants */
-        public static final double kMaxSpeedMetersPerSecond = 3;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 3;
-        public static final double kTrackwidthMeters = 0.648; ///TODO: SET THIS SOON!
-        public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters);
-
+        public static final double MAX_SPEED_METERS_PER_SECOND = 3;
+        public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 3;
+        public static final double TRACK_WIDTH_METERS = 0.648; ///TODO: SET THIS SOON!
+        public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
+ 
         /* Remote Sensors */
         public final static int REMOTE_0 = 0;
         public final static int REMOTE_1 = 1;
