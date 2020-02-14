@@ -373,7 +373,7 @@ public class Drive extends SubsystemBase {
    * @param rightSpeed the commanded right output
    */
   public void tankDriveVelocity(double leftSpeed, double rightSpeed) {
-    /*DifferentialDriveWheelSpeeds wheelSpeeds = new DifferentialDriveWheelSpeeds(leftSpeed, rightSpeed);
+    DifferentialDriveWheelSpeeds wheelSpeeds = new DifferentialDriveWheelSpeeds(leftSpeed, rightSpeed);
     ChassisSpeeds chassisSpeeds = DriveConstants.kDriveKinematics.toChassisSpeeds(wheelSpeeds);
     double moveVelMPS = chassisSpeeds.vxMetersPerSecond;
     double angleVelRad = chassisSpeeds.omegaRadiansPerSecond;
@@ -383,14 +383,19 @@ public class Drive extends SubsystemBase {
     m_kinematicsTargetAngle = MathUtil.clamp( m_kinematicsTargetAngle, 
                                               m_currentAngleYaw-(360),
                                               m_currentAngleYaw+(360));
-    double targetGyro = (m_kinematicsTargetAngle / 360) * DriveConstants.TICKS_PER_GYRO_REV;*/
-    double moveVelLeft = inchesToMeters(metersToInches(leftSpeed))/DriveConstants.SECONDS_TO_TICK_TIME;
-    double moveVelRight = inchesToMeters(metersToInches(rightSpeed))/DriveConstants.SECONDS_TO_TICK_TIME;
+    double targetGyro = (m_kinematicsTargetAngle / 360) * DriveConstants.TICKS_PER_GYRO_REV;
+    double moveVel = inchesToTicks(metersToInches(moveVelMPS))/DriveConstants.SECONDS_TO_TICK_TIME;
+    //double moveVelRight = inchesToTicks(metersToInches(rightSpeed))/DriveConstants.SECONDS_TO_TICK_TIME;
 
-    //runDriveStraightVelocityPID(moveVel, targetGyro);
+    //SmartDashboard.putNumber("Move Vel Left", moveVelLeft);
+    //SmartDashboard.putNumber("Move Vel Right", moveVelRight);
 
-    m_rightFrontMotor.set(TalonFXControlMode.Velocity, moveVelRight);
-    m_leftFrontMotor.set(TalonFXControlMode.Velocity, moveVelLeft);
+    runDriveVelocityPID(moveVel*2, targetGyro);
+
+    //m_rightFrontMotor.set(TalonFXControlMode.Velocity, moveVelRight);
+    //m_leftFrontMotor.set(TalonFXControlMode.Velocity, moveVelLeft);
+
+    //m_driveTrain.feedWatchdog();
   }
 
   /**

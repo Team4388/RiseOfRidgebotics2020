@@ -31,6 +31,7 @@ import frc4388.robot.Constants.*;
 import frc4388.robot.commands.DriveStraightAtVelocityPID;
 import frc4388.robot.commands.DriveStraightToPositionMM;
 import frc4388.robot.commands.DriveStraightToPositionPID;
+import frc4388.robot.commands.DriveWithJoystick;
 import frc4388.robot.commands.DriveWithJoystickUsingDeadAssistPID;
 import frc4388.robot.commands.RunClimberWithTriggers;
 import frc4388.robot.commands.RunExtenderOutIn;
@@ -77,7 +78,7 @@ public class RobotContainer {
 
         /* Default Commands */
         // drives the robot with a two-axis input from the driver controller
-        m_robotDrive.setDefaultCommand(new DriveWithJoystickUsingDeadAssistPID(m_robotDrive, getDriverController()));
+        m_robotDrive.setDefaultCommand(new DriveWithJoystick(m_robotDrive, getDriverController()));
         // drives intake with input from triggers on the opperator controller
         m_robotIntake.setDefaultCommand(new RunIntakeWithTriggers(m_robotIntake, getOperatorController()));
         // drives climber with input from triggers on the opperator controller
@@ -126,7 +127,7 @@ public class RobotContainer {
       
         // resets the yaw of the pigeon
         new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
-            .whenPressed(new DriveStraightToPositionMM(m_robotDrive, 72));
+            .whileHeld(new RunCommand(() -> m_robotDrive.tankDriveVelocity(1, 1), m_robotDrive));
       
         // turn 45 degrees
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
@@ -184,11 +185,11 @@ public class RobotContainer {
             new Pose2d(0, 0, new Rotation2d(0)),
             // Pass through these two interior waypoints, making an 's' curve path
             List.of(
-                new Translation2d(1, 1),
-                new Translation2d(2, -1)
+                new Translation2d(2, 0)
+                //new Translation2d(4, -2)
             ),
             // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(3, 0, new Rotation2d(0)),
+            new Pose2d(4, 0, new Rotation2d(0)),
             // Pass config
             config);
 
