@@ -493,7 +493,7 @@ public class Drive extends SubsystemBase {
   public void selectSong(String song) {
     SmartDashboard.putString("Selected Song", song);
     m_orchestra.loadMusic(song);
-    
+  }
   /**
    * Set to high or low gear based on boolean state, true = high, false = low
    * @param state Chooses between high or low gear
