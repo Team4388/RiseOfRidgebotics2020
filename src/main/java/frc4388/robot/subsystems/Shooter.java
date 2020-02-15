@@ -117,10 +117,7 @@ public class Shooter extends SubsystemBase {
   }
 
 
-  public void runShooterWithInput(IHandController controller) {
-    m_controller = controller;
-    input = m_controller.getLeftXAxis();
-    System.err.println(input);
+  public void runShooterWithInput(double input) {
     m_shooterRotateMotor.set(input);
   }
 
