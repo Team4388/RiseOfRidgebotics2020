@@ -69,7 +69,7 @@ public class RobotContainer {
         // drives intake with input from triggers on the opperator controller
         m_robotIntake.setDefaultCommand(new RunIntakeWithTriggers(m_robotIntake, getOperatorController()));
         // drives climber with input from triggers on the opperator controller
-        m_robotClimber.setDefaultCommand(new RunClimberWithTriggers(m_robotClimber, getDriverController()));
+        m_robotClimber.setDefaultCommand(new RunClimberWithTriggers(m_robotClimber, getOperatorController()));
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
         // runs the drum shooter in idle mode
@@ -134,8 +134,8 @@ public class RobotContainer {
             .whenPressed(new InstantCommand(() -> System.out.print("Gamer"), m_robotDrive));
 
         // safety for climber and leveler
-        new JoystickButton(getOperatorJoystick(), XboxController.START_BUTTON)
-            .whileHeld(new InstantCommand(() -> m_robotClimber.setSafetyPressed(), m_robotClimber))
+        new JoystickButton(getOperatorJoystick(), XboxController.BACK_BUTTON)
+            .whenPressed(new InstantCommand(() -> m_robotClimber.setSafetyPressed(), m_robotClimber))
             .whenReleased(new InstantCommand(() -> m_robotClimber.setSafetyNotPressed(), m_robotClimber));
 
         /* Storage Neo PID Test */
