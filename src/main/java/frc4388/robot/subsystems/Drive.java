@@ -7,6 +7,17 @@
 
 package frc4388.robot.subsystems;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.FollowerType;
@@ -17,11 +28,15 @@ import com.ctre.phoenix.motorcontrol.SensorTerm;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.music.Orchestra;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -41,6 +56,7 @@ public class Drive extends SubsystemBase {
   public WPI_TalonFX m_leftBackMotor = new WPI_TalonFX(DriveConstants.DRIVE_LEFT_BACK_CAN_ID);
   public WPI_TalonFX m_rightBackMotor = new WPI_TalonFX(DriveConstants.DRIVE_RIGHT_BACK_CAN_ID);
   public static PigeonIMU m_pigeon = new PigeonIMU(DriveConstants.PIGEON_ID);
+  public Orchestra m_orchestra = new Orchestra();
 
   public DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
 
@@ -49,6 +65,8 @@ public class Drive extends SubsystemBase {
   public static Gains m_gainsVelocity = DriveConstants.DRIVE_VELOCITY_GAINS;
   public static Gains m_gainsTurning = DriveConstants.DRIVE_TURNING_GAINS;
   public static Gains m_gainsMotionMagic = DriveConstants.DRIVE_MOTION_MAGIC_GAINS;
+
+  SendableChooser<String> m_songChooser = new SendableChooser<String>();
 
   public DoubleSolenoid speedShift;
 
@@ -79,7 +97,7 @@ public class Drive extends SubsystemBase {
     /* flip input so forward becomes back, etc */
     m_leftFrontMotor.setInverted(false);
     m_rightFrontMotor.setInverted(true);
-    m_driveTrain.setRightSideInverted(false);
+    //m_driveTrain.setRightSideInverted(false);
     m_leftBackMotor.setInverted(InvertType.FollowMaster);
     m_rightBackMotor.setInverted(InvertType.FollowMaster);
 
@@ -103,6 +121,15 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.config_kI(DriveConstants.SLOT_DISTANCE, m_gainsDistance.m_kI, DriveConstants.DRIVE_TIMEOUT_MS);
     m_rightFrontMotor.config_kD(DriveConstants.SLOT_DISTANCE, m_gainsDistance.m_kD, DriveConstants.DRIVE_TIMEOUT_MS);
     m_rightFrontMotor.configClosedLoopPeakOutput(DriveConstants.SLOT_DISTANCE, m_gainsDistance.m_kPeakOutput, DriveConstants.DRIVE_TIMEOUT_MS);    
+
+    m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_MOTION_MAGIC, DriveConstants.PID_PRIMARY);
+    m_rightFrontMotor.config_kF(DriveConstants.SLOT_MOTION_MAGIC, m_gainsMotionMagic.m_kF, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kP(DriveConstants.SLOT_MOTION_MAGIC, m_gainsMotionMagic.m_kP, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kI(DriveConstants.SLOT_MOTION_MAGIC, m_gainsMotionMagic.m_kI, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.config_kD(DriveConstants.SLOT_MOTION_MAGIC, m_gainsMotionMagic.m_kD, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.configMotionCruiseVelocity(DriveConstants.DRIVE_CRUISE_VELOCITY, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.configMotionAcceleration(DriveConstants.DRIVE_ACCELERATION, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.configMotionSCurveStrength(0, DriveConstants.DRIVE_TIMEOUT_MS);
 
     /* Setup Sensors for WPI_TalonFXs */
     m_leftFrontMotor.setSelectedSensorPosition(0, DriveConstants.PID_PRIMARY, DriveConstants.DRIVE_TIMEOUT_MS);
@@ -134,8 +161,8 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.configSensorTerm(SensorTerm.Sum1, FeedbackDevice.IntegratedSensor, DriveConstants.DRIVE_TIMEOUT_MS);
 
     /* Diff Signal */
-    m_rightFrontMotor.configSensorTerm(SensorTerm.Diff0, FeedbackDevice.RemoteSensor0, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightFrontMotor.configSensorTerm(SensorTerm.Diff1, FeedbackDevice.IntegratedSensor, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.configSensorTerm(SensorTerm.Diff1, FeedbackDevice.RemoteSensor0, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightFrontMotor.configSensorTerm(SensorTerm.Diff0, FeedbackDevice.IntegratedSensor, DriveConstants.DRIVE_TIMEOUT_MS);
 
     /* Configure Sum [Sum of both QuadEncoders] to be used for Primary PID Index */
 		m_rightFrontMotor.configSelectedFeedbackSensor(	FeedbackDevice.SensorDifference,
@@ -225,8 +252,22 @@ public class Drive extends SubsystemBase {
 		 * true means talon's local output is PID0 - PID1, and other side Talon is PID0 + PID1
 		 */
     m_rightFrontMotor.configAuxPIDPolarity(false, DriveConstants.DRIVE_TIMEOUT_MS);
+
+    m_orchestra.addInstrument(m_leftBackMotor);
+    m_orchestra.addInstrument(m_rightFrontMotor);
+    m_orchestra.addInstrument(m_rightBackMotor);
+    m_orchestra.addInstrument(m_leftFrontMotor);
+
+    File songsDir = new File(Filesystem.getDeployDirectory().getAbsolutePath() + "/songs");
+    System.err.println(songsDir.getPath());
+    String[] songsStrings = songsDir.list();
+    for (String songString : songsStrings){
+      m_songChooser.addOption(songString, songsDir.getAbsolutePath() + "/" + songString);
+    }
+    Shuffleboard.getTab("Songs").add(m_songChooser);
   }
 
+  String currentSong = "";
   @Override
   public void periodic() {
     try {
@@ -254,6 +295,11 @@ public class Drive extends SubsystemBase {
       SmartDashboard.putNumber("PID 0 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_PRIMARY));
       SmartDashboard.putNumber("PID 1 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_TURN));
 
+      if (currentSong != m_songChooser.getSelected()){
+        currentSong = m_songChooser.getSelected();
+        selectSong(currentSong);
+        System.err.println(currentSong);
+      }
     } catch (Exception e) {
       System.err.println("Error in the Drive Subsystem");
       //e.printStackTrace(System.err);
@@ -319,14 +365,29 @@ public class Drive extends SubsystemBase {
   }
 
   /**
-   * Add your docs here.
+   * Runs percent output control on the moving and steering of the drive train,
+   * using the Differential Drive class to manage the two inputs
    */
   public void driveWithInput(double move, double steer){
-    m_driveTrain.arcadeDrive(move, steer);
+    //m_driveTrain.arcadeDrive(move, steer);
   }
 
   /**
-   * Runs a position PID while driving straight (has not been tested)
+   * Runs percent output control on the drive train while using an AUX PID for rotation
+   * @param targetPos The position to drive to in units
+   * @param targetGyro The angle to drive at in units
+   */
+  public void driveWithInputAux(double move, double targetGyro) {
+    m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
+
+    m_rightFrontMotor.set(TalonFXControlMode.PercentOutput, move, DemandType.AuxPID, targetGyro);
+    m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
+
+    m_driveTrain.feedWatchdog();
+  }
+
+  /**
+   * Runs a position PID while driving straight
    * @param targetPos The position to drive to in units
    * @param targetGyro The angle to drive at in units
    */
@@ -334,11 +395,10 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_DISTANCE, DriveConstants.PID_PRIMARY);
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
 
-    targetPos *= 2;
     m_rightFrontMotor.set(TalonFXControlMode.Position, targetPos, DemandType.AuxPID, targetGyro);
     m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
 
-    m_driveTrain.feedWatchdog();
+    //m_driveTrain.feedWatchdog();
   }
 
   /**
@@ -349,27 +409,26 @@ public class Drive extends SubsystemBase {
   public void runDriveStraightVelocityPID(double targetVel, double targetGyro) {
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
-
-    targetVel *= 2;
     m_rightFrontMotor.set(TalonFXControlMode.Velocity, targetVel, DemandType.AuxPID, targetGyro);
     m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
 
-    m_driveTrain.feedWatchdog();
+    //m_driveTrain.feedWatchdog();
   }
 
   /**
-   * Runs motion magic PID while driving straight (has not been tested)
+   * Runs motion magic PID while driving straight
    * @param targetPos The position to drive to in units
    * @param targetGyro The angle to drive at in units
    */
   public void runMotionMagicPID(double targetPos, double targetGyro){
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_MOTION_MAGIC, DriveConstants.PID_PRIMARY);
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
-    
-    m_rightFrontMotor.set(TalonFXControlMode.MotionMagic, targetPos, DemandType.AuxPID, targetGyro);
+
+    m_rightFrontMotor.set(ControlMode.MotionMagic, targetPos, DemandType.AuxPID, targetGyro);
     m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
-    
+
     m_driveTrain.feedWatchdog();
+
   }
 
   /**
@@ -420,6 +479,21 @@ public class Drive extends SubsystemBase {
     m_pigeon.setAccumZAngle(0);
   }
 
+  /**
+   * Plays Music!
+   */
+  public void playSong() {
+    m_orchestra.play();
+  }
+
+  /**
+   * Selects a song to play!
+   * @param song The name of the song to be played
+   */
+  public void selectSong(String song) {
+    SmartDashboard.putString("Selected Song", song);
+    m_orchestra.loadMusic(song);
+  }
   /**
    * Set to high or low gear based on boolean state, true = high, false = low
    * @param state Chooses between high or low gear
