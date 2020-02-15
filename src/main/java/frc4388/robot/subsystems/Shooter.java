@@ -118,12 +118,8 @@ public class Shooter extends SubsystemBase {
 
 
   public void runShooterWithInput(IHandController controller) {
-    /* m_controller = controller;
-     input = controller.getLeftXAxis();
-     * System.err.println(input);
-     * m_shooterFalcon.set(TalonFXControlMode.PercentOutput, 0.3);
-     */
-    input = controller.getLeftXAxis();
+    m_controller = controller;
+    input = m_controller.getLeftXAxis();
     System.err.println(input);
     m_shooterRotateMotor.set(input);
   }
