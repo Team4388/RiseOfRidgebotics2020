@@ -329,12 +329,18 @@ public class Drive extends SubsystemBase {
   }
 
   /**
-   * Add your docs here.
+   * Runs percent output control on the moving and steering of the drive train,
+   * using the Differential Drive class to manage the two inputs
    */
   public void driveWithInput(double move, double steer){
     m_driveTrain.arcadeDrive(move, steer);
   }
 
+  /**
+   * Runs percent output control on the drive train while using an AUX PID for rotation
+   * @param targetPos The position to drive to in units
+   * @param targetGyro The angle to drive at in units
+   */
   public void driveWithInputAux(double move, double targetGyro) {
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
 
@@ -374,7 +380,7 @@ public class Drive extends SubsystemBase {
   }
 
   /**
-   * Runs motion magic PID while driving straight (has not been tested)
+   * Runs motion magic PID while driving straight
    * @param targetPos The position to drive to in units
    * @param targetGyro The angle to drive at in units
    */

@@ -18,8 +18,7 @@ import frc4388.robot.Constants.*;
 import frc4388.robot.commands.DriveStraightAtVelocityPID;
 import frc4388.robot.commands.DriveStraightToPositionMM;
 import frc4388.robot.commands.DriveStraightToPositionPID;
-import frc4388.robot.commands.DriveWithJoystick;
-import frc4388.robot.commands.DriveWithJoystickAuxPID;
+import frc4388.robot.commands.DriveWithJoystickUsingDeadAssistPID;
 import frc4388.robot.commands.RunClimberWithTriggers;
 import frc4388.robot.commands.RunExtenderOutIn;
 import frc4388.robot.commands.RunIntakeWithTriggers;
@@ -30,9 +29,6 @@ import frc4388.robot.subsystems.LED;
 import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.Climber;
 import frc4388.robot.commands.RunLevelerWithJoystick;
-import frc4388.robot.subsystems.Drive;
-import frc4388.robot.subsystems.Intake;
-import frc4388.robot.subsystems.LED;
 import frc4388.robot.subsystems.Leveler;
 import frc4388.robot.subsystems.Storage;
 import frc4388.utility.LEDPatterns;
@@ -68,7 +64,7 @@ public class RobotContainer {
 
         /* Default Commands */
         // drives the robot with a two-axis input from the driver controller
-        m_robotDrive.setDefaultCommand(new DriveWithJoystick(m_robotDrive, getDriverController()));
+        m_robotDrive.setDefaultCommand(new DriveWithJoystickUsingDeadAssistPID(m_robotDrive, getDriverController()));
         // drives intake with input from triggers on the opperator controller
         m_robotIntake.setDefaultCommand(new RunIntakeWithTriggers(m_robotIntake, getOperatorController()));
         // drives climber with input from triggers on the opperator controller
@@ -134,6 +130,10 @@ public class RobotContainer {
         // interrupts any running command
         new JoystickButton(getDriverJoystick(), XboxController.LEFT_JOYSTICK_BUTTON)
             .whenPressed(new InstantCommand(() -> System.out.print("Gamer"), m_robotDrive));
+
+        /* Storage Neo PID Test */
+        new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
+            .whileHeld(new RunCommand(() -> m_robotStorage.runStoragePositionPID(0.5, 0.2, 0.0, 0.0, 0.0, 0.0, 1, -1)));
     }
       
     /**
