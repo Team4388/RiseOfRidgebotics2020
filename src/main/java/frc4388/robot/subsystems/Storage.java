@@ -59,9 +59,9 @@ public class Storage extends SubsystemBase {
     final boolean beam_on = m_beamSensors[0].get();
 
     if (beam_on) {
-      System.err.println("Beam on");
+      //System.err.println("Beam on");
     } else {
-      System.err.println("Beam off");
+      //System.err.println("Beam off");
     }
 
   }
