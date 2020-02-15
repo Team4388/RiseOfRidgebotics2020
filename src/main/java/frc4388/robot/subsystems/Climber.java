@@ -19,6 +19,9 @@ import frc4388.robot.Constants.ClimberConstants;
 public class Climber extends SubsystemBase {
   CANSparkMax m_climberMotor = new CANSparkMax(ClimberConstants.CLIMBER_SPARK_ID, MotorType.kBrushless);
   CANDigitalInput m_climberForwardLimit, m_climberReverseLimit;
+
+  public boolean climberSafety = false;
+
   /**
    * Creates a new Climber.
    */
@@ -44,6 +47,23 @@ public class Climber extends SubsystemBase {
    * @param input the voltage to run motor at
    */
   public void runClimber(double input) {
-    m_climberMotor.set(input);
+    if(climberSafety){
+      m_climberMotor.set(input);
+    }
+    else{
+      m_climberMotor.set(0);
+    }
+  }
+
+  /* Safety Button for Climber */
+  public void setSafetyPressed()
+  {
+    climberSafety = true;
+  }
+
+  /* Safety Button for Climber set back to false */
+  public void setSafetyNotPressed()
+  {
+    climberSafety = false;
   }
 }
