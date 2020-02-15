@@ -9,6 +9,7 @@ package frc4388.robot.commands;
 
 import frc4388.robot.Constants.VisionConstants;
 import frc4388.robot.subsystems.Drive;
+import frc4388.robot.subsystems.Shooter;
 import frc4388.utility.controller.IHandController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.networktables.NetworkTable;
@@ -19,22 +20,21 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class TrackTarget extends CommandBase {
     //Setup
   NetworkTableEntry xEntry;
-  Drive m_drive;
+  Shooter m_shooter;
   IHandController m_driverController;
     //Aiming
   double turnAmount = 0;
   double xAngle = 0;
   double yAngle = 0;
   double target = 0;
-  double distance;
+  public double distance;
 
   /**
    * Uses the Limelight to track the target
    */
-  public TrackTarget(Drive driveSubsystem, IHandController driverController) {
-    m_drive = driveSubsystem;
-    addRequirements(m_drive);
-    m_driverController = driverController;
+  public TrackTarget(Shooter shooterSubsystem) {
+    m_shooter = shooterSubsystem;
+    addRequirements(m_shooter);
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1);
   }
 
@@ -60,7 +60,8 @@ public class TrackTarget extends CommandBase {
         //Deadzones
       else if(turnAmount > 0 && turnAmount < VisionConstants.MOTOR_DEAD_ZONE){turnAmount = VisionConstants.MOTOR_DEAD_ZONE;} 
       else if(turnAmount < 0 && turnAmount > -VisionConstants.MOTOR_DEAD_ZONE){turnAmount = -VisionConstants.MOTOR_DEAD_ZONE;}
-      m_drive.driveWithInput(m_driverController.getLeftYAxis(), turnAmount);
+      //m_drive.driveWithInput(m_driverController.getLeftYAxis(), turnAmount);
+      m_shooter.runShooterWithInput(turnAmount);
 
         //Finding Distance
       distance = VisionConstants.TARGET_HEIGHT/Math.tan((VisionConstants.LIME_ANGLE + yAngle)*(Math.PI/180));
