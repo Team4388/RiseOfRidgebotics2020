@@ -15,7 +15,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.SparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -57,12 +56,6 @@ public class Storage extends SubsystemBase {
   public void runStorage(final double input) {
     m_storageMotor.set(input);
     final boolean beam_on = m_beamSensors[0].get();
-
-    if (beam_on) {
-      //System.err.println("Beam on");
-    } else {
-      //System.err.println("Beam off");
-    }
 
   }
 
