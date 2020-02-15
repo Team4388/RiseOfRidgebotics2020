@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.*;
 import frc4388.robot.commands.DriveStraightAtVelocityPID;
+import frc4388.robot.commands.DriveWithJoystick;
 import frc4388.robot.commands.DriveStraightToPositionMM;
 import frc4388.robot.commands.DriveStraightToPositionPID;
 import frc4388.robot.commands.DriveWithJoystickUsingDeadAssistPID;
@@ -73,14 +74,12 @@ public class RobotContainer {
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
         // runs the drum shooter in idle mode
 
-        //#Janky
+      
         m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runShooterWithInput(m_operatorXbox), m_robotShooter));
-        //#Janky
-
         // drives the leveler with an axis input from the driver controller
-        m_robotLeveler.setDefaultCommand(new RunLevelerWithJoystick(m_robotLeveler, getDriverController()));
+    //    m_robotLeveler.setDefaultCommand(new RunLevelerWithJoystick(m_robotLeveler, getDriverController()));
         // runs storage motor at 50 percent
-        m_robotStorage.setDefaultCommand(new RunCommand(() -> m_robotStorage.runStorage(0.0), m_robotStorage));
+    //    m_robotStorage.setDefaultCommand(new RunCommand(() -> m_robotStorage.runStorage(0.0), m_robotStorage));
     }
 
     /**
@@ -122,6 +121,7 @@ public class RobotContainer {
         // turn 45 degrees
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
             .whenPressed(new RunCommand(() -> m_robotDrive.runTurningPID(45), m_robotDrive));
+
 
         // sets solenoids into high gear
         new JoystickButton(getDriverJoystick(), XboxController.START_BUTTON)

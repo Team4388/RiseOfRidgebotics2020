@@ -56,6 +56,7 @@ public class Storage extends SubsystemBase {
   public void runStorage(final double input) {
     m_storageMotor.set(input);
     final boolean beam_on = m_beamSensors[0].get();
+
   }
 
   public void resetEncoder()

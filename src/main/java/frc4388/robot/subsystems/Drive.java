@@ -7,6 +7,16 @@
 
 package frc4388.robot.subsystems;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -18,11 +28,15 @@ import com.ctre.phoenix.motorcontrol.SensorTerm;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.music.Orchestra;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -42,6 +56,7 @@ public class Drive extends SubsystemBase {
   public WPI_TalonFX m_leftBackMotor = new WPI_TalonFX(DriveConstants.DRIVE_LEFT_BACK_CAN_ID);
   public WPI_TalonFX m_rightBackMotor = new WPI_TalonFX(DriveConstants.DRIVE_RIGHT_BACK_CAN_ID);
   public static PigeonIMU m_pigeon = new PigeonIMU(DriveConstants.PIGEON_ID);
+  public Orchestra m_orchestra = new Orchestra();
 
   public DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
 
@@ -50,6 +65,8 @@ public class Drive extends SubsystemBase {
   public static Gains m_gainsVelocity = DriveConstants.DRIVE_VELOCITY_GAINS;
   public static Gains m_gainsTurning = DriveConstants.DRIVE_TURNING_GAINS;
   public static Gains m_gainsMotionMagic = DriveConstants.DRIVE_MOTION_MAGIC_GAINS;
+
+  SendableChooser<String> m_songChooser = new SendableChooser<String>();
 
   public DoubleSolenoid speedShift;
 
@@ -80,7 +97,7 @@ public class Drive extends SubsystemBase {
     /* flip input so forward becomes back, etc */
     m_leftFrontMotor.setInverted(false);
     m_rightFrontMotor.setInverted(true);
-    m_driveTrain.setRightSideInverted(false);
+    //m_driveTrain.setRightSideInverted(false);
     m_leftBackMotor.setInverted(InvertType.FollowMaster);
     m_rightBackMotor.setInverted(InvertType.FollowMaster);
 
@@ -235,8 +252,22 @@ public class Drive extends SubsystemBase {
 		 * true means talon's local output is PID0 - PID1, and other side Talon is PID0 + PID1
 		 */
     m_rightFrontMotor.configAuxPIDPolarity(false, DriveConstants.DRIVE_TIMEOUT_MS);
+
+    m_orchestra.addInstrument(m_leftBackMotor);
+    m_orchestra.addInstrument(m_rightFrontMotor);
+    m_orchestra.addInstrument(m_rightBackMotor);
+    m_orchestra.addInstrument(m_leftFrontMotor);
+
+    File songsDir = new File(Filesystem.getDeployDirectory().getAbsolutePath() + "/songs");
+    System.err.println(songsDir.getPath());
+    String[] songsStrings = songsDir.list();
+    for (String songString : songsStrings){
+      m_songChooser.addOption(songString, songsDir.getAbsolutePath() + "/" + songString);
+    }
+    Shuffleboard.getTab("Songs").add(m_songChooser);
   }
 
+  String currentSong = "";
   @Override
   public void periodic() {
     try {
@@ -264,6 +295,11 @@ public class Drive extends SubsystemBase {
       SmartDashboard.putNumber("PID 0 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_PRIMARY));
       SmartDashboard.putNumber("PID 1 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_TURN));
 
+      if (currentSong != m_songChooser.getSelected()){
+        currentSong = m_songChooser.getSelected();
+        selectSong(currentSong);
+        System.err.println(currentSong);
+      }
     } catch (Exception e) {
       System.err.println("Error in the Drive Subsystem");
       //e.printStackTrace(System.err);
@@ -333,7 +369,7 @@ public class Drive extends SubsystemBase {
    * using the Differential Drive class to manage the two inputs
    */
   public void driveWithInput(double move, double steer){
-    m_driveTrain.arcadeDrive(move, steer);
+    //m_driveTrain.arcadeDrive(move, steer);
   }
 
   /**
@@ -362,7 +398,7 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.set(TalonFXControlMode.Position, targetPos, DemandType.AuxPID, targetGyro);
     m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
 
-    m_driveTrain.feedWatchdog();
+    //m_driveTrain.feedWatchdog();
   }
 
   /**
@@ -376,7 +412,7 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.set(TalonFXControlMode.Velocity, targetVel, DemandType.AuxPID, targetGyro);
     m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
 
-    m_driveTrain.feedWatchdog();
+    //m_driveTrain.feedWatchdog();
   }
 
   /**
@@ -392,6 +428,7 @@ public class Drive extends SubsystemBase {
     m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
 
     m_driveTrain.feedWatchdog();
+
   }
 
   /**
@@ -442,6 +479,21 @@ public class Drive extends SubsystemBase {
     m_pigeon.setAccumZAngle(0);
   }
 
+  /**
+   * Plays Music!
+   */
+  public void playSong() {
+    m_orchestra.play();
+  }
+
+  /**
+   * Selects a song to play!
+   * @param song The name of the song to be played
+   */
+  public void selectSong(String song) {
+    SmartDashboard.putString("Selected Song", song);
+    m_orchestra.loadMusic(song);
+  }
   /**
    * Set to high or low gear based on boolean state, true = high, false = low
    * @param state Chooses between high or low gear
