@@ -60,8 +60,7 @@ public class TrackTarget extends CommandBase {
         //Deadzones
       else if(turnAmount > 0 && turnAmount < VisionConstants.MOTOR_DEAD_ZONE){turnAmount = VisionConstants.MOTOR_DEAD_ZONE;} 
       else if(turnAmount < 0 && turnAmount > -VisionConstants.MOTOR_DEAD_ZONE){turnAmount = -VisionConstants.MOTOR_DEAD_ZONE;}
-      //m_drive.driveWithInput(m_driverController.getLeftYAxis(), turnAmount);
-      //m_shooter.runShooterWithInput(turnAmount);
+      m_shooter.runShooterWithInput(turnAmount);
 
         //Finding Distance
       distance = VisionConstants.TARGET_HEIGHT/Math.tan((VisionConstants.LIME_ANGLE + yAngle)*(Math.PI/180));
