@@ -110,7 +110,7 @@ public class RobotContainer {
             .whileHeld(new ShooterVelocityControlPID(m_robotShooter, 4000));
             
         new JoystickButton(getOperatorJoystick(), XboxController.Y_BUTTON)
-            .whileHeld(new TrackTarget(m_robotDrive, m_driverXbox));
+            .whileHeld(new TrackTarget(m_robotShooter));
         
         new JoystickButton(getOperatorJoystick(), XboxController.LEFT_BUMPER_BUTTON)
             .whenPressed(new RunExtenderOutIn(m_robotIntake));
