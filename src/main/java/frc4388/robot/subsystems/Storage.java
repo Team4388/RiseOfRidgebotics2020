@@ -32,6 +32,8 @@ public class Storage extends SubsystemBase {
 
   Gains storageGains = StorageConstants.STORAGE_GAINS;
 
+  Intake m_intake;
+
   /**
    * Creates a new Storage.
    */
@@ -56,17 +58,7 @@ public class Storage extends SubsystemBase {
    * 
    * @param input the voltage to run motor at
    */
-  public void runStorage(final double input) {
-    m_storageMotor.set(input);
-    final boolean beam_on = m_beamSensors[0].get();
-
-    if (beam_on) {
-      System.err.println("Beam on");
-    } else {
-      System.err.println("Beam off");
-    }
-    
-  }
+  
 
   public void resetEncoder()
   {
@@ -95,8 +87,8 @@ public class Storage extends SubsystemBase {
   /**
    * Prepares storage for shooting
    */
-  public void storageAim() {
-    if (m_beamSensors[0].get() == false){
+  public void storageAim() {  
+    if (m_beamSensors[2].get() == false){
       m_storageMotor.set(0.5);
     }
     else{
@@ -104,18 +96,25 @@ public class Storage extends SubsystemBase {
     }
   }
 
-public void storageIntake() {
-  if (m_beamSensors[2].get() == false){
+public void storageIntake(Intake intake) {
+  m_intake = intake;
+  if (m_beamSensors[1].get() == false){
     m_storageMotor.set(-0.5);
   }
   else{
     m_storageMotor.set(0);
-
+  }
+  if (m_beamSensors[0].get()){
+    m_intake.runExtender(-0.3);
+    m_storagePIDController.setReference(10, ControlType.kPosition);
+  }
+}
+public void storageOuttake() {
+     m_storageMotor.set(1);
   }
     /*
     *If shooting move storage motor until top sensor is tripped
     *If intaking move storage motor until bottom sensor is tripped
     *
     */
-}
 }
