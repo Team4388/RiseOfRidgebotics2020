@@ -10,26 +10,36 @@ package frc4388.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Gains;
 import frc4388.robot.Constants.DriveConstants;
 import frc4388.robot.Constants.ShooterConstants;
+import frc4388.utility.controller.IHandController;
 
 public class Shooter extends SubsystemBase {
 
   public WPI_TalonFX m_shooterFalcon = new WPI_TalonFX(ShooterConstants.SHOOTER_FALCON_ID);
 
   public static Gains m_shooterGains = ShooterConstants.SHOOTER_GAINS;
-
+  public static Shooter m_shooter;
+  public static IHandController m_controller;
   double velP;
-  /**
+  double input;
+  public static CANSparkMax m_shooterRotate = new CANSparkMax(ShooterConstants.SHOOTERROTATION_SPARK_ID, MotorType.kBrushless);
+  
+  /*
    * Creates a new Shooter subsystem.
    */
   public Shooter() {
     m_shooterFalcon.configFactoryDefault();
-
+    m_shooterRotate.setIdleMode(IdleMode.kBrake);
     m_shooterFalcon.setNeutralMode(NeutralMode.Coast);
     m_shooterFalcon.setInverted(false);
     
@@ -86,4 +96,26 @@ public class Shooter extends SubsystemBase {
       m_shooterFalcon.set(TalonFXControlMode.Velocity, targetVel); //Init PID
     }
   }
+  //PLZ Help I Have No Idea What I Am Doing
+  //Help PLZ
+  //I Am Desperate
+  //PLZ
+  //PLZ
+  //With A Cherry On Top
+
+
+
+
+  //#Janky
+  public void runShooterWithInput(IHandController controller) {
+    /* m_controller = controller;
+     input = controller.getLeftXAxis();
+     * System.err.println(input);
+     * m_shooterFalcon.set(TalonFXControlMode.PercentOutput, 0.3);
+     */
+    input = controller.getLeftXAxis();
+    System.err.println(input);
+    m_shooterRotate.set(input);
+  }
+  //#Janky
 }

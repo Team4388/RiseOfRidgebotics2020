@@ -79,6 +79,10 @@ public final class Constants {
         public static final int SHOOTER_TIMEOUT_MS = 30;
         public static final Gains SHOOTER_GAINS = new Gains(0.4, 0.0005, 13, 0.05, 0, 1.0);
         
+        //#Janky
+        public static final int SHOOTERROTATION_SPARK_ID = 9;
+        //#Janky
+        
         public static final double ENCODER_TICKS_PER_REV = 2048;
     }
     
