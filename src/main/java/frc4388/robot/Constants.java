@@ -66,24 +66,31 @@ public final class Constants {
     }
     
     public static final class IntakeConstants {
-        public static final int INTAKE_SPARK_ID = 9;
-        public static final int EXTENDER_SPARK_ID = 10;
+        public static final int INTAKE_SPARK_ID = -9;
+        public static final int EXTENDER_SPARK_ID = -10;
     }
   
     public static final class ShooterConstants {
+        /* Motor IDs */
         public static final int SHOOTER_FALCON_ID = 8;
+        public static final int SHOOTER_ANGLE_ADJUST_ID = 9;
+        public static final int SHOOTER_ROTATE_ID = 10;
 
         /* PID Constants Shooter */
         public static final int SHOOTER_SLOT_IDX = 0;
         public static final int SHOOTER_PID_LOOP_IDX = 1;
         public static final int SHOOTER_TIMEOUT_MS = 30;
-        public static final Gains SHOOTER_GAINS = new Gains(0.4, 0.0005, 13, 0.05, 0, 1.0);
+        public static final Gains DRUM_SHOOTER_GAINS = new Gains(0.4, 0.0005, 13, 0.05, 0, 1.0);
         
+        public static final Gains SHOOTER_TURRET_GAINS = new Gains(0.2, 0.0, 0.0, 0.0, 0, 1.0);
+        public static final double SHOOTER_TURRET_MIN = -1.0;
         public static final double ENCODER_TICKS_PER_REV = 2048;
+        public static final double NEO_UNITS_PER_REV = 42;
+        public static final double DEGREES_PER_ROT = 360;
     }
     
     public static final class ClimberConstants {
-        public static final int CLIMBER_SPARK_ID = 10;
+        public static final int CLIMBER_SPARK_ID = -1;
     }
   
     public static final class LevelerConstants {
