@@ -17,16 +17,20 @@ import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.IntakeConstants;
 
+
+
 public class Intake extends SubsystemBase {
   CANSparkMax m_intakeMotor = new CANSparkMax(IntakeConstants.INTAKE_SPARK_ID, MotorType.kBrushless);
   CANSparkMax m_extenderMotor = new CANSparkMax(IntakeConstants.EXTENDER_SPARK_ID, MotorType.kBrushless);
-  CANDigitalInput m_extenderForwardLimit;
-  CANDigitalInput m_extenderReverseLimit;
+
 
   /**
    * Creates a new Intake.
    */
   public Intake() {
+    CANDigitalInput m_extenderForwardLimit;
+    CANDigitalInput m_extenderReverseLimit;
+
     m_intakeMotor.restoreFactoryDefaults();
     m_extenderMotor.restoreFactoryDefaults();
 
@@ -50,7 +54,7 @@ public class Intake extends SubsystemBase {
    * Runs intake motor
    * @param input the percent output to run motor at
    */
-  public void runIntake(double input) {
+  public void runIntake(final double input) {
     m_intakeMotor.set(input);
   }
   
@@ -58,7 +62,7 @@ public class Intake extends SubsystemBase {
    * Runs extender motor
    * @param input the percent output to run motor at
    */
-  public void runExtender(double input) {
+  public void runExtender(final double input) {
     m_extenderMotor.set(input);
   }
 }

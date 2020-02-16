@@ -79,9 +79,8 @@ public class RobotContainer {
         m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runDrumShooter(0.15), m_robotShooter));
         // drives the leveler with an axis input from the driver controller
         m_robotLeveler.setDefaultCommand(new RunLevelerWithJoystick(m_robotLeveler, getDriverController()));
-        // runs storage motor at 50 percent
-        m_robotStorage.setDefaultCommand(new RunCommand(() -> m_robotStorage.runStorage(0.0), m_robotStorage));
     }
+      
 
     /**
     * Use this method to define your button->command mappings.  Buttons can be created by
@@ -139,8 +138,13 @@ public class RobotContainer {
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
             .whileHeld(new RunCommand(() -> m_robotStorage.runStoragePositionPID(0.5)));
 
+        //Prepares storage for intaking
         new JoystickButton(getOperatorJoystick(), XboxController.LEFT_TRIGGER_AXIS)
-            .whileHeld(new RunCommand(() -> m_robotStorage.storageIntake()));
+            .whileHeld(new RunCommand(() -> m_robotStorage.storageIntake(m_robotIntake)));
+            
+        //Runs storage to outtake
+        new JoystickButton(getOperatorJoystick(), XboxController.RIGHT_TRIGGER_AXIS)
+            .whileHeld(new RunCommand(() -> m_robotStorage.storageOuttake()));
     }
       
     /**

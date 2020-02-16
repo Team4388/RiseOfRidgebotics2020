@@ -9,12 +9,14 @@ package frc4388.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.SparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
@@ -95,7 +97,6 @@ public class Storage extends SubsystemBase {
       m_storageMotor.set(0);
     }
   }
-
 public void storageIntake(Intake intake) {
   m_intake = intake;
   if (m_beamSensors[1].get() == false){
@@ -110,11 +111,11 @@ public void storageIntake(Intake intake) {
   }
 }
 public void storageOuttake() {
-     m_storageMotor.set(1);
+  m_storageMotor.set(1);
+  
+  /*
+  *If shooting move storage motor until top sensor is tripped
+  *If intaking move storage motor until bottom sensor is tripped
+  */
   }
-    /*
-    *If shooting move storage motor until top sensor is tripped
-    *If intaking move storage motor until bottom sensor is tripped
-    *
-    */
 }
