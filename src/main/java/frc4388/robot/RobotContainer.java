@@ -147,6 +147,11 @@ public class RobotContainer {
         new JoystickButton(getDriverJoystick(), XboxController.LEFT_JOYSTICK_BUTTON)
             .whenPressed(new InstantCommand(() -> System.out.print("Gamer"), m_robotDrive));
 
+        // safety for climber and leveler
+        new JoystickButton(getOperatorJoystick(), XboxController.BACK_BUTTON)
+            .whenPressed(new InstantCommand(() -> m_robotClimber.setSafetyPressed(), m_robotClimber))
+            .whenReleased(new InstantCommand(() -> m_robotClimber.setSafetyNotPressed(), m_robotClimber));
+
         /* Storage Neo PID Test */
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
             .whileHeld(new RunCommand(() -> m_robotStorage.runStoragePositionPID(0.5, 0.2, 0.0, 0.0, 0.0, 0.0, 1, -1)));
