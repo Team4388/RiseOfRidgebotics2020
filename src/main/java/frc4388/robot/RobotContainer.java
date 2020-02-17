@@ -102,7 +102,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-            .whenPressed(new DriveStraightToPositionPID(m_robotDrive, 144));
+            .whenPressed(new RunCommand(() -> m_robotDrive.runTurningPID(0), m_robotDrive));
 
         /* Operator Buttons */
         // activates "Lit Mode"
@@ -131,7 +131,7 @@ public class RobotContainer {
       
         // turn 45 degrees
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
-            .whenPressed(new RunCommand(() -> m_robotDrive.runTurningPID(45), m_robotDrive));
+            .whenPressed(new RunCommand(() -> m_robotDrive.driveWithInputAux(0.2, 0), m_robotDrive));
 
         // sets solenoids into high gear
         new JoystickButton(getDriverJoystick(), XboxController.START_BUTTON)
@@ -153,9 +153,18 @@ public class RobotContainer {
     /**
      * Sets Motors to a NeutralMode.
      * @param mode NeutralMode to set motors to
+     * @param state the gearing of the gearbox (true is high, false is low)
      */
     public void setDriveNeutralMode(NeutralMode mode) {
         m_robotDrive.setDriveTrainNeutralMode(mode);
+    }
+
+    /**
+     * Sets the gear of the drivetrain
+     * @param state the gearing of the gearbox (true is high, false is low)
+     */
+    public void setDriveGearState(boolean state) {
+        m_robotDrive.setShiftState(state);
     }
 
     public void configDriveTrainSensors(FeedbackDevice type) {
@@ -185,11 +194,11 @@ public class RobotContainer {
             new Pose2d(0, 0, new Rotation2d(0)),
             // Pass through these two interior waypoints, making an 's' curve path
             List.of(
-                new Translation2d(2, 0)
-                //new Translation2d(4, -2)
+                new Translation2d(1, 1),
+                new Translation2d(2, -1)
             ),
             // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(4, 0, new Rotation2d(0)),
+            new Pose2d(3, 0, new Rotation2d(0)),
             // Pass config
             config);
 

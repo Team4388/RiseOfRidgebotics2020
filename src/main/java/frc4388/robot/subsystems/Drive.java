@@ -85,13 +85,6 @@ public class Drive extends SubsystemBase {
     m_leftBackMotor.follow(m_leftFrontMotor);
     m_rightBackMotor.follow(m_rightFrontMotor);
 
-    setDriveTrainNeutralMode(NeutralMode.Coast);
-
-    /* deadbands */
-    m_leftBackMotor.configNeutralDeadband(0.0, DriveConstants.DRIVE_TIMEOUT_MS); // DO NOT CHANGE
-    m_rightBackMotor.configNeutralDeadband(0.0, DriveConstants.DRIVE_TIMEOUT_MS); // Ensures motors run at the same
-                                                                                  // speed
-
     /* flip input so forward becomes back, etc */
     m_leftFrontMotor.setInverted(false);
     m_rightFrontMotor.setInverted(true);
@@ -99,6 +92,15 @@ public class Drive extends SubsystemBase {
     m_leftBackMotor.setInverted(InvertType.FollowMaster);
     m_rightBackMotor.setInverted(InvertType.FollowMaster);
 
+    setDriveTrainNeutralMode(NeutralMode.Coast);
+
+    /* deadbands */
+    m_leftBackMotor.configNeutralDeadband(0.0, DriveConstants.DRIVE_TIMEOUT_MS); // DO NOT CHANGE
+    m_rightBackMotor.configNeutralDeadband(0.0, DriveConstants.DRIVE_TIMEOUT_MS); // Ensures motors run at the same speed
+    //m_leftFrontMotor.configNeutralDeadband(0.0, DriveConstants.DRIVE_TIMEOUT_MS); // DO NOT CHANGE
+    //m_rightFrontMotor.configNeutralDeadband(0.0, DriveConstants.DRIVE_TIMEOUT_MS); // Ensures motors run at the same speed
+
+    /* PID for Front Motor Control in Teleop */
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
     m_rightFrontMotor.config_kF(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.m_kF, DriveConstants.DRIVE_TIMEOUT_MS);
     m_rightFrontMotor.config_kP(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.m_kP, DriveConstants.DRIVE_TIMEOUT_MS);
@@ -130,6 +132,21 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.configMotionAcceleration(DriveConstants.DRIVE_ACCELERATION, DriveConstants.DRIVE_TIMEOUT_MS);
     m_rightFrontMotor.configMotionSCurveStrength(0, DriveConstants.DRIVE_TIMEOUT_MS);
 
+    /* PID for Back Motor control in Auto */
+    m_rightBackMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
+    m_rightBackMotor.config_kF(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.m_kF, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightBackMotor.config_kP(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.m_kP, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightBackMotor.config_kI(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.m_kI, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightBackMotor.config_kD(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.m_kD, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightBackMotor.configClosedLoopPeakOutput(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.m_kPeakOutput, DriveConstants.DRIVE_TIMEOUT_MS);
+
+    m_leftBackMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
+    m_leftBackMotor.config_kF(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.m_kF, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftBackMotor.config_kP(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.m_kP, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftBackMotor.config_kI(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.m_kI, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftBackMotor.config_kD(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.m_kD, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftBackMotor.configClosedLoopPeakOutput(DriveConstants.SLOT_VELOCITY, m_gainsVelocity.m_kPeakOutput, DriveConstants.DRIVE_TIMEOUT_MS);
+
     /* Setup Sensors for WPI_TalonFXs */
     resetEncoders();
 
@@ -138,18 +155,22 @@ public class Drive extends SubsystemBase {
                                                     DriveConstants.PID_PRIMARY, // PID Index for Source [0, 1]
                                                     DriveConstants.DRIVE_TIMEOUT_MS); // Configuration Timeout
 
-    /*
-     * Configure the Remote Talon's selected sensor as a remote sensor for the right
-     * Talon
-     */
+    /* Configure the left back Talon's selected sensor as local QuadEncoder */
+    m_leftBackMotor.configSelectedFeedbackSensor( FeedbackDevice.IntegratedSensor, // Local Feedback Source
+                                                  DriveConstants.PID_PRIMARY, // PID Index for Source [0, 1]
+                                                  DriveConstants.DRIVE_TIMEOUT_MS); // Configuration Timeout
+                                                  
+    /* Configure the right back Talon's selected sensor as local QuadEncoder */
+    m_rightBackMotor.configSelectedFeedbackSensor(  FeedbackDevice.IntegratedSensor, // Local Feedback Source
+                                                    DriveConstants.PID_PRIMARY, // PID Index for Source [0, 1]
+                                                    DriveConstants.DRIVE_TIMEOUT_MS); // Configuration Timeout
+
+    /* Configure the Remote Talon's selected sensor as a remote sensor for the right Talon */
     m_rightFrontMotor.configRemoteFeedbackFilter( m_leftFrontMotor.getDeviceID(), // Device ID of Source
                                                   RemoteSensorSource.TalonSRX_SelectedSensor, DriveConstants.REMOTE_0, // Source number [0, 1]
                                                   DriveConstants.DRIVE_TIMEOUT_MS); // Configuration Timeout
 
-    /*
-     * Configure the Pigeon IMU to the other Remote Slot available on the right
-     * Talon
-     */
+    /* Configure the Pigeon IMU to the other Remote Slot available on the right Talon */
     m_rightFrontMotor.configRemoteFeedbackFilter( m_pigeon.getDeviceID(), RemoteSensorSource.Pigeon_Yaw,
                                                   DriveConstants.REMOTE_1, DriveConstants.DRIVE_TIMEOUT_MS);
 
@@ -164,19 +185,22 @@ public class Drive extends SubsystemBase {
     /* Configure Sum [Sum of both QuadEncoders] to be used for Primary PID Index */
     configMotorSensor(FeedbackDevice.SensorDifference);
 
-    /* Don't scale the Feedback Sensor (use 1 for 1:1 ratio) */
+    /* Don't scale the Feedback Sensor (use 1 for 1:1 ratio) DOESN'T WORK */
+    /*
     m_rightFrontMotor.configSelectedFeedbackCoefficient(  1, // Coefficient
                                                           DriveConstants.PID_PRIMARY, // PID Slot of Source
                                                           DriveConstants.DRIVE_TIMEOUT_MS); // Configuration Timeout
+    */
 
-    m_rightFrontMotor.configSelectedFeedbackSensor( FeedbackDevice.RemoteSensor1, DriveConstants.PID_TURN,
+    m_rightFrontMotor.configSelectedFeedbackSensor( FeedbackDevice.RemoteSensor1,
+                                                    DriveConstants.PID_TURN,
                                                     DriveConstants.DRIVE_TIMEOUT_MS);
 
-    /* Don't scale the Feedback Sensor (use 1 for 1:1 ratio) */
-    m_rightFrontMotor.configSelectedFeedbackCoefficient(1, DriveConstants.PID_TURN, DriveConstants.DRIVE_TIMEOUT_MS);
+    /* Don't scale the Feedback Sensor (use 1 for 1:1 ratio) DOESN'T WORK */
+    //m_rightFrontMotor.configSelectedFeedbackCoefficient(1, DriveConstants.PID_TURN, DriveConstants.DRIVE_TIMEOUT_MS);
 
-    /* Don't scale the Feedback Sensor (use 1 for 1:1 ratio) */
-    m_leftFrontMotor.configSelectedFeedbackCoefficient(1, DriveConstants.PID_PRIMARY, DriveConstants.DRIVE_TIMEOUT_MS);
+    /* Don't scale the Feedback Sensor (use 1 for 1:1 ratio) DOESN'T WORK */
+    //m_leftFrontMotor.configSelectedFeedbackCoefficient(1, DriveConstants.PID_PRIMARY, DriveConstants.DRIVE_TIMEOUT_MS);
 
     /* Set status frame periods to ensure we don't have stale data */
     m_rightFrontMotor.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20, DriveConstants.DRIVE_TIMEOUT_MS);
@@ -185,18 +209,8 @@ public class Drive extends SubsystemBase {
     m_leftFrontMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, DriveConstants.DRIVE_TIMEOUT_MS);
     m_pigeon.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR, 5, DriveConstants.DRIVE_TIMEOUT_MS);
 
-    /* Smart Dashboard Initial Values */
-
-    /* Gyro */
-    SmartDashboard.putNumber("Pigeon Yaw", getGyroYaw());
-    //SmartDashboard.putNumber("Pigeon Pitch", getGyroPitch());
-    //SmartDashboard.putNumber("Pigeon Roll", getGyroRoll());
-
-    /* Sensor Values */
-    //SmartDashboard.putNumber("Left Motor Velocity Raw", m_leftFrontMotor.getSelectedSensorVelocity(0));
-    //SmartDashboard.putNumber("Right Motor Velocity Raw", m_rightFrontMotor.getSelectedSensorVelocity());
-    //SmartDashboard.putNumber("Left Motor Position Raw", m_leftFrontMotor.getSelectedSensorPosition(0));
-    //SmartDashboard.putNumber("Right Motor Position Raw", m_rightFrontMotor.getSelectedSensorPosition());
+    m_leftBackMotor.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightBackMotor.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20, DriveConstants.DRIVE_TIMEOUT_MS);
 
     /**
      * Max out the peak output (for all modes). However you can limit the output of
@@ -206,6 +220,11 @@ public class Drive extends SubsystemBase {
     m_leftFrontMotor.configPeakOutputReverse(-1, DriveConstants.DRIVE_TIMEOUT_MS);
     m_rightFrontMotor.configPeakOutputForward(+1, DriveConstants.DRIVE_TIMEOUT_MS);
     m_rightFrontMotor.configPeakOutputReverse(-1, DriveConstants.DRIVE_TIMEOUT_MS);
+
+    m_leftBackMotor.configPeakOutputForward(+1, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftBackMotor.configPeakOutputReverse(-1, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightBackMotor.configPeakOutputForward(+1, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightBackMotor.configPeakOutputReverse(-1, DriveConstants.DRIVE_TIMEOUT_MS);
 
     /**
      * 1ms per loop. PID loop can be slowed down if need be. For example, - if
@@ -221,6 +240,15 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.configClosedLoopPeriod( DriveConstants.PID_TURN, 
                                               closedLoopTimeMs,
                                               DriveConstants.DRIVE_TIMEOUT_MS);
+
+    m_leftBackMotor.configClosedLoopPeriod( DriveConstants.PID_PRIMARY, 
+                                              closedLoopTimeMs,
+                                              DriveConstants.DRIVE_TIMEOUT_MS);
+
+    m_leftBackMotor.configClosedLoopPeriod( DriveConstants.PID_PRIMARY, 
+                                              closedLoopTimeMs,
+                                              DriveConstants.DRIVE_TIMEOUT_MS);
+    
     /**
      * configAuxPIDPolarity(boolean invert, int timeoutMs) false means talon's local
      * output is PID0 + PID1, and other side Talon is PID0 - PID1 true means talon's
@@ -247,16 +275,16 @@ public class Drive extends SubsystemBase {
       //SmartDashboard.putNumber("Right Motor Velocity Raw", m_rightFrontMotor.getSelectedSensorVelocity());
       //SmartDashboard.putNumber("Left Motor Position Raw", m_leftFrontMotor.getSelectedSensorPosition());
       //SmartDashboard.putNumber("Right Motor Position Raw", m_rightFrontMotor.getSelectedSensorPosition(0));
-      //SmartDashboard.putNumber("Right Motor Velocity Int Sensor", m_rightFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
-      //SmartDashboard.putNumber("Left Motor Velocity Int Sensor", m_leftFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
+      SmartDashboard.putNumber("Right Motor Velocity Int Sensor", m_rightFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
+      SmartDashboard.putNumber("Left Motor Velocity Int Sensor", m_leftFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
 
       //SmartDashboard.putNumber("Right Front Motor Current", m_rightFrontMotor.getSupplyCurrent());
       //SmartDashboard.putNumber("Left Front Motor Current", m_leftFrontMotor.getSupplyCurrent());
       //SmartDashboard.putNumber("Right Back Motor Current", m_rightFrontMotor.getSupplyCurrent());
       //SmartDashboard.putNumber("Left Back Motor Current", m_leftFrontMotor.getSupplyCurrent());
 
-      //SmartDashboard.putNumber("PID 0 Error", m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_PRIMARY));
-      //SmartDashboard.putNumber("PID 1 Error", m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_TURN));
+      SmartDashboard.putNumber("PID 0 Error", m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_PRIMARY));
+      SmartDashboard.putNumber("PID 1 Error", m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_TURN));
       //SmartDashboard.putNumber("PID 0 Target", m_rightFrontMotor.getClosedLoopTarget(DriveConstants.PID_PRIMARY));
       //SmartDashboard.putNumber("PID 1 Target", m_rightFrontMotor.getClosedLoopTarget(DriveConstants.PID_TURN));
       //SmartDashboard.putNumber("PID 0 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_PRIMARY));
@@ -271,8 +299,8 @@ public class Drive extends SubsystemBase {
     }
 
     m_odometry.update(Rotation2d.fromDegrees( getHeading()),
-                                              inchesToMeters(getDistanceInches(m_leftFrontMotor)),
-                                              inchesToMeters(-getDistanceInches(m_rightFrontMotor)));
+                                              inchesToMeters(getDistanceInches(m_leftBackMotor)),
+                                              -inchesToMeters(getDistanceInches(m_rightBackMotor)));
   }
 
   /**
@@ -293,6 +321,8 @@ public class Drive extends SubsystemBase {
    */
   public void driveWithInput(double move, double steer) {
     m_driveTrain.arcadeDrive(move, steer);
+    m_leftBackMotor.follow(m_leftFrontMotor);
+    m_rightBackMotor.follow(m_rightFrontMotor);
   }
 
   /**
@@ -305,6 +335,8 @@ public class Drive extends SubsystemBase {
 
     m_rightFrontMotor.set(TalonFXControlMode.PercentOutput, move, DemandType.AuxPID, targetGyro);
     m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
+    m_leftBackMotor.follow(m_leftFrontMotor);
+    m_rightBackMotor.follow(m_rightFrontMotor);
 
     m_driveTrain.feedWatchdog();
   }
@@ -321,6 +353,8 @@ public class Drive extends SubsystemBase {
 
     m_rightFrontMotor.set(TalonFXControlMode.Position, targetPos, DemandType.AuxPID, targetGyro);
     m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
+    m_leftBackMotor.follow(m_leftFrontMotor);
+    m_rightBackMotor.follow(m_rightFrontMotor);
 
     m_driveTrain.feedWatchdog();
   }
@@ -334,8 +368,11 @@ public class Drive extends SubsystemBase {
   public void runDriveVelocityPID(double targetVel, double targetGyro) {
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
+
     m_rightFrontMotor.set(TalonFXControlMode.Velocity, targetVel, DemandType.AuxPID, targetGyro);
     m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
+    m_leftBackMotor.follow(m_leftFrontMotor);
+    m_rightBackMotor.follow(m_rightFrontMotor);
 
     m_driveTrain.feedWatchdog();
   }
@@ -351,6 +388,8 @@ public class Drive extends SubsystemBase {
 
     m_rightFrontMotor.set(ControlMode.MotionMagic, targetPos, DemandType.AuxPID, targetGyro);
     m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
+    m_leftBackMotor.follow(m_leftFrontMotor);
+    m_rightBackMotor.follow(m_rightFrontMotor);
 
     m_driveTrain.feedWatchdog();
   }
@@ -369,33 +408,38 @@ public class Drive extends SubsystemBase {
   /**
    * Controls the left and right sides of the drive with velocity targets.
    *
-   * @param leftSpeed  the commanded left output
-   * @param rightSpeed the commanded right output
+   * @param leftSpeed  the commanded left speed
+   * @param rightSpeed the commanded right speed
    */
   public void tankDriveVelocity(double leftSpeed, double rightSpeed) {
-    DifferentialDriveWheelSpeeds wheelSpeeds = new DifferentialDriveWheelSpeeds(leftSpeed, rightSpeed);
-    ChassisSpeeds chassisSpeeds = DriveConstants.kDriveKinematics.toChassisSpeeds(wheelSpeeds);
-    double moveVelMPS = chassisSpeeds.vxMetersPerSecond;
-    double angleVelRad = chassisSpeeds.omegaRadiansPerSecond;
-    double angleVelDeg = Math.toDegrees(angleVelRad);
+    //DifferentialDriveWheelSpeeds wheelSpeeds = new DifferentialDriveWheelSpeeds(leftSpeed, rightSpeed);
+    //ChassisSpeeds chassisSpeeds = DriveConstants.kDriveKinematics.toChassisSpeeds(wheelSpeeds);
+    //double moveVelMPS = chassisSpeeds.vxMetersPerSecond;
+    //double angleVelRad = chassisSpeeds.omegaRadiansPerSecond;
+    //double angleVelDeg = Math.toDegrees(angleVelRad);
 
-    m_kinematicsTargetAngle += angleVelDeg * (m_deltaTime/1000);
-    m_kinematicsTargetAngle = MathUtil.clamp( m_kinematicsTargetAngle, 
-                                              m_currentAngleYaw-(360),
-                                              m_currentAngleYaw+(360));
-    double targetGyro = (m_kinematicsTargetAngle / 360) * DriveConstants.TICKS_PER_GYRO_REV;
-    double moveVel = inchesToTicks(metersToInches(moveVelMPS))/DriveConstants.SECONDS_TO_TICK_TIME;
-    //double moveVelRight = inchesToTicks(metersToInches(rightSpeed))/DriveConstants.SECONDS_TO_TICK_TIME;
+    //m_kinematicsTargetAngle += angleVelDeg * (m_deltaTime/1000);
+    //m_kinematicsTargetAngle = MathUtil.clamp( m_kinematicsTargetAngle, 
+    //                                          m_currentAngleYaw-(360),
+    //                                          m_currentAngleYaw+(360));
+    //double targetGyro = (m_kinematicsTargetAngle / 360) * DriveConstants.TICKS_PER_GYRO_REV;
+    double moveVelLeft = inchesToTicks(metersToInches(leftSpeed))/DriveConstants.SECONDS_TO_TICK_TIME;
+    double moveVelRight = inchesToTicks(metersToInches(rightSpeed))/DriveConstants.SECONDS_TO_TICK_TIME;
 
     //SmartDashboard.putNumber("Move Vel Left", moveVelLeft);
     //SmartDashboard.putNumber("Move Vel Right", moveVelRight);
 
-    runDriveVelocityPID(moveVel*2, targetGyro);
+    //runDriveVelocityPID(moveVel*2, targetGyro);
 
-    //m_rightFrontMotor.set(TalonFXControlMode.Velocity, moveVelRight);
-    //m_leftFrontMotor.set(TalonFXControlMode.Velocity, moveVelLeft);
+    m_rightBackMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
+    m_leftBackMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
 
-    //m_driveTrain.feedWatchdog();
+    m_rightBackMotor.set(TalonFXControlMode.Velocity, moveVelRight);
+    m_leftBackMotor.set(TalonFXControlMode.Velocity, moveVelLeft);
+    m_leftFrontMotor.follow(m_leftFrontMotor);
+    m_rightFrontMotor.follow(m_rightFrontMotor);
+
+    m_driveTrain.feedWatchdog();
   }
 
   /**
@@ -486,8 +530,8 @@ public class Drive extends SubsystemBase {
    * @return The current wheel speeds.
    */
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(  inchesToMeters(getVelocityInchesPerSecond(m_leftFrontMotor)), 
-                                              inchesToMeters(getVelocityInchesPerSecond(m_rightFrontMotor)));
+    return new DifferentialDriveWheelSpeeds(  inchesToMeters(getVelocityInchesPerSecond(m_leftBackMotor)), 
+                                              -inchesToMeters(getVelocityInchesPerSecond(m_rightBackMotor)));
   }
 
   /**
@@ -496,6 +540,8 @@ public class Drive extends SubsystemBase {
   public void resetEncoders() {
     m_leftFrontMotor.getSensorCollection().setIntegratedSensorPosition(0, DriveConstants.DRIVE_TIMEOUT_MS);
     m_rightFrontMotor.getSensorCollection().setIntegratedSensorPosition(0, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftBackMotor.getSensorCollection().setIntegratedSensorPosition(0, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightBackMotor.getSensorCollection().setIntegratedSensorPosition(0, DriveConstants.DRIVE_TIMEOUT_MS);
   }
 
   /**
