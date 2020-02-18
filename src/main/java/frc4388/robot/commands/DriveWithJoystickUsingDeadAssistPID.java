@@ -16,7 +16,9 @@ import frc4388.utility.controller.IHandController;
 public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
   Drive m_drive;
   double m_targetGyro, m_currentGyro;
-  long m_lastTime, m_deltaTime;
+  long m_currTime, m_deltaTime;
+  long m_deadTimeSteer, m_deadTimeMove;
+  long m_deadTimeout = 500;
   IHandController m_controller;
 
   /**
@@ -38,7 +40,7 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_lastTime = System.currentTimeMillis();
+    m_currTime = System.currentTimeMillis();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -48,12 +50,20 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
     double moveInput = -m_controller.getLeftYAxis();
     double steerInput = m_controller.getRightXAxis();
     double moveOutput = 0;
-    double steerOutput = 0;
-    m_deltaTime = System.currentTimeMillis() - m_lastTime;
-    m_lastTime = System.currentTimeMillis();
+    m_deltaTime = System.currentTimeMillis() - m_currTime;
+    m_currTime = System.currentTimeMillis();
 
     /* If move stick is being used */
     if (moveInput != 0) {
+      m_deadTimeMove = m_currTime;
+    }
+    /* If steer stick is being used */
+    if (steerInput != 0) {
+      m_deadTimeSteer = m_currTime;
+    }
+
+    /* If move stick has not been pressed for 1 sec */
+    if (m_currTime - m_deadTimeMove < m_deadTimeout) {
       /* Curves the moveInput to be slightly more gradual at first */
       if (moveInput >= 0) {
         moveOutput = -Math.cos(1.571*moveInput)+1;
@@ -61,33 +71,46 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
         moveOutput = Math.cos(1.571*moveInput)-1;
       }
 
-      /* If steer stick is being used. */
-      if (steerInput != 0) {
-        double cosMultiplier = .45;
-        double deadzone = .2;
-        /* Curves the steer output to be similarily gradual */
-        if (steerInput > 0){
-          steerOutput = -cosMultiplier*Math.cos(1.571*steerInput)+(cosMultiplier+deadzone);
-        } else {
-          steerOutput = cosMultiplier*Math.cos(1.571*steerInput)-(cosMultiplier+deadzone);
-        }
-        resetGyroTarget();
-        m_drive.driveWithInput(moveOutput, steerOutput);
-        System.out.println("Driving With Input");
+      /* If steer stick has not been used for less than 1 sec */
+      if (m_currTime - m_deadTimeSteer < m_deadTimeout) {
+        runDriveWithInput(moveOutput, steerInput);
+        m_deadTimeSteer = m_currTime;
       }
-      /* If only the move stick is being used */
+      /* If steer stick has not been used for 1 sec */
       else {
-        updateGyroTarget(steerInput);
-        m_drive.driveWithInputAux(moveOutput, m_targetGyro);
-        System.out.println("Driving with Input Aux with Target: " + m_targetGyro);
+        runDriveStraight(moveOutput);
       }
     }
-    /* If the move stick is not being used */
+    /* If the move stick has not been used for 1 sec */
     else {
-      updateGyroTarget(steerInput);
-      m_drive.runDriveStraightVelocityPID(0, m_targetGyro);
-      System.out.println("Driving with Velocity PID with Target: " + m_targetGyro);
+      runStoppedTurn(steerInput);
     }
+  }
+
+  private void runDriveWithInput(double move, double steer) {
+    double cosMultiplier = .45;
+    double steerOutput = 0;
+    double deadzone = .2;
+    /* Curves the steer output to be similarily gradual */
+    if (steer > 0){
+      steerOutput = -cosMultiplier*Math.cos(1.571*steer)+(cosMultiplier+deadzone);
+    } else {
+      steerOutput = cosMultiplier*Math.cos(1.571*steer)-(cosMultiplier+deadzone);
+    }
+    resetGyroTarget();
+    m_drive.driveWithInput(move, steerOutput);
+    System.out.println("Driving With Input");
+  }
+
+  private void runDriveStraight(double move) {
+    m_drive.driveWithInputAux(move, m_targetGyro);
+    System.out.println("Driving with Input Aux with Target: " + m_targetGyro);
+  }
+
+  private void runStoppedTurn(double steer) {
+    updateGyroTarget(steer);
+    m_drive.runDriveVelocityPID(0, m_targetGyro);
+    System.out.println("Driving with Velocity PID with Target: " + m_targetGyro);
   }
 
   /**
