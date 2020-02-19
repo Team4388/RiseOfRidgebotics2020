@@ -74,7 +74,7 @@ public final class Constants {
         /* Motor IDs */
         public static final int SHOOTER_FALCON_ID = -1;
         public static final int SHOOTER_ANGLE_ADJUST_ID = -1;
-        public static final int SHOOTER_ROTATE_ID = -1;
+        public static final int SHOOTER_ROTATE_ID = 10;
 
         /* PID Constants Shooter */
         public static final int SHOOTER_SLOT_IDX = 0;

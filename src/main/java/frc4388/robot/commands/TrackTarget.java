@@ -52,7 +52,7 @@ public class TrackTarget extends CommandBase {
     target = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0);
     xAngle = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
     yAngle = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
-
+    
     if (target == 1.0){ //If target in view
         //Aiming Left/Right
       turnAmount = (xAngle/VisionConstants.FOV)*VisionConstants.TURN_P_VALUE;
@@ -60,7 +60,7 @@ public class TrackTarget extends CommandBase {
         //Deadzones
       else if(turnAmount > 0 && turnAmount < VisionConstants.MOTOR_DEAD_ZONE){turnAmount = VisionConstants.MOTOR_DEAD_ZONE;} 
       else if(turnAmount < 0 && turnAmount > -VisionConstants.MOTOR_DEAD_ZONE){turnAmount = -VisionConstants.MOTOR_DEAD_ZONE;}
-      m_shooter.runShooterWithInput(turnAmount/2);
+      m_shooter.runShooterWithInput(turnAmount/5);
 
         //Finding Distance
       distance = VisionConstants.TARGET_HEIGHT/Math.tan((VisionConstants.LIME_ANGLE + yAngle)*(Math.PI/180));
