@@ -106,7 +106,7 @@ public void storageIntake(Intake intake) {
     m_storageMotor.set(0);
   }
   if (m_beamSensors[0].get()){
-    m_intake.runExtender(-0.3);
+    m_intake.runExtender(-0.3); 
     m_storagePIDController.setReference(10, ControlType.kPosition);
   }
 }

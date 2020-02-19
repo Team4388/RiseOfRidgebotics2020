@@ -22,14 +22,15 @@ import frc4388.robot.Constants.IntakeConstants;
 public class Intake extends SubsystemBase {
   CANSparkMax m_intakeMotor = new CANSparkMax(IntakeConstants.INTAKE_SPARK_ID, MotorType.kBrushless);
   CANSparkMax m_extenderMotor = new CANSparkMax(IntakeConstants.EXTENDER_SPARK_ID, MotorType.kBrushless);
-
+  CANDigitalInput m_extenderForwardLimit;
+  CANDigitalInput m_extenderReverseLimit;
+  boolean extended = false;
 
   /**
    * Creates a new Intake.
    */
   public Intake() {
-    CANDigitalInput m_extenderForwardLimit;
-    CANDigitalInput m_extenderReverseLimit;
+    
 
     m_intakeMotor.restoreFactoryDefaults();
     m_extenderMotor.restoreFactoryDefaults();
@@ -63,6 +64,18 @@ public class Intake extends SubsystemBase {
    * @param input the percent output to run motor at
    */
   public void runExtender(final double input) {
-    m_extenderMotor.set(input);
+    if (m_extenderForwardLimit.get()) {
+      extended = true;
+    }
+    if (m_extenderReverseLimit.get()) {
+      extended = false;
+    }
+    
+    if (extended == false) {
+      m_extenderMotor.set(0.5);
+    }
+    if (extended == true) {
+      m_extenderMotor.set(-0.5);
+    }
   }
 }
