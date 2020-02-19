@@ -271,9 +271,7 @@ public class Drive extends SubsystemBase {
     m_currentAngleYaw = getGyroYaw();
 
     m_rightFrontMotorPos = m_rightFrontMotor.getSelectedSensorPosition();
-
     m_rightFrontMotorVel = m_rightFrontMotor.getSelectedSensorVelocity();
-
     
     try {
       SmartDashboard.putNumber("Pigeon Yaw", getGyroYaw());
@@ -288,6 +286,9 @@ public class Drive extends SubsystemBase {
       //SmartDashboard.putNumber("Right Motor Position Raw", m_rightFrontMotor.getSelectedSensorPosition(0));
       SmartDashboard.putNumber("Right Motor Velocity Int Sensor", m_rightFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
       SmartDashboard.putNumber("Left Motor Velocity Int Sensor", m_leftFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
+
+      SmartDashboard.putNumber("Right Motor Temp", m_rightFrontMotor.getTemperature());
+      SmartDashboard.putNumber("Left Motor Temp", m_leftFrontMotor.getTemperature());
 
       //SmartDashboard.putNumber("Right Front Motor Current Supply", m_rightFrontMotor.getSupplyCurrent());
       //SmartDashboard.putNumber("Left Front Motor Current Supply", m_leftFrontMotor.getSupplyCurrent());
