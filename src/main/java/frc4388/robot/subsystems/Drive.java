@@ -279,21 +279,23 @@ public class Drive extends SubsystemBase {
       SmartDashboard.putNumber("Pigeon Yaw", getGyroYaw());
       //SmartDashboard.putNumber("Pigeon Pitch", getGyroPitch());
       //SmartDashboard.putNumber("Pigeon Roll", getGyroRoll());
+      SmartDashboard.putNumber("Left Back Output", m_leftBackMotor.get());
+      SmartDashboard.putNumber("Right Back Output", m_rightBackMotor.get());
 
-      //SmartDashboard.putNumber("Left Motor Velocity Raw", m_leftFrontMotor.getSelectedSensorVelocity(0));
-      //SmartDashboard.putNumber("Right Motor Velocity Raw", m_rightFrontMotor.getSelectedSensorVelocity());
+      SmartDashboard.putNumber("Left Back Motor Velocity Raw", m_leftBackMotor.getSelectedSensorVelocity());
+      SmartDashboard.putNumber("Right Back Motor Velocity Raw", m_rightBackMotor.getSelectedSensorVelocity());
       //SmartDashboard.putNumber("Left Motor Position Raw", m_leftFrontMotor.getSelectedSensorPosition());
       //SmartDashboard.putNumber("Right Motor Position Raw", m_rightFrontMotor.getSelectedSensorPosition(0));
       SmartDashboard.putNumber("Right Motor Velocity Int Sensor", m_rightFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
       SmartDashboard.putNumber("Left Motor Velocity Int Sensor", m_leftFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
 
-      SmartDashboard.putNumber("Right Front Motor Current Supply", m_rightFrontMotor.getSupplyCurrent());
-      SmartDashboard.putNumber("Left Front Motor Current Supply", m_leftFrontMotor.getSupplyCurrent());
-      SmartDashboard.putNumber("Right Front Motor Current Stator ", m_rightFrontMotor.getStatorCurrent());
-      SmartDashboard.putNumber("Left Front Motor Current Stator", m_leftFrontMotor.getSupplyCurrent());
+      //SmartDashboard.putNumber("Right Front Motor Current Supply", m_rightFrontMotor.getSupplyCurrent());
+      //SmartDashboard.putNumber("Left Front Motor Current Supply", m_leftFrontMotor.getSupplyCurrent());
+      //SmartDashboard.putNumber("Right Front Motor Current Stator ", m_rightFrontMotor.getStatorCurrent());
+      //SmartDashboard.putNumber("Left Front Motor Current Stator", m_leftFrontMotor.getSupplyCurrent());
 
-      SmartDashboard.putNumber("PID 0 Error", m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_PRIMARY));
-      SmartDashboard.putNumber("PID 1 Error", m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_TURN));
+      //SmartDashboard.putNumber("PID 0 Error", m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_PRIMARY));
+      //SmartDashboard.putNumber("PID 1 Error", m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_TURN));
       //SmartDashboard.putNumber("PID 0 Target", m_rightFrontMotor.getClosedLoopTarget(DriveConstants.PID_PRIMARY));
       //SmartDashboard.putNumber("PID 1 Target", m_rightFrontMotor.getClosedLoopTarget(DriveConstants.PID_TURN));
       //SmartDashboard.putNumber("PID 0 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_PRIMARY));
