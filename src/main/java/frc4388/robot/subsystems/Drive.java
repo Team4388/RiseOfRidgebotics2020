@@ -63,7 +63,8 @@ public class Drive extends SubsystemBase {
   
   public final DifferentialDriveOdometry m_odometry;
   
-  public DoubleSolenoid speedShift;
+  public DoubleSolenoid m_speedShift;
+  public DoubleSolenoid m_coolFalcon;
 
   public long m_lastTime, m_deltaTime; //in milliseconds
 
@@ -83,8 +84,9 @@ public class Drive extends SubsystemBase {
 
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()), new Pose2d(0, 0, new Rotation2d()));
 
-    speedShift = new DoubleSolenoid(7,0,1);
-
+    m_speedShift = new DoubleSolenoid(7,0,1);
+    m_coolFalcon = new DoubleSolenoid(7,3,2);
+    
     /* set back motors as followers */
     m_leftBackMotor.follow(m_leftFrontMotor);
     m_rightBackMotor.follow(m_rightFrontMotor);
@@ -626,10 +628,10 @@ public class Drive extends SubsystemBase {
    */
   public void setShiftState(boolean state) {
     if (state == true) {
-			speedShift.set(DoubleSolenoid.Value.kForward);
+			m_speedShift.set(DoubleSolenoid.Value.kForward);
 		}
 		if (state == false) {
-			speedShift.set(DoubleSolenoid.Value.kReverse);
+			m_speedShift.set(DoubleSolenoid.Value.kReverse);
 		}
   }
 }
