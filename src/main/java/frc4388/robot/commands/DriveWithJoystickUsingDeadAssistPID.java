@@ -16,9 +16,10 @@ import frc4388.utility.controller.IHandController;
 public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
   Drive m_drive;
   double m_targetGyro, m_currentGyro;
+  double m_stopPos;
   long m_currTime, m_deltaTime;
   long m_deadTimeSteer, m_deadTimeMove;
-  long m_deadTimeout = 500;
+  long m_deadTimeout = 100;
   IHandController m_controller;
 
   /**
@@ -56,13 +57,15 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
     /* If move stick is being used */
     if (moveInput != 0) {
       m_deadTimeMove = m_currTime;
+      m_stopPos = m_drive.m_rightFrontMotor.getSelectedSensorPosition()
+                  + (m_drive.m_rightFrontMotor.getSelectedSensorVelocity());
     }
     /* If steer stick is being used */
     if (steerInput != 0) {
       m_deadTimeSteer = m_currTime;
     }
 
-    /* If move stick has not been pressed for 1 sec */
+    /* If move stick has been pressed within 1 sec */
     if (m_currTime - m_deadTimeMove < m_deadTimeout) {
       /* Curves the moveInput to be slightly more gradual at first */
       if (moveInput >= 0) {
@@ -74,7 +77,6 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
       /* If steer stick has not been used for less than 1 sec */
       if (m_currTime - m_deadTimeSteer < m_deadTimeout) {
         runDriveWithInput(moveOutput, steerInput);
-        m_deadTimeSteer = m_currTime;
       }
       /* If steer stick has not been used for 1 sec */
       else {
@@ -103,21 +105,30 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
   }
 
   private void runDriveStraight(double move) {
-    m_drive.driveWithInputAux(move, m_targetGyro);
-    System.out.println("Driving with Input Aux with Target: " + m_targetGyro);
+    m_drive.driveWithInputAux(move * 3/4, m_targetGyro);
+    System.out.println("Driving Straight with Target: " + m_targetGyro);
   }
 
   private void runStoppedTurn(double steer) {
     updateGyroTarget(steer);
-    m_drive.runDriveVelocityPID(0, m_targetGyro);
-    System.out.println("Driving with Velocity PID with Target: " + m_targetGyro);
+    m_drive.runDrivePositionPID(m_stopPos, m_targetGyro);
+
+    System.out.println("Turning with Target: " + m_targetGyro);
+
+    /* if (m_drive.m_rightFrontMotor.getSelectedSensorVelocity() > 3000) {
+      m_drive.driveWithInputAux(0, m_targetGyro);
+      System.out.println("!Turning with Target: " + m_targetGyro);
+    } else {
+      m_drive.runDriveVelocityPID(0, m_targetGyro);
+      System.out.println("Turning with Target: " + m_targetGyro);
+    }*/
   }
 
   /**
    * If AuxPID is enabled, then update using the steer input
    */
   private void updateGyroTarget(double steerInput) {
-    m_targetGyro += 2 * steerInput * m_deltaTime;
+    m_targetGyro -= 5 * steerInput * m_deltaTime;
 
     m_targetGyro = MathUtil.clamp(  m_targetGyro,
                                     m_currentGyro-(DriveConstants.TICKS_PER_GYRO_REV/4),
@@ -128,7 +139,9 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
    * set target angle to current angle (prevents buildup of gyro error).
    */
   private void resetGyroTarget() {
-    m_targetGyro = m_currentGyro;
+    //m_targetGyro = m_currentGyro;
+    m_targetGyro = m_drive.m_rightFrontMotor.getSelectedSensorPosition(1)
+                      + (3 * m_drive.m_rightFrontMotor.getSelectedSensorVelocity(1));
   }
 
   // Called once the command ends or is interrupted.
