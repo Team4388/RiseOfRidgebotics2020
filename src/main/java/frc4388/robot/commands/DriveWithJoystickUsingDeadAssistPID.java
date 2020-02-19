@@ -112,16 +112,7 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
   private void runStoppedTurn(double steer) {
     updateGyroTarget(steer);
     m_drive.runDrivePositionPID(m_stopPos, m_targetGyro);
-
     System.out.println("Turning with Target: " + m_targetGyro);
-
-    /* if (m_drive.m_rightFrontMotor.getSelectedSensorVelocity() > 3000) {
-      m_drive.driveWithInputAux(0, m_targetGyro);
-      System.out.println("!Turning with Target: " + m_targetGyro);
-    } else {
-      m_drive.runDriveVelocityPID(0, m_targetGyro);
-      System.out.println("Turning with Target: " + m_targetGyro);
-    }*/
   }
 
   /**
@@ -129,7 +120,6 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
    */
   private void updateGyroTarget(double steerInput) {
     m_targetGyro -= 5 * steerInput * m_deltaTime;
-
     m_targetGyro = MathUtil.clamp(  m_targetGyro,
                                     m_currentGyro-(DriveConstants.TICKS_PER_GYRO_REV/8),
                                     m_currentGyro+(DriveConstants.TICKS_PER_GYRO_REV/8));
@@ -142,6 +132,10 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
     m_targetGyro = m_currentGyro;
     m_targetGyro =  m_currentGyro
                     + (3 * m_drive.m_rightFrontMotor.getSelectedSensorVelocity(1));
+
+    m_targetGyro = MathUtil.clamp(  m_targetGyro,
+                                    m_currentGyro-(DriveConstants.TICKS_PER_GYRO_REV/8),
+                                    m_currentGyro+(DriveConstants.TICKS_PER_GYRO_REV/8));
   }
 
   // Called once the command ends or is interrupted.
