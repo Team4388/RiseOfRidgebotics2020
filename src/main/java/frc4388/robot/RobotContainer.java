@@ -83,7 +83,6 @@ public class RobotContainer {
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
         // runs the drum shooter in idle mode
 
-      
         m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runShooterWithInput(m_operatorXbox.getLeftXAxis()), m_robotShooter));
         // drives the leveler with an axis input from the driver controller
     //    m_robotLeveler.setDefaultCommand(new RunLevelerWithJoystick(m_robotLeveler, getDriverController()));
@@ -104,9 +103,9 @@ public class RobotContainer {
 
         /* Operator Buttons */
         // activates "Lit Mode"
-        new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
-            .whenPressed(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW))
-            .whenReleased(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN));
+        //new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
+        //    .whenPressed(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW))
+        //    .whenReleased(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN));
       
         new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
             .whileHeld(new ShooterVelocityControlPID(m_robotShooter, 4000));
@@ -154,7 +153,7 @@ public class RobotContainer {
 
         /* Storage Neo PID Test */
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
-            .whileHeld(new RunCommand(() -> m_robotStorage.runStoragePositionPID(0.5, 0.2, 0.0, 0.0, 0.0, 0.0, 1, -1)));
+            .whileHeld(new TrackTarget(m_robotShooter));
     }
       
     /**
