@@ -86,6 +86,8 @@ public class Drive extends SubsystemBase {
 
     m_speedShift = new DoubleSolenoid(7,0,1);
     m_coolFalcon = new DoubleSolenoid(7,3,2);
+
+    coolFalcon(false);
     
     /* set back motors as followers */
     m_leftBackMotor.follow(m_leftFrontMotor);
@@ -634,4 +636,18 @@ public class Drive extends SubsystemBase {
 			m_speedShift.set(DoubleSolenoid.Value.kReverse);
 		}
   }
+
+  /**
+   * Set to open or close solenoid that cools the falcon, true = open, false = close
+   * @param state Chooses between open and close
+   */
+  public void coolFalcon(boolean state) {
+    if (state == true) {
+      m_coolFalcon.set(DoubleSolenoid.Value.kForward);
+    }
+    if (state == false) {
+      m_coolFalcon.set(DoubleSolenoid.Value.kReverse);
+    }
+  }
+
 }
