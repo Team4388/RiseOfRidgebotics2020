@@ -66,6 +66,8 @@ public class Drive extends SubsystemBase {
   public DoubleSolenoid m_speedShift;
   public DoubleSolenoid m_coolFalcon;
 
+  public int m_currentTimeSec = (int)(System.currentTimeMillis() * 1000);
+
   public long m_lastTime, m_deltaTime; //in milliseconds
 
   public double m_lastAngleYaw, m_currentAngleYaw, m_kinematicsTargetAngle;
@@ -269,6 +271,13 @@ public class Drive extends SubsystemBase {
 
   @Override
   public void periodic() {
+
+    if (m_currentTimeSec % 10 == 0) {
+      coolFalcon(true);
+    } else if ((m_currentTimeSec - 2) % 10 == 0) {
+      coolFalcon(false);
+    }
+
     m_deltaTime = System.currentTimeMillis() - m_lastTime;
     m_lastTime = System.currentTimeMillis();
     m_lastAngleYaw = m_currentAngleYaw;
