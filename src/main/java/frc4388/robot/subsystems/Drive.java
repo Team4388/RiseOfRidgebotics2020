@@ -63,7 +63,10 @@ public class Drive extends SubsystemBase {
   
   public final DifferentialDriveOdometry m_odometry;
   
-  public DoubleSolenoid speedShift;
+  public DoubleSolenoid m_speedShift;
+  public DoubleSolenoid m_coolFalcon;
+
+  public int m_currentTimeSec = (int)(System.currentTimeMillis() * 1000);
 
   public long m_lastTime, m_deltaTime; //in milliseconds
 
@@ -83,8 +86,11 @@ public class Drive extends SubsystemBase {
 
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()), new Pose2d(0, 0, new Rotation2d()));
 
-    speedShift = new DoubleSolenoid(7,0,1);
+    m_speedShift = new DoubleSolenoid(7,0,1);
+    m_coolFalcon = new DoubleSolenoid(7,3,2);
 
+    coolFalcon(false);
+    
     /* set back motors as followers */
     m_leftBackMotor.follow(m_leftFrontMotor);
     m_rightBackMotor.follow(m_rightFrontMotor);
@@ -265,6 +271,13 @@ public class Drive extends SubsystemBase {
 
   @Override
   public void periodic() {
+
+    if (m_currentTimeSec % 10 == 0) {
+      coolFalcon(true);
+    } else if ((m_currentTimeSec - 2) % 10 == 0) {
+      coolFalcon(false);
+    }
+
     m_deltaTime = System.currentTimeMillis() - m_lastTime;
     m_lastTime = System.currentTimeMillis();
     m_lastAngleYaw = m_currentAngleYaw;
@@ -626,10 +639,24 @@ public class Drive extends SubsystemBase {
    */
   public void setShiftState(boolean state) {
     if (state == true) {
-			speedShift.set(DoubleSolenoid.Value.kForward);
+			m_speedShift.set(DoubleSolenoid.Value.kForward);
 		}
 		if (state == false) {
-			speedShift.set(DoubleSolenoid.Value.kReverse);
+			m_speedShift.set(DoubleSolenoid.Value.kReverse);
 		}
   }
+
+  /**
+   * Set to open or close solenoid that cools the falcon, true = open, false = close
+   * @param state Chooses between open and close
+   */
+  public void coolFalcon(boolean state) {
+    if (state == true) {
+      m_coolFalcon.set(DoubleSolenoid.Value.kForward);
+    }
+    if (state == false) {
+      m_coolFalcon.set(DoubleSolenoid.Value.kReverse);
+    }
+  }
+
 }
