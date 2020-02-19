@@ -82,7 +82,6 @@ public class RobotContainer {
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
         // runs the drum shooter in idle mode
-
         m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runShooterWithInput(m_operatorXbox.getLeftXAxis()), m_robotShooter));
         // drives the leveler with an axis input from the driver controller
     //    m_robotLeveler.setDefaultCommand(new RunLevelerWithJoystick(m_robotLeveler, getDriverController()));
@@ -110,10 +109,10 @@ public class RobotContainer {
         new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
             .whileHeld(new ShooterVelocityControlPID(m_robotShooter, 4000));
             
-        new JoystickButton(getOperatorJoystick(), XboxController.Y_BUTTON)
+        new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
             .whileHeld(new TrackTarget(m_robotShooter));
         
-        new JoystickButton(getOperatorJoystick(), XboxController.LEFT_BUMPER_BUTTON)
+        new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
             .whenPressed(new RunExtenderOutIn(m_robotIntake));
       
         /* PID Test Command */
@@ -135,11 +134,11 @@ public class RobotContainer {
 
 
         // sets solenoids into high gear
-        new JoystickButton(getDriverJoystick(), XboxController.START_BUTTON)
+        new JoystickButton(getDriverJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
             .whenPressed(new InstantCommand(() -> m_robotDrive.setShiftState(true), m_robotDrive));
 
         // sets solenoids into low gear
-        new JoystickButton(getDriverJoystick(), XboxController.BACK_BUTTON)
+        new JoystickButton(getDriverJoystick(), XboxController.LEFT_BUMPER_BUTTON)
             .whenPressed(new InstantCommand(() -> m_robotDrive.setShiftState(false), m_robotDrive));
         
         // interrupts any running command
