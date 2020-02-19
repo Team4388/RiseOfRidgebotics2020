@@ -77,6 +77,7 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
       /* If steer stick has not been used for less than 1 sec */
       if (m_currTime - m_deadTimeSteer < m_deadTimeout) {
         runDriveWithInput(moveOutput, steerInput);
+        resetGyroTarget();
       }
       /* If steer stick has not been used for 1 sec */
       else {
@@ -99,7 +100,6 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
     } else {
       steerOutput = cosMultiplier*Math.cos(1.571*steer)-(cosMultiplier+deadzone);
     }
-    resetGyroTarget();
     m_drive.driveWithInput(move, steerOutput);
     System.out.println("Driving With Input");
   }
@@ -131,17 +131,17 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
     m_targetGyro -= 5 * steerInput * m_deltaTime;
 
     m_targetGyro = MathUtil.clamp(  m_targetGyro,
-                                    m_currentGyro-(DriveConstants.TICKS_PER_GYRO_REV/4),
-                                    m_currentGyro+(DriveConstants.TICKS_PER_GYRO_REV/4));
+                                    m_currentGyro-(DriveConstants.TICKS_PER_GYRO_REV/8),
+                                    m_currentGyro+(DriveConstants.TICKS_PER_GYRO_REV/8));
   }
 
   /**
    * set target angle to current angle (prevents buildup of gyro error).
    */
   private void resetGyroTarget() {
-    //m_targetGyro = m_currentGyro;
-    m_targetGyro = m_drive.m_rightFrontMotor.getSelectedSensorPosition(1)
-                      + (3 * m_drive.m_rightFrontMotor.getSelectedSensorVelocity(1));
+    m_targetGyro = m_currentGyro;
+    m_targetGyro =  m_currentGyro
+                    + (3 * m_drive.m_rightFrontMotor.getSelectedSensorVelocity(1));
   }
 
   // Called once the command ends or is interrupted.
