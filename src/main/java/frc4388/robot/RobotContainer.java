@@ -169,7 +169,7 @@ public class RobotContainer {
 
     public void configDriveTrainSensors(FeedbackDevice type) {
         m_robotDrive.configMotorSensor(type);
-    }
+    } 
 
     public void resetOdometry() {
         m_robotDrive.resetGyroAngles();

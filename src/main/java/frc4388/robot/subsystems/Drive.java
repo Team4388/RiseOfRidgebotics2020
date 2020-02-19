@@ -49,6 +49,10 @@ public class Drive extends SubsystemBase {
   public WPI_TalonFX m_rightBackMotor = new WPI_TalonFX(DriveConstants.DRIVE_RIGHT_BACK_CAN_ID);
   public static PigeonIMU m_pigeon = new PigeonIMU(DriveConstants.PIGEON_ID);
 
+  public double m_rightFrontMotorPos;
+
+  public double m_rightFrontMotorVel;
+
   public DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
 
   SendableChooser<Gains> m_chooser = new SendableChooser<Gains>();
@@ -265,6 +269,11 @@ public class Drive extends SubsystemBase {
     m_lastTime = System.currentTimeMillis();
     m_lastAngleYaw = m_currentAngleYaw;
     m_currentAngleYaw = getGyroYaw();
+
+    m_rightFrontMotorPos = m_rightFrontMotor.getSelectedSensorPosition();
+
+    m_rightFrontMotorVel = m_rightFrontMotor.getSelectedSensorVelocity();
+
     
     try {
       SmartDashboard.putNumber("Pigeon Yaw", getGyroYaw());
@@ -459,7 +468,7 @@ public class Drive extends SubsystemBase {
 
     m_pigeon.getYawPitchRoll(ypr);
     return ypr[0];
-  }
+  } 
 
   /**
    * Returns the current pitch of the pigeon
