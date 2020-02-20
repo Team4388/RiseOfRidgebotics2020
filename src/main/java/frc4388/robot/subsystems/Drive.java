@@ -273,7 +273,7 @@ public class Drive extends SubsystemBase {
   @Override
   public void periodic() {
     m_currentTimeSec = (int)(System.currentTimeMillis() / 1000);
-    SmartDashboard.putNumber("Time Seconds", m_currentTimeSec);
+    SmartDashboard.putNumber("Time Seconds", System.currentTimeMillis());
 
     if (m_currentTimeSec % 10 == 0) {
       coolFalcon(true);
