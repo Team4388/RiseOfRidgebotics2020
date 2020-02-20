@@ -66,7 +66,7 @@ public class Drive extends SubsystemBase {
   public DoubleSolenoid m_speedShift;
   public DoubleSolenoid m_coolFalcon;
 
-  public int m_currentTimeSec = (int)(System.currentTimeMillis() * 1000);
+  public int m_currentTimeSec = (int)(System.currentTimeMillis() / 1000);
 
   public long m_lastTime, m_deltaTime; //in milliseconds
 
@@ -84,7 +84,8 @@ public class Drive extends SubsystemBase {
     m_pigeon.configFactoryDefault();
     resetGyroYaw();
 
-    m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()), new Pose2d(0, 0, new Rotation2d()));
+    m_odometry = new DifferentialDriveOdometry( Rotation2d.fromDegrees(getHeading()), 
+                                                new Pose2d(0, 0, new Rotation2d()) );
 
     m_speedShift = new DoubleSolenoid(7,0,1);
     m_coolFalcon = new DoubleSolenoid(7,3,2);
@@ -271,11 +272,15 @@ public class Drive extends SubsystemBase {
 
   @Override
   public void periodic() {
+    m_currentTimeSec = (int)(System.currentTimeMillis() / 1000);
+    SmartDashboard.putNumber("Time Seconds", System.currentTimeMillis());
 
     if (m_currentTimeSec % 10 == 0) {
       coolFalcon(true);
+      SmartDashboard.putBoolean("Solenoid", true);
     } else if ((m_currentTimeSec - 2) % 10 == 0) {
       coolFalcon(false);
+      SmartDashboard.putBoolean("Solenoid", false);
     }
 
     m_deltaTime = System.currentTimeMillis() - m_lastTime;
@@ -606,7 +611,7 @@ public class Drive extends SubsystemBase {
    * @param ticks The value in ticks to convert
    * @return The converted value in inches
    */
-  public double ticksToInches(double ticks) {
+  public double  ticksToInches(double ticks) {
     return ticks * DriveConstants.INCHES_PER_TICK;
   }
 
