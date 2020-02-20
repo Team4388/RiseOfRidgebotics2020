@@ -30,6 +30,7 @@ import frc4388.robot.subsystems.LED;
 import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.Climber;
 import frc4388.robot.commands.RunLevelerWithJoystick;
+import frc4388.robot.commands.ShootShooter;
 import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Intake;
 import frc4388.robot.subsystems.LED;
@@ -106,8 +107,11 @@ public class RobotContainer {
         //    .whenPressed(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW))
         //    .whenReleased(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN));
       
-        new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
-            .whileHeld(new ShooterVelocityControlPID(m_robotShooter, 4000));
+        new JoystickButton(getOperatorJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
+            .whileHeld(new ShootShooter(m_robotShooter, m_robotStorage, 5));
+
+        new JoystickButton(getOperatorJoystick(), XboxController.LEFT_BUMPER_BUTTON)
+            .whileHeld(new ShootShooter(m_robotShooter, m_robotStorage, 1));
             
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
             .whileHeld(new TrackTarget(m_robotShooter));

@@ -137,6 +137,7 @@ public final class Constants {
         public static final double MOTOR_DEAD_ZONE = 0.3;
         public static final double DISTANCE_ERROR_EQUATION_M = 1.1279;
         public static final double DISTANCE_ERROR_EQUATION_B = -15.0684;
+        public static final double GRAV = 385.83;
         }
 
     public static final class OIConstants {
