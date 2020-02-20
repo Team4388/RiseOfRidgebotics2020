@@ -84,7 +84,8 @@ public class Drive extends SubsystemBase {
     m_pigeon.configFactoryDefault();
     resetGyroYaw();
 
-    m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()), new Pose2d(0, 0, new Rotation2d()));
+    m_odometry = new DifferentialDriveOdometry( Rotation2d.fromDegrees(getHeading()), 
+                                                new Pose2d(0, 0, new Rotation2d()) );
 
     m_speedShift = new DoubleSolenoid(7,0,1);
     m_coolFalcon = new DoubleSolenoid(7,3,2);
@@ -606,7 +607,7 @@ public class Drive extends SubsystemBase {
    * @param ticks The value in ticks to convert
    * @return The converted value in inches
    */
-  public double ticksToInches(double ticks) {
+  public double  ticksToInches(double ticks) {
     return ticks * DriveConstants.INCHES_PER_TICK;
   }
 
