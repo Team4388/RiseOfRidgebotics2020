@@ -469,8 +469,8 @@ public class Drive extends SubsystemBase {
 
     m_rightBackMotor.set(TalonFXControlMode.Velocity, moveVelRight);
     m_leftBackMotor.set(TalonFXControlMode.Velocity, moveVelLeft);
-    m_leftFrontMotor.follow(m_leftFrontMotor);
-    m_rightFrontMotor.follow(m_rightFrontMotor);
+    m_leftFrontMotor.follow(m_leftBackMotor);
+    m_rightFrontMotor.follow(m_rightBackMotor);
 
     m_driveTrain.feedWatchdog();
   }
