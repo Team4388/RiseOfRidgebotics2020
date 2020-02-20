@@ -318,6 +318,9 @@ public class Drive extends SubsystemBase {
       SmartDashboard.putString("Odometry Values Meters", getPose().toString());
       SmartDashboard.putNumber("Odometry Heading", getHeading());
 
+      SmartDashboard.putNumber("Time Seconds", m_currentTimeSec);
+      //SmartDashboard.putNumber("Delta Time", m_deltaTime);
+
     } catch (Exception e) {
       System.err.println("Error in the Drive Subsystem");
       // e.printStackTrace(System.err);
@@ -539,7 +542,8 @@ public class Drive extends SubsystemBase {
    */
   public double getTurnRate() {
     double deltaYaw = m_currentAngleYaw - m_lastAngleYaw;
-    return deltaYaw / (m_deltaTime/1000);
+    double turnRate = 1000 * deltaYaw / m_deltaTime;
+    return turnRate;
   }
 
   /**

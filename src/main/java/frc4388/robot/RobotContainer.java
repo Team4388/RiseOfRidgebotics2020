@@ -33,6 +33,7 @@ import frc4388.robot.commands.DriveStraightToPositionMM;
 import frc4388.robot.commands.DriveStraightToPositionPID;
 import frc4388.robot.commands.DriveWithJoystick;
 import frc4388.robot.commands.DriveWithJoystickUsingDeadAssistPID;
+import frc4388.robot.commands.DriveWithJoystickDriveStraight;
 import frc4388.robot.commands.RunClimberWithTriggers;
 import frc4388.robot.commands.RunExtenderOutIn;
 import frc4388.robot.commands.RunIntakeWithTriggers;

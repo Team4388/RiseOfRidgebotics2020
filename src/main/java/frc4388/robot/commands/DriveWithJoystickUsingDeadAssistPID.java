@@ -131,11 +131,7 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
   private void resetGyroTarget() {
     m_targetGyro = m_currentGyro;
     m_targetGyro =  m_currentGyro
-                    + (3 * m_drive.m_rightFrontMotor.getSelectedSensorVelocity(1));
-
-    m_targetGyro = MathUtil.clamp(  m_targetGyro,
-                                    m_currentGyro-(DriveConstants.TICKS_PER_GYRO_REV/8),
-                                    m_currentGyro+(DriveConstants.TICKS_PER_GYRO_REV/8));
+                    + m_drive.getTurnRate();
   }
 
   // Called once the command ends or is interrupted.

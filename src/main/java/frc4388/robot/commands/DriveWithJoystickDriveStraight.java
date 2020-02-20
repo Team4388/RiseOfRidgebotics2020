@@ -47,7 +47,7 @@ public class DriveWithJoystickDriveStraight extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_currentGyro = m_drive.m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_TURN);
+    m_currentGyro = m_drive.m_rightFrontMotor.getSelectedSensorPosition(1);
     double moveInput = -m_controller.getLeftYAxis();
     double steerInput = m_controller.getRightXAxis();
     double moveOutput = 0;
@@ -102,7 +102,7 @@ public class DriveWithJoystickDriveStraight extends CommandBase {
   private void resetGyroTarget() {
     //m_targetGyro = m_currentGyro;
     m_targetGyro =  m_currentGyro
-                    + (3 * m_drive.m_rightFrontMotor.getSelectedSensorVelocity(1));
+                    + m_drive.getTurnRate();
   }
 
   // Called once the command ends or is interrupted.
