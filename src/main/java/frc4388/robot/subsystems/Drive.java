@@ -275,10 +275,10 @@ public class Drive extends SubsystemBase {
     m_currentTimeSec = (int)(System.currentTimeMillis() / 1000);
     SmartDashboard.putNumber("Time Seconds", System.currentTimeMillis());
 
-    if (m_currentTimeSec % 10 == 0) {
+    if (m_currentTimeSec % 30 == 0) {
       coolFalcon(true);
       SmartDashboard.putBoolean("Solenoid", true);
-    } else if ((m_currentTimeSec - 2) % 10 == 0) {
+    } else if ((m_currentTimeSec - 1) % 30 == 0) {
       coolFalcon(false);
       SmartDashboard.putBoolean("Solenoid", false);
     }
@@ -467,6 +467,8 @@ public class Drive extends SubsystemBase {
     m_rightBackMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
     m_leftBackMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
 
+    System.err.println(moveVelLeft);
+
     m_rightBackMotor.set(TalonFXControlMode.Velocity, moveVelRight);
     m_leftBackMotor.set(TalonFXControlMode.Velocity, moveVelLeft);
     m_leftFrontMotor.follow(m_leftBackMotor);
@@ -531,9 +533,12 @@ public class Drive extends SubsystemBase {
     m_currentAngleYaw = 0;
     m_kinematicsTargetAngle = 0;
   }
-
+//lol
+//sko
+//ridge
   /**
-   * Returns the heading of the robot
+//brayden=bad coder
+  * Returns the heading of the robot
    * @return The robot's heading in degrees, from -180 to 180
    */
   public double getHeading() {

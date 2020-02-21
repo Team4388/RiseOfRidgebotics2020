@@ -128,7 +128,7 @@ public class RobotContainer {
       
         // resets the yaw of the pigeon
         new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
-            .whileHeld(new RunCommand(() -> m_robotDrive.tankDriveVelocity(1, 1), m_robotDrive));
+            .whileHeld(new RunCommand(() -> m_robotDrive.tankDriveVelocity(9, 3), m_robotDrive));
       
         // turn 45 degrees
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
@@ -195,14 +195,14 @@ public class RobotContainer {
             new Pose2d(0, 0, new Rotation2d(0)),
             // Pass through these two interior waypoints, making an 's' curve path
             List.of(
-                new Translation2d(3, 0)
-                //new Translation2d(2, -1)
+                new Translation2d(10, 0)
             ),
             // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(3, 0, new Rotation2d(0)),
+            new Pose2d(20, 20, new Rotation2d(0)),
             // Pass config
             config);
-
+            // 10 = 20, 20 = 35, 30 = 53.5
+            // (0,10) = (8,22)
         RamseteCommand ramseteCommand = new RamseteCommand(
             exampleTrajectory,
             m_robotDrive::getPose,
