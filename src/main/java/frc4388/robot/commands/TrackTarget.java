@@ -49,12 +49,7 @@ public class TrackTarget extends CommandBase {
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
   }
 
-  public double addFireVel() {
-    return fireVel;
-  }
-  public double addFireAngle() {
-    return fireAngle;
-  }
+
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -81,6 +76,8 @@ public class TrackTarget extends CommandBase {
 
       fireVel = Math.sqrt((Math.pow(xVel, 2))+(Math.pow(yVel,2)));
       fireAngle = Math.atan(yVel/xVel);
+      m_shooter.m_fireVel = fireVel;
+      m_shooter.m_fireAngle = fireAngle;
     }
   }
 

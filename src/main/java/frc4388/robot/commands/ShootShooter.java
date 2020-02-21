@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc4388.robot.Constants.ShooterConstants;
-import frc4388.robot.commands.TrackTarget;
 import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.Storage;
 
@@ -23,6 +22,7 @@ public class ShootShooter extends CommandBase {
   Storage m_storage;
   private long startTime;
   private int ballNum;
+  public boolean velReach = false;
   /**
    * Creates a new ShootAlll.
    */
@@ -30,35 +30,35 @@ public class ShootShooter extends CommandBase {
     ballNum = numBall;
     m_shooter = shootSub;
     m_storage = storeSub;
-    addRequirements(m_shooter);
-    addRequirements(m_storage);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    startTime = System.currentTimeMillis();
-    //new InstantCommand(() -> m_storage.storageAiming());
+    //new InstantCommand(() -> m_storage.storageAim());
+    velReach = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    TrackTarget track = new TrackTarget(m_shooter); //Used to pull velocity and angle from TrackTarget.java
 
       //Aiming
-    if (startTime + 3000 > System.currentTimeMillis())
+    if (!m_shooter.velReached && velReach == false) //If the shooter is spooled
     {
-      new ShooterVelocityControlPID(m_shooter, track.addFireVel());
+      new ShooterVelocityControlPID(m_shooter, m_shooter.addFireVel());
+      startTime = System.currentTimeMillis();
     }
     
-    else if(3000 + startTime + (1000 * ballNum) > System.currentTimeMillis()){
-      new RunCommand(() -> m_storage.runStorage(0.5));
-      new ShooterVelocityControlPID(m_shooter, track.addFireVel());
-      new RunCommand(() -> m_shooter.runAngleAdjustPID(track.addFireAngle()));
+    else {
+      velReach = true;
+      new ParallelCommandGroup(
+        new ShooterVelocityControlPID(m_shooter, m_shooter.addFireVel()),
+        new RunCommand(() -> m_shooter.runAngleAdjustPID(m_shooter.addFireAngle())),
+        new RunCommand(() -> m_storage.runStoragePositionPID(m_storage.getEncoderPos() + (2*ballNum)))
+      );
     }
   }
-
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
@@ -67,7 +67,7 @@ public class ShootShooter extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (3000 + startTime + (1000 * ballNum) > System.currentTimeMillis()){
+    if (startTime + (1000 * ballNum) < System.currentTimeMillis()){
       return true;
     }
     return false;

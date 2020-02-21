@@ -48,6 +48,9 @@ public class Shooter extends SubsystemBase {
 
   double velP;
   double input;
+  public boolean velReached;
+  public double m_fireVel;
+  public double m_fireAngle;
   
   /*
    * Creates a new Shooter subsystem.
@@ -79,6 +82,13 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Shooter Velocity", m_shooterFalcon.getSelectedSensorVelocity()*600/ShooterConstants.ENCODER_TICKS_PER_REV);
   }
 
+  public double addFireVel() {
+    return m_fireVel;
+  }
+  public double addFireAngle() {
+    return m_fireAngle;
+  }
+
   /**
    * Runs drum shooter motor.
    * @param speed Speed to set the motor at
@@ -105,14 +115,25 @@ public class Shooter extends SubsystemBase {
   public void runDrumShooterVelocityPID(double targetVel, double actualVel) {
     velP = actualVel/targetVel; //Percent of target
     double runSpeed = actualVel + (12000*velP); //Ramp up equation
-    //if (runSpeed > targetVel) {runSpeed = targetVel;}
     SmartDashboard.putNumber("shoot", actualVel);
     runSpeed = runSpeed/targetVel; //Convert to percent
+
     if (actualVel < targetVel - 1000){ //PID Based on ramp up amount
       m_shooterFalcon.set(TalonFXControlMode.PercentOutput, runSpeed);
     }
     else{ //PID Based on targetVel
       m_shooterFalcon.set(TalonFXControlMode.Velocity, targetVel); //Init PID
+    }
+
+      //Tells wether the target velocity has been reached
+    double upperBound = targetVel + 300;
+    double lowerBound = targetVel - 300;
+    if (actualVel < upperBound && actualVel > lowerBound)
+    {
+      velReached = true;
+    }
+    else{
+      velReached = false;
     }
   }
 
