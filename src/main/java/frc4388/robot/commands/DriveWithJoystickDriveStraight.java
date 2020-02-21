@@ -13,7 +13,7 @@ import frc4388.robot.Constants.DriveConstants;
 import frc4388.robot.subsystems.Drive;
 import frc4388.utility.controller.IHandController;
 
-public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
+public class DriveWithJoystickDriveStraight extends CommandBase {
   Drive m_drive;
   double m_targetGyro, m_currentGyro;
   double m_stopPos;
@@ -23,7 +23,7 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
   IHandController m_controller;
 
   /**
-   * Creates a new DriveWithJoystickUsingDeadAssistPID to control the drivetrain with an Xbox controller.
+   * Creates a new DriveWithJoystickDriveStraight to control the drivetrain with an Xbox controller.
    * Applies a curved ramp to the input from the controllers to make the robot less "touchy".
    * Also uses PIDs to keep the robot on course when given a "dead" or 0 input.
    * @param subsystem pass the Drive subsystem from {@link frc4388.robot.RobotContainer#RobotContainer() RobotContainer}
@@ -31,7 +31,7 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
    * {@link frc4388.robot.RobotContainer#getDriverJoystick() getDriverJoystick()} method in
    * {@link frc4388.robot.RobotContainer#RobotContainer() RobotContainer}
    */
-  public DriveWithJoystickUsingDeadAssistPID(Drive subsystem, IHandController controller) {
+  public DriveWithJoystickDriveStraight(Drive subsystem, IHandController controller) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = subsystem;
     m_controller = controller;
@@ -47,46 +47,33 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_currentGyro = m_drive.m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_TURN);
+    m_currentGyro = m_drive.m_rightFrontMotor.getSelectedSensorPosition(1);
     double moveInput = -m_controller.getLeftYAxis();
     double steerInput = m_controller.getRightXAxis();
     double moveOutput = 0;
     m_deltaTime = System.currentTimeMillis() - m_currTime;
     m_currTime = System.currentTimeMillis();
 
-    /* If move stick is being used */
-    if (moveInput != 0) {
-      m_deadTimeMove = m_currTime;
-      m_stopPos = m_drive.m_rightFrontMotor.getSelectedSensorPosition()
-                  + (m_drive.m_rightFrontMotor.getSelectedSensorVelocity());
-    }
     /* If steer stick is being used */
     if (steerInput != 0) {
       m_deadTimeSteer = m_currTime;
     }
 
-    /* If move stick has been pressed within 1 sec */
-    if (m_currTime - m_deadTimeMove < m_deadTimeout) {
-      /* Curves the moveInput to be slightly more gradual at first */
-      if (moveInput >= 0) {
-        moveOutput = -Math.cos(1.571*moveInput)+1;
-      } else {
-        moveOutput = Math.cos(1.571*moveInput)-1;
-      }
-
-      /* If steer stick has not been used for less than 1 sec */
-      if (m_currTime - m_deadTimeSteer < m_deadTimeout) {
-        runDriveWithInput(moveOutput, steerInput);
-        resetGyroTarget();
-      }
-      /* If steer stick has not been used for 1 sec */
-      else {
-        runDriveStraight(moveOutput);
-      }
+    /* Curves the moveInput to be slightly more gradual at first */
+    if (moveInput >= 0) {
+      moveOutput = -Math.cos(1.571*moveInput)+1;
+    } else {
+      moveOutput = Math.cos(1.571*moveInput)-1;
     }
-    /* If the move stick has not been used for 1 sec */
+
+    /* If steer stick has not been used for less than 1 sec */
+    if (m_currTime - m_deadTimeSteer < m_deadTimeout) {
+      runDriveWithInput(moveOutput, steerInput);
+      resetGyroTarget();
+    }
+    /* If steer stick has not been used for 1 sec */
     else {
-      runStoppedTurn(steerInput);
+      runDriveStraight(moveOutput);
     }
   }
 
@@ -109,27 +96,11 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
     System.out.println("Driving Straight with Target: " + m_targetGyro);
   }
 
-  private void runStoppedTurn(double steer) {
-    updateGyroTarget(steer);
-    m_drive.runDrivePositionPID(m_stopPos, m_targetGyro);
-    System.out.println("Turning with Target: " + m_targetGyro);
-  }
-
-  /**
-   * If AuxPID is enabled, then update using the steer input
-   */
-  private void updateGyroTarget(double steerInput) {
-    m_targetGyro -= 5 * steerInput * m_deltaTime;
-    m_targetGyro = MathUtil.clamp(  m_targetGyro,
-                                    m_currentGyro-(DriveConstants.TICKS_PER_GYRO_REV/8),
-                                    m_currentGyro+(DriveConstants.TICKS_PER_GYRO_REV/8));
-  }
-
   /**
    * set target angle to current angle (prevents buildup of gyro error).
    */
   private void resetGyroTarget() {
-    m_targetGyro = m_currentGyro;
+    //m_targetGyro = m_currentGyro;
     m_targetGyro =  m_currentGyro
                     + m_drive.getTurnRate();
   }
