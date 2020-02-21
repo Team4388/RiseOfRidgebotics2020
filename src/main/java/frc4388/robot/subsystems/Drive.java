@@ -81,6 +81,8 @@ public class Drive extends SubsystemBase {
   public DoubleSolenoid m_speedShift;
   public DoubleSolenoid m_coolFalcon;
 
+  SendableChooser<String> m_songChooser = new SendableChooser<String>();
+
   public int m_currentTimeSec = (int)(System.currentTimeMillis() / 1000);
   public long m_lastTime, m_deltaTime; //in milliseconds
 
