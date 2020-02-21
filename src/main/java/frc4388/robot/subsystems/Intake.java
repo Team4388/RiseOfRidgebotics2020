@@ -24,7 +24,7 @@ public class Intake extends SubsystemBase {
   CANSparkMax m_extenderMotor = new CANSparkMax(IntakeConstants.EXTENDER_SPARK_ID, MotorType.kBrushless);
   CANDigitalInput m_extenderForwardLimit;
   CANDigitalInput m_extenderReverseLimit;
-  boolean extended = false;
+  public boolean isExtended = false;
 
   /**
    * Creates a new Intake.
@@ -65,16 +65,16 @@ public class Intake extends SubsystemBase {
    */
   public void runExtender(final double input) {
     if (m_extenderForwardLimit.get()) {
-      extended = true;
+      isExtended = true;
     }
     if (m_extenderReverseLimit.get()) {
-      extended = false;
+      isExtended = false;
     }
     
-    if (extended == false) {
+    if (isExtended == false) {
       m_extenderMotor.set(0.5);
     }
-    if (extended == true) {
+    if (isExtended == true) {
       m_extenderMotor.set(-0.5);
     }
   }

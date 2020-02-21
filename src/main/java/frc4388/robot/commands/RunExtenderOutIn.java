@@ -19,7 +19,7 @@ import frc4388.utility.controller.IHandController;
 
 public class RunExtenderOutIn extends CommandBase {
   private Intake m_intake;
-  private boolean isOut = false;
+
   CANSparkMax m_intakeMotor = new CANSparkMax(IntakeConstants.INTAKE_SPARK_ID, MotorType.kBrushless);
   CANSparkMax m_extenderMotor = new CANSparkMax(IntakeConstants.EXTENDER_SPARK_ID, MotorType.kBrushless);
   CANDigitalInput m_extenderForwardLimit;
@@ -46,13 +46,13 @@ public class RunExtenderOutIn extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    isOut = !isOut;
+    m_intake.isExtended = !m_intake.isExtended;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (isOut){
+    if (m_intake.isExtended){
       m_intake.runExtender(0.3);
     } else {
       m_intake.runExtender(-0.3);
@@ -69,11 +69,11 @@ public class RunExtenderOutIn extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (isOut && m_extenderForwardLimit.get() == true){
+    if (m_intake.isExtended && m_extenderForwardLimit.get() == true){
       return true;
     }
     
-    else if(isOut && m_extenderReverseLimit.get() == true){
+    else if(m_intake.isExtended && m_extenderReverseLimit.get() == true){
       return true;
     }
     
