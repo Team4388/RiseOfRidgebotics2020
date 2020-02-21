@@ -295,7 +295,7 @@ public class Drive extends SubsystemBase {
       m_songChooser.addOption(songString, songsDir.getAbsolutePath() + "/" + songString);
     }
     Shuffleboard.getTab("Songs").add(m_songChooser);
-  }
+  } 
 
   String currentSong = "";
   @Override

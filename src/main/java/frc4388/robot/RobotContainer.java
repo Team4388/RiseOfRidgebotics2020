@@ -170,11 +170,10 @@ public class RobotContainer {
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
             .whileHeld(new TrackTarget(m_robotShooter));
     }
-      
+       
     /**
      * Sets Motors to a NeutralMode.
      * @param mode NeutralMode to set motors to
-     * @param state the gearing of the gearbox (true is high, false is low)
      */
     public void setDriveNeutralMode(NeutralMode mode) {
         m_robotDrive.setDriveTrainNeutralMode(mode);
