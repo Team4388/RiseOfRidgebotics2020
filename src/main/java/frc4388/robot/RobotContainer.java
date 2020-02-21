@@ -185,7 +185,7 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
 
         // Create config for trajectory
-        TrajectoryConfig config = new TrajectoryConfig( DriveConstants.MAX_SPEED_METERS_PER_SECOND,
+        /*TrajectoryConfig config = new TrajectoryConfig( DriveConstants.MAX_SPEED_METERS_PER_SECOND,
                                                         DriveConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
                                                         // Add kinematics to ensure max speed is actually obeyed
                                                         .setKinematics(DriveConstants.kDriveKinematics);
@@ -212,7 +212,8 @@ public class RobotContainer {
             m_robotDrive);
 
         // Run path following command, then stop at the end.
-        return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+        return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));*/
+        return new InstantCommand();
     }
 
     /**
