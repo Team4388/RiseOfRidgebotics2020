@@ -42,7 +42,6 @@ public class Storage extends SubsystemBase {
    */
   public Storage() {
     resetEncoder();
-    boolean botReached = false;
     m_beamSensors[0] = new DigitalInput(StorageConstants.BEAM_SENSOR_DIO_0);
     m_beamSensors[1] = new DigitalInput(StorageConstants.BEAM_SENSOR_DIO_1);
     m_beamSensors[2] = new DigitalInput(StorageConstants.BEAM_SENSOR_DIO_2);
@@ -62,7 +61,7 @@ public class Storage extends SubsystemBase {
    * @param input the voltage to run motor at
    */
   
-  public void runStorage(final double input) {
+  public void runStorage(double input) {
     m_storageMotor.set(input);
   }
 

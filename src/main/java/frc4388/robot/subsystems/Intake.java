@@ -55,7 +55,7 @@ public class Intake extends SubsystemBase {
    * Runs intake motor
    * @param input the percent output to run motor at
    */
-  public void runIntake(final double input) {
+  public void runIntake(double input) {
     m_intakeMotor.set(input);
   }
   
@@ -63,7 +63,7 @@ public class Intake extends SubsystemBase {
    * Runs extender motor
    * @param input the percent output to run motor at
    */
-  public void runExtender(final double input) {
+  public void runExtender() {
     if (m_extenderForwardLimit.get()) {
       isExtended = true;
     }
