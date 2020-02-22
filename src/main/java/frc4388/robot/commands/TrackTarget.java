@@ -7,6 +7,7 @@
 
 package frc4388.robot.commands;
 
+import frc4388.robot.Constants.ShooterConstants;
 import frc4388.robot.Constants.VisionConstants;
 import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Shooter;
@@ -28,6 +29,8 @@ public class TrackTarget extends CommandBase {
   double yAngle = 0;
   double target = 0;
   public double distance;
+  public static double fireVel;
+  public static double fireAngle;
 
   /**
    * Uses the Limelight to track the target
@@ -45,6 +48,8 @@ public class TrackTarget extends CommandBase {
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0);
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
   }
+
+
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -65,6 +70,14 @@ public class TrackTarget extends CommandBase {
         //Finding Distance
       distance = VisionConstants.TARGET_HEIGHT/Math.tan((VisionConstants.LIME_ANGLE + yAngle)*(Math.PI/180));
       SmartDashboard.putNumber("Distance to Target", distance);
+
+      double yVel = Math.sqrt(2*VisionConstants.GRAV*VisionConstants.TARGET_HEIGHT);
+      double xVel = (distance*VisionConstants.GRAV)/(yVel);
+
+      fireVel = Math.sqrt((Math.pow(xVel, 2))+(Math.pow(yVel,2)));
+      fireAngle = Math.atan(yVel/xVel);
+      m_shooter.m_fireVel = fireVel;
+      m_shooter.m_fireAngle = fireAngle;
     }
   }
 

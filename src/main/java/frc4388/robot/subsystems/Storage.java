@@ -36,7 +36,6 @@ public class Storage extends SubsystemBase {
 
   Intake m_intake;
 
-  public boolean botReached;
 
   /**
    * Creates a new Storage.
@@ -75,15 +74,16 @@ public class Storage extends SubsystemBase {
   /* Storage PID Control */
   public void runStoragePositionPID(double targetPos){
     // Set PID Coefficients
-    m_storagePIDController.setP(storageGains.m_kP);
-    m_storagePIDController.setI(storageGains.m_kI);
-    m_storagePIDController.setD(storageGains.m_kD);
-    m_storagePIDController.setIZone(storageGains.m_kIzone);
-    m_storagePIDController.setFF(storageGains.m_kF);
-    m_storagePIDController.setOutputRange(StorageConstants.STORAGE_MIN_OUTPUT, storageGains.m_kPeakOutput);
+    m_storagePIDController.setP(m_storageGains.m_kP);
+    m_storagePIDController.setI(m_storageGains.m_kI);
+    m_storagePIDController.setD(m_storageGains.m_kD);
+    m_storagePIDController.setIZone(m_storageGains.m_kIzone);
+    m_storagePIDController.setFF(m_storageGains.m_kF);
+    m_storagePIDController.setOutputRange(StorageConstants.storkminOutput, m_storageGains.m_kmaxOutput);
 
     m_storagePIDController.setReference(targetPos, ControlType.kPosition);
   }
+
 
   public double getEncoderPos(){
     return m_encoder.getPosition();
