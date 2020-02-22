@@ -47,7 +47,7 @@ public class DriveStraightToPositionPID extends CommandBase {
     //System.err.println("| \n Sensor Pos \n" + m_drive.m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_PRIMARY));
     //System.err.println("Sensor Error \n" + m_drive.m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_PRIMARY));
     //System.err.println("Sensor Target \n" + m_drive.m_rightFrontMotor.getClosedLoopTarget(DriveConstants.PID_PRIMARY));
-    m_drive.runDriveStraightPositionPID(m_targetPosOut, m_targetGyro);
+    m_drive.runDrivePositionPID(m_targetPosOut, m_targetGyro);
   }
 
   // Called once the command ends or is interrupted.

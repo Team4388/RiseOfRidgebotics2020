@@ -7,6 +7,7 @@
 
 package frc4388.robot;
 
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import frc4388.utility.LEDPatterns;
 
 /**
@@ -28,13 +29,19 @@ public final class Constants {
 
         /* PID Constants Drive*/
         public static final int DRIVE_TIMEOUT_MS = 30;
-        public static final Gains DRIVE_DISTANCE_GAINS = new Gains(0.2, 0.0, 0.0, 0.0, 0, 0.3);
-        public static final Gains DRIVE_VELOCITY_GAINS = new Gains(0.1, 0.0, 0.0, 0.1, 0, 1.0);
-        public static final Gains DRIVE_TURNING_GAINS = new Gains(0.4, 0.0, 0.0, 0.0, 0, 0.5);
-        public static final Gains DRIVE_MOTION_MAGIC_GAINS = new Gains(0.2, 0.0, 0.0, 0.0, 0, 1.0);
-        public static final int DRIVE_CRUISE_VELOCITY = 20000;
-        public static final int DRIVE_ACCELERATION = 7000;
+        public static final Gains DRIVE_DISTANCE_GAINS = new Gains(0.1, 0.0, 1.0, 0.0, 0, 0.3);
+        public static final Gains DRIVE_VELOCITY_GAINS = new Gains(0.1, 0.0, 0.2, 0.025, 0, 0.05);
+        public static final Gains DRIVE_TURNING_GAINS = new Gains(0.5, 0.0, 0.05, 0.0, 0, 0.5);
+        //public static final Gains DRIVE_MOTION_MAGIC_GAINS = new Gains(0.2, 0.0, 0.0, 0.0, 0, 1.0);
+        //public static final int DRIVE_CRUISE_VELOCITY = 20000;
+        //public static final int DRIVE_ACCELERATION = 7000;
 
+        /* Trajectory Constants */
+        public static final double MAX_SPEED_METERS_PER_SECOND = 3;
+        public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 3;
+        public static final double TRACK_WIDTH_METERS = 0.648;
+        public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
+ 
         /* Remote Sensors */
         public final static int REMOTE_0 = 0;
         public final static int REMOTE_1 = 1;
@@ -50,19 +57,21 @@ public final class Constants {
 	    public final static int SLOT_MOTION_MAGIC = 3;
         
         /* Drive Train Characteristics */
-        public static final double TICKS_PER_MOTOR_REV = 2048*2;
-        public static final double MOTOR_TO_WHEEL_GEAR_RATIO = 12.5;
+        public static final double TICKS_PER_MOTOR_REV = 2048;
+        public static final double MOTOR_ROT_PER_WHEEL_ROT = 5.13;
         public static final double WHEEL_DIAMETER_INCHES = 6;
         public static final double TICKS_PER_GYRO_REV = 8192;
         
         /* Ratio Calculation */
         public static final double TICK_TIME_TO_SECONDS = 0.1;
         public static final double SECONDS_TO_TICK_TIME = 1/TICK_TIME_TO_SECONDS;
-        public static final double WHEEL_TO_MOTOR_GEAR_RATIO = 1/MOTOR_TO_WHEEL_GEAR_RATIO;
-        public static final double TICKS_PER_WHEEL_REV = TICKS_PER_MOTOR_REV * MOTOR_TO_WHEEL_GEAR_RATIO;
+        public static final double WHEEL_ROT_PER_MOTOR_ROT = 1/MOTOR_ROT_PER_WHEEL_ROT;
+        public static final double TICKS_PER_WHEEL_REV = TICKS_PER_MOTOR_REV * MOTOR_ROT_PER_WHEEL_ROT;
         public static final double INCHES_PER_WHEEL_REV = WHEEL_DIAMETER_INCHES * Math.PI;
         public static final double TICKS_PER_INCH = TICKS_PER_WHEEL_REV/INCHES_PER_WHEEL_REV;
         public static final double INCHES_PER_TICK = 1/TICKS_PER_INCH;
+        public static final double INCHES_PER_METER = 39.370;
+        public static final double METERS_PER_INCH = 1/INCHES_PER_METER;
     }
     
     public static final class IntakeConstants {
