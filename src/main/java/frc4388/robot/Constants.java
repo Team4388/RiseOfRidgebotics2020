@@ -7,6 +7,7 @@
 
 package frc4388.robot;
 
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import frc4388.utility.LEDPatterns;
 
 /**
@@ -28,13 +29,19 @@ public final class Constants {
 
         /* PID Constants Drive*/
         public static final int DRIVE_TIMEOUT_MS = 30;
-        public static final Gains DRIVE_DISTANCE_GAINS = new Gains(0.2, 0.0, 0.0, 0.0, 0, 0.3);
-        public static final Gains DRIVE_VELOCITY_GAINS = new Gains(0.0, 0.0, 0.0, 0.1, 0, 1.0);
-        public static final Gains DRIVE_TURNING_GAINS = new Gains(0.4, 0.0, 0.0, 0.0, 0, 0.3);
-        public static final Gains DRIVE_MOTION_MAGIC_GAINS = new Gains(0.2, 0.0, 0.0, 0.0, 0, 1.0);
-        public static final int DRIVE_CRUISE_VELOCITY = 20000;
-        public static final int DRIVE_ACCELERATION = 7000;
+        public static final Gains DRIVE_DISTANCE_GAINS = new Gains(0.1, 0.0, 1.0, 0.0, 0, 0.3);
+        public static final Gains DRIVE_VELOCITY_GAINS = new Gains(0.1, 0.0, 0.2, 0.025, 0, 0.05);
+        public static final Gains DRIVE_TURNING_GAINS = new Gains(0.5, 0.0, 0.05, 0.0, 0, 0.5);
+        //public static final Gains DRIVE_MOTION_MAGIC_GAINS = new Gains(0.2, 0.0, 0.0, 0.0, 0, 1.0);
+        //public static final int DRIVE_CRUISE_VELOCITY = 20000;
+        //public static final int DRIVE_ACCELERATION = 7000;
 
+        /* Trajectory Constants */
+        public static final double MAX_SPEED_METERS_PER_SECOND = 3;
+        public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 3;
+        public static final double TRACK_WIDTH_METERS = 0.648;
+        public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
+ 
         /* Remote Sensors */
         public final static int REMOTE_0 = 0;
         public final static int REMOTE_1 = 1;
@@ -50,36 +57,44 @@ public final class Constants {
 	    public final static int SLOT_MOTION_MAGIC = 3;
         
         /* Drive Train Characteristics */
-        public static final double TICKS_PER_MOTOR_REV = 2048*2;
-        public static final double MOTOR_TO_WHEEL_GEAR_RATIO = 12.5;
+        public static final double TICKS_PER_MOTOR_REV = 2048;
+        public static final double MOTOR_ROT_PER_WHEEL_ROT = 5.13;
         public static final double WHEEL_DIAMETER_INCHES = 6;
         public static final double TICKS_PER_GYRO_REV = 8192;
         
         /* Ratio Calculation */
         public static final double TICK_TIME_TO_SECONDS = 0.1;
         public static final double SECONDS_TO_TICK_TIME = 1/TICK_TIME_TO_SECONDS;
-        public static final double WHEEL_TO_MOTOR_GEAR_RATIO = 1/MOTOR_TO_WHEEL_GEAR_RATIO;
-        public static final double TICKS_PER_WHEEL_REV = TICKS_PER_MOTOR_REV * MOTOR_TO_WHEEL_GEAR_RATIO;
+        public static final double WHEEL_ROT_PER_MOTOR_ROT = 1/MOTOR_ROT_PER_WHEEL_ROT;
+        public static final double TICKS_PER_WHEEL_REV = TICKS_PER_MOTOR_REV * MOTOR_ROT_PER_WHEEL_ROT;
         public static final double INCHES_PER_WHEEL_REV = WHEEL_DIAMETER_INCHES * Math.PI;
         public static final double TICKS_PER_INCH = TICKS_PER_WHEEL_REV/INCHES_PER_WHEEL_REV;
         public static final double INCHES_PER_TICK = 1/TICKS_PER_INCH;
+        public static final double INCHES_PER_METER = 39.370;
+        public static final double METERS_PER_INCH = 1/INCHES_PER_METER;
     }
     
     public static final class IntakeConstants {
-        public static final int INTAKE_SPARK_ID = 9;
-        public static final int EXTENDER_SPARK_ID = 10;
+        public static final int INTAKE_SPARK_ID = -9;
+        public static final int EXTENDER_SPARK_ID = -10;
     }
   
     public static final class ShooterConstants {
-        public static final int SHOOTER_FALCON_ID = 8;
+        /* Motor IDs */
+        public static final int SHOOTER_FALCON_ID = -1;
+        public static final int SHOOTER_ANGLE_ADJUST_ID = -1;
+        public static final int SHOOTER_ROTATE_ID = 10;
 
         /* PID Constants Shooter */
         public static final int SHOOTER_SLOT_IDX = 0;
         public static final int SHOOTER_PID_LOOP_IDX = 1;
         public static final int SHOOTER_TIMEOUT_MS = 30;
-        public static final Gains SHOOTER_GAINS = new Gains(0.4, 0.0005, 13, 0.05, 0, 1.0);
-        
+        public static final Gains DRUM_SHOOTER_GAINS = new Gains(0.4, 0.0005, 13, 0.05, 0, 1.0);
+        public static final Gains SHOOTER_TURRET_GAINS = new Gains(0.2, 0.0, 0.0, 0.0, 0, 1.0);
+        public static final double SHOOTER_TURRET_MIN = -1.0;
         public static final double ENCODER_TICKS_PER_REV = 2048;
+        public static final double NEO_UNITS_PER_REV = 42;
+        public static final double DEGREES_PER_ROT = 360;
     }
     
     public static final class ClimberConstants {
@@ -91,7 +106,7 @@ public final class Constants {
     }
   
     public static final class StorageConstants {
-        public static final int STORAGE_CAN_ID = 10;
+        public static final int STORAGE_CAN_ID = -1;
 
         /* Ball Indexes */
         public static final int BEAM_SENSOR_DIO_0 = 0;
@@ -116,6 +131,17 @@ public final class Constants {
         public static final int LED_SPARK_ID = 0;
         public static final LEDPatterns DEFAULT_PATTERN = LEDPatterns.FOREST_WAVES;
     }
+    
+    public static final class VisionConstants {
+        public static final double FOV = 29.8; //Field of view of limelight
+        public static final double TARGET_HEIGHT = 82.75;
+        public static final double LIME_ANGLE = 18.7366;
+        public static final double TURN_P_VALUE = 0.65;
+        public static final double X_ANGLE_ERROR = 1.3;
+        public static final double MOTOR_DEAD_ZONE = 0.3;
+        public static final double DISTANCE_ERROR_EQUATION_M = 1.1279;
+        public static final double DISTANCE_ERROR_EQUATION_B = -15.0684;
+        }
 
     public static final class OIConstants {
         public static final int XBOX_DRIVER_ID = 0;

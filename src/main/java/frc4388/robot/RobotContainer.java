@@ -7,19 +7,34 @@
 
 package frc4388.robot;
 
+import java.util.List;
+
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.controller.RamseteController;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+
 import frc4388.robot.Constants.*;
 import frc4388.robot.commands.DriveStraightAtVelocityPID;
+import frc4388.robot.commands.DriveWithJoystick;
 import frc4388.robot.commands.DriveStraightToPositionMM;
 import frc4388.robot.commands.DriveStraightToPositionPID;
 import frc4388.robot.commands.DriveWithJoystick;
-import frc4388.robot.commands.DriveWithJoystickAuxPID;
+import frc4388.robot.commands.DriveWithJoystickUsingDeadAssistPID;
+import frc4388.robot.commands.DriveWithJoystickDriveStraight;
 import frc4388.robot.commands.RunClimberWithTriggers;
 import frc4388.robot.commands.RunExtenderOutIn;
 import frc4388.robot.commands.RunIntakeWithTriggers;
@@ -33,6 +48,8 @@ import frc4388.robot.commands.RunLevelerWithJoystick;
 import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Intake;
 import frc4388.robot.subsystems.LED;
+import frc4388.robot.commands.TrackTarget;
+import frc4388.robot.subsystems.Camera;
 import frc4388.robot.subsystems.Leveler;
 import frc4388.robot.subsystems.Storage;
 import frc4388.utility.LEDPatterns;
@@ -56,6 +73,10 @@ public class RobotContainer {
     private final Leveler m_robotLeveler = new Leveler();
     private final Storage m_robotStorage = new Storage();
 
+    /* Cameras */
+    private final Camera m_robotCameraFront = new Camera("front",0,160,120,40);
+    private final Camera m_robotCameraBack = new Camera("back",1,160,120,40);
+
     /* Controllers */
     private final XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
     private final XboxController m_operatorXbox = new XboxController(OIConstants.XBOX_OPERATOR_ID);
@@ -76,9 +97,10 @@ public class RobotContainer {
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
         // runs the drum shooter in idle mode
-        m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runDrumShooter(0.15), m_robotShooter));
+        m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runShooterWithInput(m_operatorXbox.getLeftXAxis()), m_robotShooter));
         // drives the leveler with an axis input from the driver controller
         m_robotLeveler.setDefaultCommand(new RunLevelerWithJoystick(m_robotLeveler, getDriverController()));
+
     }
       
 
@@ -91,16 +113,19 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-            .whenPressed(new DriveStraightToPositionPID(m_robotDrive, 144));
+            .whenPressed(new RunCommand(() -> m_robotDrive.runTurningPID(0), m_robotDrive));
 
         /* Operator Buttons */
         // activates "Lit Mode"
-        new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
-            .whenPressed(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW))
-            .whenReleased(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN));
+        //new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
+        //    .whenPressed(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW))
+        //    .whenReleased(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN));
       
         new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
             .whileHeld(new ShooterVelocityControlPID(m_robotShooter, 4000));
+            
+        new JoystickButton(getOperatorJoystick(), XboxController.Y_BUTTON)
+            .whileHeld(new TrackTarget(m_robotShooter));
         
         new JoystickButton(getOperatorJoystick(), XboxController.LEFT_BUMPER_BUTTON)
             .whenPressed(new RunExtenderOutIn(m_robotIntake));
@@ -116,27 +141,33 @@ public class RobotContainer {
       
         // resets the yaw of the pigeon
         new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
-            .whenPressed(new DriveStraightToPositionMM(m_robotDrive, 72));
+            .whileHeld(new RunCommand(() -> m_robotDrive.tankDriveVelocity(9, 3), m_robotDrive));
       
         // turn 45 degrees
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
-            .whenPressed(new RunCommand(() -> m_robotDrive.runTurningPID(45), m_robotDrive));
+            .whenPressed(new RunCommand(() -> m_robotDrive.driveWithInputAux(0.2, 0), m_robotDrive));
+
 
         // sets solenoids into high gear
-        new JoystickButton(getDriverJoystick(), XboxController.START_BUTTON)
+        new JoystickButton(getDriverJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
             .whenPressed(new InstantCommand(() -> m_robotDrive.setShiftState(true), m_robotDrive));
 
         // sets solenoids into low gear
-        new JoystickButton(getDriverJoystick(), XboxController.BACK_BUTTON)
+        new JoystickButton(getDriverJoystick(), XboxController.LEFT_BUMPER_BUTTON)
             .whenPressed(new InstantCommand(() -> m_robotDrive.setShiftState(false), m_robotDrive));
         
         // interrupts any running command
         new JoystickButton(getDriverJoystick(), XboxController.LEFT_JOYSTICK_BUTTON)
             .whenPressed(new InstantCommand(() -> System.out.print("Gamer"), m_robotDrive));
 
+        // safety for climber and leveler
+        new JoystickButton(getOperatorJoystick(), XboxController.BACK_BUTTON)
+            .whenPressed(new InstantCommand(() -> m_robotClimber.setSafetyPressed(), m_robotClimber))
+            .whenReleased(new InstantCommand(() -> m_robotClimber.setSafetyNotPressed(), m_robotClimber));
+
         /* Storage Neo PID Test */
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
-            .whileHeld(new RunCommand(() -> m_robotStorage.runStoragePositionPID(0.5)));
+            .whileHeld(new TrackTarget(m_robotShooter));
 
         //Prepares storage for intaking
         new JoystickButton(getOperatorJoystick(), XboxController.LEFT_TRIGGER_AXIS)
@@ -146,7 +177,7 @@ public class RobotContainer {
         new JoystickButton(getOperatorJoystick(), XboxController.RIGHT_TRIGGER_AXIS)
             .whileHeld(new RunCommand(() -> m_robotStorage.storageOuttake()));
     }
-      
+       
     /**
      * Sets Motors to a NeutralMode.
      * @param mode NeutralMode to set motors to
@@ -156,12 +187,58 @@ public class RobotContainer {
     }
 
     /**
+     * Sets the gear of the drivetrain
+     * @param state the gearing of the gearbox (true is high, false is low)
+     */
+    public void setDriveGearState(boolean state) {
+        m_robotDrive.setShiftState(state);
+    }
+
+    public void configDriveTrainSensors(FeedbackDevice type) {
+        m_robotDrive.configMotorSensor(type);
+    } 
+
+    public void resetOdometry() {
+        m_robotDrive.resetGyroAngles();
+        m_robotDrive.setOdometry(new Pose2d());
+    }
+
+    /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        // no auto
+
+        // Create config for trajectory
+        /*TrajectoryConfig config = new TrajectoryConfig( DriveConstants.MAX_SPEED_METERS_PER_SECOND,
+                                                        DriveConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
+                                                        // Add kinematics to ensure max speed is actually obeyed
+                                                        .setKinematics(DriveConstants.kDriveKinematics);
+        
+        Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing the +X direction
+            new Pose2d(0, 0, new Rotation2d(0)),
+            // Pass through these two interior waypoints, making an 's' curve path
+            List.of(
+                new Translation2d(10, 0)
+            ),
+            // End 3 meters straight ahead of where we started, facing forward
+            new Pose2d(20, 20, new Rotation2d(0)),
+            // Pass config
+            config);
+            // 10 = 20, 20 = 35, 30 = 53.5
+            // (0,10) = (8,22)
+        RamseteCommand ramseteCommand = new RamseteCommand(
+            exampleTrajectory,
+            m_robotDrive::getPose,
+            new RamseteController(), 
+            DriveConstants.kDriveKinematics,
+            m_robotDrive::tankDriveVelocity,
+            m_robotDrive);
+
+        // Run path following command, then stop at the end.
+        return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));*/
         return new InstantCommand();
     }
 

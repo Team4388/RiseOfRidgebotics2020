@@ -10,6 +10,7 @@ package frc4388.robot.subsystems;
 import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -17,18 +18,23 @@ import frc4388.robot.Constants.ClimberConstants;
 
 public class Climber extends SubsystemBase {
   CANSparkMax m_climberMotor = new CANSparkMax(ClimberConstants.CLIMBER_SPARK_ID, MotorType.kBrushless);
-  CANDigitalInput m_forwardLimit, m_reverseLimit;
+  CANDigitalInput m_climberForwardLimit, m_climberReverseLimit;
+
+  public boolean climberSafety = false;
+
   /**
    * Creates a new Climber.
    */
   public Climber() {
     m_climberMotor.restoreFactoryDefaults();
-    
-    m_forwardLimit = m_climberMotor.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyClosed);
-    m_reverseLimit = m_climberMotor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyClosed);
 
-    m_forwardLimit.enableLimitSwitch(false);
-    m_reverseLimit.enableLimitSwitch(false);
+    m_climberMotor.setIdleMode(IdleMode.kBrake);
+    m_climberMotor.setInverted(false);
+    
+    m_climberForwardLimit = m_climberMotor.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyClosed);
+    m_climberReverseLimit = m_climberMotor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyClosed);
+    m_climberForwardLimit.enableLimitSwitch(false);
+    m_climberReverseLimit.enableLimitSwitch(false);
   }
 
   @Override
@@ -41,6 +47,23 @@ public class Climber extends SubsystemBase {
    * @param input the voltage to run motor at
    */
   public void runClimber(double input) {
-    m_climberMotor.set(input);
+    if(climberSafety){
+      m_climberMotor.set(input);
+    }
+    else{
+      m_climberMotor.set(0);
+    }
+  }
+
+  /* Safety Button for Climber */
+  public void setSafetyPressed()
+  {
+    climberSafety = true;
+  }
+
+  /* Safety Button for Climber set back to false */
+  public void setSafetyNotPressed()
+  {
+    climberSafety = false;
   }
 }

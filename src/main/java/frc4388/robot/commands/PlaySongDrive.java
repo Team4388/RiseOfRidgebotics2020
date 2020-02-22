@@ -8,36 +8,35 @@
 package frc4388.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc4388.robot.Constants.DriveConstants;
 import frc4388.robot.subsystems.Drive;
 
-public class DriveStraightAtVelocityPID extends CommandBase {
-  Drive m_drive;
-  double m_targetVel;
-  double m_targetGyro;
+public class PlaySongDrive extends CommandBase {
+  private Drive m_drive;
+  
   /**
-   * Creates a new DriveStraightAtVelocityPID.
-   * @param subsystem The drive subsystem
-   * @param targetVel The target velocity for the motors in units
+   * Creates a new PlaySongDrive.
    */
-  public DriveStraightAtVelocityPID(Drive subsystem, double targetVel) {
+  public PlaySongDrive(Drive subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = subsystem;
-    m_targetVel = targetVel;
     addRequirements(m_drive);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_targetGyro = m_drive.m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_TURN);
+    m_drive.m_rightFrontMotor.set(0);
+    m_drive.m_leftFrontMotor.set(0);
+    m_drive.m_rightBackMotor.set(0);
+    m_drive.m_leftBackMotor.set(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //System.err.println(m_drive.m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_TURN));
-    m_drive.runDriveVelocityPID(-m_targetVel, m_targetGyro);
+    m_drive.playSong();
+    //System.err.println("Playing " + m_drive.m_orchestra.isPlaying());
+    //m_drive.m_driveTrain.feedWatchdog();
   }
 
   // Called once the command ends or is interrupted.

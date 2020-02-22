@@ -17,7 +17,6 @@ import com.revrobotics.ControlType;
 import com.revrobotics.SparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
-
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -61,6 +60,10 @@ public class Storage extends SubsystemBase {
    * @param input the voltage to run motor at
    */
   
+  public void runStorage(final double input) {
+    m_storageMotor.set(input);
+    final boolean beam_on = m_beamSensors[0].get();
+  }
 
   public void resetEncoder()
   {

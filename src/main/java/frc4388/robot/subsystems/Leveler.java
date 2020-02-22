@@ -17,16 +17,20 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.LevelerConstants;
+import frc4388.robot.subsystems.*;
 
 public class Leveler extends SubsystemBase {
   CANSparkMax m_levelerMotor = new CANSparkMax(LevelerConstants.LEVELER_CAN_ID, MotorType.kBrushless);
+
+  private final Climber m_robotClimber = new Climber();
 
   /**
    * Creates a new Leveler.
    */
   public Leveler() {
     m_levelerMotor.restoreFactoryDefaults();
-    m_levelerMotor.setIdleMode(IdleMode.kCoast);
+
+    m_levelerMotor.setIdleMode(IdleMode.kBrake);
     m_levelerMotor.setInverted(false);
   }
 
@@ -40,6 +44,11 @@ public class Leveler extends SubsystemBase {
    * @param input the percent output to run motor at
    */
   public void runLeveler(double input) {
-    m_levelerMotor.set(input);
+    if(m_robotClimber.climberSafety){
+      m_levelerMotor.set(input);
+    }
+    else{
+      m_levelerMotor.set(0);
+    }
   }
 }
