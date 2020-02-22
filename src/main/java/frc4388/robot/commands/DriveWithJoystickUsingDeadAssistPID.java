@@ -7,6 +7,7 @@
 
 package frc4388.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc4388.robot.Constants.DriveConstants;
@@ -21,6 +22,7 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
   long m_deadTimeSteer, m_deadTimeMove;
   long m_deadTimeout = 100;
   IHandController m_controller;
+  boolean m_isInterrupted;
 
   /**
    * Creates a new DriveWithJoystickUsingDeadAssistPID to control the drivetrain with an Xbox controller.
@@ -42,6 +44,7 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
   @Override
   public void initialize() {
     m_currTime = System.currentTimeMillis();
+    resetGyroTarget();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -53,6 +56,11 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
     double moveOutput = 0;
     m_deltaTime = System.currentTimeMillis() - m_currTime;
     m_currTime = System.currentTimeMillis();
+
+    if (m_isInterrupted) {
+      resetGyroTarget();
+      m_isInterrupted = false;
+    }
 
     /* If move stick is being used */
     if (moveInput != 0) {
@@ -90,16 +98,17 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
     }
   }
 
-  private void runDriveWithInput(double move, double steer) {
+  private void runDriveWithInput(double move, double steerInput) {
     double cosMultiplier = .45;
     double steerOutput = 0;
     double deadzone = .2;
     /* Curves the steer output to be similarily gradual */
-    if (steer > 0){
-      steerOutput = -cosMultiplier*Math.cos(1.571*steer)+(cosMultiplier+deadzone);
-    } else {
-      steerOutput = cosMultiplier*Math.cos(1.571*steer)-(cosMultiplier+deadzone);
+    if (steerInput > 0){
+      steerOutput = -cosMultiplier*Math.cos(1.571*steerInput)+(cosMultiplier+deadzone);
+    } else if (steerInput < 0) {
+      steerOutput = cosMultiplier*Math.cos(1.571*steerInput)-(cosMultiplier+deadzone);
     }
+
     m_drive.driveWithInput(move, steerOutput);
     System.out.println("Driving With Input");
   }
@@ -110,8 +119,23 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
   }
 
   private void runStoppedTurn(double steer) {
-    updateGyroTarget(steer);
-    m_drive.runDrivePositionPID(m_stopPos, m_targetGyro);
+    double cosMultiplier = 0.70;
+    double steerOutput = 0;
+    double deadzone = .2;
+    /* Curves the steer output to be similarily gradual */
+    if (steer > 0) {
+      steerOutput = -cosMultiplier*Math.cos(1.571*steer)+(cosMultiplier+deadzone);
+    } else if (steer < 0) {
+      steerOutput = cosMultiplier*Math.cos(1.571*steer)-(cosMultiplier+deadzone);
+    }
+
+    updateGyroTarget(steerOutput);
+    double currentPos = m_drive.m_rightFrontMotorPos;
+    if (Math.abs(currentPos - m_stopPos) > 100) {
+      m_drive.runDrivePositionPID(m_stopPos, m_targetGyro);
+    } else {
+      m_drive.driveWithInputAux(0, m_targetGyro);
+    }
     System.out.println("Turning with Target: " + m_targetGyro);
   }
 
@@ -121,8 +145,8 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
   private void updateGyroTarget(double steerInput) {
     m_targetGyro -= 5 * steerInput * m_deltaTime;
     m_targetGyro = MathUtil.clamp(  m_targetGyro,
-                                    m_currentGyro-(DriveConstants.TICKS_PER_GYRO_REV/8),
-                                    m_currentGyro+(DriveConstants.TICKS_PER_GYRO_REV/8));
+                                    m_currentGyro-(DriveConstants.TICKS_PER_GYRO_REV/4),
+                                    m_currentGyro+(DriveConstants.TICKS_PER_GYRO_REV/4));
   }
 
   /**
@@ -137,6 +161,7 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_isInterrupted = interrupted;
   }
 
   // Returns true when the command should end.

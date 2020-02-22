@@ -469,9 +469,9 @@ public class Drive extends SubsystemBase {
    * @param targetAngle target angle in degrees
    */
   public void runTurningPID(double targetAngle) {
-    double targetGyro = (targetAngle / 360) * DriveConstants.TICKS_PER_GYRO_REV;
+    //double targetGyro = (targetAngle / 360) * DriveConstants.TICKS_PER_GYRO_REV;
 
-    runDriveVelocityPID(0, targetGyro);
+    runDriveVelocityPID(0, targetAngle);
   }
 
   /**

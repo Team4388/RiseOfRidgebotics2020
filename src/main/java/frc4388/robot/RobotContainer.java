@@ -50,6 +50,7 @@ import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Intake;
 import frc4388.robot.subsystems.LED;
 import frc4388.robot.commands.TrackTarget;
+import frc4388.robot.commands.TurnDegrees;
 import frc4388.robot.commands.Wait;
 import frc4388.robot.subsystems.Camera;
 import frc4388.robot.subsystems.Leveler;
@@ -144,7 +145,7 @@ public class RobotContainer {
       
         // resets the yaw of the pigeon
         new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
-            .whileHeld(new RunCommand(() -> m_robotDrive.tankDriveVelocity(9, 3), m_robotDrive));
+            .whileHeld(new RunCommand(() -> m_robotDrive.runMotionMagicPID(12, 0), m_robotDrive));
       
         // turn 45 degrees
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
@@ -161,7 +162,7 @@ public class RobotContainer {
         
         // interrupts any running command
         new JoystickButton(getDriverJoystick(), XboxController.LEFT_JOYSTICK_BUTTON)
-            .whenPressed(new Wait(3, m_robotDrive));
+            .whenPressed(new TurnDegrees(90, m_robotDrive));
 
         // safety for climber and leveler
         new JoystickButton(getOperatorJoystick(), XboxController.BACK_BUTTON)
