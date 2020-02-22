@@ -38,7 +38,7 @@ public class DriveWithJoystick extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double moveInput = m_controller.getLeftYAxis();
+    double moveInput = -m_controller.getLeftYAxis();
     double steerInput = m_controller.getRightXAxis();
     double moveOutput = 0;
     double steerOutput = 0;
