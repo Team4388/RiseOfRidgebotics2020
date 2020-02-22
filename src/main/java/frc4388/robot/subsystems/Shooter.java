@@ -132,17 +132,6 @@ public class Shooter extends SubsystemBase {
     else{ //PID Based on targetVel
       m_shooterFalcon.set(TalonFXControlMode.Velocity, targetVel); //Init PID
     }
-
-      //Tells wether the target velocity has been reached
-    double upperBound = targetVel + 300;
-    double lowerBound = targetVel - 300;
-    if (actualVel < upperBound && actualVel > lowerBound)
-    {
-      velReached = true;
-    }
-    else{
-      velReached = false;
-    }
   }
 
   public void resetGyroAngleAdj()

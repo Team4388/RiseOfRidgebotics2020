@@ -10,17 +10,13 @@ package frc4388.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.subsystems.Shooter;
 
-public class ShooterVelocityControlPID extends CommandBase {
+public class HoodAdjustPID extends CommandBase {
   Shooter m_shooter;
-  double m_targetVel;
-  double m_actualVel;
   /**
-   * Creates a new ShooterVelocityControlPID.
+   * Creates a new HoodAdjustPID.
    */
-  public ShooterVelocityControlPID(Shooter subsystem, double targetVel) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    m_shooter = subsystem;
-    m_targetVel = targetVel;
+  public HoodAdjustPID(Shooter shooterSub) {
+    m_shooter = shooterSub;
     addRequirements(m_shooter);
   }
 
@@ -32,8 +28,7 @@ public class ShooterVelocityControlPID extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooter.runDrumShooterVelocityPID(m_targetVel, m_shooter.m_shooterFalcon.getSelectedSensorVelocity());
-    m_actualVel = m_shooter.m_shooterFalcon.getSelectedSensorVelocity();
+    m_shooter.runAngleAdjustPID(m_shooter.addFireAngle());
   }
 
   // Called once the command ends or is interrupted.
@@ -44,14 +39,6 @@ public class ShooterVelocityControlPID extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //Tells wether the target velocity has been reached
-    double upperBound = m_targetVel + 300;
-    double lowerBound = m_targetVel - 300;
-    if (m_actualVel < upperBound && m_actualVel > lowerBound){
-      return true;
-    }
-    else{
-      return false;
-    }
+    return false;
   }
 }

@@ -68,7 +68,7 @@ public class TrackTarget extends CommandBase {
         //Deadzones
       else if(turnAmount > 0 && turnAmount < VisionConstants.MOTOR_DEAD_ZONE){turnAmount = VisionConstants.MOTOR_DEAD_ZONE;} 
       else if(turnAmount < 0 && turnAmount > -VisionConstants.MOTOR_DEAD_ZONE){turnAmount = -VisionConstants.MOTOR_DEAD_ZONE;}
-      m_shooterAim.runShooterWithInput(turnAmount/5);
+      m_shooterAim.runShooterWithInput(turnAmount/3);
 
         //Finding Distance
       distance = VisionConstants.TARGET_HEIGHT/Math.tan((VisionConstants.LIME_ANGLE + yAngle)*(Math.PI/180));
@@ -81,6 +81,7 @@ public class TrackTarget extends CommandBase {
       fireAngle = Math.atan(yVel/xVel);
       m_shooter.m_fireVel = fireVel;
       m_shooter.m_fireAngle = fireAngle;
+
     }
   }
 
@@ -95,6 +96,12 @@ public class TrackTarget extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    double upperLimit = xAngle + 0.05;
+    double lowerLimit = xAngle - 0.05;
+    if (xAngle < upperLimit && xAngle > lowerLimit)
+    {
+      return true;
+    }
     return false;
   }
 }
