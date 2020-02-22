@@ -23,7 +23,7 @@ public class ShootFullGroup extends SequentialCommandGroup {
    * @param m_storage The Storage subsytem
    */
   public ShootFullGroup(Shooter m_shooter, ShooterAim m_shooterAim, Storage m_storage) {
-    super(
+    addCommands(
       new ShootPrepGroup(m_shooter, m_shooterAim, m_storage), 
       new ShootFireGroup(m_shooter, m_shooterAim, m_storage)
     );

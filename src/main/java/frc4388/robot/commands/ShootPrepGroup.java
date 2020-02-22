@@ -24,11 +24,10 @@ public class ShootPrepGroup extends ParallelCommandGroup {
    * @param m_storage The Storage subsytem
    */
   public ShootPrepGroup(Shooter m_shooter, ShooterAim m_shooterAim, Storage m_storage) {
-    super(
+    addCommands(
       new TrackTarget(m_shooter, m_shooterAim),
-      new ShooterVelocityControlPID(m_shooter, m_shooter.addFireVel()),
-      new HoodAdjustPID(m_shooter),
-      new StoragePrepAim(m_storage)
-      );
+      new ShooterVelocityControlPID(m_shooter, m_shooter.addFireVel())
+      //new StoragePrepAim(m_storage)
+    );
   }
 }

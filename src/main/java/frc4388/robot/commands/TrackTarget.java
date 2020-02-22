@@ -40,7 +40,7 @@ public class TrackTarget extends CommandBase {
   public TrackTarget(Shooter shooterSubsystem, ShooterAim aimSubsystem) {
     m_shooterAim = aimSubsystem;
     m_shooter = shooterSubsystem;
-    addRequirements(m_shooter);
+    addRequirements(m_shooterAim);
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1);
   }
 
@@ -96,9 +96,7 @@ public class TrackTarget extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    double upperLimit = xAngle + 0.05;
-    double lowerLimit = xAngle - 0.05;
-    if (xAngle < upperLimit && xAngle > lowerLimit)
+    if (xAngle < 1 && xAngle > -1)
     {
       return true;
     }

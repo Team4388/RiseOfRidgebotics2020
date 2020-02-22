@@ -35,6 +35,7 @@ public class ShooterVelocityControlPID extends CommandBase {
   @Override
   public void execute() {
     m_shooter.runDrumShooterVelocityPID(m_targetVel, m_shooter.m_shooterFalcon.getSelectedSensorVelocity());
+    m_shooter.runAngleAdjustPID(m_shooter.addFireAngle());
     m_actualVel = m_shooter.m_shooterFalcon.getSelectedSensorVelocity();
   }
 

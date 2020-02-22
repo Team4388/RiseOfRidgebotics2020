@@ -127,10 +127,10 @@ public class Shooter extends SubsystemBase {
     runSpeed = runSpeed/targetVel; //Convert to percent
 
     if (actualVel < targetVel - 1000){ //PID Based on ramp up amount
-      m_shooterFalcon.set(TalonFXControlMode.PercentOutput, runSpeed);
+      m_shooterFalcon.set(TalonFXControlMode.PercentOutput, runSpeed/3);
     }
     else{ //PID Based on targetVel
-      m_shooterFalcon.set(TalonFXControlMode.Velocity, targetVel); //Init PID
+      m_shooterFalcon.set(TalonFXControlMode.Velocity, targetVel/3); //Init PID
     }
   }
 

@@ -34,6 +34,7 @@ import frc4388.robot.commands.DriveStraightToPositionMM;
 import frc4388.robot.commands.DriveStraightToPositionPID;
 import frc4388.robot.commands.DriveWithJoystick;
 import frc4388.robot.commands.DriveWithJoystickUsingDeadAssistPID;
+import frc4388.robot.commands.HoldTarget;
 import frc4388.robot.commands.DriveWithJoystickDriveStraight;
 import frc4388.robot.commands.RunClimberWithTriggers;
 import frc4388.robot.commands.RunExtenderOutIn;
@@ -127,7 +128,7 @@ public class RobotContainer {
         new JoystickButton(getDriverJoystick(), XboxController.LEFT_BUMPER_BUTTON)
             .whenPressed(new InstantCommand(() -> m_robotDrive.setShiftState(false), m_robotDrive));
 
-            
+
         /* Operator Buttons */
 
         // shoots until released
@@ -137,11 +138,6 @@ public class RobotContainer {
         // shoots one ball
         new JoystickButton(getOperatorJoystick(), XboxController.LEFT_BUMPER_BUTTON)
             .whenPressed(new ShootFullGroup(m_robotShooter, m_robotShooterAim, m_robotStorage), false);
-            
-        // aims the turret
-        new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
-            .whileHeld(new TrackTarget(m_robotShooter, m_robotShooterAim))
-            .whenPressed(new StoragePrepAim(m_robotStorage));
         
         // extends or retracts the extender
         new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
@@ -152,9 +148,10 @@ public class RobotContainer {
             .whenPressed(new InstantCommand(() -> m_robotClimber.setSafetyPressed(), m_robotClimber))
             .whenReleased(new InstantCommand(() -> m_robotClimber.setSafetyNotPressed(), m_robotClimber));
 
-        /* Storage Neo PID Test */
+        // starts tracking target
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
-            .whileHeld(new TrackTarget(m_robotShooter, m_robotShooterAim));
+            .whileHeld(new HoldTarget(m_robotShooter, m_robotShooterAim));
+            //.whenPressed(new StoragePrepAim(m_robotStorage));
 
         //Prepares storage for intaking
         new JoystickButton(getOperatorJoystick(), XboxController.LEFT_TRIGGER_AXIS)
