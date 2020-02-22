@@ -52,6 +52,7 @@ import frc4388.robot.subsystems.Intake;
 import frc4388.robot.subsystems.LED;
 import frc4388.robot.commands.TrackTarget;
 import frc4388.robot.commands.StorageOutake;
+import frc4388.robot.commands.StoragePrepAim;
 import frc4388.robot.subsystems.Camera;
 import frc4388.robot.subsystems.Leveler;
 import frc4388.robot.subsystems.Storage;
@@ -139,8 +140,8 @@ public class RobotContainer {
             
         // aims the turret
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
-            .whileHeld(new TrackTarget(m_robotShooter, m_robotShooterAim));
-            //.whenPressed(new RunCommand(() -> m_robotStorage.storeAim()));
+            .whileHeld(new TrackTarget(m_robotShooter, m_robotShooterAim))
+            .whenPressed(new StoragePrepAim(m_robotStorage));
         
         // extends or retracts the extender
         new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
