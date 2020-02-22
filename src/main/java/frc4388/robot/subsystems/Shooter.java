@@ -29,22 +29,11 @@ import frc4388.utility.controller.IHandController;
 public class Shooter extends SubsystemBase {
 
   public WPI_TalonFX m_shooterFalcon = new WPI_TalonFX(ShooterConstants.SHOOTER_FALCON_ID);
-  public CANSparkMax m_angleAdjustMotor = new CANSparkMax(ShooterConstants.SHOOTER_ANGLE_ADJUST_ID, MotorType.kBrushless);
-  public CANSparkMax m_shooterRotateMotor = new CANSparkMax(ShooterConstants.SHOOTER_ROTATE_ID, MotorType.kBrushless);
 
 
-  public static Gains m_shooterTurretGains = ShooterConstants.SHOOTER_TURRET_GAINS;
   public static Gains m_drumShooterGains = ShooterConstants.DRUM_SHOOTER_GAINS;
   public static Shooter m_shooter;
   public static IHandController m_controller;
-
-
-  // Configure PID Controllers
-  CANPIDController m_angleAdjustPIDController = m_angleAdjustMotor.getPIDController();
-  CANPIDController m_shooterRotatePIDController = m_shooterRotateMotor.getPIDController();
-
-  CANEncoder m_angleEncoder = m_angleAdjustMotor.getEncoder();
-  CANEncoder m_shooterRotateEncoder = m_shooterRotateMotor.getEncoder();
 
   double velP;
   double input;
@@ -57,11 +46,8 @@ public class Shooter extends SubsystemBase {
    */
   public Shooter() {
     //Testing purposes reseting gyros
-    resetGyroAngleAdj();
-    resetGyroShooterRotate();
 
     m_shooterFalcon.configFactoryDefault();
-    m_shooterRotateMotor.setIdleMode(IdleMode.kBrake);
     m_shooterFalcon.setNeutralMode(NeutralMode.Coast);
     m_shooterFalcon.setInverted(false);
     
@@ -102,11 +88,12 @@ public class Shooter extends SubsystemBase {
    */
   public void setShooterGains() {
     m_shooterFalcon.selectProfileSlot(ShooterConstants.SHOOTER_SLOT_IDX, ShooterConstants.SHOOTER_PID_LOOP_IDX);
-    m_shooterFalcon.config_kF(ShooterConstants.SHOOTER_SLOT_IDX, m_shooterTurretGains.m_kF, ShooterConstants.SHOOTER_TIMEOUT_MS);
-    m_shooterFalcon.config_kP(ShooterConstants.SHOOTER_SLOT_IDX, m_shooterTurretGains.m_kP, ShooterConstants.SHOOTER_TIMEOUT_MS);
-    m_shooterFalcon.config_kI(ShooterConstants.SHOOTER_SLOT_IDX, m_shooterTurretGains.m_kI, ShooterConstants.SHOOTER_TIMEOUT_MS);
-    m_shooterFalcon.config_kD(ShooterConstants.SHOOTER_SLOT_IDX, m_shooterTurretGains.m_kD, ShooterConstants.SHOOTER_TIMEOUT_MS);
+    m_shooterFalcon.config_kF(ShooterConstants.SHOOTER_SLOT_IDX, m_drumShooterGains.m_kF, ShooterConstants.SHOOTER_TIMEOUT_MS);
+    m_shooterFalcon.config_kP(ShooterConstants.SHOOTER_SLOT_IDX, m_drumShooterGains.m_kP, ShooterConstants.SHOOTER_TIMEOUT_MS);
+    m_shooterFalcon.config_kI(ShooterConstants.SHOOTER_SLOT_IDX, m_drumShooterGains.m_kI, ShooterConstants.SHOOTER_TIMEOUT_MS);
+    m_shooterFalcon.config_kD(ShooterConstants.SHOOTER_SLOT_IDX, m_drumShooterGains.m_kD, ShooterConstants.SHOOTER_TIMEOUT_MS);
   }
+
   /**
    * Runs drum shooter velocity PID.
    * @param falcon Motor to use
@@ -135,56 +122,5 @@ public class Shooter extends SubsystemBase {
     else{
       velReached = false;
     }
-  }
-
-
-  public void runShooterWithInput(double input) {
-    m_shooterRotateMotor.set(input);
-  }
-
-  /* Angle Adjustment PID Control */
-  public void runAngleAdjustPID(double targetAngle)
-  {
-    // Set PID Coefficients
-    m_angleAdjustPIDController.setP(m_shooterTurretGains.m_kP);
-    m_angleAdjustPIDController.setI(m_shooterTurretGains.m_kI);
-    m_angleAdjustPIDController.setD(m_shooterTurretGains.m_kD);
-    m_angleAdjustPIDController.setIZone(m_shooterTurretGains.m_kIzone);
-    m_angleAdjustPIDController.setFF(m_shooterTurretGains.m_kF);
-    m_angleAdjustPIDController.setOutputRange(ShooterConstants.SHOOTER_TURRET_MIN, m_shooterTurretGains.m_kPeakOutput); 
-
-    // Convert input angle in degrees to rotations of the motor
-    targetAngle = targetAngle/ShooterConstants.DEGREES_PER_ROT;
-
-    m_angleAdjustPIDController.setReference(targetAngle, ControlType.kPosition);
-  }
-
-  /* Rotate Shooter PID Control */
-  public void runshooterRotatePID(double targetAngle)
-  {
-    // Set PID Coefficients
-    m_shooterRotatePIDController.setP(m_shooterTurretGains.m_kP);
-    m_shooterRotatePIDController.setI(m_shooterTurretGains.m_kI);
-    m_shooterRotatePIDController.setD(m_shooterTurretGains.m_kD);
-    m_shooterRotatePIDController.setFF(m_shooterTurretGains.m_kF);
-    m_shooterRotatePIDController.setIZone(m_shooterTurretGains.m_kIzone);
-    m_shooterRotatePIDController.setOutputRange(ShooterConstants.SHOOTER_TURRET_MIN, m_shooterTurretGains.m_kPeakOutput); 
-
-    // Convert input angle in degrees to rotations of the motor
-    targetAngle = targetAngle/ShooterConstants.DEGREES_PER_ROT;
-
-    m_shooterRotatePIDController.setReference(targetAngle, ControlType.kPosition);
-  }
-
-  /* For Testing Purposes, reseting gyro for angle adjuster */
-  public void resetGyroAngleAdj()
-  {
-    m_angleEncoder.setPosition(0);
-  }
-
-  /* For Testing Purposes, reseting gyro for shooter rotation */
-  public void resetGyroShooterRotate()
-  {
-    m_shooterRotateEncoder.setPosition(0);
   }
 }

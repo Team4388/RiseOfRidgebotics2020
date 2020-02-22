@@ -10,12 +10,12 @@ package frc4388.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.subsystems.Storage;
 
-public class storagePrepAim extends CommandBase {
+public class StoragePrepAim extends CommandBase {
   Storage m_storage;
   /**
    * Creates a new storagePrepAim.
    */
-  public storagePrepAim(Storage storeSub) {
+  public StoragePrepAim(Storage storeSub) {
     m_storage = storeSub;
     addRequirements(m_storage);
   }

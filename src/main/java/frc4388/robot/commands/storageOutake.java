@@ -10,12 +10,12 @@ package frc4388.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.subsystems.Storage;
 
-public class storageOutake extends CommandBase {
+public class StorageOutake extends CommandBase {
   Storage m_storage;
   /**
    * Creates a new storageOutake.
    */
-  public storageOutake(Storage storeSub) {
+  public StorageOutake(Storage storeSub) {
     m_storage = storeSub;
     addRequirements(m_storage);
   }

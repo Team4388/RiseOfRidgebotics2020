@@ -11,13 +11,13 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.subsystems.Intake;
 import frc4388.robot.subsystems.Storage;
 
-public class storagePrepIntake extends CommandBase {
+public class StoragePrepIntake extends CommandBase {
   public Intake m_intake;
   public Storage m_storage;
   /**
    * Creates a new storagePrepIntake.
    */
-  public storagePrepIntake(Intake inSub, Storage storeSub) {
+  public StoragePrepIntake(Intake inSub, Storage storeSub) {
     m_intake = inSub;
     m_storage = storeSub;
     addRequirements(m_intake);

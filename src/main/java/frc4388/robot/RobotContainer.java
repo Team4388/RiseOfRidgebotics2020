@@ -44,13 +44,14 @@ import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Intake;
 import frc4388.robot.subsystems.LED;
 import frc4388.robot.subsystems.Shooter;
+import frc4388.robot.subsystems.ShooterAim;
 import frc4388.robot.subsystems.Climber;
 import frc4388.robot.commands.RunLevelerWithJoystick;
 import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Intake;
 import frc4388.robot.subsystems.LED;
 import frc4388.robot.commands.TrackTarget;
-import frc4388.robot.commands.storageOutake;
+import frc4388.robot.commands.StorageOutake;
 import frc4388.robot.subsystems.Camera;
 import frc4388.robot.subsystems.Leveler;
 import frc4388.robot.subsystems.Storage;
@@ -71,6 +72,7 @@ public class RobotContainer {
     private final LED m_robotLED = new LED();
     private final Intake m_robotIntake = new Intake();
     private final Shooter m_robotShooter = new Shooter();
+    private final ShooterAim m_robotShooterAim = new ShooterAim();
     private final Climber m_robotClimber = new Climber();
     private final Leveler m_robotLeveler = new Leveler();
     private final Storage m_robotStorage = new Storage();
@@ -99,7 +101,7 @@ public class RobotContainer {
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
         // runs the drum shooter in idle mode
-        m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runShooterWithInput(m_operatorXbox.getLeftXAxis()), m_robotShooter));
+        m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooterAim.runShooterWithInput(m_operatorXbox.getLeftXAxis()), m_robotShooter));
         // drives the leveler with an axis input from the driver controller
         m_robotLeveler.setDefaultCommand(new RunLevelerWithJoystick(m_robotLeveler, getDriverController()));
 
@@ -137,7 +139,7 @@ public class RobotContainer {
             
         // aims the turret
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
-            .whileHeld(new TrackTarget(m_robotShooter));
+            .whileHeld(new TrackTarget(m_robotShooter, m_robotShooterAim));
             //.whenPressed(new RunCommand(() -> m_robotStorage.storeAim()));
         
         // extends or retracts the extender
@@ -151,7 +153,7 @@ public class RobotContainer {
 
         /* Storage Neo PID Test */
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
-            .whileHeld(new TrackTarget(m_robotShooter));
+            .whileHeld(new TrackTarget(m_robotShooter, m_robotShooterAim));
 
         //Prepares storage for intaking
         new JoystickButton(getOperatorJoystick(), XboxController.LEFT_TRIGGER_AXIS)
@@ -159,7 +161,7 @@ public class RobotContainer {
             
         //Runs storage to outtake
         new JoystickButton(getOperatorJoystick(), XboxController.RIGHT_TRIGGER_AXIS)
-            .whileHeld(new storageOutake(m_robotStorage));
+            .whileHeld(new StorageOutake(m_robotStorage));
     }
        
     /**
