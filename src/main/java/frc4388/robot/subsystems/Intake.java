@@ -63,7 +63,7 @@ public class Intake extends SubsystemBase {
    * Runs extender motor
    * @param input the percent output to run motor at
    */
-  public void runExtender() {
+  public void runExtender(double input) {
     if (m_extenderForwardLimit.get()) {
       isExtended = true;
     }
@@ -72,10 +72,10 @@ public class Intake extends SubsystemBase {
     }
     
     if (isExtended == false) {
-      m_extenderMotor.set(0.5);
+      m_extenderMotor.set(input);
     }
     if (isExtended == true) {
-      m_extenderMotor.set(-0.5);
+      m_extenderMotor.set(-input);
     }
   }
 }
