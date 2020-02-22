@@ -99,7 +99,7 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
   }
 
   private void runDriveWithInput(double move, double steerInput) {
-    double cosMultiplier = .45;
+    double cosMultiplier = .55;
     double steerOutput = 0;
     double deadzone = .2;
     /* Curves the steer output to be similarily gradual */
@@ -119,7 +119,7 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
   }
 
   private void runStoppedTurn(double steer) {
-    double cosMultiplier = 0.70;
+    double cosMultiplier = 0.55;
     double steerOutput = 0;
     double deadzone = .2;
     /* Curves the steer output to be similarily gradual */
@@ -145,8 +145,8 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
   private void updateGyroTarget(double steerInput) {
     m_targetGyro -= 5 * steerInput * m_deltaTime;
     m_targetGyro = MathUtil.clamp(  m_targetGyro,
-                                    m_currentGyro-(DriveConstants.TICKS_PER_GYRO_REV/4),
-                                    m_currentGyro+(DriveConstants.TICKS_PER_GYRO_REV/4));
+                                    m_currentGyro-(DriveConstants.TICKS_PER_GYRO_REV/2),
+                                    m_currentGyro+(DriveConstants.TICKS_PER_GYRO_REV/2));
   }
 
   /**

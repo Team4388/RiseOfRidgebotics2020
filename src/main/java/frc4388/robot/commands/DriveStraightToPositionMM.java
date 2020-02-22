@@ -18,6 +18,7 @@ public class DriveStraightToPositionMM extends CommandBase {
   double m_targetPosOut;
   double m_targetGyro;
   boolean isGoneFast;
+  int i;
   
   /**
    * Creates a new DriveToDistancePID.
@@ -39,6 +40,7 @@ public class DriveStraightToPositionMM extends CommandBase {
     m_targetGyro = m_drive.m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_TURN);
     m_targetPosOut = m_targetPosIn + m_drive.m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_PRIMARY);
     isGoneFast = false;
+    i = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -48,6 +50,8 @@ public class DriveStraightToPositionMM extends CommandBase {
     //System.err.println("Sensor Error \n" + m_drive.m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_TURN));
     //System.err.println("Sensor Target \n" + m_drive.m_rightFrontMotor.getClosedLoopTarget(DriveConstants.PID_TURN));
     m_drive.runMotionMagicPID(m_targetPosOut, m_targetGyro);
+    SmartDashboard.putBoolean("MM Run", true);
+    i++;
   }
 
   // Called once the command ends or is interrupted.
@@ -59,9 +63,10 @@ public class DriveStraightToPositionMM extends CommandBase {
   @Override
   public boolean isFinished() {
     if (Math.abs((int)m_drive.m_rightFrontMotor.getSelectedSensorVelocity(DriveConstants.PID_PRIMARY)) < 5 && isGoneFast){
+      SmartDashboard.putBoolean("MM Run", false);
       return true;
     } else {
-      if (m_drive.m_rightFrontMotor.getSelectedSensorVelocity(DriveConstants.PID_PRIMARY) > 100) {
+      if ((m_drive.m_rightFrontMotor.getSelectedSensorVelocity(DriveConstants.PID_PRIMARY) > 100)) {
         isGoneFast = true;
       }
       return false;
