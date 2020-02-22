@@ -123,13 +123,8 @@ public final class Constants {
         public static final int PID_PRIMARY = 0;
 
         /* PID Gains */
-        public static final double storP = 0.1;
-        public static final double storI = 1e-4;
-        public static final double storD = 1.0;
-        public static final double storIz = 0.0;
-        public static final double storF = 0.0;
-        public static final double storkmaxOutput = 1.0;
         public static final double storkminOutput = -1.0;
+        public static final Gains STORAGE_GAINS = new Gains(0.1, 0, 1, 0, 0, 1);
     }
   
     public static final class LEDConstants {
@@ -146,6 +141,7 @@ public final class Constants {
         public static final double MOTOR_DEAD_ZONE = 0.3;
         public static final double DISTANCE_ERROR_EQUATION_M = 1.1279;
         public static final double DISTANCE_ERROR_EQUATION_B = -15.0684;
+        public static final double GRAV = 385.83;
         }
 
     public static final class OIConstants {
