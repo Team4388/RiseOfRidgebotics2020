@@ -242,10 +242,8 @@ public class RobotContainer {
         else if (Constants.SELECTED_AUTO == 1) {
             return new SequentialCommandGroup(  new Wait(5, m_robotDrive),
                                                 new TurnDegrees(45, m_robotDrive),
-                                                new ParallelCommandGroup(
-                                                    new InstantCommand(() -> m_robotDrive.setShiftState(false), m_robotDrive),
-                                                    new TurnDegrees(315, m_robotDrive)
-                )
+                                                new InstantCommand(() -> m_robotDrive.setShiftState(false), m_robotDrive),
+                                                new TurnDegrees(315, m_robotDrive)
             );
         }
 
