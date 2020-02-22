@@ -21,7 +21,8 @@ public class StorageIntakeGroup extends SequentialCommandGroup {
   public StorageIntakeGroup(Intake m_intake, Storage m_storage) {
     addCommands(
       new StoragePrepIntake(m_intake, m_storage), 
-      new storageIntake(m_intake, m_storage), 
-      new StorageIntakeFinal(m_storage));
+      new StorageIntake(m_intake, m_storage), 
+      new StorageIntakeFinal(m_storage)
+      );
   }
 }

@@ -8,6 +8,7 @@
 package frc4388.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc4388.robot.Constants.StorageConstants;
 import frc4388.robot.subsystems.Storage;
 
 public class StorageIntakeFinal extends CommandBase {
@@ -29,7 +30,7 @@ public class StorageIntakeFinal extends CommandBase {
   @Override
   public void execute() {
     if (m_storage.getBeam(1)){
-      m_storage.setStoragePID(m_storage.getEncoderPos() + 5);
+      m_storage.setStoragePID(m_storage.getEncoderPos() + StorageConstants.STORAGE_FULL_BALL);
     }
   }
 

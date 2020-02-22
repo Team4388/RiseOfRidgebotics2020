@@ -77,6 +77,7 @@ public final class Constants {
     public static final class IntakeConstants {
         public static final int INTAKE_SPARK_ID = -9;
         public static final int EXTENDER_SPARK_ID = -10;
+        public static final double EXTENDER_SPEED = 0.3;
     }
   
     public static final class ShooterConstants {
@@ -107,7 +108,10 @@ public final class Constants {
   
     public static final class StorageConstants {
         public static final int STORAGE_CAN_ID = -1;
-
+        public static final double STORAGE_PARTIAL_BALL = 2;
+        public static final double STORAGE_FULL_BALL = 7;
+        public static final double STORAGE_SPEED = 0.5;
+       
         /* Ball Indexes */
         public static final int BEAM_SENSOR_DIO_0 = 0;
         public static final int BEAM_SENSOR_DIO_1 = 1;
@@ -123,7 +127,6 @@ public final class Constants {
         public static final int PID_PRIMARY = 0;
 
         /* PID Gains */
-
         public static final double STORAGE_MIN_OUTPUT = -1.0;
         public static final Gains STORAGE_GAINS = new Gains(0.2, 0.0, 0.0, 0.0, 0, 1.0);
     }

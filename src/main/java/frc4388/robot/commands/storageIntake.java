@@ -8,16 +8,19 @@
 package frc4388.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc4388.robot.Constants.IntakeConstants;
+import frc4388.robot.Constants.StorageConstants;
 import frc4388.robot.subsystems.Intake;
 import frc4388.robot.subsystems.Storage;
 
-public class storageIntake extends CommandBase {
+public class StorageIntake extends CommandBase {
   public Intake m_intake;
   public Storage m_storage;
+  public boolean intook;
   /**
    * Creates a new storageIntake.
    */
-  public storageIntake(Intake inSub, Storage storeSub) {
+  public StorageIntake(Intake inSub, Storage storeSub) {
     m_intake = inSub;
     m_storage = storeSub;
     addRequirements(m_intake);
@@ -27,6 +30,7 @@ public class storageIntake extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    intook = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -34,11 +38,12 @@ public class storageIntake extends CommandBase {
   public void execute() {
 
     if (m_storage.getBeam(0)){
-      m_storage.setStoragePID(m_storage.getEncoderPos() + 2);
-      m_intake.runExtender(-0.3); 
+      m_storage.setStoragePID(m_storage.getEncoderPos() + StorageConstants.STORAGE_PARTIAL_BALL);
+      m_intake.runExtender(-IntakeConstants.EXTENDER_SPEED); 
+      intook = true;
     }
     else{
-      m_intake.runExtender(0.3); 
+      m_intake.runExtender(IntakeConstants.EXTENDER_SPEED); 
     }
   }
 
@@ -50,7 +55,7 @@ public class storageIntake extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (m_storage.getBeam(0)){
+    if (!m_storage.getBeam(0) && m_storage.getBeam(1) && intook){
       return true;
     }
     return false;

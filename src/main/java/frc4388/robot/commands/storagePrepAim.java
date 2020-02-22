@@ -8,6 +8,7 @@
 package frc4388.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc4388.robot.Constants.StorageConstants;
 import frc4388.robot.subsystems.Storage;
 
 public class StoragePrepAim extends CommandBase {
@@ -29,7 +30,7 @@ public class StoragePrepAim extends CommandBase {
   @Override
   public void execute() {
     if (m_storage.getBeam(2) == false){
-      m_storage.runStorage(0.5);
+      m_storage.runStorage(StorageConstants.STORAGE_SPEED);
     }
     else{
       m_storage.runStorage(0);
