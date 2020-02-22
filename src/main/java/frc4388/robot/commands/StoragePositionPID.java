@@ -8,8 +8,9 @@
 package frc4388.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc4388.robot.Constants.StorageConstants;
-import frc4388.robot.Subsystems.Storage;
+import frc4388.robot.subsystems.Storage;
 
 
 public class StoragePositionPID extends CommandBase {
@@ -30,7 +31,7 @@ public class StoragePositionPID extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    new runStoragePositionPID(m_storage.getEncoderPos() + StorageConstants.STORAGE_FULL_BALL)
+    new RunCommand(() -> m_storage.runStoragePositionPID(m_storage.getEncoderPos() + StorageConstants.STORAGE_FULL_BALL));
   }
 
   // Called once the command ends or is interrupted.
