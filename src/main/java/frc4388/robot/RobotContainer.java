@@ -13,7 +13,6 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.command.WaitCommand;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -24,8 +23,10 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc4388.robot.Constants.*;
@@ -235,6 +236,19 @@ public class RobotContainer {
 
         // Run path following command, then stop at the end.
         return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));*/
+        if (Constants.SELECTED_AUTO == 0) {
+            return new InstantCommand();
+        }
+        else if (Constants.SELECTED_AUTO == 1) {
+            return new SequentialCommandGroup(  new Wait(5, m_robotDrive),
+                                                new TurnDegrees(45, m_robotDrive),
+                                                new ParallelCommandGroup(
+                                                    new InstantCommand(() -> m_robotDrive.setShiftState(false), m_robotDrive),
+                                                    new TurnDegrees(315, m_robotDrive)
+                )
+            );
+        }
+
         return new InstantCommand();
     }
 
