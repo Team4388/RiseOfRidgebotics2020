@@ -39,6 +39,7 @@ import frc4388.robot.commands.RunClimberWithTriggers;
 import frc4388.robot.commands.RunExtenderOutIn;
 import frc4388.robot.commands.RunIntakeWithTriggers;
 import frc4388.robot.commands.ShooterVelocityControlPID;
+import frc4388.robot.commands.StorageIntakeGroup;
 import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Intake;
 import frc4388.robot.subsystems.LED;
@@ -49,6 +50,7 @@ import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Intake;
 import frc4388.robot.subsystems.LED;
 import frc4388.robot.commands.TrackTarget;
+import frc4388.robot.commands.storageOutake;
 import frc4388.robot.subsystems.Camera;
 import frc4388.robot.subsystems.Leveler;
 import frc4388.robot.subsystems.Storage;
@@ -171,11 +173,11 @@ public class RobotContainer {
 
         //Prepares storage for intaking
         new JoystickButton(getOperatorJoystick(), XboxController.LEFT_TRIGGER_AXIS)
-            .whileHeld(new RunCommand(() -> m_robotStorage.storageIntake(m_robotIntake)));
+            .whileHeld(new StorageIntakeGroup(m_robotIntake, m_robotStorage));
             
         //Runs storage to outtake
         new JoystickButton(getOperatorJoystick(), XboxController.RIGHT_TRIGGER_AXIS)
-            .whileHeld(new RunCommand(() -> m_robotStorage.storageOuttake()));
+            .whileHeld(new storageOutake(m_robotStorage));
     }
        
     /**

@@ -19,6 +19,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Gains;
 import frc4388.robot.Constants.StorageConstants;
@@ -35,12 +36,14 @@ public class Storage extends SubsystemBase {
 
   Intake m_intake;
 
+  public boolean botReached;
+
   /**
    * Creates a new Storage.
    */
   public Storage() {
     resetEncoder();
-
+    boolean botReached = false;
     m_beamSensors[0] = new DigitalInput(StorageConstants.BEAM_SENSOR_DIO_0);
     m_beamSensors[1] = new DigitalInput(StorageConstants.BEAM_SENSOR_DIO_1);
     m_beamSensors[2] = new DigitalInput(StorageConstants.BEAM_SENSOR_DIO_2);
@@ -65,14 +68,12 @@ public class Storage extends SubsystemBase {
     final boolean beam_on = m_beamSensors[0].get();
   }
 
-  public void resetEncoder()
-  {
+  public void resetEncoder(){
     m_encoder.setPosition(0);
   }
 
   /* Storage PID Control */
-  public void runStoragePositionPID(double targetPos)
-  {
+  public void runStoragePositionPID(double targetPos){
     // Set PID Coefficients
     m_storagePIDController.setP(storageGains.m_kP);
     m_storagePIDController.setI(storageGains.m_kI);
@@ -84,41 +85,15 @@ public class Storage extends SubsystemBase {
     m_storagePIDController.setReference(targetPos, ControlType.kPosition);
   }
 
-  public void getEncoderPos()
-  {
-    m_encoder.getPosition();
+  public double getEncoderPos(){
+    return m_encoder.getPosition();
   }
 
-  /**
-   * Prepares storage for shooting
-   */
-  public void storageAim() {  
-    if (m_beamSensors[2].get() == false){
-      m_storageMotor.set(0.5);
-    }
-    else{
-      m_storageMotor.set(0);
-    }
+  public boolean getBeam(int id){
+    return m_beamSensors[id].get();
   }
-public void storageIntake(Intake intake) {
-  m_intake = intake;
-  if (m_beamSensors[1].get() == false){
-    m_storageMotor.set(-0.5);
-  }
-  else{
-    m_storageMotor.set(0);
-  }
-  if (m_beamSensors[0].get()){
-    m_intake.runExtender(-0.3); 
-    m_storagePIDController.setReference(10, ControlType.kPosition);
-  }
-}
-public void storageOuttake() {
-  m_storageMotor.set(1);
-  
-  /*
-  *If shooting move storage motor until top sensor is tripped
-  *If intaking move storage motor until bottom sensor is tripped
-  */
+
+  public void setStoragePID(double position){
+    m_storagePIDController.setReference(position , ControlType.kPosition);
   }
 }
