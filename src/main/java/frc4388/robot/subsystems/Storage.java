@@ -64,7 +64,6 @@ public class Storage extends SubsystemBase {
   
   public void runStorage(final double input) {
     m_storageMotor.set(input);
-    final boolean beam_on = m_beamSensors[0].get();
   }
 
   public void resetEncoder(){
@@ -74,12 +73,12 @@ public class Storage extends SubsystemBase {
   /* Storage PID Control */
   public void runStoragePositionPID(double targetPos){
     // Set PID Coefficients
-    m_storagePIDController.setP(m_storageGains.m_kP);
-    m_storagePIDController.setI(m_storageGains.m_kI);
-    m_storagePIDController.setD(m_storageGains.m_kD);
-    m_storagePIDController.setIZone(m_storageGains.m_kIzone);
-    m_storagePIDController.setFF(m_storageGains.m_kF);
-    m_storagePIDController.setOutputRange(StorageConstants.storkminOutput, m_storageGains.m_kmaxOutput);
+    m_storagePIDController.setP(storageGains.m_kP);
+    m_storagePIDController.setI(storageGains.m_kI);
+    m_storagePIDController.setD(storageGains.m_kD);
+    m_storagePIDController.setIZone(storageGains.m_kIzone);
+    m_storagePIDController.setFF(storageGains.m_kF);
+    m_storagePIDController.setOutputRange(StorageConstants.STORAGE_MIN_OUTPUT, storageGains.m_kmaxOutput);
 
     m_storagePIDController.setReference(targetPos, ControlType.kPosition);
   }
