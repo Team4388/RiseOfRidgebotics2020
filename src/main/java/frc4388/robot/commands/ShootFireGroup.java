@@ -25,9 +25,9 @@ public class ShootFireGroup extends ParallelRaceGroup {
    */
   public ShootFireGroup(Shooter m_shooter, ShooterAim m_shooterAim, Storage m_storage) {
     super(
-      new ShooterVelocityControlPID(m_shooter, m_shooter.addFireVel()),
-      new HoodAdjustPID(m_shooter),
-      new TrackTarget(m_shooter, m_shooterAim),
+      new RunCommand(() -> m_shooter.runDrumShooterVelocityPID(m_shooter.addFireVel(), m_shooter.m_shooterFalcon.getSelectedSensorVelocity())),
+      new RunCommand(() -> m_shooter.runAngleAdjustPID(m_shooter.addFireAngle())),
+      new HoldTarget(m_shooter, m_shooterAim),
       new StorageRun(m_storage)
       );
   }

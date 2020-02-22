@@ -47,6 +47,7 @@ import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.ShooterAim;
 import frc4388.robot.subsystems.Climber;
 import frc4388.robot.commands.RunLevelerWithJoystick;
+import frc4388.robot.commands.ShootFullGroup;
 import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Intake;
 import frc4388.robot.subsystems.LED;
@@ -79,15 +80,15 @@ public class RobotContainer {
     private final Storage m_robotStorage = new Storage();
 
     /* Cameras */
-    private final Camera m_robotCameraFront = new Camera("front",0,160,120,40);
-    private final Camera m_robotCameraBack = new Camera("back",1,160,120,40);
+    private final Camera m_robotCameraFront = new Camera("front", 0, 160, 120, 40);
+    private final Camera m_robotCameraBack = new Camera("back", 1, 160, 120, 40);
 
     /* Controllers */
     private final XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
     private final XboxController m_operatorXbox = new XboxController(OIConstants.XBOX_OPERATOR_ID);
 
     /**
-     * The container for the robot.  Contains subsystems, OI devices, and commands.
+     * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
         configureButtonBindings();
@@ -102,22 +103,22 @@ public class RobotContainer {
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
         // runs the drum shooter in idle mode
-        m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooterAim.runShooterWithInput(m_operatorXbox.getLeftXAxis()), m_robotShooter));
+        m_robotShooter.setDefaultCommand(new RunCommand(
+                () -> m_robotShooterAim.runShooterWithInput(m_operatorXbox.getLeftXAxis()), m_robotShooter));
         // drives the leveler with an axis input from the driver controller
         m_robotLeveler.setDefaultCommand(new RunLevelerWithJoystick(m_robotLeveler, getDriverController()));
 
     }
-      
 
     /**
-    * Use this method to define your button->command mappings.  Buttons can be created by
-    * instantiating a {@link GenericHID} or one of its subclasses ({@link
-    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a
-    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-    */
+     * Use this method to define your button->command mappings. Buttons can be
+     * created by instantiating a {@link GenericHID} or one of its subclasses
+     * ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
+     * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+     */
     private void configureButtonBindings() {
         /* Driver Buttons */
-        
+
         // sets solenoids into high gear
         new JoystickButton(getDriverJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
             .whenPressed(new InstantCommand(() -> m_robotDrive.setShiftState(true), m_robotDrive));
@@ -126,17 +127,16 @@ public class RobotContainer {
         new JoystickButton(getDriverJoystick(), XboxController.LEFT_BUMPER_BUTTON)
             .whenPressed(new InstantCommand(() -> m_robotDrive.setShiftState(false), m_robotDrive));
 
-
+            
         /* Operator Buttons */
-      
-            //TODO: Shooter Buttons
+
         // shoots until released
-        //new JoystickButton(getOperatorJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
-        //    .whileHeld(new ShootShooter(m_robotShooter, m_robotStorage, 5));
+        new JoystickButton(getOperatorJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
+            .whileHeld(new ShootFullGroup(m_robotShooter, m_robotShooterAim, m_robotStorage), false);
 
         // shoots one ball
-        //new JoystickButton(getOperatorJoystick(), XboxController.LEFT_BUMPER_BUTTON)
-        //    .whileHeld(new ShootShooter(m_robotShooter, m_robotStorage, 1));
+        new JoystickButton(getOperatorJoystick(), XboxController.LEFT_BUMPER_BUTTON)
+            .whenPressed(new ShootFullGroup(m_robotShooter, m_robotShooterAim, m_robotStorage), false);
             
         // aims the turret
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)

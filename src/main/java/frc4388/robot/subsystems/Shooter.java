@@ -134,8 +134,7 @@ public class Shooter extends SubsystemBase {
     }
   }
 
-  public void resetGyroAngleAdj()
-    {
+  public void resetGyroAngleAdj(){
       m_angleEncoder.setPosition(0);
-    }
+  }
 }
