@@ -112,42 +112,7 @@ public class RobotContainer {
     */
     private void configureButtonBindings() {
         /* Driver Buttons */
-        new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-            .whenPressed(new RunCommand(() -> m_robotDrive.runTurningPID(0), m_robotDrive));
-
-        /* Operator Buttons */
-        // activates "Lit Mode"
-        //new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
-        //    .whenPressed(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW))
-        //    .whenReleased(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN));
-      
-        new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
-            .whileHeld(new ShooterVelocityControlPID(m_robotShooter, 4000));
-            
-        new JoystickButton(getOperatorJoystick(), XboxController.Y_BUTTON)
-            .whileHeld(new TrackTarget(m_robotShooter));
         
-        new JoystickButton(getOperatorJoystick(), XboxController.LEFT_BUMPER_BUTTON)
-            .whenPressed(new RunExtenderOutIn(m_robotIntake));
-      
-        /* PID Test Command */
-        // runs velocity PID while driving straight
-        new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
-            .whenPressed(new DriveStraightAtVelocityPID(m_robotDrive, 500))
-            .whenReleased(new InstantCommand(() -> System.out.print("Gamer"), m_robotDrive));
-        
-        //new JoystickButton(getDriverJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
-        //    .whileHeld(new DriveWithJoystickAuxPID(m_robotDrive, getDriverController()));
-      
-        // resets the yaw of the pigeon
-        new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
-            .whileHeld(new RunCommand(() -> m_robotDrive.tankDriveVelocity(9, 3), m_robotDrive));
-      
-        // turn 45 degrees
-        new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
-            .whenPressed(new RunCommand(() -> m_robotDrive.driveWithInputAux(0.2, 0), m_robotDrive));
-
-
         // sets solenoids into high gear
         new JoystickButton(getDriverJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
             .whenPressed(new InstantCommand(() -> m_robotDrive.setShiftState(true), m_robotDrive));
@@ -155,10 +120,27 @@ public class RobotContainer {
         // sets solenoids into low gear
         new JoystickButton(getDriverJoystick(), XboxController.LEFT_BUMPER_BUTTON)
             .whenPressed(new InstantCommand(() -> m_robotDrive.setShiftState(false), m_robotDrive));
+
+
+        /* Operator Buttons */
+      
+            //TODO: Shooter Buttons
+        // shoots until released
+        //new JoystickButton(getOperatorJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
+        //    .whileHeld(new ShootShooter(m_robotShooter, m_robotStorage, 5));
+
+        // shoots one ball
+        //new JoystickButton(getOperatorJoystick(), XboxController.LEFT_BUMPER_BUTTON)
+        //    .whileHeld(new ShootShooter(m_robotShooter, m_robotStorage, 1));
+            
+        // aims the turret
+        new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
+            .whileHeld(new TrackTarget(m_robotShooter));
+            //.whenPressed(new RunCommand(() -> m_robotStorage.storeAim()));
         
-        // interrupts any running command
-        new JoystickButton(getDriverJoystick(), XboxController.LEFT_JOYSTICK_BUTTON)
-            .whenPressed(new InstantCommand(() -> System.out.print("Gamer"), m_robotDrive));
+        // extends or retracts the extender
+        new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
+            .whenPressed(new RunExtenderOutIn(m_robotIntake));
 
         // safety for climber and leveler
         new JoystickButton(getOperatorJoystick(), XboxController.BACK_BUTTON)
