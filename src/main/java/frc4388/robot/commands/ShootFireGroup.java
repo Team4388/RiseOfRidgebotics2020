@@ -18,16 +18,17 @@ import frc4388.robot.subsystems.Storage;
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
 public class ShootFireGroup extends ParallelRaceGroup {
   /**
-   * Creates a new ShootFireGroup.
+   * Fires the shooter
+   * @param m_shooter The Shooter subsytem
+   * @param m_shooterAim The ShooterAim subsystem
+   * @param m_storage The Storage subsytem
    */
   public ShootFireGroup(Shooter m_shooter, ShooterAim m_shooterAim, Storage m_storage) {
-
-    // Add your commands in the super() call, e.g.
-    // super(new FooCommand(), new BarCommand());
     super(
       new ShooterVelocityControlPID(m_shooter, m_shooter.addFireVel()),
-      new RunCommand(() -> m_shooter.runAngleAdjustPID(m_shooter.addFireAngle())),
-      new TrackTarget(m_shooter, m_shooterAim)
+      new HoodAdjustPID(m_shooter),
+      new TrackTarget(m_shooter, m_shooterAim),
+      new StorageRun(m_storage)
       );
   }
 }

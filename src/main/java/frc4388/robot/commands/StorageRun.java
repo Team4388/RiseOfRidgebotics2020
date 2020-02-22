@@ -8,22 +8,17 @@
 package frc4388.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc4388.robot.subsystems.Shooter;
+import frc4388.robot.Constants.StorageConstants;
+import frc4388.robot.subsystems.Storage;
 
-public class ShooterVelocityControlPID extends CommandBase {
-  Shooter m_shooter;
-  double m_targetVel;
-  double m_actualVel;
+public class StorageRun extends CommandBase {
+  Storage m_storage;
   /**
-   * Creates a new ShooterVelocityControlPID.
-   * @param subsystem The Shooter subsytem
-   * @param targetVel The target velocity
+   * Runs the Storage at a speed
+   * @param storageSub The Storage subsytem
    */
-  public ShooterVelocityControlPID(Shooter subsystem, double targetVel) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    m_shooter = subsystem;
-    m_targetVel = targetVel;
-    addRequirements(m_shooter);
+  public StorageRun(Storage storageSub) {
+    m_storage = storageSub;
   }
 
   // Called when the command is initially scheduled.
@@ -34,8 +29,7 @@ public class ShooterVelocityControlPID extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooter.runDrumShooterVelocityPID(m_targetVel, m_shooter.m_shooterFalcon.getSelectedSensorVelocity());
-    m_actualVel = m_shooter.m_shooterFalcon.getSelectedSensorVelocity();
+    m_storage.runStorage(StorageConstants.STORAGE_SPEED);
   }
 
   // Called once the command ends or is interrupted.
@@ -46,14 +40,6 @@ public class ShooterVelocityControlPID extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //Tells wether the target velocity has been reached
-    double upperBound = m_targetVel + 300;
-    double lowerBound = m_targetVel - 300;
-    if (m_actualVel < upperBound && m_actualVel > lowerBound){
-      return true;
-    }
-    else{
-      return false;
-    }
+    return false;
   }
 }

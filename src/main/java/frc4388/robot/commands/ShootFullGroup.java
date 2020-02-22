@@ -17,12 +17,15 @@ import frc4388.robot.subsystems.Storage;
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
 public class ShootFullGroup extends SequentialCommandGroup {
   /**
-   * Creates a new ShootFullGroup.
+   * Preps and Fires the Shooter
+   * @param m_shooter The Shooter subsytem
+   * @param m_shooterAim The ShooterAim subsystem
+   * @param m_storage The Storage subsytem
    */
   public ShootFullGroup(Shooter m_shooter, ShooterAim m_shooterAim, Storage m_storage) {
     super(
       new ShootPrepGroup(m_shooter, m_shooterAim, m_storage), 
-      new ShootFireGroup()
+      new ShootFireGroup(m_shooter, m_shooterAim, m_storage)
     );
   }
 }

@@ -13,7 +13,8 @@ import frc4388.robot.subsystems.Shooter;
 public class HoodAdjustPID extends CommandBase {
   Shooter m_shooter;
   /**
-   * Creates a new HoodAdjustPID.
+   * Adjusts the hood based on the limelight target angle
+   * @param shooterSub The Shooter subsystem
    */
   public HoodAdjustPID(Shooter shooterSub) {
     m_shooter = shooterSub;
