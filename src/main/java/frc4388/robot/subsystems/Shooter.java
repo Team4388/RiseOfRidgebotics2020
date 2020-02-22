@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Gains;
 import frc4388.robot.Constants.ShooterConstants;
+import frc4388.utility.ShooterTables;
 import frc4388.utility.controller.IHandController;
 
 public class Shooter extends SubsystemBase {
@@ -48,6 +49,8 @@ public class Shooter extends SubsystemBase {
 
   double velP;
   double input;
+
+  ShooterTables m_shooterTable;
   
   /*
    * Creates a new Shooter subsystem.
@@ -71,6 +74,18 @@ public class Shooter extends SubsystemBase {
     int closedLoopTimeMs = 1;
     m_shooterFalcon.configClosedLoopPeriod(0, closedLoopTimeMs, ShooterConstants.SHOOTER_TIMEOUT_MS);
     m_shooterFalcon.configClosedLoopPeriod(1, closedLoopTimeMs, ShooterConstants.SHOOTER_TIMEOUT_MS);
+
+    m_shooterTable = new ShooterTables();
+
+    SmartDashboard.putNumber("CSV 10", m_shooterTable.getVelocity(10));
+    SmartDashboard.putNumber("CSV 200", m_shooterTable.getVelocity(200));
+    SmartDashboard.putNumber("CSV 250", m_shooterTable.getVelocity(250));
+    SmartDashboard.putNumber("CSV 500", m_shooterTable.getVelocity(500));
+
+    SmartDashboard.putNumber("CSV A -30", m_shooterTable.getAngleDisplacement(-30));
+    SmartDashboard.putNumber("CSV A 10", m_shooterTable.getAngleDisplacement(10));
+    SmartDashboard.putNumber("CSV A 5", m_shooterTable.getAngleDisplacement(5));
+    SmartDashboard.putNumber("CSV A 30", m_shooterTable.getAngleDisplacement(30));
   }
 
   @Override
