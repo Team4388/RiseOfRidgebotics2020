@@ -16,7 +16,7 @@ public class StoragePrepIntake extends CommandBase {
   public Storage m_storage;
 
   /**
-   * Creates a new storagePrepIntake.
+   * Creates a new StoragePrepIntake.
    */
   public StoragePrepIntake(Intake inSub, Storage storeSub) {
     m_intake = inSub;
