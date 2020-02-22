@@ -526,6 +526,7 @@ public class Drive extends SubsystemBase {
    * Returns the current yaw of the pigeon
    */
   public double getGyroYaw() {
+
     double[] ypr = new double[3];
 
     m_pigeon.getYawPitchRoll(ypr);

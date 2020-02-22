@@ -39,6 +39,7 @@ import frc4388.robot.commands.RunClimberWithTriggers;
 import frc4388.robot.commands.RunExtenderOutIn;
 import frc4388.robot.commands.RunIntakeWithTriggers;
 import frc4388.robot.commands.ShooterVelocityControlPID;
+import frc4388.robot.commands.StorageIntakeGroup;
 import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Intake;
 import frc4388.robot.subsystems.LED;
@@ -49,6 +50,7 @@ import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Intake;
 import frc4388.robot.subsystems.LED;
 import frc4388.robot.commands.TrackTarget;
+import frc4388.robot.commands.storageOutake;
 import frc4388.robot.subsystems.Camera;
 import frc4388.robot.subsystems.Leveler;
 import frc4388.robot.subsystems.Storage;
@@ -99,10 +101,10 @@ public class RobotContainer {
         // runs the drum shooter in idle mode
         m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runShooterWithInput(m_operatorXbox.getLeftXAxis()), m_robotShooter));
         // drives the leveler with an axis input from the driver controller
-    //    m_robotLeveler.setDefaultCommand(new RunLevelerWithJoystick(m_robotLeveler, getDriverController()));
-        // runs storage motor at 50 percent
-    //    m_robotStorage.setDefaultCommand(new RunCommand(() -> m_robotStorage.runStorage(0.0), m_robotStorage));
+        m_robotLeveler.setDefaultCommand(new RunLevelerWithJoystick(m_robotLeveler, getDriverController()));
+
     }
+      
 
     /**
     * Use this method to define your button->command mappings.  Buttons can be created by
@@ -147,6 +149,17 @@ public class RobotContainer {
             .whenPressed(new InstantCommand(() -> m_robotClimber.setSafetyPressed(), m_robotClimber))
             .whenReleased(new InstantCommand(() -> m_robotClimber.setSafetyNotPressed(), m_robotClimber));
 
+        /* Storage Neo PID Test */
+        new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
+            .whileHeld(new TrackTarget(m_robotShooter));
+
+        //Prepares storage for intaking
+        new JoystickButton(getOperatorJoystick(), XboxController.LEFT_TRIGGER_AXIS)
+            .whileHeld(new StorageIntakeGroup(m_robotIntake, m_robotStorage));
+            
+        //Runs storage to outtake
+        new JoystickButton(getOperatorJoystick(), XboxController.RIGHT_TRIGGER_AXIS)
+            .whileHeld(new storageOutake(m_robotStorage));
     }
        
     /**
