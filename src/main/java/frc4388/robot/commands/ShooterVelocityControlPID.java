@@ -20,7 +20,6 @@ public class ShooterVelocityControlPID extends CommandBase {
    * @param targetVel The target velocity
    */
   public ShooterVelocityControlPID(Shooter subsystem, double targetVel) {
-    // Use addRequirements() here to declare subsystem dependencies.
     m_shooter = subsystem;
     m_targetVel = targetVel;
     addRequirements(m_shooter);
