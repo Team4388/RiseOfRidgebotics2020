@@ -96,7 +96,7 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
       moveOutput = Math.cos(1.571*moveInput)-1;
     }
 
-    if (m_drive.isSpeedShiftHigh) {
+    if (m_drive.m_isSpeedShiftHigh) {
       runDriveWithInput(moveOutput, steerInput);
       resetGyroTarget();
     }
