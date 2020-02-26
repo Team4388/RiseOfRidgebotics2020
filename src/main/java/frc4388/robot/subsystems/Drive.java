@@ -26,6 +26,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.motorcontrol.SensorTerm;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.music.Orchestra;
@@ -33,6 +34,7 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -114,16 +116,24 @@ public class Drive extends SubsystemBase {
 
     /* flip input so forward becomes back, etc */
     m_leftFrontMotor.setInverted(false);
-    m_rightFrontMotor.setInverted(true);
+    m_rightFrontMotor.setInverted(false);
     //m_driveTrain.setRightSideInverted(false);
     m_leftBackMotor.setInverted(InvertType.FollowMaster);
     m_rightBackMotor.setInverted(InvertType.FollowMaster);
 
-    setDriveTrainNeutralMode(NeutralMode.Coast);
+    float rampRate = 0.1f;
+    m_rightFrontMotor.configOpenloopRamp(rampRate, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightBackMotor.configOpenloopRamp(rampRate, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftFrontMotor.configOpenloopRamp(rampRate, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftBackMotor.configOpenloopRamp(rampRate, DriveConstants.DRIVE_TIMEOUT_MS);
+
+    //SupplyCurrentLimitConfiguration c = new SupplyCurrentLimitConfiguration(true, 40, 35, 0.01);
+    //m_rightFrontMotor.configSupplyCurrentLimit(c);
+    //m_leftFrontMotor.configSupplyCurrentLimit(c);
 
     /* deadbands */
-    m_leftBackMotor.configNeutralDeadband(0.0, DriveConstants.DRIVE_TIMEOUT_MS); // DO NOT CHANGE
-    m_rightBackMotor.configNeutralDeadband(0.0, DriveConstants.DRIVE_TIMEOUT_MS); // Ensures motors run at the same speed
+    //m_leftBackMotor.configNeutralDeadband(0.0, DriveConstants.DRIVE_TIMEOUT_MS); // DO NOT CHANGE
+    //m_rightBackMotor.configNeutralDeadband(0.0, DriveConstants.DRIVE_TIMEOUT_MS); // Ensures motors run at the same speed
     //m_leftFrontMotor.configNeutralDeadband(0.0, DriveConstants.DRIVE_TIMEOUT_MS); // DO NOT CHANGE
     //m_rightFrontMotor.configNeutralDeadband(0.0, DriveConstants.DRIVE_TIMEOUT_MS); // Ensures motors run at the same speed
 
@@ -322,26 +332,36 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotorVel = m_rightFrontMotor.getSelectedSensorVelocity();
     
     try {
-      SmartDashboard.putNumber("Pigeon Yaw", getGyroYaw());
+      //SmartDashboard.putNumber("Pigeon Yaw", getGyroYaw());
       //SmartDashboard.putNumber("Pigeon Pitch", getGyroPitch());
       //SmartDashboard.putNumber("Pigeon Roll", getGyroRoll());
+      SmartDashboard.putNumber("Left Front Output", m_leftFrontMotor.get());
+      SmartDashboard.putNumber("Right Front Output", m_rightFrontMotor.get());
       SmartDashboard.putNumber("Left Back Output", m_leftBackMotor.get());
       SmartDashboard.putNumber("Right Back Output", m_rightBackMotor.get());
-
-      SmartDashboard.putNumber("Left Back Motor Velocity Raw", m_leftBackMotor.getSelectedSensorVelocity());
-      SmartDashboard.putNumber("Right Back Motor Velocity Raw", m_rightBackMotor.getSelectedSensorVelocity());
+      //SmartDashboard.putNumber("Left Back Motor Velocity Raw", m_leftBackMotor.getSelectedSensorVelocity());
+      //SmartDashboard.putNumber("Right Back Motor Velocity Raw", m_rightBackMotor.getSelectedSensorVelocity());
       //SmartDashboard.putNumber("Left Motor Position Raw", m_leftFrontMotor.getSelectedSensorPosition());
       //SmartDashboard.putNumber("Right Motor Position Raw", m_rightFrontMotor.getSelectedSensorPosition(0));
-      SmartDashboard.putNumber("Right Motor Velocity Int Sensor", m_rightFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
-      SmartDashboard.putNumber("Left Motor Velocity Int Sensor", m_leftFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
-
+      /*SmartDashboard.putNumber("Right Front Velocity", m_rightFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
+      SmartDashboard.putNumber("Left Front Velocity", m_leftFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
+      SmartDashboard.putNumber("Right Back Velocity", m_rightBackMotor.getSensorCollection().getIntegratedSensorVelocity());
+      SmartDashboard.putNumber("Left Back Velocity", m_leftBackMotor.getSensorCollection().getIntegratedSensorVelocity());
+      */
       SmartDashboard.putNumber("Right Motor Temp", m_rightFrontMotor.getTemperature());
       SmartDashboard.putNumber("Left Motor Temp", m_leftFrontMotor.getTemperature());
 
-      //SmartDashboard.putNumber("Right Front Motor Current Supply", m_rightFrontMotor.getSupplyCurrent());
-      //SmartDashboard.putNumber("Left Front Motor Current Supply", m_leftFrontMotor.getSupplyCurrent());
-      //SmartDashboard.putNumber("Right Front Motor Current Stator ", m_rightFrontMotor.getStatorCurrent());
-      //SmartDashboard.putNumber("Left Front Motor Current Stator", m_leftFrontMotor.getSupplyCurrent());
+
+
+      SmartDashboard.putNumber("Right Front Motor Current Supply", m_rightFrontMotor.getSupplyCurrent());
+      SmartDashboard.putNumber("Left Front Motor Current Supply", m_leftFrontMotor.getSupplyCurrent());
+      SmartDashboard.putNumber("Right Back Motor Current Supply", m_rightBackMotor.getSupplyCurrent());
+      SmartDashboard.putNumber("Left Back Motor Current Supply", m_leftBackMotor.getSupplyCurrent());
+      
+      SmartDashboard.putNumber("Right Front Motor Current Stator ", m_rightFrontMotor.getStatorCurrent());
+      SmartDashboard.putNumber("Left Front Motor Current Stator", m_leftFrontMotor.getStatorCurrent());
+      SmartDashboard.putNumber("Right Back Motor Current Stator ", m_rightBackMotor.getStatorCurrent());
+      SmartDashboard.putNumber("Left Back Motor Current Stator", m_leftBackMotor.getStatorCurrent());
 
       //SmartDashboard.putNumber("PID 0 Error", m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_PRIMARY));
       //SmartDashboard.putNumber("PID 1 Error", m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_TURN));
@@ -350,10 +370,10 @@ public class Drive extends SubsystemBase {
       //SmartDashboard.putNumber("PID 0 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_PRIMARY));
       //SmartDashboard.putNumber("PID 1 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_TURN));
 
-      SmartDashboard.putString("Odometry Values Meters", getPose().toString());
-      SmartDashboard.putNumber("Odometry Heading", getHeading());
+      //SmartDashboard.putString("Odometry Values Meters", getPose().toString());
+      //SmartDashboard.putNumber("Odometry Heading", getHeading());
 
-      SmartDashboard.putNumber("Time Seconds", m_currentTimeSec);
+      //SmartDashboard.putNumber("Time Seconds", m_currentTimeSec);
       //SmartDashboard.putNumber("Delta Time", m_deltaTime);
 
       if (currentSong != m_songChooser.getSelected()){
