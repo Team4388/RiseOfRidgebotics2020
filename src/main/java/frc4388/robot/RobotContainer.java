@@ -123,13 +123,9 @@ public class RobotContainer {
         new JoystickButton(getDriverJoystick(), XboxController.LEFT_BUMPER_BUTTON)
             .whenPressed(new InstantCommand(() -> m_robotDrive.setShiftState(true), m_robotDrive));
 
-        new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-            .whileHeld(new InstantCommand(() -> m_robotDrive.driveWithInput(0, 0), m_robotDrive));
-
-
         /* Operator Buttons */
       
-            //TODO: Shooter Buttons
+        //TODO: Shooter Buttons
         // shoots until released
         //new JoystickButton(getOperatorJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
         //    .whileHeld(new ShootShooter(m_robotShooter, m_robotStorage, 5));

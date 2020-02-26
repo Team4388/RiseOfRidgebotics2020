@@ -71,7 +71,6 @@ public class Drive extends SubsystemBase {
   public double m_rightFrontMotorVel;
 
   public DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
-  //public RobotDrive m_driveTrain2 = new RobotDrive(frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor)
 
   SendableChooser<Gains> m_chooser = new SendableChooser<Gains>();
   public static Gains m_gainsDistance = DriveConstants.DRIVE_DISTANCE_GAINS;
@@ -112,8 +111,8 @@ public class Drive extends SubsystemBase {
     coolFalcon(false);
     
     /* set back motors as followers */
-    //m_leftBackMotor.follow(m_leftFrontMotor);
-    //m_rightBackMotor.follow(m_rightFrontMotor);
+    m_leftBackMotor.follow(m_leftFrontMotor);
+    m_rightBackMotor.follow(m_rightFrontMotor);
 
     /* flip input so forward becomes back, etc */
     m_leftFrontMotor.setInverted(false);
@@ -410,8 +409,8 @@ public class Drive extends SubsystemBase {
    */
   public void driveWithInput(double move, double steer) {
     m_driveTrain.arcadeDrive(move, steer);
-    m_leftBackMotor.follow(m_leftFrontMotor, FollowerType.PercentOutput);
-    m_rightBackMotor.follow(m_rightFrontMotor, FollowerType.PercentOutput);
+    m_leftBackMotor.follow(m_leftFrontMotor);
+    m_rightBackMotor.follow(m_rightFrontMotor);
   }
 
   /**
