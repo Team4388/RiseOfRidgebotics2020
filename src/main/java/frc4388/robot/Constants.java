@@ -7,6 +7,8 @@
 
 package frc4388.robot;
 
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import frc4388.utility.LEDPatterns;
 
@@ -86,6 +88,17 @@ public final class Constants {
         public static final double TICKS_PER_WHEEL_REV_LOW = TICKS_PER_MOTOR_REV * MOTOR_ROT_PER_WHEEL_ROT_LOW;
         public static final double TICKS_PER_INCH_LOW = TICKS_PER_WHEEL_REV_LOW/INCHES_PER_WHEEL_REV;
         public static final double INCHES_PER_TICK_LOW = 1/TICKS_PER_INCH_LOW;
+
+        public static final double OPEN_LOOP_RAMP_RATE = 0.1;
+        public static final double NEUTRAL_DEADBAND = 0.04;
+        public static final SupplyCurrentLimitConfiguration SUPPLY_CURRENT_LIMIT_CONFIG =
+            new SupplyCurrentLimitConfiguration(false, 40, 35, 0.01);
+        public static final boolean isRightMotorInverted = false;
+        public static final boolean isLeftMotorInverted = false;
+        public static final boolean isRightArcadeInverted = false;
+        public static final boolean isAuxPIDInverted = false;
+
+        public static final int CLOSED_LOOP_TIME_MS = 1;
     }
     
     public static final class IntakeConstants {
