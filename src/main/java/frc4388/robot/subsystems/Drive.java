@@ -67,9 +67,10 @@ public class Drive extends SubsystemBase {
   public static Gains m_gainsMotionMagicHigh = DriveConstants.DRIVE_MOTION_MAGIC_GAINS_HIGH;
 
   /* Timey Whimey */
-  public long m_lastTime;
-  public long m_deltaTime = 0;
-  public int m_currentTimeSec = (int)(System.currentTimeMillis() / 1000);
+  public long m_currentTimeMs = System.currentTimeMillis();
+  public long m_lastTimeMs = m_currentTimeMs;
+  public long m_deltaTimeMs = 0;
+  public long m_currentTimeSec = m_currentTimeMs / 1000;
 
   /* Position Tracking */
   public double m_rightFrontMotorPos = 0;
@@ -78,6 +79,8 @@ public class Drive extends SubsystemBase {
   public double m_totalLeftDistanceInches = 0;
   public double m_totalRightDistanceInches = 0;
 
+  public double m_currentLeftPosTicks = 0;
+  public double m_currentRightPosTicks = 0;
   public double m_lastLeftPosTicks = 0;
   public double m_lastRightPosTicks = 0;
 
@@ -90,6 +93,7 @@ public class Drive extends SubsystemBase {
   
   /* Misc */
   public boolean m_isSpeedShiftHigh;
+  String m_currentSong = "";
 
   /**
    * Add your docs here.
@@ -266,14 +270,34 @@ public class Drive extends SubsystemBase {
     Shuffleboard.getTab("Songs").add(m_songChooser);
 
     /* Start counting time */
-    m_lastTime = System.currentTimeMillis();
-  } 
+    m_lastTimeMs = System.currentTimeMillis();
+  }
 
-  String currentSong = "";
   @Override
   public void periodic() {
-    m_currentTimeSec = (int)(System.currentTimeMillis() / 1000);
-    SmartDashboard.putNumber("Time Seconds", System.currentTimeMillis());
+    m_lastTimeMs = m_currentTimeMs;
+    m_currentTimeMs = System.currentTimeMillis();
+    m_currentTimeSec = m_currentTimeMs / 1000;
+    m_deltaTimeMs = m_currentTimeMs - m_lastTimeMs;
+    //SmartDashboard.putNumber("Time Seconds", m_currentTimeSec);
+
+    m_lastAngleYaw = m_currentAngleYaw;
+    m_currentAngleYaw = getGyroYaw();
+
+    m_rightFrontMotorPos = m_rightFrontMotor.getSelectedSensorPosition();
+    m_rightFrontMotorVel = m_rightFrontMotor.getSelectedSensorVelocity();
+
+    m_lastRightPosTicks = m_currentRightPosTicks;
+    m_lastLeftPosTicks = m_currentLeftPosTicks;
+    m_currentRightPosTicks = m_rightFrontMotor.getSensorCollection().getIntegratedSensorPosition();
+    m_currentLeftPosTicks = m_leftFrontMotor.getSensorCollection().getIntegratedSensorPosition();
+
+    m_totalRightDistanceInches += ticksToInches(m_currentRightPosTicks - m_lastRightPosTicks);
+    m_totalLeftDistanceInches += ticksToInches(m_currentLeftPosTicks - m_lastLeftPosTicks);
+
+    m_odometry.update(Rotation2d.fromDegrees( getHeading()),
+                                              getDistanceInches(m_leftFrontMotor),
+                                              -getDistanceInches(m_rightFrontMotor));
 
     if (m_currentTimeSec % 30 == 0) {
       coolFalcon(true);
@@ -282,21 +306,6 @@ public class Drive extends SubsystemBase {
       coolFalcon(false);
       SmartDashboard.putBoolean("Solenoid", false);
     }
-
-    m_deltaTime = System.currentTimeMillis() - m_lastTime;
-    m_lastTime = System.currentTimeMillis();
-    m_lastAngleYaw = m_currentAngleYaw;
-    m_currentAngleYaw = getGyroYaw();
-
-    m_rightFrontMotorPos = m_rightFrontMotor.getSelectedSensorPosition();
-    m_rightFrontMotorVel = m_rightFrontMotor.getSelectedSensorVelocity();
-
-    m_totalRightDistanceInches += ticksToInches(m_rightFrontMotor.getSensorCollection().getIntegratedSensorPosition() - m_lastRightPosTicks);
-    m_totalLeftDistanceInches += ticksToInches(m_leftFrontMotor.getSensorCollection().getIntegratedSensorPosition() - m_lastLeftPosTicks);
-
-    m_odometry.update(Rotation2d.fromDegrees( getHeading()),
-                                              getDistanceInches(m_rightFrontMotor),
-                                              -getDistanceInches(m_rightFrontMotor));
     
     try {
       //SmartDashboard.putNumber("Pigeon Yaw", getGyroYaw());
@@ -349,18 +358,15 @@ public class Drive extends SubsystemBase {
       //SmartDashboard.putNumber("Time Seconds", m_currentTimeSec);
       //SmartDashboard.putNumber("Delta Time", m_deltaTime);
 
-      if (currentSong != m_songChooser.getSelected()){
-        currentSong = m_songChooser.getSelected();
-        selectSong(currentSong);
-        System.err.println(currentSong);
+      if (m_currentSong != m_songChooser.getSelected()){
+        m_currentSong = m_songChooser.getSelected();
+        selectSong(m_currentSong);
+        //System.err.println(m_currentSong);
       }
     } catch (Exception e) {
-      System.err.println("Error in the Drive Subsystem");
+      System.err.println("Error while using Drive SmartDashboard");
       // e.printStackTrace(System.err);
     }
-
-    m_lastRightPosTicks = m_rightFrontMotor.getSensorCollection().getIntegratedSensorPosition();
-    m_lastLeftPosTicks = m_leftFrontMotor.getSensorCollection().getIntegratedSensorPosition();
   }
 
   public void setRightMotorGains(boolean isHighGear) {
@@ -639,7 +645,7 @@ public class Drive extends SubsystemBase {
    */
   public double getTurnRate() {
     double deltaYaw = m_currentAngleYaw - m_lastAngleYaw;
-    double turnRate = 1000 * deltaYaw / m_deltaTime;
+    double turnRate = 1000 * deltaYaw / m_deltaTimeMs;
     return turnRate;
   }
 
