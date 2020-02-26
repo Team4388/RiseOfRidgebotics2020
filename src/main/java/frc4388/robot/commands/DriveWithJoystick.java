@@ -49,7 +49,7 @@ public class DriveWithJoystick extends CommandBase {
     }
 
     double cosMultiplier = .55;
-    double deadzone = .2;
+    double deadzone = .1;
     if (steerInput > 0){
       steerOutput = -(cosMultiplier - deadzone) * Math.cos(1.571*steerInput) + cosMultiplier;
     } else if (steerInput < 0) {
