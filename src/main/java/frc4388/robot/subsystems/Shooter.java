@@ -55,6 +55,7 @@ public class Shooter extends SubsystemBase {
     m_shooterFalcon.setNeutralMode(NeutralMode.Coast);
     m_shooterFalcon.setInverted(false);
     m_angleAdjustMotor.setIdleMode(IdleMode.kBrake);
+    m_shooterFalcon.configOpenloopRamp(1, ShooterConstants.SHOOTER_TIMEOUT_MS);
     setShooterGains();
 
     m_shooterFalcon.configPeakOutputReverse(0, ShooterConstants.SHOOTER_TIMEOUT_MS);
@@ -101,6 +102,7 @@ public class Shooter extends SubsystemBase {
   /* Angle Adjustment PID Control */
   public void runAngleAdjustPID(double targetAngle)
   {
+    targetAngle = addFireAngle();
     // Set PID Coefficients
     m_angleAdjustPIDController.setP(m_angleAdjustGains.m_kP);
     m_angleAdjustPIDController.setI(m_angleAdjustGains.m_kI);
@@ -121,17 +123,14 @@ public class Shooter extends SubsystemBase {
    * @param targetVel Target velocity to run motor at
    */
   public void runDrumShooterVelocityPID(double targetVel, double actualVel) {
-    velP = actualVel/targetVel; //Percent of target
-    double runSpeed = actualVel + (12000*velP); //Ramp up equation
     SmartDashboard.putNumber("shoot", actualVel);
-    runSpeed = runSpeed/targetVel; //Convert to percent
-
-    if (actualVel < targetVel - 1000){ //PID Based on ramp up amount
-      m_shooterFalcon.set(TalonFXControlMode.PercentOutput, runSpeed/3);
+    if (actualVel < targetVel - 1000){
+      m_shooterFalcon.set(TalonFXControlMode.PercentOutput, 1);//Ramp up
     }
     else{ //PID Based on targetVel
-      m_shooterFalcon.set(TalonFXControlMode.Velocity, targetVel/3); //Init PID
+      m_shooterFalcon.set(TalonFXControlMode.Velocity, targetVel); //Init PID
     }
+    m_shooterFalcon.feed();
   }
 
   public void resetGyroAngleAdj(){

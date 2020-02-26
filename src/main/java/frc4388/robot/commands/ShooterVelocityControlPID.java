@@ -19,23 +19,22 @@ public class ShooterVelocityControlPID extends CommandBase {
    * @param subsystem The Shooter subsytem
    * @param targetVel The target velocity
    */
-  public ShooterVelocityControlPID(Shooter subsystem, double targetVel) {
+  public ShooterVelocityControlPID(Shooter subsystem) {
     m_shooter = subsystem;
-    m_targetVel = targetVel;
     addRequirements(m_shooter);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooter.runDrumShooterVelocityPID(m_targetVel, m_shooter.m_shooterFalcon.getSelectedSensorVelocity());
+    m_shooter.runDrumShooterVelocityPID(7000, m_shooter.m_shooterFalcon.getSelectedSensorVelocity());
     m_shooter.runAngleAdjustPID(m_shooter.addFireAngle());
-    m_actualVel = m_shooter.m_shooterFalcon.getSelectedSensorVelocity();
   }
 
   // Called once the command ends or is interrupted.
