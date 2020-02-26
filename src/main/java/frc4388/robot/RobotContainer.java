@@ -9,7 +9,6 @@ package frc4388.robot;
 
 import java.util.List;
 
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -17,7 +16,6 @@ import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
-import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
@@ -29,17 +27,11 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc4388.robot.Constants.*;
 import frc4388.robot.commands.DrivePositionMPAux;
-import frc4388.robot.commands.DriveStraightAtVelocityPID;
 import frc4388.robot.commands.DriveWithJoystick;
 import frc4388.robot.commands.DriveStraightToPositionMM;
-import frc4388.robot.commands.DriveStraightToPositionPID;
-import frc4388.robot.commands.DriveWithJoystick;
-import frc4388.robot.commands.DriveWithJoystickUsingDeadAssistPID;
-import frc4388.robot.commands.DriveWithJoystickDriveStraight;
 import frc4388.robot.commands.RunClimberWithTriggers;
 import frc4388.robot.commands.RunExtenderOutIn;
 import frc4388.robot.commands.RunIntakeWithTriggers;
-import frc4388.robot.commands.ShooterVelocityControlPID;
 import frc4388.robot.commands.StorageIntakeGroup;
 import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Intake;
@@ -47,17 +39,11 @@ import frc4388.robot.subsystems.LED;
 import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.Climber;
 import frc4388.robot.commands.RunLevelerWithJoystick;
-import frc4388.robot.subsystems.Drive;
-import frc4388.robot.subsystems.Intake;
-import frc4388.robot.subsystems.LED;
 import frc4388.robot.commands.TrackTarget;
-import frc4388.robot.commands.TurnDegrees;
-import frc4388.robot.commands.Wait;
 import frc4388.robot.commands.storageOutake;
 import frc4388.robot.subsystems.Camera;
 import frc4388.robot.subsystems.Leveler;
 import frc4388.robot.subsystems.Storage;
-import frc4388.utility.LEDPatterns;
 import frc4388.utility.controller.IHandController;
 import frc4388.utility.controller.XboxController;
 
