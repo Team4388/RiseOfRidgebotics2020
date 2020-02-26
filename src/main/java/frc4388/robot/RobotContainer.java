@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc4388.robot.Constants.*;
+import frc4388.robot.commands.DrivePositionMPAux;
 import frc4388.robot.commands.DriveStraightAtVelocityPID;
 import frc4388.robot.commands.DriveWithJoystick;
 import frc4388.robot.commands.DriveStraightToPositionMM;
@@ -50,6 +51,8 @@ import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Intake;
 import frc4388.robot.subsystems.LED;
 import frc4388.robot.commands.TrackTarget;
+import frc4388.robot.commands.TurnDegrees;
+import frc4388.robot.commands.Wait;
 import frc4388.robot.commands.storageOutake;
 import frc4388.robot.subsystems.Camera;
 import frc4388.robot.subsystems.Leveler;
@@ -114,7 +117,17 @@ public class RobotContainer {
     */
     private void configureButtonBindings() {
         /* Driver Buttons */
-        
+        //new JoystickButton(getDriverJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
+        //    .whileHeld(new DriveWithJoystickAuxPID(m_robotDrive, getDriverController()));
+      
+        // resets the yaw of the pigeon
+        new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
+            .whenPressed(new DriveStraightToPositionMM(m_robotDrive, 36));
+      
+        // turn 45 degrees
+        new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
+            .whenPressed(new RunCommand(() -> m_robotDrive.driveWithInputAux(0.2, 0), m_robotDrive));
+     
         // sets solenoids into high gear
         new JoystickButton(getDriverJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
             .whenPressed(new InstantCommand(() -> m_robotDrive.setShiftState(false), m_robotDrive));
@@ -222,7 +235,8 @@ public class RobotContainer {
 
         // Run path following command, then stop at the end.
         return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));*/
-        return new InstantCommand();
+        // return new InstantCommand();
+        return new DrivePositionMPAux(m_robotDrive, 500.0, 12.0, 2, 60.0, 0.0);
     }
 
     /**
