@@ -9,16 +9,19 @@ package frc4388.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.SparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc4388.robot.Gains;
 import frc4388.robot.Constants.StorageConstants;
 
 public class Storage extends SubsystemBase {
@@ -29,12 +32,16 @@ public class Storage extends SubsystemBase {
 
   CANEncoder m_encoder = m_storageMotor.getEncoder();
 
+  Gains storageGains = StorageConstants.STORAGE_GAINS;
+
+  Intake m_intake;
+
+
   /**
    * Creates a new Storage.
    */
   public Storage() {
     resetEncoder();
-
     m_beamSensors[0] = new DigitalInput(StorageConstants.BEAM_SENSOR_DIO_0);
     m_beamSensors[1] = new DigitalInput(StorageConstants.BEAM_SENSOR_DIO_1);
     m_beamSensors[2] = new DigitalInput(StorageConstants.BEAM_SENSOR_DIO_2);
@@ -53,32 +60,38 @@ public class Storage extends SubsystemBase {
    * 
    * @param input the voltage to run motor at
    */
-  public void runStorage(final double input) {
+  
+  public void runStorage(double input) {
     m_storageMotor.set(input);
-    final boolean beam_on = m_beamSensors[0].get();
   }
 
-  public void resetEncoder()
-  {
+  public void resetEncoder(){
     m_encoder.setPosition(0);
   }
 
   /* Storage PID Control */
-  public void runStoragePositionPID(double targetPos, double kP, double kI, double kD, double kIz, double kF, double kmaxOutput, double kminOutput)
-  {
+  public void runStoragePositionPID(double targetPos){
     // Set PID Coefficients
-    m_storagePIDController.setP(kP);
-    m_storagePIDController.setI(kI);
-    m_storagePIDController.setD(kD);
-    m_storagePIDController.setIZone(kIz);
-    m_storagePIDController.setFF(kF);
-    m_storagePIDController.setOutputRange(kminOutput, kmaxOutput);
+    m_storagePIDController.setP(storageGains.m_kP);
+    m_storagePIDController.setI(storageGains.m_kI);
+    m_storagePIDController.setD(storageGains.m_kD);
+    m_storagePIDController.setIZone(storageGains.m_kIzone);
+    m_storagePIDController.setFF(storageGains.m_kF);
+    m_storagePIDController.setOutputRange(StorageConstants.STORAGE_MIN_OUTPUT, storageGains.m_kmaxOutput);
 
     m_storagePIDController.setReference(targetPos, ControlType.kPosition);
   }
 
-  public void getEncoderPos()
-  {
-    m_encoder.getPosition();
+
+  public double getEncoderPos(){
+    return m_encoder.getPosition();
+  }
+
+  public boolean getBeam(int id){
+    return m_beamSensors[id].get();
+  }
+
+  public void setStoragePID(double position){
+    m_storagePIDController.setReference(position , ControlType.kPosition);
   }
 }
