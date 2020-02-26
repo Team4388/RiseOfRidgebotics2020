@@ -7,14 +7,25 @@
 
 package frc4388.robot.commands;
 
+import com.revrobotics.CANDigitalInput;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc4388.robot.Constants.IntakeConstants;
 import frc4388.robot.subsystems.Intake;
 import frc4388.utility.controller.IHandController;
 
 public class RunExtenderOutIn extends CommandBase {
   private Intake m_intake;
-  private boolean isOut = false;
-  private long startTime;
+
+  CANSparkMax m_intakeMotor = new CANSparkMax(IntakeConstants.INTAKE_SPARK_ID, MotorType.kBrushless);
+  CANSparkMax m_extenderMotor = new CANSparkMax(IntakeConstants.EXTENDER_SPARK_ID, MotorType.kBrushless);
+  CANDigitalInput m_extenderForwardLimit;
+  CANDigitalInput m_extenderReverseLimit;
+
+  
 
   /**
    * Uses input from opperator to run the extender motor.
@@ -25,19 +36,23 @@ public class RunExtenderOutIn extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
     m_intake = subsystem;
     addRequirements(m_intake);
+
+    m_extenderForwardLimit = m_extenderMotor.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyClosed);
+    m_extenderReverseLimit = m_extenderMotor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyClosed);
+    m_extenderForwardLimit.enableLimitSwitch(false);
+    m_extenderReverseLimit.enableLimitSwitch(false);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    isOut = !isOut;
-    startTime = System.currentTimeMillis();
+    m_intake.isExtended = !m_intake.isExtended;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (isOut){
+    if (m_intake.isExtended){
       m_intake.runExtender(0.3);
     } else {
       m_intake.runExtender(-0.3);
@@ -54,9 +69,16 @@ public class RunExtenderOutIn extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (startTime + 3000 < System.currentTimeMillis()) {
+    if (m_intake.isExtended && m_extenderForwardLimit.get() == true){
       return true;
     }
-    return false;
+    
+    else if(m_intake.isExtended && m_extenderReverseLimit.get() == true){
+      return true;
+    }
+    
+    else{
+      return false;
+    }
   }
 }
