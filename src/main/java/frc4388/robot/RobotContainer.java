@@ -154,8 +154,8 @@ public class RobotContainer {
             .whileHeld(new TrackTarget(m_robotShooter));
 
         //Prepares storage for intaking
-        new JoystickButton(getOperatorJoystick(), XboxController.LEFT_TRIGGER_AXIS)
-            .whileHeld(new StorageIntakeGroup(m_robotIntake, m_robotStorage));
+        new JoystickButton(getOperatorJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
+            .whileHeld(new InstantCommand(() -> m_robotIntake.runIntake(0.3), m_robotIntake));
             
         //Runs storage to outtake
         new JoystickButton(getOperatorJoystick(), XboxController.RIGHT_TRIGGER_AXIS)
