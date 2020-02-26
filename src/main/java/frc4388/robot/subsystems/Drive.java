@@ -273,14 +273,26 @@ public class Drive extends SubsystemBase {
 
   @Override
   public void periodic() {
+    updateTime();
+    updateAngles();
+    updatePosition();
+    runFalconCooling();
+    updateSmartDashboard();
+  }
+
+  public void updateTime() {
     m_lastTimeMs = m_currentTimeMs;
     m_currentTimeMs = System.currentTimeMillis();
     m_currentTimeSec = m_currentTimeMs / 1000;
     m_deltaTimeMs = m_currentTimeMs - m_lastTimeMs;
+  }
 
+  public void updateAngles() {
     m_lastAngleYaw = m_currentAngleYaw;
     m_currentAngleYaw = getGyroYaw();
+  }
 
+  public void updatePosition() {
     m_rightFrontMotorPos = m_rightFrontMotor.getSelectedSensorPosition();
     m_rightFrontMotorVel = m_rightFrontMotor.getSelectedSensorVelocity();
 
@@ -295,9 +307,6 @@ public class Drive extends SubsystemBase {
     m_odometry.update(Rotation2d.fromDegrees( getHeading()),
                                               getDistanceInches(m_leftFrontMotor),
                                               -getDistanceInches(m_rightFrontMotor));
-
-    runFalconCooling();
-    updateSmartDashboard();
   }
 
   /**
