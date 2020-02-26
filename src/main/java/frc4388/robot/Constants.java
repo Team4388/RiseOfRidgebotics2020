@@ -7,6 +7,8 @@
 
 package frc4388.robot;
 
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import frc4388.utility.LEDPatterns;
 
@@ -26,6 +28,19 @@ public final class Constants {
 	    public static final int DRIVE_LEFT_BACK_CAN_ID = 3;
         public static final int DRIVE_RIGHT_BACK_CAN_ID = 5;
         public static final int PIGEON_ID = 6;
+
+        /* Drive Inversions */
+        public static final boolean isRightMotorInverted = false;
+        public static final boolean isLeftMotorInverted = false;
+        public static final boolean isRightArcadeInverted = false;
+        public static final boolean isAuxPIDInverted = false;
+
+        /* Drive Configuration */
+        public static final double OPEN_LOOP_RAMP_RATE = 0.1;
+        public static final double NEUTRAL_DEADBAND = 0.04;
+        public static final SupplyCurrentLimitConfiguration SUPPLY_CURRENT_LIMIT_CONFIG =
+            new SupplyCurrentLimitConfiguration(false, 40, 35, 0.01);
+        public static final int CLOSED_LOOP_TIME_MS = 1;
 
         /* PID Constants Drive*/
         public static final int DRIVE_TIMEOUT_MS = 30;

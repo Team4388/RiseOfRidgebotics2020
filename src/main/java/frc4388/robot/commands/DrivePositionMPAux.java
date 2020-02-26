@@ -63,7 +63,7 @@ public class DrivePositionMPAux extends CommandBase {
     m_currentPos = m_drive.m_rightFrontMotorPos;
     if (System.currentTimeMillis() - m_startTime < m_rampRate) {
       // Ramping
-      m_targetVel += m_rampAcc * m_drive.m_deltaTime;
+      m_targetVel += m_rampAcc * m_drive.m_deltaTimeMs;
       m_drive.runDriveVelocityPID(-m_targetVel, m_targetGyro);
     } else if (m_targetPos - m_currentPos > m_rampDist) {
       // Cruising
