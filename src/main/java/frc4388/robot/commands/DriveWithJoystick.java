@@ -52,8 +52,10 @@ public class DriveWithJoystick extends CommandBase {
     double deadzone = .2;
     if (steerInput > 0){
       steerOutput = -cosMultiplier*Math.cos(1.571*steerInput)+(cosMultiplier+deadzone);
-    } else {
+    } else if (steerInput < 0) {
       steerOutput = cosMultiplier*Math.cos(1.571*steerInput)-(cosMultiplier+deadzone);
+    } else {
+      steerOutput = 0;
     }
 
     m_drive.driveWithInput(moveOutput, steerOutput);

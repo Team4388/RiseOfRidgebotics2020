@@ -95,6 +95,11 @@ public class Drive extends SubsystemBase {
 
   public double m_lastAngleYaw, m_currentAngleYaw, m_kinematicsTargetAngle;
 
+  public double m_totalLeftDistanceInches = 0;
+  public double m_totalRightDistanceInches = 0;
+  public double m_lastLeftPosTicks = 0;
+  public double m_lastRightPosTicks = 0;
+
   /**
    * Add your docs here.
    */
@@ -106,7 +111,7 @@ public class Drive extends SubsystemBase {
     m_rightBackMotor.configFactoryDefault();
     m_pigeon.configFactoryDefault();
     resetGyroYaw();
-
+    
     m_odometry = new DifferentialDriveOdometry( Rotation2d.fromDegrees(getHeading()), 
                                                 new Pose2d(0, 0, new Rotation2d()) );
 
@@ -298,6 +303,13 @@ public class Drive extends SubsystemBase {
 
     m_rightFrontMotorPos = m_rightFrontMotor.getSelectedSensorPosition();
     m_rightFrontMotorVel = m_rightFrontMotor.getSelectedSensorVelocity();
+
+    m_totalRightDistanceInches += ticksToInches(m_rightFrontMotor.getSensorCollection().getIntegratedSensorPosition() - m_lastRightPosTicks);
+    m_totalLeftDistanceInches += ticksToInches(m_leftFrontMotor.getSensorCollection().getIntegratedSensorPosition() - m_lastLeftPosTicks);
+
+    m_odometry.update(Rotation2d.fromDegrees( getHeading()),
+                                              getDistanceInches(m_rightFrontMotor),
+                                              -getDistanceInches(m_rightFrontMotor));
     
     try {
       SmartDashboard.putNumber("Pigeon Yaw", getGyroYaw());
@@ -312,8 +324,8 @@ public class Drive extends SubsystemBase {
       //SmartDashboard.putNumber("Right Motor Position Raw", m_rightFrontMotor.getSelectedSensorPosition(0));
       //SmartDashboard.putNumber("Right Motor Velocity Int Sensor", m_rightFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
       //SmartDashboard.putNumber("Left Motor Velocity Int Sensor", m_leftFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
-      SmartDashboard.putNumber("Left Motor Pos Inches", getDistanceInches(m_leftFrontMotor));
-      SmartDashboard.putNumber("Right Motor Pos Inches", getDistanceInches(m_rightFrontMotor));
+      SmartDashboard.putNumber("Left Motor Pos Inches", getDistanceInches(m_rightFrontMotor));
+      SmartDashboard.putNumber("Right Motor Pos Inches", getDistanceInches(m_leftFrontMotor));
 
       SmartDashboard.putNumber("Right Motor Temp", m_rightFrontMotor.getTemperature());
       SmartDashboard.putNumber("Left Motor Temp", m_leftFrontMotor.getTemperature());
@@ -346,9 +358,8 @@ public class Drive extends SubsystemBase {
       // e.printStackTrace(System.err);
     }
 
-    m_odometry.update(Rotation2d.fromDegrees( getHeading()),
-                                              getDistanceInches(m_leftBackMotor),
-                                              -getDistanceInches(m_rightBackMotor));
+    m_lastRightPosTicks = m_rightFrontMotor.getSensorCollection().getIntegratedSensorPosition();
+    m_lastLeftPosTicks = m_leftFrontMotor.getSensorCollection().getIntegratedSensorPosition();
   }
 
   public void setRightMotorGains(boolean isHighGear) {
@@ -470,7 +481,7 @@ public class Drive extends SubsystemBase {
     m_leftBackMotor.follow(m_leftFrontMotor);
     m_rightBackMotor.follow(m_rightFrontMotor);
 
-    //m_driveTrain.feedWatchdog();
+    m_driveTrain.feedWatchdog();
   }
 
   /**
@@ -488,7 +499,7 @@ public class Drive extends SubsystemBase {
     m_leftBackMotor.follow(m_leftFrontMotor);
     m_rightBackMotor.follow(m_rightFrontMotor);
 
-    //m_driveTrain.feedWatchdog();
+    m_driveTrain.feedWatchdog();
   }
 
   /**
@@ -619,9 +630,9 @@ public class Drive extends SubsystemBase {
 //lol
 //sko
 //ridge
-  /**
 //brayden=bad coder
-  * Returns the heading of the robot
+  /**
+   * Returns the heading of the robot
    * @return The robot's heading in degrees, from -180 to 180
    */
   public double getHeading() {
@@ -664,6 +675,9 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.getSensorCollection().setIntegratedSensorPosition(0, DriveConstants.DRIVE_TIMEOUT_MS);
     m_leftBackMotor.getSensorCollection().setIntegratedSensorPosition(0, DriveConstants.DRIVE_TIMEOUT_MS);
     m_rightBackMotor.getSensorCollection().setIntegratedSensorPosition(0, DriveConstants.DRIVE_TIMEOUT_MS);
+
+    m_totalLeftDistanceInches = 0;
+    m_totalRightDistanceInches = 0;
   }
 
   /**

@@ -79,7 +79,7 @@ public class Robot extends TimedRobot {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     m_robotContainer.setDriveNeutralMode(NeutralMode.Brake);
-    m_robotContainer.setDriveGearState(true);
+    //m_robotContainer.setDriveGearState(true);
     m_robotContainer.resetOdometry();
     //m_robotContainer.configDriveTrainSensors(FeedbackDevice.IntegratedSensor);
 
