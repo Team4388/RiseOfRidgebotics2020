@@ -13,6 +13,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Gains;
 import frc4388.robot.Constants.ShooterConstants;

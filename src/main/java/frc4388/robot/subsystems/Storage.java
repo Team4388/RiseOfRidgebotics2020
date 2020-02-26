@@ -94,4 +94,15 @@ public class Storage extends SubsystemBase {
   public void setStoragePID(double position){
     m_storagePIDController.setReference(position , ControlType.kPosition);
   }
+
+
+  /*
+  If pressing aim
+    Run until hitting bottom beam
+    dont run intake if balls not at bottom
+  else
+    run unti; hitting top beam
+  
+  2 beamms total
+  */
 }

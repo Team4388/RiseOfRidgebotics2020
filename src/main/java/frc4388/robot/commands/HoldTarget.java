@@ -10,6 +10,7 @@ package frc4388.robot.commands;
 import frc4388.robot.Constants.ShooterConstants;
 import frc4388.robot.Constants.VisionConstants;
 import frc4388.robot.subsystems.Drive;
+import frc4388.robot.subsystems.LimeLight;
 import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.ShooterAim;
 import frc4388.utility.controller.IHandController;
@@ -48,8 +49,7 @@ public class HoldTarget extends CommandBase {
   @Override
   public void initialize() {
       //Vision Processing Mode
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0);
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
+    LimeLight.limeOn();
   }
 
 
@@ -89,8 +89,7 @@ public class HoldTarget extends CommandBase {
   @Override
   public void end(boolean interrupted) {
       //Drive Camera Mode
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1);
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(0);
+    LimeLight.limeOff();
   }
 
   // Returns true when the command should end.

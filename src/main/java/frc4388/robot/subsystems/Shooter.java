@@ -100,9 +100,9 @@ public class Shooter extends SubsystemBase {
   }
 
   /* Angle Adjustment PID Control */
-  public void runAngleAdjustPID(double targetAngle)
+  public void runAngleAdjustPID(double mmtargetAngle)
   {
-    targetAngle = addFireAngle();
+    double targetAngle = addFireAngle();
     // Set PID Coefficients
     m_angleAdjustPIDController.setP(m_angleAdjustGains.m_kP);
     m_angleAdjustPIDController.setI(m_angleAdjustGains.m_kI);

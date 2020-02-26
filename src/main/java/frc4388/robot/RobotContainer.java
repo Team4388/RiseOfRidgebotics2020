@@ -59,6 +59,7 @@ import frc4388.robot.commands.StorageOutake;
 import frc4388.robot.commands.StoragePrepAim;
 import frc4388.robot.subsystems.Camera;
 import frc4388.robot.subsystems.Leveler;
+import frc4388.robot.subsystems.LimeLight;
 import frc4388.robot.subsystems.Storage;
 import frc4388.utility.LEDPatterns;
 import frc4388.utility.controller.IHandController;
@@ -85,6 +86,7 @@ public class RobotContainer {
     /* Cameras */
     private final Camera m_robotCameraFront = new Camera("front", 0, 160, 120, 40);
     private final Camera m_robotCameraBack = new Camera("back", 1, 160, 120, 40);
+    private final LimeLight m_robotLime = new LimeLight();
 
     /* Controllers */
     private final XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
@@ -111,6 +113,8 @@ public class RobotContainer {
         m_robotLeveler.setDefaultCommand(new RunLevelerWithJoystick(m_robotLeveler, getDriverController()));
         // moves the drum not
         m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runDrumShooter(0), m_robotShooter));
+        //turns limelight off
+        //m_robotLime.setDefaultCommand(new RunCommand(() -> m_robotLime.limeOff(), m_robotLime));
 
     }
 
@@ -140,10 +144,11 @@ public class RobotContainer {
 
         // shoots one ball
         new JoystickButton(getOperatorJoystick(), XboxController.LEFT_BUMPER_BUTTON)
-            .whenPressed(new ShootFullGroup(m_robotShooter, m_robotShooterAim, m_robotStorage), false)
-            .whenReleased(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(0, m_robotShooter.m_shooterFalcon.getSelectedSensorVelocity())));
-            //.whenReleased(new InstantCommand(() -> m_robotShooterAim.runShooterWithInput(0), m_robotShooterAim));
-             
+            .whileHeld(new ShootFullGroup(m_robotShooter, m_robotShooterAim, m_robotStorage), false);
+            //.whenReleased(new RunCommand(() -> m_robotLime.limeOff()));
+            //.whenReleased(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(0, m_robotShooter.m_shooterFalcon.getSelectedSensorVelocity())))
+            //.whenReleased(new RunCommand(() -> m_robotShooterAim.limeOff()))
+            //.whenReleased(new RunCommand(() -> m_robotShooterAim.runShooterWithInput(0)));
         // extends or retracts the extender
         new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
             .whenPressed(new RunExtenderOutIn(m_robotIntake));
