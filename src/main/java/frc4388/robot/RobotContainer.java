@@ -102,18 +102,24 @@ public class RobotContainer {
     * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
     */
     private void configureButtonBindings() {
-        /* Driver Buttons */
-        //new JoystickButton(getDriverJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
-        //    .whileHeld(new DriveWithJoystickAuxPID(m_robotDrive, getDriverController()));
-      
-        // resets the yaw of the pigeon
-        new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
-            .whenPressed(new DriveStraightToPositionMM(m_robotDrive, 36));
-      
-        // turn 45 degrees
+        /* Test Buttons */
+        // A driver test button
+        new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
+            .whenPressed(new InstantCommand());
+        
+        // B driver test button
+        new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
+            .whenPressed(new InstantCommand());
+
+        // Y driver test button
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
-            .whenPressed(new RunCommand(() -> m_robotDrive.driveWithInputAux(0.2, 0), m_robotDrive));
+            .whenPressed(new InstantCommand());
+
+        // X driver test button
+        new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
+            .whenPressed(new InstantCommand());
      
+        /* Driver Buttons */
         // sets solenoids into high gear
         new JoystickButton(getDriverJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
             .whenPressed(new InstantCommand(() -> m_robotDrive.setShiftState(false), m_robotDrive));
@@ -123,7 +129,6 @@ public class RobotContainer {
             .whenPressed(new InstantCommand(() -> m_robotDrive.setShiftState(true), m_robotDrive));
 
         /* Operator Buttons */
-      
         //TODO: Shooter Buttons
         // shoots until released
         //new JoystickButton(getOperatorJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
@@ -159,7 +164,62 @@ public class RobotContainer {
         new JoystickButton(getOperatorJoystick(), XboxController.RIGHT_TRIGGER_AXIS)
             .whileHeld(new storageOutake(m_robotStorage));
     }
-       
+
+    /**
+     * Use this to pass the autonomous command to the main {@link Robot} class.
+     *
+     * @return the command to run in autonomous
+     */
+    public Command getAutonomousCommand() {
+        // Create config for trajectory
+        TrajectoryConfig config = getTrajectoryConfig();
+        Trajectory trajectory = getTrajectory(config);
+        RamseteCommand ramseteCommand = getRamseteCommand(trajectory);
+        // Run path following command, then stop at the end.
+        //return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+
+        // return new InstantCommand();
+        return new DrivePositionMPAux(m_robotDrive, 500.0, 12.0, 2, 60.0, 0.0);
+    }
+
+    TrajectoryConfig getTrajectoryConfig() {
+        return new TrajectoryConfig(
+            DriveConstants.MAX_SPEED_METERS_PER_SECOND,
+            DriveConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
+            // Add kinematics to ensure max speed is actually obeyed
+            .setKinematics(DriveConstants.kDriveKinematics);
+    }
+
+    Trajectory getTrajectory(TrajectoryConfig config) {
+        Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing the +X direction
+            new Pose2d(0, 0, new Rotation2d(0)),
+            // Pass through these two interior waypoints, making an 's' curve path
+            List.of(
+                new Translation2d(10, 0)
+            ),
+            // End 3 meters straight ahead of where we started, facing forward
+            new Pose2d(20, 20, new Rotation2d(0)),
+            // Pass config
+            config);
+            // 10 = 20, 20 = 35, 30 = 53.5
+            // (0,10) = (8,22)
+        
+        return exampleTrajectory;
+    }
+
+    RamseteCommand getRamseteCommand(Trajectory trajectory) {
+        RamseteCommand ramseteCommand = new RamseteCommand(
+            trajectory,
+            m_robotDrive::getPose,
+            new RamseteController(), 
+            DriveConstants.kDriveKinematics,
+            m_robotDrive::tankDriveVelocity,
+            m_robotDrive);
+        
+        return ramseteCommand;
+    }
+
     /**
      * Sets Motors to a NeutralMode.
      * @param mode NeutralMode to set motors to
@@ -176,53 +236,12 @@ public class RobotContainer {
         m_robotDrive.setShiftState(state);
     }
 
-    public void configDriveTrainSensors(FeedbackDevice type) {
-        m_robotDrive.configMotorSensor(type);
-    } 
-
+    /**
+     * 
+     */
     public void resetOdometry() {
         m_robotDrive.resetGyroAngles();
         m_robotDrive.setOdometry(new Pose2d());
-    }
-
-    /**
-     * Use this to pass the autonomous command to the main {@link Robot} class.
-     *
-     * @return the command to run in autonomous
-     */
-    public Command getAutonomousCommand() {
-
-        // Create config for trajectory
-        /*TrajectoryConfig config = new TrajectoryConfig( DriveConstants.MAX_SPEED_METERS_PER_SECOND,
-                                                        DriveConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
-                                                        // Add kinematics to ensure max speed is actually obeyed
-                                                        .setKinematics(DriveConstants.kDriveKinematics);
-        
-        Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-            // Start at the origin facing the +X direction
-            new Pose2d(0, 0, new Rotation2d(0)),
-            // Pass through these two interior waypoints, making an 's' curve path
-            List.of(
-                new Translation2d(10, 0)
-            ),
-            // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(20, 20, new Rotation2d(0)),
-            // Pass config
-            config);
-            // 10 = 20, 20 = 35, 30 = 53.5
-            // (0,10) = (8,22)
-        RamseteCommand ramseteCommand = new RamseteCommand(
-            exampleTrajectory,
-            m_robotDrive::getPose,
-            new RamseteController(), 
-            DriveConstants.kDriveKinematics,
-            m_robotDrive::tankDriveVelocity,
-            m_robotDrive);
-
-        // Run path following command, then stop at the end.
-        return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));*/
-        // return new InstantCommand();
-        return new DrivePositionMPAux(m_robotDrive, 500.0, 12.0, 2, 60.0, 0.0);
     }
 
     /**
