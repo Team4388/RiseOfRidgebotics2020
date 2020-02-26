@@ -64,7 +64,6 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     m_robotContainer.setDriveNeutralMode(NeutralMode.Coast);
-    //m_robotContainer.setDriveGearState(true);
   }
 
   @Override

@@ -132,8 +132,6 @@ public class Drive extends SubsystemBase {
     //m_rightFrontMotor.configSupplyCurrentLimit(c);
     //m_leftFrontMotor.configSupplyCurrentLimit(c);
 
-    setDriveTrainNeutralMode(NeutralMode.Coast);
-
     /* deadbands */
     //m_leftBackMotor.configNeutralDeadband(0.0, DriveConstants.DRIVE_TIMEOUT_MS); // DO NOT CHANGE
     //m_rightBackMotor.configNeutralDeadband(0.0, DriveConstants.DRIVE_TIMEOUT_MS); // Ensures motors run at the same speed
