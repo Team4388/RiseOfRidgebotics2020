@@ -27,7 +27,7 @@ public class DriveStraightToPositionPID extends CommandBase {
   public DriveStraightToPositionPID(Drive subsystem, double targetPos) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = subsystem;
-    m_targetPosIn = targetPos * DriveConstants.TICKS_PER_INCH_HIGH;
+    m_targetPosIn = targetPos * DriveConstants.TICKS_PER_INCH_LOW;
     addRequirements(m_drive);
     //SmartDashboard.putNumber("Distance Target Inches", targetPos);
   }

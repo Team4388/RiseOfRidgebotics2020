@@ -36,10 +36,10 @@ public class DrivePositionMPAux extends CommandBase {
   public DrivePositionMPAux(Drive subsystem, double cruiseVel, double rampDist, float rampRate, double targetPos, double targetGyro) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = subsystem;
-    m_cruiseVel = cruiseVel * DriveConstants.TICKS_PER_INCH / 10;
-    m_rampDist = rampDist * DriveConstants.TICKS_PER_INCH;
+    m_cruiseVel = cruiseVel * DriveConstants.TICKS_PER_INCH_LOW / 10;
+    m_rampDist = rampDist * DriveConstants.TICKS_PER_INCH_LOW;
     m_rampRate = (long) rampRate * 1000;
-    m_targetPos = targetPos * DriveConstants.TICKS_PER_INCH;
+    m_targetPos = targetPos * DriveConstants.TICKS_PER_INCH_LOW;
     //m_targetGyro = targetGyro * DriveConstants.TICKS_PER_GYRO_REV / 360;
     m_targetGyro = m_drive.m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_TURN);
     addRequirements(m_drive);
@@ -82,7 +82,7 @@ public class DrivePositionMPAux extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (m_currentPos - m_targetPos <= 0.5f * DriveConstants.TICKS_PER_INCH) {
+    if (m_currentPos - m_targetPos <= 0.5f * DriveConstants.TICKS_PER_INCH_LOW) {
       return true;
     }
     return false;
