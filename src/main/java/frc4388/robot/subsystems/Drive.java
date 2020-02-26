@@ -42,51 +42,56 @@ import frc4388.robot.Gains;
  * Add your docs here.
  */
 public class Drive extends SubsystemBase {
-  // Put methods for controlling this subsystem
-  // here. Call these from Commands.
-
+  /* Create Motors, Gyros, Solenoids, etc */
   public WPI_TalonFX m_leftFrontMotor = new WPI_TalonFX(DriveConstants.DRIVE_LEFT_FRONT_CAN_ID);
   public WPI_TalonFX m_rightFrontMotor = new WPI_TalonFX(DriveConstants.DRIVE_RIGHT_FRONT_CAN_ID);
   public WPI_TalonFX m_leftBackMotor = new WPI_TalonFX(DriveConstants.DRIVE_LEFT_BACK_CAN_ID);
   public WPI_TalonFX m_rightBackMotor = new WPI_TalonFX(DriveConstants.DRIVE_RIGHT_BACK_CAN_ID);
   public static PigeonIMU m_pigeon = new PigeonIMU(DriveConstants.PIGEON_ID);
+  public DoubleSolenoid m_speedShift = new DoubleSolenoid(7,0,1);
+  public DoubleSolenoid m_coolFalcon = new DoubleSolenoid(7,3,2);
+  
+  /* Drive objects to manage Drive Train */
+  public DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
+  public final DifferentialDriveOdometry m_odometry;
   public Orchestra m_orchestra = new Orchestra();
 
-  public double m_rightFrontMotorPos;
-
-  public double m_rightFrontMotorVel;
-
-  public DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftFrontMotor, m_rightFrontMotor);
-
-  SendableChooser<Gains> m_chooser = new SendableChooser<Gains>();
+  /* Low Gear Gains */
   public static Gains m_gainsDistanceLow = DriveConstants.DRIVE_DISTANCE_GAINS_LOW;
   public static Gains m_gainsVelocityLow = DriveConstants.DRIVE_VELOCITY_GAINS_LOW;
   public static Gains m_gainsTurningLow = DriveConstants.DRIVE_TURNING_GAINS_LOW;
   public static Gains m_gainsMotionMagicLow = DriveConstants.DRIVE_MOTION_MAGIC_GAINS_LOW;
 
+  /* High Gear Gains */
   public static Gains m_gainsDistanceHigh = DriveConstants.DRIVE_DISTANCE_GAINS_HIGH;
   public static Gains m_gainsVelocityHigh = DriveConstants.DRIVE_VELOCITY_GAINS_HIGH;
   public static Gains m_gainsTurningHigh = DriveConstants.DRIVE_TURNING_GAINS_HIGH;
   public static Gains m_gainsMotionMagicHigh = DriveConstants.DRIVE_MOTION_MAGIC_GAINS_HIGH;
-  
-  public final DifferentialDriveOdometry m_odometry;
-  
-  public DoubleSolenoid m_speedShift;
-  public boolean m_isSpeedShiftHigh;
 
-  public DoubleSolenoid m_coolFalcon;
-
-  SendableChooser<String> m_songChooser = new SendableChooser<String>();
-
+  /* Timey Whimey */
+  public long m_lastTime;
+  public long m_deltaTime = 0;
   public int m_currentTimeSec = (int)(System.currentTimeMillis() / 1000);
-  public long m_lastTime, m_deltaTime; //in milliseconds
 
-  public double m_lastAngleYaw, m_currentAngleYaw, m_kinematicsTargetAngle;
+  /* Position Tracking */
+  public double m_rightFrontMotorPos = 0;
+  public double m_rightFrontMotorVel = 0;
 
   public double m_totalLeftDistanceInches = 0;
   public double m_totalRightDistanceInches = 0;
+
   public double m_lastLeftPosTicks = 0;
   public double m_lastRightPosTicks = 0;
+  
+  public double m_lastAngleYaw = 0;
+  public double m_currentAngleYaw = 0;
+  public double m_kinematicsTargetAngle = 0;
+
+  /* Smart Dashboard Objects */
+  SendableChooser<String> m_songChooser = new SendableChooser<String>();
+  
+  /* Misc */
+  public boolean m_isSpeedShiftHigh;
 
   /**
    * Add your docs here.
@@ -101,10 +106,7 @@ public class Drive extends SubsystemBase {
     resetGyroYaw();
     
     m_odometry = new DifferentialDriveOdometry( Rotation2d.fromDegrees(getHeading()), 
-                                                new Pose2d(0, 0, new Rotation2d()) );
-
-    m_speedShift = new DoubleSolenoid(7,0,1);
-    m_coolFalcon = new DoubleSolenoid(7,3,2);
+                                                new Pose2d(0, 0, new Rotation2d()));
 
     coolFalcon(false);
     
