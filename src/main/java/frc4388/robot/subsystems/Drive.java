@@ -119,8 +119,8 @@ public class Drive extends SubsystemBase {
     m_leftFrontMotor.setInverted(false);
     m_rightFrontMotor.setInverted(false);
     //m_driveTrain.setRightSideInverted(false);
-    //m_leftBackMotor.setInverted(InvertType.FollowMaster);
-    //m_rightBackMotor.setInverted(InvertType.FollowMaster);
+    m_leftBackMotor.setInverted(InvertType.FollowMaster);
+    m_rightBackMotor.setInverted(InvertType.FollowMaster);
 
     float rampRate = 0.1f;
     m_rightFrontMotor.configOpenloopRamp(rampRate, DriveConstants.DRIVE_TIMEOUT_MS);
@@ -128,9 +128,9 @@ public class Drive extends SubsystemBase {
     m_leftFrontMotor.configOpenloopRamp(rampRate, DriveConstants.DRIVE_TIMEOUT_MS);
     m_leftBackMotor.configOpenloopRamp(rampRate, DriveConstants.DRIVE_TIMEOUT_MS);
 
-    SupplyCurrentLimitConfiguration c = new SupplyCurrentLimitConfiguration(true, 20, 25, 0.01);
-    m_rightFrontMotor.configSupplyCurrentLimit(c);
-    m_leftFrontMotor.configSupplyCurrentLimit(c);
+    //SupplyCurrentLimitConfiguration c = new SupplyCurrentLimitConfiguration(true, 40, 35, 0.01);
+    //m_rightFrontMotor.configSupplyCurrentLimit(c);
+    //m_leftFrontMotor.configSupplyCurrentLimit(c);
 
     setDriveTrainNeutralMode(NeutralMode.Coast);
 
