@@ -23,6 +23,7 @@ public class DrivePositionMPAux extends CommandBase {
   double m_rampAcc;
   long m_startTime;
   long m_rampRate;
+  int m_counter;
 
   /**
    * Creates a new DrivePositionMPAux.
@@ -54,6 +55,7 @@ public class DrivePositionMPAux extends CommandBase {
     m_targetVel = m_currentVel;
     m_startTime = System.currentTimeMillis();
     m_rampAcc = (m_cruiseVel - m_currentVel) / m_rampRate;
+    m_counter = 0;
   }
 
   // Called every m_isRamptime the scheduler runs while the command is scheduled.
@@ -72,6 +74,7 @@ public class DrivePositionMPAux extends CommandBase {
       // Deramp PID
       m_drive.runDrivePositionPID(-m_targetPos, m_targetGyro);
     }
+    m_counter ++;
   }
 
   // Called once the command ends or is interrupted.
@@ -82,7 +85,7 @@ public class DrivePositionMPAux extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (m_currentPos - m_targetPos <= 0.5f * DriveConstants.TICKS_PER_INCH_LOW) {
+    if (Math.abs((int)m_drive.m_rightFrontMotor.getSelectedSensorVelocity(DriveConstants.PID_PRIMARY)) < 5 && (m_counter > 5)) {
       return true;
     }
     return false;
