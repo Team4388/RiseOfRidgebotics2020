@@ -85,7 +85,6 @@ public class Drive extends SubsystemBase {
 
   public double m_lastAngleYaw = 0;
   public double m_currentAngleYaw = 0;
-  public double m_kinematicsTargetAngle = 0;
 
   /* Smart Dashboard Objects */
   SendableChooser<String> m_songChooser = new SendableChooser<String>();
@@ -527,7 +526,6 @@ public class Drive extends SubsystemBase {
   public void resetGyroAngles() {
     m_lastAngleYaw = 0;
     m_currentAngleYaw = 0;
-    m_kinematicsTargetAngle = 0;
   }
 
   /**
