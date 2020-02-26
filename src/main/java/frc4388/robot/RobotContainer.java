@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc4388.robot.Constants.*;
+import frc4388.robot.commands.DrivePositionMPAux;
 import frc4388.robot.commands.DriveStraightAtVelocityPID;
 import frc4388.robot.commands.DriveWithJoystick;
 import frc4388.robot.commands.DriveStraightToPositionMM;
@@ -234,7 +235,8 @@ public class RobotContainer {
 
         // Run path following command, then stop at the end.
         return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));*/
-        return new InstantCommand();
+        // return new InstantCommand();
+        return new DrivePositionMPAux(m_robotDrive, 500.0, 12.0, 2, 60.0, 0.0);
     }
 
     /**
