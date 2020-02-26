@@ -83,15 +83,14 @@ public class RobotContainer {
         m_robotDrive.setDefaultCommand(new DriveWithJoystick(m_robotDrive, getDriverController()));
         // drives intake with input from triggers on the opperator controller
         m_robotIntake.setDefaultCommand(new RunIntakeWithTriggers(m_robotIntake, getOperatorController()));
-        // drives climber with input from triggers on the opperator controller
-        m_robotClimber.setDefaultCommand(new RunClimberWithTriggers(m_robotClimber, getDriverController()));
-        // continually sends updates to the Blinkin LED controller to keep the lights on
-        m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
         // runs the drum shooter in idle mode
         m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runShooterWithInput(m_operatorXbox.getLeftXAxis()), m_robotShooter));
+        // drives climber with input from triggers on the opperator controller
+        m_robotClimber.setDefaultCommand(new RunClimberWithTriggers(m_robotClimber, getDriverController()));
         // drives the leveler with an axis input from the driver controller
         m_robotLeveler.setDefaultCommand(new RunLevelerWithJoystick(m_robotLeveler, getDriverController()));
-
+        // continually sends updates to the Blinkin LED controller to keep the lights on
+        m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
     }
       
 
