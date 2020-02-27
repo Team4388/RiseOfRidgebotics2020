@@ -30,7 +30,7 @@ public final class Constants {
         public static final int PIGEON_ID = 6;
 
         /* Drive Inversions */
-        public static final boolean isRightMotorInverted = false;
+        public static final boolean isRightMotorInverted = true;
         public static final boolean isLeftMotorInverted = false;
         public static final boolean isRightArcadeInverted = false;
         public static final boolean isAuxPIDInverted = false;
@@ -53,7 +53,7 @@ public final class Constants {
         /* PID Constants Drive*/
         public static final Gains DRIVE_DISTANCE_GAINS_LOW = new Gains(0.1, 0.0, 1.0, 0.0, 0, 0.5);
         public static final Gains DRIVE_VELOCITY_GAINS_LOW = new Gains(0.1, 0.0, 0.2, 0.025, 0, 1.0);
-        public static final Gains DRIVE_TURNING_GAINS_LOW = new Gains(0.5, 0.0, 0.05, 0.0, 0, 0.55);
+        public static final Gains DRIVE_TURNING_GAINS_LOW = new Gains(0.5, 0.0, 0.0, 0.0, 0, 0.55);
         public static final Gains DRIVE_MOTION_MAGIC_GAINS_LOW = new Gains(0.2, 0.0, 0.0, 0.0, 0, 1.0);
         public static final int DRIVE_CRUISE_VELOCITY = 20000;
         public static final int DRIVE_ACCELERATION = 7000;

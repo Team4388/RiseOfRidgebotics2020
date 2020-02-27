@@ -106,13 +106,6 @@ public class Drive extends SubsystemBase {
     m_pigeon.configFactoryDefault();
     resetGyroYaw();
 
-    /* flip input so forward becomes back, etc */
-    m_leftFrontMotor.setInverted(DriveConstants.isLeftMotorInverted);
-    m_rightFrontMotor.setInverted(DriveConstants.isRightMotorInverted);
-    m_leftBackMotor.setInverted(DriveConstants.isLeftMotorInverted);
-    m_rightBackMotor.setInverted(DriveConstants.isRightMotorInverted);
-    m_driveTrain.setRightSideInverted(DriveConstants.isRightArcadeInverted);
-
     /* Config Open Loop Ramp so we don't make sudden output changes */
     m_rightFrontMotor.configOpenloopRamp(DriveConstants.OPEN_LOOP_RAMP_RATE, DriveConstants.DRIVE_TIMEOUT_MS);
     m_rightBackMotor.configOpenloopRamp(DriveConstants.OPEN_LOOP_RAMP_RATE, DriveConstants.DRIVE_TIMEOUT_MS);
@@ -120,10 +113,10 @@ public class Drive extends SubsystemBase {
     m_leftBackMotor.configOpenloopRamp(DriveConstants.OPEN_LOOP_RAMP_RATE, DriveConstants.DRIVE_TIMEOUT_MS);
 
     /* Config Supply Current Limit (Use only for debugging) */
-    m_rightFrontMotor.configSupplyCurrentLimit(DriveConstants.SUPPLY_CURRENT_LIMIT_CONFIG);
-    m_leftFrontMotor.configSupplyCurrentLimit(DriveConstants.SUPPLY_CURRENT_LIMIT_CONFIG);
-    m_rightBackMotor.configSupplyCurrentLimit(DriveConstants.SUPPLY_CURRENT_LIMIT_CONFIG);
-    m_leftBackMotor.configSupplyCurrentLimit(DriveConstants.SUPPLY_CURRENT_LIMIT_CONFIG);
+    //m_rightFrontMotor.configSupplyCurrentLimit(DriveConstants.SUPPLY_CURRENT_LIMIT_CONFIG);
+    //m_leftFrontMotor.configSupplyCurrentLimit(DriveConstants.SUPPLY_CURRENT_LIMIT_CONFIG);
+    //m_rightBackMotor.configSupplyCurrentLimit(DriveConstants.SUPPLY_CURRENT_LIMIT_CONFIG);
+    //m_leftBackMotor.configSupplyCurrentLimit(DriveConstants.SUPPLY_CURRENT_LIMIT_CONFIG);
 
     /* Config deadbands so that  */
     m_leftBackMotor.configNeutralDeadband(DriveConstants.NEUTRAL_DEADBAND, DriveConstants.DRIVE_TIMEOUT_MS);
@@ -252,6 +245,13 @@ public class Drive extends SubsystemBase {
 
     /* Set up Orchestra */
     m_orchestra = new Orchestra();
+
+    /* flip input so forward becomes back, etc */
+    m_leftFrontMotor.setInverted(DriveConstants.isLeftMotorInverted);
+    m_rightFrontMotor.setInverted(DriveConstants.isRightMotorInverted);
+    m_leftBackMotor.setInverted(DriveConstants.isLeftMotorInverted);
+    m_rightBackMotor.setInverted(DriveConstants.isRightMotorInverted);
+    //m_driveTrain.setRightSideInverted(DriveConstants.isRightArcadeInverted);
     
     /* Set up music for drive train */
     m_orchestra.addInstrument(m_leftBackMotor);
@@ -322,7 +322,7 @@ public class Drive extends SubsystemBase {
    * using the Differential Drive class to manage the two inputs
    */
   public void driveWithInput(double move, double steer) {
-    m_driveTrain.arcadeDrive(steer, move);
+    m_driveTrain.arcadeDrive(move, steer);
     m_leftBackMotor.follow(m_leftFrontMotor);
     m_rightBackMotor.follow(m_rightFrontMotor);
   }
@@ -723,8 +723,8 @@ public class Drive extends SubsystemBase {
       //SmartDashboard.putNumber("Pigeon Roll", getGyroRoll());
       SmartDashboard.putNumber("Left Front Output", m_leftFrontMotor.get());
       SmartDashboard.putNumber("Right Front Output", m_rightFrontMotor.get());
-      SmartDashboard.putNumber("Left Back Output", m_leftBackMotor.get());
-      SmartDashboard.putNumber("Right Back Output", m_rightBackMotor.get());
+      //SmartDashboard.putNumber("Left Back Output", m_leftBackMotor.get());
+      //SmartDashboard.putNumber("Right Back Output", m_rightBackMotor.get());
 
       //SmartDashboard.putNumber("Left Back Motor Velocity Raw", m_leftBackMotor.getSelectedSensorVelocity());
       //SmartDashboard.putNumber("Right Back Motor Velocity Raw", m_rightBackMotor.getSelectedSensorVelocity());
@@ -756,9 +756,9 @@ public class Drive extends SubsystemBase {
       SmartDashboard.putNumber("Left Back Motor Current Stator", m_leftBackMotor.getStatorCurrent());
 
       //SmartDashboard.putNumber("PID 0 Error", m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_PRIMARY));
-      //SmartDashboard.putNumber("PID 1 Error", m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_TURN));
+      SmartDashboard.putNumber("PID 1 Error", m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_TURN));
       //SmartDashboard.putNumber("PID 0 Target", m_rightFrontMotor.getClosedLoopTarget(DriveConstants.PID_PRIMARY));
-      //SmartDashboard.putNumber("PID 1 Target", m_rightFrontMotor.getClosedLoopTarget(DriveConstants.PID_TURN));
+      SmartDashboard.putNumber("PID 1 Target", m_rightFrontMotor.getClosedLoopTarget(DriveConstants.PID_TURN));
       //SmartDashboard.putNumber("PID 0 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_PRIMARY));
       //SmartDashboard.putNumber("PID 1 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_TURN));
 
@@ -766,7 +766,7 @@ public class Drive extends SubsystemBase {
       //SmartDashboard.putNumber("Odometry Heading", getHeading());
 
       //SmartDashboard.putNumber("Time Seconds", m_currentTimeSec);
-      //SmartDashboard.putNumber("Delta Time", m_deltaTime);
+      SmartDashboard.putNumber("Delta Time", m_deltaTimeMs);
 
       if (m_currentSong != m_songChooser.getSelected()){
         m_currentSong = m_songChooser.getSelected();
