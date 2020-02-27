@@ -42,6 +42,7 @@ import frc4388.robot.commands.TrackTarget;
 import frc4388.robot.commands.storageOutake;
 import frc4388.robot.subsystems.Camera;
 import frc4388.robot.subsystems.Leveler;
+import frc4388.robot.subsystems.Pneumatics;
 import frc4388.robot.subsystems.Storage;
 import frc4388.utility.controller.IHandController;
 import frc4388.utility.controller.XboxController;
@@ -56,6 +57,7 @@ import frc4388.utility.controller.XboxController;
 public class RobotContainer {
     /* Subsystems */
     private final Drive m_robotDrive = new Drive();
+    private final Pneumatics m_robotPneumatics = new Pneumatics();
     private final LED m_robotLED = new LED();
     private final Intake m_robotIntake = new Intake();
     private final Shooter m_robotShooter = new Shooter();
@@ -75,6 +77,10 @@ public class RobotContainer {
      * The container for the robot.  Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
+        /* Passing Drive and Pneumatics Subsystems */
+        m_robotPneumatics.passRequiredSubsystem(m_robotDrive);
+        m_robotDrive.passRequiredSubsystem(m_robotPneumatics);
+
         configureButtonBindings();
 
         /* Default Commands */
@@ -120,11 +126,11 @@ public class RobotContainer {
         /* Driver Buttons */
         // sets solenoids into high gear
         new JoystickButton(getDriverJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
-            .whenPressed(new InstantCommand(() -> m_robotDrive.setShiftState(false), m_robotDrive));
+            .whenPressed(new InstantCommand(() -> m_robotPneumatics.setShiftState(false), m_robotDrive));
 
         // sets solenoids into low gear
         new JoystickButton(getDriverJoystick(), XboxController.LEFT_BUMPER_BUTTON)
-            .whenPressed(new InstantCommand(() -> m_robotDrive.setShiftState(true), m_robotDrive));
+            .whenPressed(new InstantCommand(() -> m_robotPneumatics.setShiftState(true), m_robotDrive));
 
         /* Operator Buttons */
         //TODO: Shooter Buttons
@@ -231,7 +237,7 @@ public class RobotContainer {
      * @param state the gearing of the gearbox (true is high, false is low)
      */
     public void setDriveGearState(boolean state) {
-        m_robotDrive.setShiftState(state);
+        m_robotPneumatics.setShiftState(state);
     }
 
     /**

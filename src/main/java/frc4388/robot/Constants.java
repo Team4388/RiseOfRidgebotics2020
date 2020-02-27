@@ -156,6 +156,16 @@ public final class Constants {
         public static final double STORAGE_MIN_OUTPUT = -1.0;
         public static final Gains STORAGE_GAINS = new Gains(0.2, 0.0, 0.0, 0.0, 0, 1.0);
     }
+
+    public static final class PneumaticsConstants {
+        public static final int PCM_MODULE_ID = 7;
+
+        public static final int SPEED_SHIFT_FORWARD_ID = 0;
+        public static final int SPEED_SHIFT_REVERSE_ID = 1;
+
+        public static final int COOL_FALCON_FORWARD_ID = 3;
+        public static final int COOL_FALCON_REVERSE_ID = 2;
+    }
   
     public static final class LEDConstants {
         public static final int LED_SPARK_ID = 0;
