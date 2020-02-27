@@ -43,6 +43,7 @@ import frc4388.robot.subsystems.Climber;
 import frc4388.robot.commands.RunLevelerWithJoystick;
 import frc4388.robot.commands.TrackTarget;
 import frc4388.robot.commands.TurnDegrees;
+import frc4388.robot.commands.Wait;
 import frc4388.robot.commands.storageOutake;
 import frc4388.robot.subsystems.Camera;
 import frc4388.robot.subsystems.Leveler;
@@ -191,25 +192,25 @@ public class RobotContainer {
         return new SequentialCommandGroup(new Wait(2, m_robotDrive), 
                                     //add aim command
                                     //add shooter command
-                                    new DrivePositionMPAux(m_robotDrive, 12.0, 10.0, 3, 120.0, 0.0),
+                                    new DrivePositionMPAux(m_robotDrive, 12.0, 10.0, 3, 120.0),
                                     new ParallelCommandGroup(
                                         new StorageIntakeGroup(m_robotIntake, m_robotStorage),
-                                            new DrivePositionMPAux(m_robotDrive, 12.0, 10.0, 3, 36.0, 0.0)),
+                                            new DrivePositionMPAux(m_robotDrive, 12.0, 10.0, 3, 36.0)),
                                     new ParallelCommandGroup(
                                          new StorageIntakeGroup(m_robotIntake, m_robotStorage),
-                                            new DrivePositionMPAux(m_robotDrive, 12.0, 10.0, 3, 36.0, 0)),
+                                            new DrivePositionMPAux(m_robotDrive, 12.0, 10.0, 3, 36.0)),
                                     new StorageIntakeGroup(m_robotIntake, m_robotStorage),
                                     //add aim command 
                                     //add shooter command
 //Below this would be the picking up additional balls outside of those in the trench directly behind us
 
                                     new TurnDegrees(-150, m_robotDrive),
-                                    new DrivePositionMPAux(m_robotDrive, 12.0, 10.0, 3, 96.0, 0.0),
+                                    new DrivePositionMPAux(m_robotDrive, 12.0, 10.0, 3, 96.0),
                                     new StorageIntakeGroup(m_robotIntake, m_robotStorage),
                                     new TurnDegrees(75, m_robotDrive),
-                                    new DrivePositionMPAux(m_robotDrive, 12.0, 10.0, 3, 18.0, 0.0),
+                                    new DrivePositionMPAux(m_robotDrive, 12.0, 10.0, 3, 18.0),
                                     new TurnDegrees(-45, m_robotDrive),
-                                    new DrivePositionMPAux(m_robotDrive, 12.0, 10.0, 3, 6.0, 0.0));
+                                    new DrivePositionMPAux(m_robotDrive, 12.0, 10.0, 3, 6.0));
     }
     TrajectoryConfig getTrajectoryConfig() {
         return new TrajectoryConfig(
