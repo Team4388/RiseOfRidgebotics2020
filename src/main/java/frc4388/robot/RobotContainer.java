@@ -21,8 +21,10 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc4388.robot.Constants.*;
@@ -39,6 +41,8 @@ import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.Climber;
 import frc4388.robot.commands.RunLevelerWithJoystick;
 import frc4388.robot.commands.TrackTarget;
+import frc4388.robot.commands.TurnDegrees;
+import frc4388.robot.commands.Wait;
 import frc4388.robot.commands.storageOutake;
 import frc4388.robot.subsystems.Camera;
 import frc4388.robot.subsystems.Leveler;
@@ -181,11 +185,32 @@ public class RobotContainer {
         RamseteCommand ramseteCommand = getRamseteCommand(trajectory);
         // Run path following command, then stop at the end.
         //return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+       
+        //Runs an Autonomous command group that would shoot our preloaded balls, pick up 3 more from the trench, and shoot those
+        //This assumes that we are positioned against the right wall with our shooter facing the target.
+        return new SequentialCommandGroup(new Wait(2, m_robotDrive), 
+                                    //add aim command
+                                    //add shooter command
+                                    new DrivePositionMPAux(m_robotDrive, 12.0, 10.0, 3, 120.0, 0.0),
+                                    new ParallelCommandGroup(
+                                        new StorageIntakeGroup(m_robotIntake, m_robotStorage),
+                                            new DrivePositionMPAux(m_robotDrive, 12.0, 10.0, 3, 36.0, 0.0)),
+                                    new ParallelCommandGroup(
+                                         new StorageIntakeGroup(m_robotIntake, m_robotStorage),
+                                            new DrivePositionMPAux(m_robotDrive, 12.0, 10.0, 3, 36.0, 0)),
+                                    new StorageIntakeGroup(m_robotIntake, m_robotStorage),
+                                    //add aim command 
+                                    //add shooter command
+//Below this would be the picking up additional balls outside of those in the trench directly behind us
 
-        // return new InstantCommand();
-        return new DrivePositionMPAux(m_robotDrive, 500.0, 12.0, 2, 60.0, 0.0);
+                                    new TurnDegrees(-150, m_robotDrive),
+                                    new DrivePositionMPAux(m_robotDrive, 12.0, 10.0, 3, 96.0, 0.0),
+                                    new StorageIntakeGroup(m_robotIntake, m_robotStorage),
+                                    new TurnDegrees(75, m_robotDrive),
+                                    new DrivePositionMPAux(m_robotDrive, 12.0, 10.0, 3, 18.0, 0.0),
+                                    new TurnDegrees(-45, m_robotDrive),
+                                    new DrivePositionMPAux(m_robotDrive, 12.0, 10.0, 3, 6.0, 0.0));
     }
-
     TrajectoryConfig getTrajectoryConfig() {
         return new TrajectoryConfig(
             DriveConstants.MAX_SPEED_METERS_PER_SECOND,
