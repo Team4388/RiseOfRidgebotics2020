@@ -73,7 +73,7 @@ public class TrackTarget extends CommandBase {
       } else if (turnAmount < 0 && turnAmount > -VisionConstants.MOTOR_DEAD_ZONE) {
         turnAmount = -VisionConstants.MOTOR_DEAD_ZONE;
       }
-      m_shooterAim.runShooterWithInput(turnAmount / 3);
+      m_shooterAim.runShooterWithInput(turnAmount);
 
       // Finding Distance
       distance = VisionConstants.TARGET_HEIGHT / Math.tan((VisionConstants.LIME_ANGLE + yAngle) * (Math.PI / 180));

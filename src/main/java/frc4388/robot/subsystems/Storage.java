@@ -98,10 +98,10 @@ public class Storage extends SubsystemBase {
 
   /*
   If pressing aim
+    run unti; hitting top beam
+  else
     Run until hitting bottom beam
     dont run intake if balls not at bottom
-  else
-    run unti; hitting top beam
   
   2 beamms total
   */

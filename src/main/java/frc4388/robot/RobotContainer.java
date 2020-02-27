@@ -40,7 +40,7 @@ import frc4388.robot.commands.RunClimberWithTriggers;
 import frc4388.robot.commands.RunExtenderOutIn;
 import frc4388.robot.commands.RunIntakeWithTriggers;
 import frc4388.robot.commands.ShooterVelocityControlPID;
-import frc4388.robot.commands.StorageIntakeGroup;
+import frc4388.robot.commands.StorageIntake;
 import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Intake;
 import frc4388.robot.subsystems.LED;
@@ -57,6 +57,7 @@ import frc4388.robot.subsystems.LED;
 import frc4388.robot.commands.TrackTarget;
 import frc4388.robot.commands.StorageOutake;
 import frc4388.robot.commands.StoragePrepAim;
+import frc4388.robot.commands.StoragePrepIntake;
 import frc4388.robot.subsystems.Camera;
 import frc4388.robot.subsystems.Leveler;
 import frc4388.robot.subsystems.LimeLight;
@@ -113,8 +114,6 @@ public class RobotContainer {
         m_robotLeveler.setDefaultCommand(new RunLevelerWithJoystick(m_robotLeveler, getDriverController()));
         // moves the drum not
         m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runDrumShooter(0), m_robotShooter));
-        //turns limelight off
-        //m_robotLime.setDefaultCommand(new RunCommand(() -> m_robotLime.limeOff(), m_robotLime));
 
     }
 
@@ -145,10 +144,7 @@ public class RobotContainer {
         // shoots one ball
         new JoystickButton(getOperatorJoystick(), XboxController.LEFT_BUMPER_BUTTON)
             .whileHeld(new ShootFullGroup(m_robotShooter, m_robotShooterAim, m_robotStorage), false);
-            //.whenReleased(new RunCommand(() -> m_robotLime.limeOff()));
-            //.whenReleased(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(0, m_robotShooter.m_shooterFalcon.getSelectedSensorVelocity())))
-            //.whenReleased(new RunCommand(() -> m_robotShooterAim.limeOff()))
-            //.whenReleased(new RunCommand(() -> m_robotShooterAim.runShooterWithInput(0)));
+
         // extends or retracts the extender
         new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
             .whenPressed(new RunExtenderOutIn(m_robotIntake));
@@ -160,12 +156,12 @@ public class RobotContainer {
 
         // starts tracking target
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
-            .whileHeld(new HoldTarget(m_robotShooter, m_robotShooterAim));
-            //.whenPressed(new StoragePrepAim(m_robotStorage));
+            .whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotStorage))
+            .whenReleased(new StoragePrepIntake(m_robotIntake, m_robotStorage));
 
         //Prepares storage for intaking
         new JoystickButton(getOperatorJoystick(), XboxController.LEFT_TRIGGER_AXIS)
-            .whileHeld(new StorageIntakeGroup(m_robotIntake, m_robotStorage));
+            .whileHeld(new StorageIntake(m_robotIntake, m_robotStorage));
             
         //Runs storage to outtake
         new JoystickButton(getOperatorJoystick(), XboxController.RIGHT_TRIGGER_AXIS)

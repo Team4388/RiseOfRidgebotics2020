@@ -29,7 +29,7 @@ public class StoragePrepAim extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (m_storage.getBeam(2) == false){
+    if (m_storage.getBeam(1) == false){
       m_storage.runStorage(StorageConstants.STORAGE_SPEED);
     }
     else{
@@ -45,7 +45,7 @@ public class StoragePrepAim extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (m_storage.getBeam(2)){
+    if (m_storage.getBeam(1)){
       return true;
     }
     return false;

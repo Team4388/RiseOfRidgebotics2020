@@ -38,12 +38,11 @@ public class StorageIntake extends CommandBase {
   public void execute() {
 
     if (m_storage.getBeam(0)){
-      m_storage.setStoragePID(m_storage.getEncoderPos() + StorageConstants.STORAGE_PARTIAL_BALL);
-      m_intake.runExtender(-IntakeConstants.EXTENDER_SPEED); 
+      m_storage.runStorage(StorageConstants.STORAGE_SPEED);
       intook = true;
     }
     else{
-      m_intake.runExtender(IntakeConstants.EXTENDER_SPEED); 
+      m_storage.runStorage(0); 
     }
   }
 
@@ -55,7 +54,7 @@ public class StorageIntake extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (!m_storage.getBeam(0) && m_storage.getBeam(1) && intook){
+    if (!m_storage.getBeam(0) && intook){
       return true;
     }
     return false;

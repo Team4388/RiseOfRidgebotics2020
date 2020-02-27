@@ -33,7 +33,7 @@ public class ShooterVelocityControlPID extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooter.runDrumShooterVelocityPID(7000, m_shooter.m_shooterFalcon.getSelectedSensorVelocity());
+    m_shooter.runDrumShooterVelocityPID(m_shooter.addFireVel(), m_shooter.m_shooterFalcon.getSelectedSensorVelocity());
     m_shooter.runAngleAdjustPID(m_shooter.addFireAngle());
   }
 
