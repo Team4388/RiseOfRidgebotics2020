@@ -7,6 +7,8 @@
 
 package frc4388.robot;
 
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import frc4388.utility.LEDPatterns;
 
@@ -27,14 +29,34 @@ public final class Constants {
         public static final int DRIVE_RIGHT_BACK_CAN_ID = 5;
         public static final int PIGEON_ID = 6;
 
+        /* Drive Inversions */
+        public static final boolean isRightMotorInverted = false;
+        public static final boolean isLeftMotorInverted = false;
+        public static final boolean isRightArcadeInverted = false;
+        public static final boolean isAuxPIDInverted = false;
+
+        /* Drive Configuration */
+        public static final double OPEN_LOOP_RAMP_RATE = 0.1;
+        public static final double NEUTRAL_DEADBAND = 0.04;
+        public static final SupplyCurrentLimitConfiguration SUPPLY_CURRENT_LIMIT_CONFIG =
+            new SupplyCurrentLimitConfiguration(false, 40, 35, 0.01);
+        public static final int CLOSED_LOOP_TIME_MS = 1;
+
         /* PID Constants Drive*/
         public static final int DRIVE_TIMEOUT_MS = 30;
-        public static final Gains DRIVE_DISTANCE_GAINS = new Gains(0.1, 0.0, 1.0, 0.0, 0, 0.3);
-        public static final Gains DRIVE_VELOCITY_GAINS = new Gains(0.1, 0.0, 0.2, 0.025, 0, 0.05);
-        public static final Gains DRIVE_TURNING_GAINS = new Gains(0.5, 0.0, 0.05, 0.0, 0, 0.5);
-        //public static final Gains DRIVE_MOTION_MAGIC_GAINS = new Gains(0.2, 0.0, 0.0, 0.0, 0, 1.0);
-        //public static final int DRIVE_CRUISE_VELOCITY = 20000;
-        //public static final int DRIVE_ACCELERATION = 7000;
+        public static final Gains DRIVE_DISTANCE_GAINS_LOW = new Gains(0.1, 0.0, 1.0, 0.0, 0, 0.5);
+        public static final Gains DRIVE_VELOCITY_GAINS_LOW = new Gains(0.1, 0.0, 0.2, 0.025, 0, 1.0);
+        public static final Gains DRIVE_TURNING_GAINS_LOW = new Gains(0.5, 0.0, 0.05, 0.0, 0, 0.55);
+        public static final Gains DRIVE_MOTION_MAGIC_GAINS_LOW = new Gains(0.2, 0.0, 0.0, 0.0, 0, 1.0);
+        public static final int DRIVE_CRUISE_VELOCITY = 20000;
+        public static final int DRIVE_ACCELERATION = 7000;
+
+        public static final Gains DRIVE_DISTANCE_GAINS_HIGH = new Gains(0.0, 0.0, 0.0, 0.0, 0, 0.5);
+        public static final Gains DRIVE_VELOCITY_GAINS_HIGH = new Gains(0.0, 0.0, 0.0, 0.0, 0, 1.0);
+        public static final Gains DRIVE_TURNING_GAINS_HIGH = new Gains(0.0, 0.0, 0.0, 0.0, 0, 0.55);
+        public static final Gains DRIVE_MOTION_MAGIC_GAINS_HIGH = new Gains(0.0, 0.0, 0.0, 0.0, 0, 1.0);
+        public static final int DRIVE_CRUISE_VELOCITY_HIGH = 20000;
+        public static final int DRIVE_ACCELERATION_HIGH = 7000;
 
         /* Trajectory Constants */
         public static final double MAX_SPEED_METERS_PER_SECOND = 3;
@@ -58,20 +80,27 @@ public final class Constants {
         
         /* Drive Train Characteristics */
         public static final double TICKS_PER_MOTOR_REV = 2048;
-        public static final double MOTOR_ROT_PER_WHEEL_ROT = 5.13;
+        public static final double MOTOR_ROT_PER_WHEEL_ROT_HIGH = 5.13;
+        public static final double MOTOR_ROT_PER_WHEEL_ROT_LOW = 15;
         public static final double WHEEL_DIAMETER_INCHES = 6;
         public static final double TICKS_PER_GYRO_REV = 8192;
         
         /* Ratio Calculation */
+        public static final double INCHES_PER_WHEEL_REV = WHEEL_DIAMETER_INCHES * Math.PI;
         public static final double TICK_TIME_TO_SECONDS = 0.1;
         public static final double SECONDS_TO_TICK_TIME = 1/TICK_TIME_TO_SECONDS;
-        public static final double WHEEL_ROT_PER_MOTOR_ROT = 1/MOTOR_ROT_PER_WHEEL_ROT;
-        public static final double TICKS_PER_WHEEL_REV = TICKS_PER_MOTOR_REV * MOTOR_ROT_PER_WHEEL_ROT;
-        public static final double INCHES_PER_WHEEL_REV = WHEEL_DIAMETER_INCHES * Math.PI;
-        public static final double TICKS_PER_INCH = TICKS_PER_WHEEL_REV/INCHES_PER_WHEEL_REV;
-        public static final double INCHES_PER_TICK = 1/TICKS_PER_INCH;
         public static final double INCHES_PER_METER = 39.370;
         public static final double METERS_PER_INCH = 1/INCHES_PER_METER;
+        
+        public static final double WHEEL_ROT_PER_MOTOR_ROT_HIGH = 1/MOTOR_ROT_PER_WHEEL_ROT_HIGH;
+        public static final double TICKS_PER_WHEEL_REV_HIGH = TICKS_PER_MOTOR_REV * MOTOR_ROT_PER_WHEEL_ROT_HIGH;
+        public static final double TICKS_PER_INCH_HIGH = TICKS_PER_WHEEL_REV_HIGH/INCHES_PER_WHEEL_REV;
+        public static final double INCHES_PER_TICK_HIGH = 1/TICKS_PER_INCH_HIGH;
+
+        public static final double WHEEL_ROT_PER_MOTOR_ROT_LOW = 1/MOTOR_ROT_PER_WHEEL_ROT_LOW;
+        public static final double TICKS_PER_WHEEL_REV_LOW = TICKS_PER_MOTOR_REV * MOTOR_ROT_PER_WHEEL_ROT_LOW;
+        public static final double TICKS_PER_INCH_LOW = TICKS_PER_WHEEL_REV_LOW/INCHES_PER_WHEEL_REV;
+        public static final double INCHES_PER_TICK_LOW = 1/TICKS_PER_INCH_LOW;
     }
     
     public static final class IntakeConstants {
