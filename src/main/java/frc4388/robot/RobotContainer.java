@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc4388.robot.Constants.*;
 import frc4388.robot.commands.DrivePositionMPAux;
+import frc4388.robot.commands.DriveStraightAtVelocityPID;
 import frc4388.robot.commands.DriveWithJoystick;
 import frc4388.robot.commands.RunClimberWithTriggers;
 import frc4388.robot.commands.RunExtenderOutIn;
@@ -39,6 +40,7 @@ import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.Climber;
 import frc4388.robot.commands.RunLevelerWithJoystick;
 import frc4388.robot.commands.TrackTarget;
+import frc4388.robot.commands.TurnDegrees;
 import frc4388.robot.commands.storageOutake;
 import frc4388.robot.subsystems.Camera;
 import frc4388.robot.subsystems.Leveler;
@@ -109,11 +111,11 @@ public class RobotContainer {
         /* Test Buttons */
         // A driver test button
         new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-            .whenPressed(new InstantCommand());
+            .whenPressed(new TurnDegrees(90, m_robotDrive));
         
         // B driver test button
         new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
-            .whenPressed(new InstantCommand());
+            .whenPressed(new DriveStraightAtVelocityPID(m_robotDrive, 6000));
 
         // Y driver test button
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
@@ -183,7 +185,7 @@ public class RobotContainer {
         //return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
 
         // return new InstantCommand();
-        return new DrivePositionMPAux(m_robotDrive, 500.0, 12.0, 2, 60.0, 0.0);
+        return new DrivePositionMPAux(m_robotDrive, 12.0, 12.0, 2, 100.0);
     }
 
     TrajectoryConfig getTrajectoryConfig() {
