@@ -23,17 +23,18 @@ public class DrivePositionMPAux extends CommandBase {
   double m_rampAcc;
   long m_startTime;
   long m_rampRate;
+  int m_counter;
 
   /**
    * Creates a new DrivePositionMPAux.
    * 
    * @param subsystem The drive subsystem
-   * @param cruiseVel The target velocity for the motors in units
+   * @param cruiseVel The target velocity for the motors in in/s
    * @param rampDist  The distance before cruise velocity is reached in inches
    * @param rampRate  The time to reach the cruise velocity in seconds
    * @param targetPos The target position
    */
-  public DrivePositionMPAux(Drive subsystem, double cruiseVel, double rampDist, float rampRate, double targetPos, double targetGyro) {
+  public DrivePositionMPAux(Drive subsystem, double cruiseVel, double rampDist, float rampRate, double targetPos) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = subsystem;
     m_cruiseVel = cruiseVel * DriveConstants.TICKS_PER_INCH_LOW / 10;
@@ -54,6 +55,7 @@ public class DrivePositionMPAux extends CommandBase {
     m_targetVel = m_currentVel;
     m_startTime = System.currentTimeMillis();
     m_rampAcc = (m_cruiseVel - m_currentVel) / m_rampRate;
+    m_counter = 0;
   }
 
   // Called every m_isRamptime the scheduler runs while the command is scheduled.
@@ -72,6 +74,7 @@ public class DrivePositionMPAux extends CommandBase {
       // Deramp PID
       m_drive.runDrivePositionPID(-m_targetPos, m_targetGyro);
     }
+    m_counter ++;
   }
 
   // Called once the command ends or is interrupted.
@@ -82,8 +85,8 @@ public class DrivePositionMPAux extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (m_currentPos - m_targetPos <= 0.5f * DriveConstants.TICKS_PER_INCH_LOW) {
-      return true;
+    if (Math.abs((int)m_drive.m_rightFrontMotor.getSelectedSensorVelocity(DriveConstants.PID_PRIMARY)) < 5 && (m_counter > 5)) {
+      //return true;
     }
     return false;
   }

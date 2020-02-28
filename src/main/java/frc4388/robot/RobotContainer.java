@@ -21,12 +21,15 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc4388.robot.Constants.*;
 import frc4388.robot.commands.DrivePositionMPAux;
+import frc4388.robot.commands.DriveStraightAtVelocityPID;
 import frc4388.robot.commands.DriveWithJoystick;
 import frc4388.robot.commands.RunClimberWithTriggers;
 import frc4388.robot.commands.RunExtenderOutIn;
@@ -39,9 +42,12 @@ import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.Climber;
 import frc4388.robot.commands.RunLevelerWithJoystick;
 import frc4388.robot.commands.TrackTarget;
+import frc4388.robot.commands.TurnDegrees;
+import frc4388.robot.commands.Wait;
 import frc4388.robot.commands.storageOutake;
 import frc4388.robot.subsystems.Camera;
 import frc4388.robot.subsystems.Leveler;
+import frc4388.robot.subsystems.Pneumatics;
 import frc4388.robot.subsystems.Storage;
 import frc4388.utility.controller.IHandController;
 import frc4388.utility.controller.XboxController;
@@ -56,6 +62,7 @@ import frc4388.utility.controller.XboxController;
 public class RobotContainer {
     /* Subsystems */
     private final Drive m_robotDrive = new Drive();
+    private final Pneumatics m_robotPneumatics = new Pneumatics();
     private final LED m_robotLED = new LED();
     private final Intake m_robotIntake = new Intake();
     private final Shooter m_robotShooter = new Shooter();
@@ -75,6 +82,10 @@ public class RobotContainer {
      * The container for the robot.  Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
+        /* Passing Drive and Pneumatics Subsystems */
+        m_robotPneumatics.passRequiredSubsystem(m_robotDrive);
+        m_robotDrive.passRequiredSubsystem(m_robotPneumatics);
+
         configureButtonBindings();
 
         /* Default Commands */
@@ -103,11 +114,11 @@ public class RobotContainer {
         /* Test Buttons */
         // A driver test button
         new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-            .whenPressed(new InstantCommand());
+            .whenPressed(new TurnDegrees(90, m_robotDrive));
         
         // B driver test button
         new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
-            .whenPressed(new InstantCommand());
+            .whenPressed(new DriveStraightAtVelocityPID(m_robotDrive, 6000));
 
         // Y driver test button
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
@@ -120,11 +131,11 @@ public class RobotContainer {
         /* Driver Buttons */
         // sets solenoids into high gear
         new JoystickButton(getDriverJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
-            .whenPressed(new InstantCommand(() -> m_robotDrive.setShiftState(false), m_robotDrive));
+            .whenPressed(new InstantCommand(() -> m_robotPneumatics.setShiftState(false), m_robotDrive));
 
         // sets solenoids into low gear
         new JoystickButton(getDriverJoystick(), XboxController.LEFT_BUMPER_BUTTON)
-            .whenPressed(new InstantCommand(() -> m_robotDrive.setShiftState(true), m_robotDrive));
+            .whenPressed(new InstantCommand(() -> m_robotPneumatics.setShiftState(true), m_robotDrive));
 
         /* Operator Buttons */
         //TODO: Shooter Buttons
@@ -175,11 +186,32 @@ public class RobotContainer {
         RamseteCommand ramseteCommand = getRamseteCommand(trajectory);
         // Run path following command, then stop at the end.
         //return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+       
+        //Runs an Autonomous command group that would shoot our preloaded balls, pick up 3 more from the trench, and shoot those
+        //This assumes that we are positioned against the right wall with our shooter facing the target.
+        return new SequentialCommandGroup(new Wait(2, m_robotDrive), 
+                                    //add aim command
+                                    //add shooter command
+                                    new DrivePositionMPAux(m_robotDrive, 12.0, 10.0, 3, 120.0),
+                                    new ParallelCommandGroup(
+                                        new StorageIntakeGroup(m_robotIntake, m_robotStorage),
+                                            new DrivePositionMPAux(m_robotDrive, 12.0, 10.0, 3, 36.0)),
+                                    new ParallelCommandGroup(
+                                         new StorageIntakeGroup(m_robotIntake, m_robotStorage),
+                                            new DrivePositionMPAux(m_robotDrive, 12.0, 10.0, 3, 36.0)),
+                                    new StorageIntakeGroup(m_robotIntake, m_robotStorage),
+                                    //add aim command 
+                                    //add shooter command
+//Below this would be the picking up additional balls outside of those in the trench directly behind us
 
-        // return new InstantCommand();
-        return new DrivePositionMPAux(m_robotDrive, 500.0, 12.0, 2, 60.0, 0.0);
+                                    new TurnDegrees(-150, m_robotDrive),
+                                    new DrivePositionMPAux(m_robotDrive, 12.0, 10.0, 3, 96.0),
+                                    new StorageIntakeGroup(m_robotIntake, m_robotStorage),
+                                    new TurnDegrees(75, m_robotDrive),
+                                    new DrivePositionMPAux(m_robotDrive, 12.0, 10.0, 3, 18.0),
+                                    new TurnDegrees(-45, m_robotDrive),
+                                    new DrivePositionMPAux(m_robotDrive, 12.0, 10.0, 3, 6.0));
     }
-
     TrajectoryConfig getTrajectoryConfig() {
         return new TrajectoryConfig(
             DriveConstants.MAX_SPEED_METERS_PER_SECOND,
@@ -231,7 +263,7 @@ public class RobotContainer {
      * @param state the gearing of the gearbox (true is high, false is low)
      */
     public void setDriveGearState(boolean state) {
-        m_robotDrive.setShiftState(state);
+        m_robotPneumatics.setShiftState(state);
     }
 
     /**
