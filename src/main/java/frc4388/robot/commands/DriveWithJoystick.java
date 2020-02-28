@@ -7,6 +7,7 @@
 
 package frc4388.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.subsystems.Drive;
 import frc4388.utility.controller.IHandController;
@@ -38,26 +39,27 @@ public class DriveWithJoystick extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double moveInput = -m_controller.getLeftYAxis();
-    double steerInput = m_controller.getRightXAxis();
+    double moveInput = m_controller.getRightXAxis();
+    double steerInput = -m_controller.getLeftYAxis();
     double moveOutput = 0;
     double steerOutput = 0;
-    if (moveInput >= 0){
-      moveOutput = -Math.cos(1.571*moveInput)+1;
+    if (steerInput >= 0){
+      steerOutput = -Math.cos(1.571*steerInput)+1;
     } else {
-      moveOutput = Math.cos(1.571*moveInput)-1;
+      steerOutput = Math.cos(1.571*steerInput)-1;
     }
 
-    double cosMultiplier = .55;
+    double cosMultiplier = 1.0;
     double deadzone = .1;
-    if (steerInput > 0){
-      steerOutput = -(cosMultiplier - deadzone) * Math.cos(1.571*steerInput) + cosMultiplier;
-    } else if (steerInput < 0) {
-      steerOutput = (cosMultiplier - deadzone) * Math.cos(1.571*steerInput) - cosMultiplier;
+    if (moveInput > 0){
+      moveOutput = -(cosMultiplier - deadzone) * Math.cos(1.571*moveInput) + cosMultiplier;
+    } else if (moveInput < 0) {
+      moveOutput = (cosMultiplier - deadzone) * Math.cos(1.571*moveInput) - cosMultiplier;
     } else {
-      steerOutput = 0;
+      moveOutput = 0;
     }
-
+    
+    SmartDashboard.putNumber("Steer Output Test", moveOutput);
     m_drive.driveWithInput(moveOutput, steerOutput);
   }
 
