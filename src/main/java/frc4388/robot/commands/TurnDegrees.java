@@ -24,7 +24,7 @@ public class TurnDegrees extends CommandBase {
   /**
    * Creates a new TurnDeg.
    */
-  public TurnDegrees(double targetAngle, Drive subsystem) {
+  public TurnDegrees(Drive subsystem, double targetAngle) {
     // Use addRequirements() here to declare subsystem dependencies.
 
     m_targetAngle = targetAngle;

@@ -66,13 +66,13 @@ public class DrivePositionMPAux extends CommandBase {
     if (System.currentTimeMillis() - m_startTime < m_rampRate) {
       // Ramping
       m_targetVel += m_rampAcc * m_drive.m_deltaTimeMs;
-      m_drive.runDriveVelocityPID(-m_targetVel, m_targetGyro);
+      m_drive.runDriveVelocityPID(m_targetVel, m_targetGyro);
     } else if (m_targetPos - m_currentPos > m_rampDist) {
       // Cruising
-      m_drive.runDriveVelocityPID(-m_cruiseVel, m_targetGyro);
+      m_drive.runDriveVelocityPID(m_cruiseVel, m_targetGyro);
     } else {
       // Deramp PID
-      m_drive.runDrivePositionPID(-m_targetPos, m_targetGyro);
+      m_drive.runDrivePositionPID(m_targetPos, m_targetGyro);
     }
     m_counter ++;
   }
