@@ -20,13 +20,12 @@ public class GotoCoordinates extends SequentialCommandGroup {
   double m_yTarget;
   double m_currentAngle;
   double m_hypotDist;
-
-  double m_lastAngle;
+  double m_endAngle;
 
   /**
    * Creates a new GotoPosition.
    */
-  public GotoCoordinates(Drive subsystem, double xTarget, double yTarget) {
+  public GotoCoordinates(Drive subsystem, double xTarget, double yTarget, double endAngle) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     m_drive = subsystem;
@@ -37,9 +36,12 @@ public class GotoCoordinates extends SequentialCommandGroup {
     m_hypotDist = Math.sqrt((m_xTarget*m_xTarget) + (m_yTarget*m_yTarget));
 
     m_currentAngle = calcAngle();
+    m_endAngle = endAngle;
 
 
-    addCommands(new TurnDegrees(m_drive, m_currentAngle), new DriveStraightToPositionMM(m_drive, m_hypotDist));
+    addCommands(  new TurnDegrees(m_drive, m_currentAngle), 
+                  new DriveStraightToPositionMM(m_drive, m_hypotDist), 
+                  new TurnDegrees(m_drive, m_endAngle - m_currentAngle - 90));
   }
 
   public boolean isQuadrantThree() {

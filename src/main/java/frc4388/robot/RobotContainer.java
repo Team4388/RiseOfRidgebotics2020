@@ -125,7 +125,7 @@ public class RobotContainer {
 
         // Y driver test button
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
-            .whenPressed(new GotoCoordinates(m_robotDrive, 12, 40));
+            .whenPressed(new GotoCoordinates(m_robotDrive, 12, 12, 0));
 
         // X driver test button
         new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
@@ -192,10 +192,10 @@ public class RobotContainer {
        
         //Runs an Autonomous command group that would shoot our preloaded balls, pick up 3 more from the trench, and shoot those
         //This assumes that we are positioned against the right wall with our shooter facing the target.
-        return new SequentialCommandGroup(new Wait(2, m_robotDrive), 
+        return new SequentialCommandGroup(new Wait(0, m_robotDrive), 
                                     //add aim command
                                     //add shooter command
-                                    new DriveStraightToPositionMM(m_robotDrive, 48.0),
+                                    //new DriveStraightToPositionMM(m_robotDrive, 48.0),
                                     /*new ParallelCommandGroup(
                                         new StorageIntakeGroup(m_robotIntake, m_robotStorage),
                                             new DriveStraightToPositionMM(m_robotDrive, 36.0)),
@@ -207,8 +207,8 @@ public class RobotContainer {
                                     //add shooter command
 //Below this would be the picking up additional balls outside of those in the trench directly behind us
 
-                                    new TurnDegrees(m_robotDrive, -90),
-                                    new DriveStraightToPositionMM(m_robotDrive, 96.0));//,
+                                    //new GotoCoordinates(m_robotDrive, 36, 36),
+                                    new GotoCoordinates(m_robotDrive, 36, 36, 0));//,
                                     //new StorageIntakeGroup(m_robotIntake, m_robotStorage),
                                     //new TurnDegrees(m_robotDrive, 75),
                                     //new DriveStraightToPositionMM(m_robotDrive, 18.0),

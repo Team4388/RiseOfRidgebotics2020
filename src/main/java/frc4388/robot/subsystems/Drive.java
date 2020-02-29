@@ -727,8 +727,8 @@ public class Drive extends SubsystemBase {
       //SmartDashboard.putNumber("Left Back Output", m_leftBackMotor.get());
       //SmartDashboard.putNumber("Right Back Output", m_rightBackMotor.get());
 
-      double leftRPM = m_leftFrontMotor.getSensorCollection().getIntegratedSensorVelocity();
-      double rightRPM = m_rightFrontMotor.getSensorCollection().getIntegratedSensorVelocity();
+      double leftRPM = ticksToInches(m_leftFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
+      double rightRPM = ticksToInches(m_rightFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
 
       SmartDashboard.putNumber("Left Motor RPM", leftRPM);
       SmartDashboard.putNumber("Right Motor RPM", rightRPM);
