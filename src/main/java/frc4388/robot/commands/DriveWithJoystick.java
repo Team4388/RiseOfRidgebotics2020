@@ -26,9 +26,10 @@ public class DriveWithJoystick extends CommandBase {
    * {@link frc4388.robot.RobotContainer#getDriverJoystick() getDriverJoystick()} method in
    * {@link frc4388.robot.RobotContainer#RobotContainer() RobotContainer}
    */
-  public DriveWithJoystick(Drive subsystem, IHandController controller) {
+  public DriveWithJoystick(Drive subsystem, Pneumatics subsystem2, IHandController controller) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = subsystem;
+    m_pneumatics = subsystem2;
     m_controller = controller;
     addRequirements(m_drive);
   }
