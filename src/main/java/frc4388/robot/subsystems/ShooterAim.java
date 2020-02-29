@@ -7,10 +7,12 @@
 
 package frc4388.robot.subsystems;
 
+import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
+import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -22,6 +24,7 @@ import frc4388.robot.Constants.ShooterConstants;
 public class ShooterAim extends SubsystemBase {
   public CANSparkMax m_shooterRotateMotor = new CANSparkMax(ShooterConstants.SHOOTER_ROTATE_ID, MotorType.kBrushless);
   public static Gains m_shooterTurretGains = ShooterConstants.SHOOTER_TURRET_GAINS;
+  CANDigitalInput m_shooterRightLimit, m_shooterLeftLimit;
 
     // Configure PID Controllers
     CANPIDController m_shooterRotatePIDController = m_shooterRotateMotor.getPIDController();
@@ -32,10 +35,15 @@ public class ShooterAim extends SubsystemBase {
   public ShooterAim() {
     resetGyroShooterRotate();
     m_shooterRotateMotor.setIdleMode(IdleMode.kBrake);
+
+    m_shooterRightLimit = m_shooterRotateMotor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
+    m_shooterLeftLimit = m_shooterRotateMotor.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
+    m_shooterRightLimit.enableLimitSwitch(true);
+    m_shooterLeftLimit.enableLimitSwitch(true);
   }
 
   public void runShooterWithInput(double input) {
-    m_shooterRotateMotor.set(input);
+    m_shooterRotateMotor.set(input/3);
   }
 
 

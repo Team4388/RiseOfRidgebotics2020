@@ -51,7 +51,8 @@ public class TrackTarget extends CommandBase {
   @Override
   public void initialize() {
     // Vision Processing Mode
-    LimeLight.limeOn();
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0);
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -93,17 +94,18 @@ public class TrackTarget extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // Drive Camera Mode
-    LimeLight.limeOff();
+
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (xAngle < 1 && xAngle > -1)
+    if (xAngle < 1 && xAngle > -1 && target == 1)
     {
+      SmartDashboard.putBoolean("TrackTarget Finished", true);
       return true;
     }
+    SmartDashboard.putBoolean("TrackTarget Finished", false);
     return false;
   }
 }

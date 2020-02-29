@@ -7,6 +7,7 @@
 
 package frc4388.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.Constants.StorageConstants;
 import frc4388.robot.subsystems.Storage;
@@ -29,7 +30,7 @@ public class StoragePrepAim extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (m_storage.getBeam(1) == false){
+    if (m_storage.getBeam(1)){
       m_storage.runStorage(StorageConstants.STORAGE_SPEED);
     }
     else{
@@ -45,9 +46,11 @@ public class StoragePrepAim extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (m_storage.getBeam(1)){
+    if (!m_storage.getBeam(1)){
+      SmartDashboard.putBoolean("StoragePrepAim Finished", true);
       return true;
     }
+    SmartDashboard.putBoolean("StoragePrepAim Finished", false);
     return false;
   }
 }

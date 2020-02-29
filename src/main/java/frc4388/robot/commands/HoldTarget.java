@@ -49,7 +49,8 @@ public class HoldTarget extends CommandBase {
   @Override
   public void initialize() {
       //Vision Processing Mode
-    LimeLight.limeOn();
+      NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0);
+      NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
   }
 
 
@@ -88,8 +89,7 @@ public class HoldTarget extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-      //Drive Camera Mode
-    LimeLight.limeOff();
+
   }
 
   // Returns true when the command should end.

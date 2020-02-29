@@ -13,9 +13,11 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.ControlType;
+import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -48,6 +50,7 @@ public class Shooter extends SubsystemBase {
   public boolean velReached;
   public double m_fireVel;
   public double m_fireAngle;
+  CANDigitalInput m_hoodUpLimit, m_hoodDownLimit;
   
   /*
    * Creates a new Shooter subsystem.
@@ -81,6 +84,13 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("CSV A 10", m_shooterTable.getAngleDisplacement(10));
     SmartDashboard.putNumber("CSV A 5", m_shooterTable.getAngleDisplacement(5));
     SmartDashboard.putNumber("CSV A 30", m_shooterTable.getAngleDisplacement(30));
+
+
+
+    m_hoodUpLimit = m_angleAdjustMotor.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
+    m_hoodDownLimit = m_angleAdjustMotor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
+    m_hoodUpLimit.enableLimitSwitch(true);
+    m_hoodDownLimit.enableLimitSwitch(true);
   }
 
   @Override

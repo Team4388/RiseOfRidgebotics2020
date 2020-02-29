@@ -41,7 +41,6 @@ import frc4388.robot.commands.StorageIntake;
 import frc4388.robot.commands.RunClimberWithTriggers;
 import frc4388.robot.commands.RunExtenderOutIn;
 import frc4388.robot.commands.RunIntakeWithTriggers;
-import frc4388.robot.commands.StorageIntakeGroup;
 import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Intake;
 import frc4388.robot.subsystems.LED;
@@ -105,7 +104,7 @@ public class RobotContainer {
         // drives intake with input from triggers on the opperator controller
         m_robotIntake.setDefaultCommand(new RunIntakeWithTriggers(m_robotIntake, getOperatorController()));
         // runs the turret with joystick
-        m_robotShooterAim.setDefaultCommand(new RunCommand(() -> m_robotShooterAim.runShooterWithInput(m_operatorXbox.getLeftXAxis()), m_robotShooterAim));
+        m_robotShooterAim.setDefaultCommand(new RunCommand(() -> m_robotShooterAim.runShooterWithInput(-m_operatorXbox.getLeftXAxis()), m_robotShooterAim));
         // moves the drum not
         m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runDrumShooter(0), m_robotShooter));
         // drives climber with input from triggers on the opperator controller
@@ -114,6 +113,8 @@ public class RobotContainer {
         m_robotLeveler.setDefaultCommand(new RunLevelerWithJoystick(m_robotLeveler, getDriverController()));
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
+        //m_robotStorage.setDefaultCommand(new RunCommand(() -> m_robotStorage.runStorage(0), m_robotStorage));
+        //m_robotLime.setDefaultCommand(new RunCommand(() -> m_robotLime.limeOff(), m_robotLime));
     }
 
     /**
@@ -149,15 +150,18 @@ public class RobotContainer {
         new JoystickButton(getDriverJoystick(), XboxController.LEFT_BUMPER_BUTTON)
             .whenPressed(new InstantCommand(() -> m_robotDrive.setShiftState(true), m_robotDrive));
 
+
         /* Operator Buttons */
 
         // shoots until released
         new JoystickButton(getOperatorJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
-            .whileHeld(new ShootFullGroup(m_robotShooter, m_robotShooterAim, m_robotStorage), false);
+            .whileHeld(new ShootFullGroup(m_robotShooter, m_robotShooterAim, m_robotStorage), false)
+            .whenReleased(new RunCommand(() -> m_robotLime.limeOff()));
 
         // shoots one ball
         new JoystickButton(getOperatorJoystick(), XboxController.LEFT_BUMPER_BUTTON)
-            .whileHeld(new ShootFullGroup(m_robotShooter, m_robotShooterAim, m_robotStorage), false);
+            .whenPressed(new ShootFullGroup(m_robotShooter, m_robotShooterAim, m_robotStorage), false)
+            .whenReleased(new RunCommand(() -> m_robotLime.limeOff()));
 
         // extends or retracts the extender
         new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
@@ -171,7 +175,9 @@ public class RobotContainer {
         // starts tracking target
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
             .whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotStorage))
+            //.whileHeld(new TrackTarget(m_robotShooter,m_robotShooterAim))
             .whenReleased(new StoragePrepIntake(m_robotIntake, m_robotStorage));
+            //.whenReleased(new RunCommand(() -> m_robotLime.limeOff()));
 
         //Prepares storage for intaking
         new JoystickButton(getOperatorJoystick(), XboxController.LEFT_TRIGGER_AXIS)
@@ -182,10 +188,12 @@ public class RobotContainer {
             .whileHeld(new StorageOutake(m_robotStorage));
 
         new JoystickButton(getOperatorJoystick(), XboxController.Y_BUTTON)
-            .whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotStorage));
+            .whileHeld(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(0.2)))
+            .whenReleased(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(0)));
 
         new JoystickButton(getOperatorJoystick(), XboxController.B_BUTTON)
-            .whileHeld(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(13000, m_robotShooter.m_shooterFalcon.getSelectedSensorVelocity())));
+            .whileHeld(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(-0.2)))
+            .whenReleased(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(0)));
     }
 
     /**

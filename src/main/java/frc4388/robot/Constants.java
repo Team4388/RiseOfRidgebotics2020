@@ -120,7 +120,7 @@ public final class Constants {
         public static final int SHOOTER_PID_LOOP_IDX = 1;
         public static final int SHOOTER_TIMEOUT_MS = 30;
         //public static final Gains DRUM_SHOOTER_GAINS = new Gains(0.4, 0.0005, 13, 0.05, 0, 1.0);
-        public static final Gains DRUM_SHOOTER_GAINS = new Gains(0.0, 0.0, 0, 0.0453, 0, 1.0);
+        public static final Gains DRUM_SHOOTER_GAINS = new Gains(0.2, 0.0, 0, 0.0453, 0, 1.0);
         public static final Gains SHOOTER_TURRET_GAINS = new Gains(0.0, 0.0, 0.0, 0.0, 0, 1.0);
         public static final Gains SHOOTER_ANGLE_GAINS = new Gains(0.5, 0.0, 0.0, 0.0, 0, 1.0);
         public static final double SHOOTER_TURRET_MIN = -1.0;
@@ -130,7 +130,7 @@ public final class Constants {
     }
     
     public static final class ClimberConstants {
-        public static final int CLIMBER_SPARK_ID = 10;
+        public static final int CLIMBER_SPARK_ID = -10;
     }
   
     public static final class LevelerConstants {
@@ -138,7 +138,7 @@ public final class Constants {
     }
   
     public static final class StorageConstants {
-        public static final int STORAGE_CAN_ID = -1;
+        public static final int STORAGE_CAN_ID = 11;
         public static final double STORAGE_PARTIAL_BALL = 2;
         public static final double STORAGE_FULL_BALL = 7;
         public static final double STORAGE_SPEED = 0.5;
@@ -159,7 +159,7 @@ public final class Constants {
 
         /* PID Gains */
         public static final double STORAGE_MIN_OUTPUT = -1.0;
-        public static final Gains STORAGE_GAINS = new Gains(0.2, 0.0, 0.0, 0.0, 0, 1.0);
+        public static final Gains STORAGE_GAINS = new Gains(1, 0.0, 0.0, 0.0, 0, 1.0);
     }
   
     public static final class LEDConstants {

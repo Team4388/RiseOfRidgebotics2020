@@ -36,7 +36,8 @@ public class StoragePrepIntake extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (!m_storage.getBeam(0) && System.currentTimeMillis() < startTime + 3000){ //If the bottom beam is broken, or 3 seconds have passed
+    System.err.println(m_storage.getBeam(0));
+    if (m_storage.getBeam(0)){//&& System.currentTimeMillis() < startTime + 3000){ //If the bottom beam is broken, or 3 seconds have passed
       m_storage.runStorage(-StorageConstants.STORAGE_SPEED);
     }
     else{
@@ -52,7 +53,7 @@ public class StoragePrepIntake extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (m_storage.getBeam(0)){
+    if (!m_storage.getBeam(0)){
       return true;
     }
     return false;

@@ -20,12 +20,13 @@ import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.command.WaitUntilCommand;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Gains;
 import frc4388.robot.Constants.StorageConstants;
 
 public class Storage extends SubsystemBase {
-  private CANSparkMax m_storageMotor = new CANSparkMax(StorageConstants.STORAGE_CAN_ID, MotorType.kBrushless);
+  public CANSparkMax m_storageMotor = new CANSparkMax(StorageConstants.STORAGE_CAN_ID, MotorType.kBrushless);
   private DigitalInput[] m_beamSensors = new DigitalInput[6];
 
   CANPIDController m_storagePIDController = m_storageMotor.getPIDController();
@@ -69,6 +70,11 @@ public class Storage extends SubsystemBase {
     m_encoder.setPosition(0);
   }
 
+  public void testBeams(){
+    SmartDashboard.putBoolean("Beam 0", m_beamSensors[0].get());
+    SmartDashboard.putBoolean("Beam 1", m_beamSensors[1].get());
+  }
+
   /* Storage PID Control */
   public void runStoragePositionPID(double targetPos){
     // Set PID Coefficients
@@ -79,6 +85,8 @@ public class Storage extends SubsystemBase {
     m_storagePIDController.setFF(storageGains.m_kF);
     m_storagePIDController.setOutputRange(StorageConstants.STORAGE_MIN_OUTPUT, storageGains.m_kmaxOutput);
 
+    SmartDashboard.putNumber("Storage Position PID Target", targetPos);
+    SmartDashboard.putNumber("Storage Position Pos", getEncoderPos());
     m_storagePIDController.setReference(targetPos, ControlType.kPosition);
   }
 

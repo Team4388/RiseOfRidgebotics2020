@@ -110,7 +110,7 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.setInverted(DriveConstants.isRightMotorInverted);
     m_leftBackMotor.setInverted(DriveConstants.isLeftMotorInverted);
     m_rightBackMotor.setInverted(DriveConstants.isRightMotorInverted);
-    m_driveTrain.setRightSideInverted(DriveConstants.isRightArcadeInverted);
+   // m_driveTrain.setRightSideInverted(DriveConstants.isRightArcadeInverted);
 
     /* Config Open Loop Ramp so we don't make sudden output changes */
     m_rightFrontMotor.configOpenloopRamp(DriveConstants.OPEN_LOOP_RAMP_RATE, DriveConstants.DRIVE_TIMEOUT_MS);

@@ -8,30 +8,31 @@
 package frc4388.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc4388.robot.Constants.StorageConstants;
 import frc4388.robot.subsystems.Storage;
 
-
 public class StoragePositionPID extends CommandBase {
-  Storage m_storage;
+  public Storage m_storage;
+  double startPos;
   /**
    * Creates a new StoragePositionPID.
    */
-  public StoragePositionPID(Storage storage) {
-    m_storage = storage;
+  public StoragePositionPID(Storage subsystem) {
+    m_storage = subsystem;
     addRequirements(m_storage);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    startPos = m_storage.getEncoderPos();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    new RunCommand(() -> m_storage.runStoragePositionPID(m_storage.getEncoderPos() + StorageConstants.STORAGE_FULL_BALL));
+    System.err.println("oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooiujgxzxfghjkiujsdasdgioiedsdjkl");
+    m_storage.runStoragePositionPID(m_storage.getEncoderPos() + StorageConstants.STORAGE_FULL_BALL);
   }
 
   // Called once the command ends or is interrupted.
@@ -42,6 +43,10 @@ public class StoragePositionPID extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (startPos + StorageConstants.STORAGE_FULL_BALL == m_storage.getEncoderPos())
+    {
+      return true;
+    }
     return false;
   }
 }

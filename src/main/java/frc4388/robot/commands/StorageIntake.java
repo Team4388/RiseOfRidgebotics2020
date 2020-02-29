@@ -37,7 +37,7 @@ public class StorageIntake extends CommandBase {
   @Override
   public void execute() {
 
-    if (m_storage.getBeam(0)){
+    if (!m_storage.getBeam(0)){
       m_storage.runStorage(StorageConstants.STORAGE_SPEED);
       intook = true;
     }
@@ -54,7 +54,7 @@ public class StorageIntake extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (!m_storage.getBeam(0) && intook){
+    if (m_storage.getBeam(0) && intook){
       return true;
     }
     return false;
