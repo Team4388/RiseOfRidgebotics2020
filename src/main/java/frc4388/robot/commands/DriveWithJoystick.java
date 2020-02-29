@@ -58,11 +58,18 @@ public class DriveWithJoystick extends CommandBase {
     } else {
       steerOutput = 0;
     }
+    double tempOutputLimit = 0.8;
 
-    if (moveOutput > 0.5) {
-      moveOutput = 0.5;
-    } else if(moveOutput < -0.5) {
-      moveOutput = -0.5;
+    if (moveOutput > tempOutputLimit) {
+      moveOutput = tempOutputLimit;
+    } else if(moveOutput < -tempOutputLimit) {
+      moveOutput = -tempOutputLimit;
+    }
+
+    if (steerOutput > tempOutputLimit) {
+      steerOutput = tempOutputLimit;
+    } else if(steerOutput < -tempOutputLimit) {
+      steerOutput = -tempOutputLimit;
     }
 
     SmartDashboard.putNumber("Steer Output Test", moveOutput);
