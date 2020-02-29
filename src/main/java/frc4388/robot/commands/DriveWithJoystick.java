@@ -53,6 +53,13 @@ public class DriveWithJoystick extends CommandBase {
 
     double cosMultiplier = 1.0;
     double deadzone = .1;
+
+    if (m_pneumatics.m_isSpeedShiftHigh) {
+      cosMultiplier = 0.8;
+    } else {
+      cosMultiplier = 1.0;
+    }
+
     if (steerInput > 0){
       steerOutput = -(cosMultiplier - deadzone) * Math.cos(1.571*steerInput) + cosMultiplier;
     } else if (steerInput < 0) {
@@ -60,29 +67,31 @@ public class DriveWithJoystick extends CommandBase {
     } else {
       steerOutput = 0;
     }
-    
+
+    /*
     double outputLimit = 0.8;
 
     boolean isMoveOutputLimited = false;
-    boolean isSteerOutputLimited = true;
+    boolean isSteerOutputLimited = false;
     
-  if (m_pneumatics.m_isSpeedShiftHigh) {
-    if (isMoveOutputLimited) {
-      if (moveOutput > outputLimit) {
-        moveOutput = outputLimit;
-      } else if(moveOutput < -outputLimit) {
-        moveOutput = -outputLimit;
+    if (m_pneumatics.m_isSpeedShiftHigh) {
+      if (isMoveOutputLimited) {
+        if (moveOutput > outputLimit) {
+          moveOutput = outputLimit;
+        } else if(moveOutput < -outputLimit) {
+          moveOutput = -outputLimit;
+        }
       }
-    }
 
-    if (isSteerOutputLimited) {
-      if (steerOutput > outputLimit) {
-        steerOutput = outputLimit;
-      } else if(steerOutput < -outputLimit) {
-        steerOutput = -outputLimit;
+      if (isSteerOutputLimited) {
+        if (steerOutput > outputLimit) {
+          steerOutput = outputLimit;
+        } else if(steerOutput < -outputLimit) {
+          steerOutput = -outputLimit;
+        }
       }
-    }
-  }
+    } 
+  */
     
     m_drive.driveWithInput(moveOutput, steerOutput);
   }
