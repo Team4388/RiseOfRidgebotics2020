@@ -88,6 +88,7 @@ public class Drive extends SubsystemBase {
   public double m_lastAngleYaw = 0;
   public double m_currentAngleYaw = 0;
 
+  public double m_lastAngleGotoCoordinates;
   /* Smart Dashboard Objects */
   SendableChooser<String> m_songChooser = new SendableChooser<String>();
   
@@ -322,7 +323,7 @@ public class Drive extends SubsystemBase {
    * using the Differential Drive class to manage the two inputs
    */
   public void driveWithInput(double move, double steer) {
-    m_driveTrain.arcadeDrive(move, steer);
+    m_driveTrain.arcadeDrive(steer, move);
     m_leftBackMotor.follow(m_leftFrontMotor);
     m_rightBackMotor.follow(m_rightFrontMotor);
   }
@@ -725,6 +726,12 @@ public class Drive extends SubsystemBase {
       SmartDashboard.putNumber("Right Front Output", m_rightFrontMotor.get());
       //SmartDashboard.putNumber("Left Back Output", m_leftBackMotor.get());
       //SmartDashboard.putNumber("Right Back Output", m_rightBackMotor.get());
+
+      double leftRPM = ticksToInches(m_leftFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
+      double rightRPM = ticksToInches(m_rightFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
+
+      SmartDashboard.putNumber("Left Motor RPM", leftRPM);
+      SmartDashboard.putNumber("Right Motor RPM", rightRPM);
 
       //SmartDashboard.putNumber("Left Back Motor Velocity Raw", m_leftBackMotor.getSelectedSensorVelocity());
       //SmartDashboard.putNumber("Right Back Motor Velocity Raw", m_rightBackMotor.getSelectedSensorVelocity());

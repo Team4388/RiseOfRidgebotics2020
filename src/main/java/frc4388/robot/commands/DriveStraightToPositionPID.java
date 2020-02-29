@@ -27,7 +27,7 @@ public class DriveStraightToPositionPID extends CommandBase {
   public DriveStraightToPositionPID(Drive subsystem, double targetPos) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = subsystem;
-    m_targetPosIn = targetPos * DriveConstants.TICKS_PER_INCH_LOW;
+    m_targetPosIn = targetPos * DriveConstants.TICKS_PER_INCH_LOW * 2;
     addRequirements(m_drive);
     //SmartDashboard.putNumber("Distance Target Inches", targetPos);
   }
@@ -58,7 +58,7 @@ public class DriveStraightToPositionPID extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (Math.abs((int)m_drive.m_rightFrontMotor.getSelectedSensorVelocity(DriveConstants.PID_PRIMARY)) < 5 && i > 5){
+    if (Math.abs((int)m_drive.m_rightFrontMotor.getSelectedSensorVelocity(DriveConstants.PID_PRIMARY)) < 5 && i > 10){
       return true;
     } else {
       i++;

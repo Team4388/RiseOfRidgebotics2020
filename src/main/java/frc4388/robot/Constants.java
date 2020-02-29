@@ -40,7 +40,7 @@ public final class Constants {
         public static final double OPEN_LOOP_RAMP_RATE = 0.1; // Seconds from 0 to full power on motor
         public static final double NEUTRAL_DEADBAND = 0.04;
         public static final SupplyCurrentLimitConfiguration SUPPLY_CURRENT_LIMIT_CONFIG =
-            new SupplyCurrentLimitConfiguration(false, 40, 35, 0.01);
+            new SupplyCurrentLimitConfiguration(false, 60, 40, 2);
         public static final int CLOSED_LOOP_TIME_MS = 1; // Higher numbers mean slower control loops
 
         /* Drive Train Characteristics */
@@ -55,8 +55,8 @@ public final class Constants {
         public static final Gains DRIVE_VELOCITY_GAINS_LOW = new Gains(0.1, 0.0, 0.2, 0.025, 0, 1.0);
         public static final Gains DRIVE_TURNING_GAINS_LOW = new Gains(0.5, 0.0, 0.0, 0.0, 0, 0.55);
         public static final Gains DRIVE_MOTION_MAGIC_GAINS_LOW = new Gains(0.2, 0.0, 0.0, 0.0, 0, 1.0);
-        public static final int DRIVE_CRUISE_VELOCITY = 20000;
-        public static final int DRIVE_ACCELERATION = 7000;
+        public static final int DRIVE_CRUISE_VELOCITY = 25000;
+        public static final int DRIVE_ACCELERATION = 21000;
 
         public static final Gains DRIVE_DISTANCE_GAINS_HIGH = new Gains(0.0, 0.0, 0.0, 0.0, 0, 0.5);
         public static final Gains DRIVE_VELOCITY_GAINS_HIGH = new Gains(0.0, 0.0, 0.0, 0.0, 0, 1.0);
@@ -104,8 +104,8 @@ public final class Constants {
     }
     
     public static final class IntakeConstants {
-        public static final int INTAKE_SPARK_ID = -9;
-        public static final int EXTENDER_SPARK_ID = -10;
+        public static final int INTAKE_SPARK_ID = 12;
+        public static final int EXTENDER_SPARK_ID = 13;
     }
   
     public static final class ShooterConstants {
