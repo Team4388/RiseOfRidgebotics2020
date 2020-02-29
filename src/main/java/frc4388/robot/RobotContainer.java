@@ -196,8 +196,7 @@ public class RobotContainer {
             .whenReleased(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(0)));
 
         new JoystickButton(getOperatorJoystick(), XboxController.START_BUTTON)
-            .whileHeld(new RunCommand(() -> m_robotStorage.runStoragePositionPID(7)))
-            .whenReleased(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(0)));
+            .whileHeld(new RunCommand(() -> m_robotStorage.runStoragePositionPID(7)));
     }
 
     /**

@@ -159,7 +159,7 @@ public final class Constants {
 
         /* PID Gains */
         public static final double STORAGE_MIN_OUTPUT = -1.0;
-        public static final Gains STORAGE_GAINS = new Gains(1, 0.0, 0.0, 0.0, 0, 1.0);
+        public static final Gains STORAGE_GAINS = new Gains(0.1, 0.0, 0.0, 0.0, 0, 1.0);
     }
   
     public static final class LEDConstants {
