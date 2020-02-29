@@ -322,7 +322,7 @@ public class Drive extends SubsystemBase {
    * using the Differential Drive class to manage the two inputs
    */
   public void driveWithInput(double move, double steer) {
-    m_driveTrain.arcadeDrive(move, steer);
+    m_driveTrain.arcadeDrive(steer, move);
     m_leftBackMotor.follow(m_leftFrontMotor);
     m_rightBackMotor.follow(m_rightFrontMotor);
   }

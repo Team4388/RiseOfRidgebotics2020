@@ -39,26 +39,32 @@ public class DriveWithJoystick extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double moveInput = m_controller.getRightXAxis();
-    double steerInput = -m_controller.getLeftYAxis();
+    double moveInput = -m_controller.getLeftYAxis();
+    double steerInput = m_controller.getRightXAxis();
     double moveOutput = 0;
     double steerOutput = 0;
-    if (steerInput >= 0){
-      steerOutput = -Math.cos(1.571*steerInput)+1;
+    if (moveInput >= 0){
+      moveOutput = -Math.cos(1.571*moveInput)+1;
     } else {
-      steerOutput = Math.cos(1.571*steerInput)-1;
+      moveOutput = Math.cos(1.571*moveInput)-1;
     }
 
     double cosMultiplier = 1.0;
     double deadzone = .1;
-    if (moveInput > 0){
-      moveOutput = -(cosMultiplier - deadzone) * Math.cos(1.571*moveInput) + cosMultiplier;
-    } else if (moveInput < 0) {
-      moveOutput = (cosMultiplier - deadzone) * Math.cos(1.571*moveInput) - cosMultiplier;
+    if (steerInput > 0){
+      steerOutput = -(cosMultiplier - deadzone) * Math.cos(1.571*steerInput) + cosMultiplier;
+    } else if (steerInput < 0) {
+      steerOutput = (cosMultiplier - deadzone) * Math.cos(1.571*steerInput) - cosMultiplier;
     } else {
-      moveOutput = 0;
+      steerOutput = 0;
     }
-    
+
+    if (moveOutput > 0.5) {
+      moveOutput = 0.5;
+    } else if(moveOutput < -0.5) {
+      moveOutput = -0.5;
+    }
+
     SmartDashboard.putNumber("Steer Output Test", moveOutput);
     m_drive.driveWithInput(moveOutput, steerOutput);
   }

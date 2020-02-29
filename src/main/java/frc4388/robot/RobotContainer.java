@@ -133,11 +133,11 @@ public class RobotContainer {
         /* Driver Buttons */
         // sets solenoids into high gear
         new JoystickButton(getDriverJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
-            .whenPressed(new InstantCommand(() -> m_robotPneumatics.setShiftState(false), m_robotDrive));
+            .whenPressed(new InstantCommand(() -> m_robotPneumatics.setShiftState(true), m_robotDrive));
 
         // sets solenoids into low gear
         new JoystickButton(getDriverJoystick(), XboxController.LEFT_BUMPER_BUTTON)
-            .whenPressed(new InstantCommand(() -> m_robotPneumatics.setShiftState(true), m_robotDrive));
+            .whenPressed(new InstantCommand(() -> m_robotPneumatics.setShiftState(false), m_robotDrive));
 
         /* Operator Buttons */
         //TODO: Shooter Buttons
