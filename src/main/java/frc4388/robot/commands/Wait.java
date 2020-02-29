@@ -21,7 +21,7 @@ public class Wait extends CommandBase {
   /**
    * Creates a new WaitCommand.
    */
-  public Wait(float seconds, SubsystemBase subsystem) {
+  public Wait(SubsystemBase subsystem, float seconds) {
     // Use addRequirements() here to declare subsystem dependencies.
 
     m_waitTime = (long) (seconds * 1000);

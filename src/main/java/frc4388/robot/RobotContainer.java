@@ -192,7 +192,7 @@ public class RobotContainer {
        
         //Runs an Autonomous command group that would shoot our preloaded balls, pick up 3 more from the trench, and shoot those
         //This assumes that we are positioned against the right wall with our shooter facing the target.
-        return new SequentialCommandGroup(new Wait(0, m_robotDrive), 
+        return new SequentialCommandGroup(new Wait(m_robotDrive, 0), 
                                     //add aim command
                                     //add shooter command
                                     //new DriveStraightToPositionMM(m_robotDrive, 48.0),
@@ -208,7 +208,9 @@ public class RobotContainer {
 //Below this would be the picking up additional balls outside of those in the trench directly behind us
 
                                     //new GotoCoordinates(m_robotDrive, 36, 36),
-                                    new GotoCoordinates(m_robotDrive, 36, 36, -90));//,
+                                    //new DriveStraightToPositionPID(m_robotDrive, 160)
+                                    //new DriveStraightToPositionMM(m_robotDrive, 160)
+                                    new GotoCoordinates(m_robotDrive, 87, 47, -90));//,
                                     //new StorageIntakeGroup(m_robotIntake, m_robotStorage),
                                     //new TurnDegrees(m_robotDrive, 75),
                                     //new DriveStraightToPositionMM(m_robotDrive, 18.0),
