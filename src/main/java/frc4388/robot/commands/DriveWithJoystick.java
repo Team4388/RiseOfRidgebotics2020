@@ -10,11 +10,13 @@ package frc4388.robot.commands;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.subsystems.Drive;
+import frc4388.robot.subsystems.Pneumatics;
 import frc4388.utility.controller.IHandController;
 
 public class DriveWithJoystick extends CommandBase {
   private Drive m_drive;
   private IHandController m_controller;
+  private Pneumatics m_pneumatics;
 
   /**
    * Creates a new DriveWithJoystick to control the drivetrain with an Xbox controller.
@@ -58,23 +60,29 @@ public class DriveWithJoystick extends CommandBase {
     } else {
       steerOutput = 0;
     }
-    double tempOutputLimit = 0.8;
+    
+    double outputLimit = 0.8;
 
-    boolean isOutputLimited = false;
-
-    if (isOutputLimited) {
-      if (moveOutput > tempOutputLimit) {
-        moveOutput = tempOutputLimit;
-      } else if(moveOutput < -tempOutputLimit) {
-        moveOutput = -tempOutputLimit;
-      }
-
-      if (steerOutput > tempOutputLimit) {
-        steerOutput = tempOutputLimit;
-      } else if(steerOutput < -tempOutputLimit) {
-        steerOutput = -tempOutputLimit;
+    boolean isMoveOutputLimited = false;
+    boolean isSteerOutputLimited = true;
+    
+  if (m_pneumatics.m_isSpeedShiftHigh) {
+    if (isMoveOutputLimited) {
+      if (moveOutput > outputLimit) {
+        moveOutput = outputLimit;
+      } else if(moveOutput < -outputLimit) {
+        moveOutput = -outputLimit;
       }
     }
+
+    if (isSteerOutputLimited) {
+      if (steerOutput > outputLimit) {
+        steerOutput = outputLimit;
+      } else if(steerOutput < -outputLimit) {
+        steerOutput = -outputLimit;
+      }
+    }
+  }
     
     m_drive.driveWithInput(moveOutput, steerOutput);
   }
