@@ -208,7 +208,7 @@ public class RobotContainer {
 //Below this would be the picking up additional balls outside of those in the trench directly behind us
 
                                     //new GotoCoordinates(m_robotDrive, 36, 36),
-                                    new GotoCoordinates(m_robotDrive, 36, 36, 0));//,
+                                    new GotoCoordinates(m_robotDrive, 36, 36, -90));//,
                                     //new StorageIntakeGroup(m_robotIntake, m_robotStorage),
                                     //new TurnDegrees(m_robotDrive, 75),
                                     //new DriveStraightToPositionMM(m_robotDrive, 18.0),

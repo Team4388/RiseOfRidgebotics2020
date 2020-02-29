@@ -7,6 +7,7 @@
 
 package frc4388.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc4388.robot.subsystems.Drive;
 
@@ -36,12 +37,15 @@ public class GotoCoordinates extends SequentialCommandGroup {
     m_hypotDist = Math.sqrt((m_xTarget*m_xTarget) + (m_yTarget*m_yTarget));
 
     m_currentAngle = calcAngle();
+
+    SmartDashboard.putNumber("Current Angle Coordinates", m_currentAngle); 
+
     m_endAngle = endAngle;
 
 
     addCommands(  new TurnDegrees(m_drive, m_currentAngle), 
                   new DriveStraightToPositionMM(m_drive, m_hypotDist), 
-                  new TurnDegrees(m_drive, m_endAngle - m_currentAngle - 90));
+                  new TurnDegrees(m_drive, m_endAngle - m_currentAngle));
   }
 
   public boolean isQuadrantThree() {
