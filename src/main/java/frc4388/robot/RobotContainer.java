@@ -33,6 +33,7 @@ import frc4388.robot.commands.DriveStraightAtVelocityPID;
 import frc4388.robot.commands.DriveStraightToPositionMM;
 import frc4388.robot.commands.DriveStraightToPositionPID;
 import frc4388.robot.commands.DriveWithJoystick;
+import frc4388.robot.commands.GotoCoordinates;
 import frc4388.robot.commands.RunClimberWithTriggers;
 import frc4388.robot.commands.RunExtenderOutIn;
 import frc4388.robot.commands.RunIntakeWithTriggers;
@@ -116,7 +117,7 @@ public class RobotContainer {
         /* Test Buttons */
         // A driver test button
         new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-            .whenPressed(new DriveStraightToPositionMM(m_robotDrive, -192));
+            .whenPressed(new DriveStraightToPositionMM(m_robotDrive, 192));
         
         // B driver test button
         new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
@@ -124,7 +125,7 @@ public class RobotContainer {
 
         // Y driver test button
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
-            .whenPressed(new DrivePositionMPAux(m_robotDrive, 12.0, 3.0, 1, 36.0));
+            .whenPressed(new GotoCoordinates(m_robotDrive, 12, 40));
 
         // X driver test button
         new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)

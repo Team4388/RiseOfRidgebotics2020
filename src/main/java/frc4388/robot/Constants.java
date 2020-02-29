@@ -40,7 +40,7 @@ public final class Constants {
         public static final double OPEN_LOOP_RAMP_RATE = 0.1; // Seconds from 0 to full power on motor
         public static final double NEUTRAL_DEADBAND = 0.04;
         public static final SupplyCurrentLimitConfiguration SUPPLY_CURRENT_LIMIT_CONFIG =
-            new SupplyCurrentLimitConfiguration(false, 40, 35, 0.01);
+            new SupplyCurrentLimitConfiguration(false, 60, 40, 2);
         public static final int CLOSED_LOOP_TIME_MS = 1; // Higher numbers mean slower control loops
 
         /* Drive Train Characteristics */

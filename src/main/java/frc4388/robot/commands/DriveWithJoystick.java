@@ -60,19 +60,22 @@ public class DriveWithJoystick extends CommandBase {
     }
     double tempOutputLimit = 0.8;
 
-    if (moveOutput > tempOutputLimit) {
-      moveOutput = tempOutputLimit;
-    } else if(moveOutput < -tempOutputLimit) {
-      moveOutput = -tempOutputLimit;
-    }
+    boolean isOutputLimited = false;
 
-    if (steerOutput > tempOutputLimit) {
-      steerOutput = tempOutputLimit;
-    } else if(steerOutput < -tempOutputLimit) {
-      steerOutput = -tempOutputLimit;
-    }
+    if (isOutputLimited) {
+      if (moveOutput > tempOutputLimit) {
+        moveOutput = tempOutputLimit;
+      } else if(moveOutput < -tempOutputLimit) {
+        moveOutput = -tempOutputLimit;
+      }
 
-    SmartDashboard.putNumber("Steer Output Test", moveOutput);
+      if (steerOutput > tempOutputLimit) {
+        steerOutput = tempOutputLimit;
+      } else if(steerOutput < -tempOutputLimit) {
+        steerOutput = -tempOutputLimit;
+      }
+    }
+    
     m_drive.driveWithInput(moveOutput, steerOutput);
   }
 
