@@ -38,10 +38,25 @@ public class GotoCoordinates extends SequentialCommandGroup {
 
     m_currentAngle = calcAngle();
 
-    SmartDashboard.putNumber("Current Angle Coordinates", m_currentAngle); 
-
     m_endAngle = endAngle;
 
+    addCommands(  new TurnDegrees(m_drive, m_currentAngle),
+                  new Wait(m_drive, 0, 0),
+                  new DriveStraightToPositionPID(m_drive, m_hypotDist), 
+                  new TurnDegrees(m_drive, m_endAngle - m_currentAngle));
+  }
+
+  public GotoCoordinates(Drive subsystem, double xTarget, double yTarget) {
+    m_drive = subsystem;
+
+    m_xTarget = xTarget;
+    m_yTarget = yTarget;
+
+    m_hypotDist = Math.sqrt((m_xTarget*m_xTarget) + (m_yTarget*m_yTarget));
+
+    m_currentAngle = calcAngle();
+
+    m_endAngle = m_currentAngle;
 
     addCommands(  new TurnDegrees(m_drive, m_currentAngle),
                   new Wait(m_drive, 0, 0),

@@ -28,13 +28,13 @@ public class AutoPath1FromCenter extends SequentialCommandGroup {
                   //shoot pre-loaded 3 balls
                   new GotoCoordinates(m_drive, 75, 44, -90),
                   //Start Intake Ball 1
-                  new GotoCoordinates(m_drive, 0, 12, 0),
-                  new GotoCoordinates(m_drive, 0, 28, 0),
+                  new GotoCoordinates(m_drive, 0, 12),
+                  new GotoCoordinates(m_drive, 0, 28),
                   //Start Intake Ball 2
-                  new GotoCoordinates(m_drive, 0, 8, 0),
-                  new GotoCoordinates(m_drive, 0, 28, 0),
+                  new GotoCoordinates(m_drive, 0, 8),
+                  new GotoCoordinates(m_drive, 0, 28),
                   //Start Intake Ball 3
-                  new GotoCoordinates(m_drive, 0, 8, 0),
+                  new GotoCoordinates(m_drive, 0, 8),
                   new Wait(m_drive, 0, 2)
                   //Shoot 3 Balls
                   );

@@ -25,16 +25,18 @@ public class AutoPath2FromRight extends SequentialCommandGroup {
     m_drive = subsystem;
     
     addCommands(  new Wait(m_drive, 0, 1),
-                  new GotoCoordinates(m_drive, 0, 77, 0),
+                  new GotoCoordinates(m_drive, 0, 77),
                   //Start Intake Ball 1
-                  new GotoCoordinates(m_drive, 0, 8, 0),
-                  new GotoCoordinates(m_drive, 0, 28, 0),
+                  new GotoCoordinates(m_drive, 0, 8),
+                  new GotoCoordinates(m_drive, 0, 28),
                   //Start Intake Ball 2
-                  new GotoCoordinates(m_drive, 0, 8, 0),
+                  new GotoCoordinates(m_drive, 0, 8),
                   //Shoot 5 Balls
-                  new GotoCoordinates(m_drive, 0, 28, 0),
+                  new GotoCoordinates(m_drive, 0, 28),
                   //Start Intake Ball 1 (second round)
-                  new GotoCoordinates(m_drive, 0, 8, 0),
+                  new GotoCoordinates(m_drive, 0, 8),
+                  //Start Moving to 4th Ball
+                  new GotoCoordinates(m_drive, 60, -50),
                   new Wait(m_drive, 0, 2)
                   );
   }
