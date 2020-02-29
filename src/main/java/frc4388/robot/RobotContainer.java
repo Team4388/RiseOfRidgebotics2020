@@ -191,23 +191,9 @@ public class RobotContainer {
         //return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
        
         //Runs an Autonomous command group that would shoot our preloaded balls, pick up 3 more from the trench, and shoot those
-        //This assumes that we are positioned against the right wall with our shooter facing the target.
+        //This assumes that we are positioned against parallel to the initiation line with our back bumper lined up with the center target
         return new SequentialCommandGroup(new Wait(m_robotDrive, 0), 
-                                    //add aim command
-                                    //add shooter command
-                                    //new DriveStraightToPositionMM(m_robotDrive, 48.0),
-                                    /*new ParallelCommandGroup(
-                                        new StorageIntakeGroup(m_robotIntake, m_robotStorage),
-                                            new DriveStraightToPositionMM(m_robotDrive, 36.0)),
-                                    new ParallelCommandGroup(
-                                         new StorageIntakeGroup(m_robotIntake, m_robotStorage),
-                                            new DriveStraightToPositionMM(m_robotDrive, 36.0)),
-                                    new StorageIntakeGroup(m_robotIntake, m_robotStorage),*/
-                                    //add aim command 
-                                    //add shooter command
-//Below this would be the picking up additional balls outside of those in the trench directly behind us
-
-                                    
+                                    //shoot pre-loaded 3 balls
                                     new GotoCoordinates(m_robotDrive, 75, 44, -90),
                                     //Start Intake Ball 1
                                     new GotoCoordinates(m_robotDrive, 0, 12, 0),
@@ -218,7 +204,6 @@ public class RobotContainer {
                                      //Start Intake Ball 3
                                      new GotoCoordinates(m_robotDrive, 0, 8, 0)
                                      /*Shoot 3 Balls*/ );
-
 
                                     /*new GotoCoordinates(m_robotDrive, 0, 68.75, 0),*/
                                     //new StorageIntakeGroup(m_robotIntake, m_robotStorage),
