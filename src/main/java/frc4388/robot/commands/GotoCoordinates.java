@@ -44,7 +44,7 @@ public class GotoCoordinates extends SequentialCommandGroup {
 
 
     addCommands(  new TurnDegrees(m_drive, m_currentAngle),
-                  new Wait(m_drive, 1),
+                  new Wait(m_drive, 0.1),
                   new DriveStraightToPositionPID(m_drive, m_hypotDist), 
                   new TurnDegrees(m_drive, m_endAngle - m_currentAngle));
   }

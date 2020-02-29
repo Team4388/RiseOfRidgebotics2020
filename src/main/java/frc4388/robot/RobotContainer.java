@@ -117,7 +117,7 @@ public class RobotContainer {
         /* Test Buttons */
         // A driver test button
         new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-            .whenPressed(new DriveStraightToPositionMM(m_robotDrive, 192));
+            .whenPressed(new DriveStraightToPositionMM(m_robotDrive, 60));
         
         // B driver test button
         new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
@@ -125,11 +125,11 @@ public class RobotContainer {
 
         // Y driver test button
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
-            .whenPressed(new GotoCoordinates(m_robotDrive, 12, 12, 0));
+            .whenPressed(new Wait(m_robotDrive, 0));
 
         // X driver test button
         new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
-            .whenPressed(new DriveStraightToPositionPID(m_robotDrive, 36));
+            .whenPressed(new DriveStraightToPositionPID(m_robotDrive, 60));
      
         /* Driver Buttons */
         // sets solenoids into high gear
@@ -207,15 +207,21 @@ public class RobotContainer {
                                     //add shooter command
 //Below this would be the picking up additional balls outside of those in the trench directly behind us
 
-                                    //new GotoCoordinates(m_robotDrive, 36, 36),
-                                    //new DriveStraightToPositionPID(m_robotDrive, 160)
-                                    //new DriveStraightToPositionMM(m_robotDrive, 160)
-                                    new GotoCoordinates(m_robotDrive, 87, 47, -90));//,
+                                    
+                                    new GotoCoordinates(m_robotDrive, 75, 44, -90),
+                                    //Start Intake Ball 1
+                                    new GotoCoordinates(m_robotDrive, 0, 12, 0),
+                                    new GotoCoordinates(m_robotDrive, 0, 28, 0),
+                                    //Start Intake Ball 2
+                                    new GotoCoordinates(m_robotDrive, 0, 8, 0),
+                                    new GotoCoordinates(m_robotDrive, 0, 28, 0),
+                                     //Start Intake Ball 3
+                                     new GotoCoordinates(m_robotDrive, 0, 8, 0)
+                                     /*Shoot 3 Balls*/ );
+
+
+                                    /*new GotoCoordinates(m_robotDrive, 0, 68.75, 0),*/
                                     //new StorageIntakeGroup(m_robotIntake, m_robotStorage),
-                                    //new TurnDegrees(m_robotDrive, 75),
-                                    //new DriveStraightToPositionMM(m_robotDrive, 18.0),
-                                    //new TurnDegrees(m_robotDrive, -45),
-                                    //new DriveStraightToPositionMM(m_robotDrive, 12.0));
     }
     TrajectoryConfig getTrajectoryConfig() {
         return new TrajectoryConfig(
