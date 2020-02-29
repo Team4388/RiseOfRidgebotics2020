@@ -54,9 +54,9 @@ public final class Constants {
         public static final Gains DRIVE_DISTANCE_GAINS_LOW = new Gains(0.1, 0.0, 1.0, 0.0, 0, 0.5);
         public static final Gains DRIVE_VELOCITY_GAINS_LOW = new Gains(0.1, 0.0, 0.2, 0.025, 0, 1.0);
         public static final Gains DRIVE_TURNING_GAINS_LOW = new Gains(0.5, 0.0, 0.0, 0.0, 0, 0.55);
-        public static final Gains DRIVE_MOTION_MAGIC_GAINS_LOW = new Gains(0.1, 0.0, 0.2, 0.05, 0, 1.0);
-        public static final int DRIVE_CRUISE_VELOCITY = 25000;
-        public static final int DRIVE_ACCELERATION = 21000;
+        public static final Gains DRIVE_MOTION_MAGIC_GAINS_LOW = new Gains(0.1, 0.0, 0, 0.025, 0, 1.0);
+        public static final int DRIVE_CRUISE_VELOCITY = 30000;
+        public static final int DRIVE_ACCELERATION = 23000;
 
         public static final Gains DRIVE_DISTANCE_GAINS_HIGH = new Gains(0.0, 0.0, 0.0, 0.0, 0, 0.5);
         public static final Gains DRIVE_VELOCITY_GAINS_HIGH = new Gains(0.0, 0.0, 0.0, 0.0, 0, 1.0);
