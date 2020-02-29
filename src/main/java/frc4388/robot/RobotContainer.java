@@ -28,6 +28,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc4388.robot.Constants.*;
+import frc4388.robot.commands.AutoPath1FromCenter;
+import frc4388.robot.commands.AutoPath2FromRight;
 import frc4388.robot.commands.DrivePositionMPAux;
 import frc4388.robot.commands.DriveStraightAtVelocityPID;
 import frc4388.robot.commands.DriveStraightToPositionMM;
@@ -117,7 +119,7 @@ public class RobotContainer {
         /* Test Buttons */
         // A driver test button
         new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-            .whenPressed(new DriveStraightToPositionMM(m_robotDrive, 240));
+            .whenPressed(new DriveStraightToPositionMM(m_robotDrive, 24));
         
         // B driver test button
         new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
@@ -125,7 +127,7 @@ public class RobotContainer {
 
         // Y driver test button
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
-            .whenPressed(new Wait(m_robotDrive, 0));
+            .whenPressed(new Wait(m_robotDrive, 0, 0));
 
         // X driver test button
         new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
@@ -190,23 +192,9 @@ public class RobotContainer {
         // Run path following command, then stop at the end.
         //return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
        
-        //Runs an Autonomous command group that would shoot our preloaded balls, pick up 3 more from the trench, and shoot those
-        //This assumes that we are positioned against parallel to the initiation line with our back bumper lined up with the center target
-        return new SequentialCommandGroup(new Wait(m_robotDrive, 0), 
-                                    //shoot pre-loaded 3 balls
-                                    new GotoCoordinates(m_robotDrive, 75, 44, -90),
-                                    //Start Intake Ball 1
-                                    new GotoCoordinates(m_robotDrive, 0, 12, 0),
-                                    new GotoCoordinates(m_robotDrive, 0, 28, 0),
-                                    //Start Intake Ball 2
-                                    new GotoCoordinates(m_robotDrive, 0, 8, 0),
-                                    new GotoCoordinates(m_robotDrive, 0, 28, 0),
-                                     //Start Intake Ball 3
-                                     new GotoCoordinates(m_robotDrive, 0, 8, 0)
-                                     /*Shoot 3 Balls*/ );
+        //return new AutoPath1FromCenter(m_robotDrive);
+        return new AutoPath2FromRight(m_robotDrive);
 
-                                    /*new GotoCoordinates(m_robotDrive, 0, 68.75, 0),*/
-                                    //new StorageIntakeGroup(m_robotIntake, m_robotStorage),
     }
     TrajectoryConfig getTrajectoryConfig() {
         return new TrajectoryConfig(
