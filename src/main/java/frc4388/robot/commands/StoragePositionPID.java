@@ -25,14 +25,14 @@ public class StoragePositionPID extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    startPos = m_storage.getEncoderPos();
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     System.err.println("oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooiujgxzxfghjkiujsdasdgioiedsdjkl");
-    m_storage.runStoragePositionPID(m_storage.getEncoderPos() + StorageConstants.STORAGE_FULL_BALL);
+    m_storage.runStoragePositionPID(StorageConstants.STORAGE_FULL_BALL);
   }
 
   // Called once the command ends or is interrupted.
