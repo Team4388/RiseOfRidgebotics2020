@@ -42,10 +42,10 @@ public class StoragePositionPID extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (startPos + StorageConstants.STORAGE_FULL_BALL == m_storage.getEncoderPos())
+    /*if (startPos + StorageConstants.STORAGE_FULL_BALL == m_storage.getEncoderPos())
     {
       return true;
-    }
+    }*/
     return false;
   }
 }

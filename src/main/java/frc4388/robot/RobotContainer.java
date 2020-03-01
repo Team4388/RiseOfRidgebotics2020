@@ -205,8 +205,6 @@ public class RobotContainer {
 
         new JoystickButton(getOperatorJoystick(), XboxController.START_BUTTON)
             .whileHeld(new CalibrateShooter(m_robotShooter, m_robotShooterAim));
-            
-        
     }
 
     /**
