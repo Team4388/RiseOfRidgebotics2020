@@ -8,14 +8,16 @@
 package frc4388.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc4388.robot.Constants.StorageConstants;
 import frc4388.robot.subsystems.Storage;
 
-public class storageOutake extends CommandBase {
+public class StorageOutake extends CommandBase {
   Storage m_storage;
   /**
-   * Creates a new storageOutake.
+   * Runs the Storage out for outaking
+   * @param storeSub The Storage subsystem
    */
-  public storageOutake(Storage storeSub) {
+  public StorageOutake(Storage storeSub) {
     m_storage = storeSub;
     addRequirements(m_storage);
   }
@@ -28,7 +30,7 @@ public class storageOutake extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      m_storage.runStorage(-0.5);
+      m_storage.runStorage(-StorageConstants.STORAGE_SPEED);
   }
 
   // Called once the command ends or is interrupted.

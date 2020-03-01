@@ -103,7 +103,8 @@ public final class Constants {
         public static final double INCHES_PER_TICK_LOW = 1/TICKS_PER_INCH_LOW;
     }
     
-    public static final class IntakeConstants {
+    public static final class IntakeConstants {;
+        public static final double EXTENDER_SPEED = 0.3;
         public static final int INTAKE_SPARK_ID = 12;
         public static final int EXTENDER_SPARK_ID = 13;
     }
@@ -118,12 +119,28 @@ public final class Constants {
         public static final int SHOOTER_SLOT_IDX = 0;
         public static final int SHOOTER_PID_LOOP_IDX = 1;
         public static final int SHOOTER_TIMEOUT_MS = 30;
-        public static final Gains DRUM_SHOOTER_GAINS = new Gains(0.4, 0.0005, 13, 0.05, 0, 1.0);
-        public static final Gains SHOOTER_TURRET_GAINS = new Gains(0.2, 0.0, 0.0, 0.0, 0, 1.0);
+        //public static final Gains DRUM_SHOOTER_GAINS = new Gains(0.4, 0.0005, 13, 0.05, 0, 1.0);
+        public static final Gains DRUM_SHOOTER_GAINS = new Gains(0.2, 0.0, 0, 0.0453, 0, 1.0);
+        public static final Gains SHOOTER_TURRET_GAINS = new Gains(0.0, 0.0, 0.0, 0.0, 0, 1.0);
+        public static final Gains SHOOTER_ANGLE_GAINS = new Gains(0.05, 0.0, 0.0, 0.0, 0, 1.0);
         public static final double SHOOTER_TURRET_MIN = -1.0;
         public static final double ENCODER_TICKS_PER_REV = 2048;
         public static final double NEO_UNITS_PER_REV = 42;
         public static final double DEGREES_PER_ROT = 360;
+
+        public static final int TURRET_RIGHT_SOFT_LIMIT = -2;
+        public static final int TURRET_LEFT_SOFT_LIMIT = -55;
+        public static final double TURRET_SPEED_MULTIPLIER = 0.3;
+        public static final double TURRET_CALIBRATE_SPEED = 0.075;
+
+        public static final int HOOD_UP_SOFT_LIMIT = 33;
+        public static final int HOOD_DOWN_SOFT_LIMIT = 3;
+        public static final double HOOD_CONVERT_SLOPE = 0.47;
+        public static final double HOOD_CONVERT_B = 40.5;
+        public static final double HOOD_CALIBRATE_SPEED = 0.1;
+
+        public static final double DRUM_RAMP_LIMIT = 1000;
+        public static final double DRUM_VELOCITY_BOUND = 300;
     }
     
     public static final class ClimberConstants {
@@ -136,6 +153,10 @@ public final class Constants {
   
     public static final class StorageConstants {
         public static final int STORAGE_CAN_ID = 11;
+        public static final double STORAGE_PARTIAL_BALL = 2;
+        public static final double STORAGE_FULL_BALL = 7;
+        public static final double STORAGE_SPEED = 0.5;
+        public static final double STORAGE_TIMEOUT = 2000;
 
         /* Ball Indexes */
         public static final int BEAM_SENSOR_DIO_0 = 0;
@@ -152,9 +173,8 @@ public final class Constants {
         public static final int PID_PRIMARY = 0;
 
         /* PID Gains */
-
         public static final double STORAGE_MIN_OUTPUT = -1.0;
-        public static final Gains STORAGE_GAINS = new Gains(0.2, 0.0, 0.0, 0.0, 0, 1.0);
+        public static final Gains STORAGE_GAINS = new Gains(0.1, 0.0, 0.0, 0.0, 0, 1.0);
     }
 
     public static final class PneumaticsConstants {
@@ -174,8 +194,8 @@ public final class Constants {
     
     public static final class VisionConstants {
         public static final double FOV = 29.8; //Field of view of limelight
-        public static final double TARGET_HEIGHT = 82.75;
-        public static final double LIME_ANGLE = 18.7366;
+        public static final double TARGET_HEIGHT = 64;
+        public static final double LIME_ANGLE = 25;
         public static final double TURN_P_VALUE = 0.65;
         public static final double X_ANGLE_ERROR = 1.3;
         public static final double MOTOR_DEAD_ZONE = 0.3;

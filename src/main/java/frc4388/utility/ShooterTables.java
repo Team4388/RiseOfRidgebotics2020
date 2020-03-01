@@ -93,7 +93,7 @@ public class ShooterTables {
         SmartDashboard.putNumber("Distance last row 2", m_distance[m_distanceLength-1][2]);
     }
 
-    public double getHood(double distance) {
+    public double getHood(double distance) { //Rotations of motor
         int i = 0;
         while ((i < m_distanceLength) && (m_distance[i][m_columnDistance] < distance)) {
             i ++;
@@ -108,7 +108,7 @@ public class ShooterTables {
         }
     }
 
-    public double getVelocity(double distance) {
+    public double getVelocity(double distance) { //Units per 100ms
         int i = 0;
         while ((i < m_distanceLength) && (m_distance[i][m_columnDistance] < distance)) {
             i ++;
