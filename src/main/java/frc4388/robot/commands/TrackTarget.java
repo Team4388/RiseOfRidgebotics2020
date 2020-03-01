@@ -15,6 +15,7 @@ import frc4388.robot.subsystems.LimeLight;
 import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.ShooterAim;
 import frc4388.robot.commands.TrimShooter;
+import frc4388.utility.ShooterTables;
 import frc4388.utility.controller.IHandController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -42,6 +43,8 @@ public class TrackTarget extends CommandBase {
   public double m_hoodTrim;
   public double m_turretTrim;
 
+  ShooterTables m_shooterTable;
+
   /**
    * Uses the Limelight to track the target
    * @param shooterSubsystem The Shooter subsystem
@@ -60,6 +63,7 @@ public class TrackTarget extends CommandBase {
     // Vision Processing Mode
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0);
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
+    m_shooterTable = new ShooterTables();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -87,11 +91,18 @@ public class TrackTarget extends CommandBase {
       distance = VisionConstants.TARGET_HEIGHT / Math.tan((VisionConstants.LIME_ANGLE + yAngle) * (Math.PI / 180));
       SmartDashboard.putNumber("Distance to Target", distance);
 
+        //START Equation Code
       double yVel = Math.sqrt(2 * VisionConstants.GRAV * VisionConstants.TARGET_HEIGHT);
       double xVel = (distance * VisionConstants.GRAV) / (yVel);
 
       fireVel = Math.sqrt((Math.pow(xVel, 2))+(Math.pow(yVel,2)));
       fireAngle = Math.atan(yVel/xVel) * (180/Math.PI);
+        //END Equation Code
+
+        /*//START CSV Code
+      fireVel = m_shooterTable.getVelocity(distance);
+      fireAngle = m_shooterTable.getHood(distance); //Note: Ensure to follow because units are different
+        //END CSV Code*/
 
       
       m_shooter.m_fireVel = fireVel;
