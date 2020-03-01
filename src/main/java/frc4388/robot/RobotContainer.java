@@ -119,11 +119,11 @@ public class RobotContainer {
         /* Test Buttons */
         // A driver test button
         new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-            .whenPressed(new DriveStraightToPositionMM(m_robotDrive, 12));
+            .whenPressed(new DriveStraightToPositionMM(m_robotDrive, m_robotPneumatics, 24.0));
         
         // B driver test button
         new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
-            .whileHeld(new DriveStraightAtVelocityPID(m_robotDrive, 6000));
+            .whenPressed(new TurnDegrees(m_robotDrive, 90));
 
         // Y driver test button
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
