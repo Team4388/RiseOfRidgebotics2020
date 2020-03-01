@@ -32,8 +32,11 @@ public class HoldTarget extends CommandBase {
   double yAngle = 0;
   double target = 0;
   public double distance;
-  public static double fireVel;
-  public static double fireAngle;
+  public double fireVel;
+  public double fireAngle;
+
+  public double m_hoodTrim;
+  public double m_turretTrim;
 
   /**
    * Uses the Limelight to track the target
@@ -69,7 +72,7 @@ public class HoldTarget extends CommandBase {
         //Deadzones
       else if(turnAmount > 0 && turnAmount < VisionConstants.MOTOR_DEAD_ZONE){turnAmount = VisionConstants.MOTOR_DEAD_ZONE;} 
       else if(turnAmount < 0 && turnAmount > -VisionConstants.MOTOR_DEAD_ZONE){turnAmount = -VisionConstants.MOTOR_DEAD_ZONE;}
-      m_shooterAim.runShooterWithInput(-turnAmount);
+      m_shooterAim.runShooterWithInput(-turnAmount - m_shooter.shooterTrims.m_turretTrim);
 
         //Finding Distance
       distance = VisionConstants.TARGET_HEIGHT/Math.tan((VisionConstants.LIME_ANGLE + yAngle)*(Math.PI/180));
@@ -81,7 +84,7 @@ public class HoldTarget extends CommandBase {
       fireVel = Math.sqrt((Math.pow(xVel, 2))+(Math.pow(yVel,2)));
       fireAngle = Math.atan(yVel/xVel) * (180/Math.PI);
       m_shooter.m_fireVel = fireVel;
-      m_shooter.m_fireAngle = fireAngle;
+      m_shooter.m_fireAngle = fireAngle + m_shooter.shooterTrims.m_hoodTrim;
 
     }/*
     else{

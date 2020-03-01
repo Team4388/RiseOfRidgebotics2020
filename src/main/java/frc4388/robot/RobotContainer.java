@@ -59,6 +59,7 @@ import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Intake;
 import frc4388.robot.subsystems.LED;
 import frc4388.robot.commands.TrackTarget;
+import frc4388.robot.commands.TrimShooter;
 import frc4388.robot.commands.StorageOutake;
 import frc4388.robot.commands.StoragePrepAim;
 import frc4388.robot.commands.StoragePrepIntake;
@@ -96,6 +97,7 @@ public class RobotContainer {
     /* Controllers */
     private final XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
     private final XboxController m_operatorXbox = new XboxController(OIConstants.XBOX_OPERATOR_ID);
+
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -174,17 +176,12 @@ public class RobotContainer {
 
         // safety for climber and leveler
         new JoystickButton(getOperatorJoystick(), XboxController.BACK_BUTTON)
-            //.whenPressed(new InstantCommand(() -> m_robotClimber.setSafetyPressed(), m_robotClimber))
-            //.whenReleased(new InstantCommand(() -> m_robotClimber.setSafetyNotPressed(), m_robotClimber));
-            .whileHeld(new RunCommand(() -> SmartDashboard.putNumber("Angle Current", m_robotShooter.m_angleAdjustMotor.getOutputCurrent())))
-            .whileHeld(new RunCommand(() -> SmartDashboard.putNumber("Rotate Current", m_robotShooterAim.m_shooterRotateMotor.getOutputCurrent())));
+            .whenPressed(new InstantCommand(() -> m_robotClimber.setSafetyPressed(), m_robotClimber))
+            .whenReleased(new InstantCommand(() -> m_robotClimber.setSafetyNotPressed(), m_robotClimber));
 
         // starts tracking target
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
             .whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotStorage))
-            //.whileHeld(new ParallelCommandGroup(
-                //new HoldTarget(m_robotShooter,m_robotShooterAim),
-                //new HoodPositionPID(m_robotShooter)))
             .whenReleased(new StoragePrepIntake(m_robotIntake, m_robotStorage));
             
 
@@ -196,16 +193,24 @@ public class RobotContainer {
         new JoystickButton(getOperatorJoystick(), XboxController.RIGHT_TRIGGER_AXIS)
             .whileHeld(new StorageOutake(m_robotStorage));
 
+        //TEST FOR HOOD
         new JoystickButton(getOperatorJoystick(), XboxController.Y_BUTTON)
             .whileHeld(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(0.3)))
             .whenReleased(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(0)));
 
+        //TEST FOR HOOD
         new JoystickButton(getOperatorJoystick(), XboxController.B_BUTTON)
             .whileHeld(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(-0.3)))
             .whenReleased(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(0)));
 
+        //Trims shooter
+        new JoystickButton(getOperatorJoystick(), XboxController.TOP_BOTTOM_DPAD_AXIS)
+            .whenPressed(new TrimShooter(m_robotShooter));
+
+        //Calibrates turret and hood
         new JoystickButton(getOperatorJoystick(), XboxController.START_BUTTON)
             .whileHeld(new CalibrateShooter(m_robotShooter, m_robotShooterAim));
+
     }
 
     /**

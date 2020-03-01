@@ -32,6 +32,7 @@ public class ShooterAim extends SubsystemBase {
     CANPIDController m_shooterRotatePIDController = m_shooterRotateMotor.getPIDController();
     public CANEncoder m_shooterRotateEncoder = m_shooterRotateMotor.getEncoder();
 
+
   /**
    * Creates a new ShooterAim.
    */

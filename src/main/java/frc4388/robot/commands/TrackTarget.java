@@ -14,12 +14,14 @@ import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.LimeLight;
 import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.ShooterAim;
+import frc4388.robot.commands.TrimShooter;
 import frc4388.utility.controller.IHandController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TrackTarget extends CommandBase {
@@ -36,6 +38,9 @@ public class TrackTarget extends CommandBase {
   public double distance;
   public static double fireVel;
   public static double fireAngle;
+
+  public double m_hoodTrim;
+  public double m_turretTrim;
 
   /**
    * Uses the Limelight to track the target
@@ -74,7 +79,7 @@ public class TrackTarget extends CommandBase {
       } else if (turnAmount < 0 && turnAmount > -VisionConstants.MOTOR_DEAD_ZONE) {
         turnAmount = -VisionConstants.MOTOR_DEAD_ZONE;
       }
-      m_shooterAim.runShooterWithInput(-turnAmount);
+      m_shooterAim.runShooterWithInput(-turnAmount - m_shooter.shooterTrims.m_turretTrim);
 
       // Finding Distance
       distance = VisionConstants.TARGET_HEIGHT / Math.tan((VisionConstants.LIME_ANGLE + yAngle) * (Math.PI / 180));
@@ -85,8 +90,10 @@ public class TrackTarget extends CommandBase {
 
       fireVel = Math.sqrt((Math.pow(xVel, 2))+(Math.pow(yVel,2)));
       fireAngle = Math.atan(yVel/xVel) * (180/Math.PI);
+
+      
       m_shooter.m_fireVel = fireVel;
-      m_shooter.m_fireAngle = fireAngle;
+      m_shooter.m_fireAngle = fireAngle + m_shooter.shooterTrims.m_hoodTrim;
     }
   }
 

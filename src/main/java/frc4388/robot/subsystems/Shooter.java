@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Gains;
+import frc4388.robot.Trims;
 import frc4388.robot.Constants.ShooterConstants;
 import frc4388.utility.ShooterTables;
 import frc4388.utility.controller.IHandController;
@@ -52,6 +53,8 @@ public class Shooter extends SubsystemBase {
   public double m_fireVel;
   public double m_fireAngle;
   CANDigitalInput m_hoodUpLimit, m_hoodDownLimit;
+
+  public Trims shooterTrims;
   
   /*
    * Creates a new Shooter subsystem.
@@ -59,6 +62,8 @@ public class Shooter extends SubsystemBase {
   public Shooter() {
     //Testing purposes reseting gyros
     //resetGyroAngleAdj();
+    shooterTrims = new Trims(0, 0);
+
     m_shooterFalcon.configFactoryDefault();
     m_shooterFalcon.setNeutralMode(NeutralMode.Coast);
     m_shooterFalcon.setInverted(true);
@@ -97,6 +102,7 @@ public class Shooter extends SubsystemBase {
     m_angleAdjustMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
     m_angleAdjustMotor.setSoftLimit(SoftLimitDirection.kForward, 33);
     m_angleAdjustMotor.setSoftLimit(SoftLimitDirection.kReverse, 3);
+    
   }
 
   @Override
