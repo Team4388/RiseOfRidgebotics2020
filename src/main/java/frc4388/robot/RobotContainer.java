@@ -191,8 +191,8 @@ public class RobotContainer {
         RamseteCommand ramseteCommand = getRamseteCommand(trajectory);
         // Run path following command, then stop at the end.
         //return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-        return new AutoPath1FromCenter(m_robotDrive);
-        //return new AutoPath2FromRight(m_robotDrive);
+        return new AutoPath1FromCenter(m_robotDrive, m_robotPneumatics);
+        //return new AutoPath2FromRight(m_robotDrive, m_robotPneumatics);
 
     }
     TrajectoryConfig getTrajectoryConfig() {

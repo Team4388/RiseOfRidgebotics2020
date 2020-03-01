@@ -29,6 +29,7 @@ public class DriveStraightToPositionPID extends CommandBase {
   public DriveStraightToPositionPID(Drive subsystem, Pneumatics subsystem2, double targetPos) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = subsystem;
+    m_pneumatics = subsystem2;
     try {
       if (m_pneumatics.m_isSpeedShiftHigh) {
         m_targetPosIn = targetPos * DriveConstants.TICKS_PER_INCH_HIGH * 2;
