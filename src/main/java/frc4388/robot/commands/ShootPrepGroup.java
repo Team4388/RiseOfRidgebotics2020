@@ -27,7 +27,8 @@ public class ShootPrepGroup extends ParallelCommandGroup {
     addCommands(
       new TrackTarget(m_shooter, m_shooterAim),
       new ShooterVelocityControlPID(m_shooter),
-      new StoragePrepAim(m_storage)
+      new StoragePrepAim(m_storage),
+      new HoodPositionPID(m_shooter)
     );
   }
 }

@@ -62,6 +62,7 @@ import frc4388.robot.commands.TrackTarget;
 import frc4388.robot.commands.StorageOutake;
 import frc4388.robot.commands.StoragePrepAim;
 import frc4388.robot.commands.StoragePrepIntake;
+import frc4388.robot.commands.StorageRun;
 import frc4388.robot.subsystems.Camera;
 import frc4388.robot.subsystems.Leveler;
 import frc4388.robot.subsystems.LimeLight;
@@ -180,12 +181,12 @@ public class RobotContainer {
 
         // starts tracking target
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
-            //.whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotStorage))
-            .whileHeld(new ParallelCommandGroup(
-                new HoldTarget(m_robotShooter,m_robotShooterAim),
-                new HoodPositionPID(m_robotShooter)));
-            //.whenReleased(new StoragePrepIntake(m_robotIntake, m_robotStorage));
-            //.whenReleased(new RunCommand(() -> m_robotLime.limeOff()));
+            .whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotStorage))
+            //.whileHeld(new ParallelCommandGroup(
+                //new HoldTarget(m_robotShooter,m_robotShooterAim),
+                //new HoodPositionPID(m_robotShooter)))
+            .whenReleased(new StoragePrepIntake(m_robotIntake, m_robotStorage));
+            
 
         //Prepares storage for intaking
         new JoystickButton(getOperatorJoystick(), XboxController.LEFT_TRIGGER_AXIS)

@@ -13,12 +13,13 @@ import frc4388.robot.subsystems.Shooter;
 
 public class HoodPositionPID extends CommandBase {
   Shooter m_shooter;
+  double firingAngle;
   /**
    * Creates a new HoodPositionPID.
    */
   public HoodPositionPID(Shooter subSystem) {
     m_shooter = subSystem;
-    addRequirements(m_shooter);
+    //addRequirements(m_shooter);
   }
 
   // Called when the command is initially scheduled.
@@ -29,7 +30,7 @@ public class HoodPositionPID extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double firingAngle = (-0.47*m_shooter.addFireAngle())+40.5;
+    firingAngle = (-0.47*m_shooter.addFireAngle())+40.5;
     SmartDashboard.putNumber("Shoot Angle From Equation", m_shooter.addFireAngle());
     SmartDashboard.putNumber("Fire Angle", firingAngle);
     m_shooter.runAngleAdjustPID(firingAngle);
@@ -43,6 +44,10 @@ public class HoodPositionPID extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    double encoderPos = m_shooter.m_angleAdjustMotor.getEncoder().getPosition();
+    if(encoderPos < firingAngle + 1 || encoderPos < firingAngle - 1){
+      return true;
+    }
     return false;
   }
 }

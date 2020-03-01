@@ -29,12 +29,14 @@ public class StorageRun extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    System.err.println("oiudhgisbjkljasbhfkofhdnsekdfjbsjfvsdkcfbsdjhfgvsdkjfbsd");
     m_storage.runStorage(StorageConstants.STORAGE_SPEED);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_storage.runStorage(0);
   }
 
   // Returns true when the command should end.
