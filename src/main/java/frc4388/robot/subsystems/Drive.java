@@ -107,6 +107,7 @@ public class Drive extends SubsystemBase {
     m_pigeon.configFactoryDefault();
     resetGyroYaw();
 
+
     /* Config Open Loop Ramp so we don't make sudden output changes */
     m_rightFrontMotor.configOpenloopRamp(DriveConstants.OPEN_LOOP_RAMP_RATE, DriveConstants.DRIVE_TIMEOUT_MS);
     m_rightBackMotor.configOpenloopRamp(DriveConstants.OPEN_LOOP_RAMP_RATE, DriveConstants.DRIVE_TIMEOUT_MS);

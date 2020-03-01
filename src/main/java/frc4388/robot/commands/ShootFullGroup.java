@@ -8,20 +8,24 @@
 package frc4388.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc4388.robot.subsystems.Intake;
+import frc4388.robot.subsystems.Shooter;
+import frc4388.robot.subsystems.ShooterAim;
 import frc4388.robot.subsystems.Storage;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class StorageIntakeGroup extends SequentialCommandGroup {
+public class ShootFullGroup extends SequentialCommandGroup {
   /**
-   * Creates a new StorageIntakeGroup.
+   * Preps and Fires the Shooter
+   * @param m_shooter The Shooter subsytem
+   * @param m_shooterAim The ShooterAim subsystem
+   * @param m_storage The Storage subsytem
    */
-  public StorageIntakeGroup(Intake m_intake, Storage m_storage) {
+  public ShootFullGroup(Shooter m_shooter, ShooterAim m_shooterAim, Storage m_storage) {
     addCommands(
-      new storagePrepIntake(m_intake, m_storage), 
-      new storageIntake(m_intake, m_storage), 
-      new StorageIntakeFinal(m_storage));
+      new ShootPrepGroup(m_shooter, m_shooterAim, m_storage), 
+      new ShootFireGroup(m_shooter, m_shooterAim, m_storage)
+    );
   }
 }

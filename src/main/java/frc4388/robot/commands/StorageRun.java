@@ -8,16 +8,17 @@
 package frc4388.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc4388.robot.Constants.StorageConstants;
 import frc4388.robot.subsystems.Storage;
 
-public class StorageIntakeFinal extends CommandBase {
+public class StorageRun extends CommandBase {
   Storage m_storage;
   /**
-   * Creates a new StorageIntakeFinal.
+   * Runs the Storage at a speed
+   * @param storageSub The Storage subsytem
    */
-  public StorageIntakeFinal(Storage subsystem) {
-    m_storage = subsystem;
-    addRequirements(m_storage);
+  public StorageRun(Storage storageSub) {
+    m_storage = storageSub;
   }
 
   // Called when the command is initially scheduled.
@@ -28,14 +29,13 @@ public class StorageIntakeFinal extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (m_storage.getBeam(1)){
-      m_storage.setStoragePID(m_storage.getEncoderPos() + 5);
-    }
+    m_storage.runStorage(StorageConstants.STORAGE_SPEED);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_storage.runStorage(0);
   }
 
   // Returns true when the command should end.
