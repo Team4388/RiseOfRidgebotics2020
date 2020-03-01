@@ -24,7 +24,7 @@ public class TurnDegrees extends CommandBase {
   /**
    * Creates a new TurnDeg.
    */
-  public TurnDegrees(double targetAngle, Drive subsystem) {
+  public TurnDegrees(Drive subsystem, double targetAngle) {
     // Use addRequirements() here to declare subsystem dependencies.
 
     m_targetAngle = targetAngle;
@@ -64,7 +64,7 @@ public class TurnDegrees extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if ((Math.abs(m_drive.getTurnRate()) < 1) && (i > 5)) {
+    if ((Math.abs(m_drive.getTurnRate()) < 1) && (Math.abs(m_currentYawInTicks - m_targetAngleTicksOut) < 70)) {
       return true;
     }
     return false;

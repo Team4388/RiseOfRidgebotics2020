@@ -30,26 +30,33 @@ public final class Constants {
         public static final int PIGEON_ID = 6;
 
         /* Drive Inversions */
-        public static final boolean isRightMotorInverted = false;
+        public static final boolean isRightMotorInverted = true;
         public static final boolean isLeftMotorInverted = false;
         public static final boolean isRightArcadeInverted = false;
         public static final boolean isAuxPIDInverted = false;
 
         /* Drive Configuration */
-        public static final double OPEN_LOOP_RAMP_RATE = 0.1;
+        public static final int DRIVE_TIMEOUT_MS = 30; // Use for all motor config
+        public static final double OPEN_LOOP_RAMP_RATE = 0.1; // Seconds from 0 to full power on motor
         public static final double NEUTRAL_DEADBAND = 0.04;
         public static final SupplyCurrentLimitConfiguration SUPPLY_CURRENT_LIMIT_CONFIG =
-            new SupplyCurrentLimitConfiguration(false, 40, 35, 0.01);
-        public static final int CLOSED_LOOP_TIME_MS = 1;
+            new SupplyCurrentLimitConfiguration(false, 60, 40, 2);
+        public static final int CLOSED_LOOP_TIME_MS = 1; // Higher numbers mean slower control loops
+
+        /* Drive Train Characteristics */
+        public static final double MOTOR_ROT_PER_WHEEL_ROT_HIGH = 5.13;
+        public static final double MOTOR_ROT_PER_WHEEL_ROT_LOW = 15;
+        public static final double WHEEL_DIAMETER_INCHES = 6;
+        public static final double TICKS_PER_GYRO_REV = 8192;
+        public static final double TICKS_PER_MOTOR_REV = 2048;
 
         /* PID Constants Drive*/
-        public static final int DRIVE_TIMEOUT_MS = 30;
         public static final Gains DRIVE_DISTANCE_GAINS_LOW = new Gains(0.1, 0.0, 1.0, 0.0, 0, 0.5);
         public static final Gains DRIVE_VELOCITY_GAINS_LOW = new Gains(0.1, 0.0, 0.2, 0.025, 0, 1.0);
-        public static final Gains DRIVE_TURNING_GAINS_LOW = new Gains(0.5, 0.0, 0.05, 0.0, 0, 0.55);
+        public static final Gains DRIVE_TURNING_GAINS_LOW = new Gains(0.5, 0.0, 0.0, 0.0, 0, 0.55);
         public static final Gains DRIVE_MOTION_MAGIC_GAINS_LOW = new Gains(0.2, 0.0, 0.0, 0.0, 0, 1.0);
-        public static final int DRIVE_CRUISE_VELOCITY = 20000;
-        public static final int DRIVE_ACCELERATION = 7000;
+        public static final int DRIVE_CRUISE_VELOCITY = 25000;
+        public static final int DRIVE_ACCELERATION = 21000;
 
         public static final Gains DRIVE_DISTANCE_GAINS_HIGH = new Gains(0.0, 0.0, 0.0, 0.0, 0, 0.5);
         public static final Gains DRIVE_VELOCITY_GAINS_HIGH = new Gains(0.0, 0.0, 0.0, 0.0, 0, 1.0);
@@ -78,13 +85,6 @@ public final class Constants {
 	    public final static int SLOT_TURNING = 2;
 	    public final static int SLOT_MOTION_MAGIC = 3;
         
-        /* Drive Train Characteristics */
-        public static final double TICKS_PER_MOTOR_REV = 2048;
-        public static final double MOTOR_ROT_PER_WHEEL_ROT_HIGH = 5.13;
-        public static final double MOTOR_ROT_PER_WHEEL_ROT_LOW = 15;
-        public static final double WHEEL_DIAMETER_INCHES = 6;
-        public static final double TICKS_PER_GYRO_REV = 8192;
-        
         /* Ratio Calculation */
         public static final double INCHES_PER_WHEEL_REV = WHEEL_DIAMETER_INCHES * Math.PI;
         public static final double TICK_TIME_TO_SECONDS = 0.1;
@@ -103,10 +103,10 @@ public final class Constants {
         public static final double INCHES_PER_TICK_LOW = 1/TICKS_PER_INCH_LOW;
     }
     
-    public static final class IntakeConstants {
-        public static final int INTAKE_SPARK_ID = -9;
-        public static final int EXTENDER_SPARK_ID = -10;
+    public static final class IntakeConstants {;
         public static final double EXTENDER_SPEED = 0.3;
+        public static final int INTAKE_SPARK_ID = 12;
+        public static final int EXTENDER_SPARK_ID = 13;
     }
   
     public static final class ShooterConstants {
@@ -175,6 +175,16 @@ public final class Constants {
         /* PID Gains */
         public static final double STORAGE_MIN_OUTPUT = -1.0;
         public static final Gains STORAGE_GAINS = new Gains(0.1, 0.0, 0.0, 0.0, 0, 1.0);
+    }
+
+    public static final class PneumaticsConstants {
+        public static final int PCM_MODULE_ID = 7;
+
+        public static final int SPEED_SHIFT_FORWARD_ID = 0;
+        public static final int SPEED_SHIFT_REVERSE_ID = 1;
+
+        public static final int COOL_FALCON_FORWARD_ID = 3;
+        public static final int COOL_FALCON_REVERSE_ID = 2;
     }
   
     public static final class LEDConstants {

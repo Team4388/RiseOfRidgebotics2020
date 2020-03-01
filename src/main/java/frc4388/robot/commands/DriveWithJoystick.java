@@ -7,6 +7,7 @@
 
 package frc4388.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.subsystems.Drive;
 import frc4388.utility.controller.IHandController;
@@ -48,7 +49,7 @@ public class DriveWithJoystick extends CommandBase {
       moveOutput = Math.cos(1.571*moveInput)-1;
     }
 
-    double cosMultiplier = .55;
+    double cosMultiplier = 1.0;
     double deadzone = .1;
     if (steerInput > 0){
       steerOutput = -(cosMultiplier - deadzone) * Math.cos(1.571*steerInput) + cosMultiplier;
@@ -57,7 +58,24 @@ public class DriveWithJoystick extends CommandBase {
     } else {
       steerOutput = 0;
     }
+    double tempOutputLimit = 0.8;
 
+    boolean isOutputLimited = false;
+
+    if (isOutputLimited) {
+      if (moveOutput > tempOutputLimit) {
+        moveOutput = tempOutputLimit;
+      } else if(moveOutput < -tempOutputLimit) {
+        moveOutput = -tempOutputLimit;
+      }
+
+      if (steerOutput > tempOutputLimit) {
+        steerOutput = tempOutputLimit;
+      } else if(steerOutput < -tempOutputLimit) {
+        steerOutput = -tempOutputLimit;
+      }
+    }
+    
     m_drive.driveWithInput(moveOutput, steerOutput);
   }
 
