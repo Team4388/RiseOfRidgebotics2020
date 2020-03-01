@@ -114,6 +114,11 @@ public class Drive extends SubsystemBase {
     m_leftFrontMotor.configOpenloopRamp(DriveConstants.OPEN_LOOP_RAMP_RATE, DriveConstants.DRIVE_TIMEOUT_MS);
     m_leftBackMotor.configOpenloopRamp(DriveConstants.OPEN_LOOP_RAMP_RATE, DriveConstants.DRIVE_TIMEOUT_MS);
 
+    m_rightFrontMotor.configClosedloopRamp(DriveConstants.OPEN_LOOP_RAMP_RATE, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightBackMotor.configClosedloopRamp(DriveConstants.OPEN_LOOP_RAMP_RATE, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftFrontMotor.configClosedloopRamp(DriveConstants.OPEN_LOOP_RAMP_RATE, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftBackMotor.configClosedloopRamp(DriveConstants.OPEN_LOOP_RAMP_RATE, DriveConstants.DRIVE_TIMEOUT_MS);
+
     /* Config Supply Current Limit (Use only for debugging) */
     //m_rightFrontMotor.configSupplyCurrentLimit(DriveConstants.SUPPLY_CURRENT_LIMIT_CONFIG);
     //m_leftFrontMotor.configSupplyCurrentLimit(DriveConstants.SUPPLY_CURRENT_LIMIT_CONFIG);
