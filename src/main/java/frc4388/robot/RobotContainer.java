@@ -28,7 +28,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
-import frc4388.robot.Constants.*
+import frc4388.robot.Constants.*;
 import frc4388.robot.commands.AutoPath1FromCenter;
 import frc4388.robot.commands.AutoPath2FromRight;
 import frc4388.robot.commands.CalibrateShooter;
