@@ -131,7 +131,7 @@ public class RobotContainer {
 
         // X driver test button
         new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
-            .whenPressed(new DriveStraightToPositionPID(m_robotDrive, 60));
+            .whenPressed(new DriveStraightToPositionPID(m_robotDrive, m_robotPneumatics, 60));
      
         /* Driver Buttons */
         // sets solenoids into high gear
