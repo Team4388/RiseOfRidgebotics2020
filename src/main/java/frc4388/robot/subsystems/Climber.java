@@ -31,10 +31,10 @@ public class Climber extends SubsystemBase {
     m_climberMotor.setIdleMode(IdleMode.kBrake);
     m_climberMotor.setInverted(false);
     
-    m_climberForwardLimit = m_climberMotor.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyClosed);
-    m_climberReverseLimit = m_climberMotor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyClosed);
-    m_climberForwardLimit.enableLimitSwitch(false);
-    m_climberReverseLimit.enableLimitSwitch(false);
+    m_climberForwardLimit = m_climberMotor.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
+    m_climberReverseLimit = m_climberMotor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
+    m_climberForwardLimit.enableLimitSwitch(true);
+    m_climberReverseLimit.enableLimitSwitch(true);
   }
 
   @Override
