@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
@@ -28,26 +29,52 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc4388.robot.Constants.*;
+import frc4388.robot.commands.CalibrateShooter;
 import frc4388.robot.commands.DrivePositionMPAux;
 import frc4388.robot.commands.DriveStraightAtVelocityPID;
 import frc4388.robot.commands.DriveStraightToPositionMM;
 import frc4388.robot.commands.DriveStraightToPositionPID;
 import frc4388.robot.commands.DriveWithJoystick;
+import frc4388.robot.commands.DriveStraightToPositionMM;
+import frc4388.robot.commands.DriveStraightToPositionPID;
+import frc4388.robot.commands.DriveWithJoystickUsingDeadAssistPID;
+import frc4388.robot.commands.HoldTarget;
+import frc4388.robot.commands.HoodPositionPID;
+import frc4388.robot.commands.DriveWithJoystickDriveStraight;
+import frc4388.robot.commands.RunClimberWithTriggers;
+import frc4388.robot.commands.RunExtenderOutIn;
+import frc4388.robot.commands.RunIntakeWithTriggers;
+import frc4388.robot.commands.ShooterVelocityControlPID;
+import frc4388.robot.commands.StorageIntake;
 import frc4388.robot.commands.GotoCoordinates;
 import frc4388.robot.commands.RunClimberWithTriggers;
 import frc4388.robot.commands.RunExtenderOutIn;
 import frc4388.robot.commands.RunIntakeWithTriggers;
-import frc4388.robot.commands.StorageIntakeGroup;
 import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Intake;
 import frc4388.robot.subsystems.LED;
 import frc4388.robot.subsystems.Shooter;
+import frc4388.robot.subsystems.ShooterAim;
 import frc4388.robot.subsystems.Climber;
 import frc4388.robot.commands.RunLevelerWithJoystick;
+import frc4388.robot.commands.ShootFireGroup;
+import frc4388.robot.commands.ShootFullGroup;
+import frc4388.robot.commands.ShootPrepGroup;
+import frc4388.robot.subsystems.Drive;
+import frc4388.robot.subsystems.Intake;
+import frc4388.robot.subsystems.LED;
 import frc4388.robot.commands.TrackTarget;
+import frc4388.robot.commands.TrimShooter;
+import frc4388.robot.commands.StorageOutake;
+import frc4388.robot.commands.StoragePrepAim;
+import frc4388.robot.commands.StoragePrepIntake;
+import frc4388.robot.commands.StorageRun;
+import frc4388.robot.subsystems.Camera;
+import frc4388.robot.subsystems.Leveler;
+import frc4388.robot.subsystems.LimeLight;
 import frc4388.robot.commands.TurnDegrees;
 import frc4388.robot.commands.Wait;
-import frc4388.robot.commands.storageOutake;
+import frc4388.robot.commands.StorageOutake;
 import frc4388.robot.subsystems.Camera;
 import frc4388.robot.subsystems.Leveler;
 import frc4388.robot.subsystems.Pneumatics;
@@ -69,20 +96,23 @@ public class RobotContainer {
     private final LED m_robotLED = new LED();
     private final Intake m_robotIntake = new Intake();
     private final Shooter m_robotShooter = new Shooter();
+    private final ShooterAim m_robotShooterAim = new ShooterAim();
     private final Climber m_robotClimber = new Climber();
     private final Leveler m_robotLeveler = new Leveler();
     private final Storage m_robotStorage = new Storage();
 
     /* Cameras */
-    private final Camera m_robotCameraFront = new Camera("front",0,160,120,40);
-    private final Camera m_robotCameraBack = new Camera("back",1,160,120,40);
+    private final Camera m_robotCameraFront = new Camera("front", 0, 160, 120, 40);
+    private final Camera m_robotCameraBack = new Camera("back", 1, 160, 120, 40);
+    private final LimeLight m_robotLime = new LimeLight();
 
     /* Controllers */
     private final XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
     private final XboxController m_operatorXbox = new XboxController(OIConstants.XBOX_OPERATOR_ID);
 
+
     /**
-     * The container for the robot.  Contains subsystems, OI devices, and commands.
+     * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
         /* Passing Drive and Pneumatics Subsystems */
@@ -96,23 +126,26 @@ public class RobotContainer {
         m_robotDrive.setDefaultCommand(new DriveWithJoystick(m_robotDrive, getDriverController()));
         // drives intake with input from triggers on the opperator controller
         m_robotIntake.setDefaultCommand(new RunIntakeWithTriggers(m_robotIntake, getOperatorController()));
-        // runs the drum shooter in idle mode
-        m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runShooterWithInput(m_operatorXbox.getLeftXAxis()), m_robotShooter));
+        // runs the turret with joystick
+        m_robotShooterAim.setDefaultCommand(new RunCommand(() -> m_robotShooterAim.runShooterWithInput(-m_operatorXbox.getLeftXAxis()), m_robotShooterAim));
+        // moves the drum not
+        m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runDrumShooter(0), m_robotShooter));
         // drives climber with input from triggers on the opperator controller
         m_robotClimber.setDefaultCommand(new RunClimberWithTriggers(m_robotClimber, getDriverController()));
         // drives the leveler with an axis input from the driver controller
         m_robotLeveler.setDefaultCommand(new RunLevelerWithJoystick(m_robotLeveler, getDriverController()));
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
+        //m_robotStorage.setDefaultCommand(new RunCommand(() -> m_robotStorage.runStorage(0), m_robotStorage));
+        //m_robotLime.setDefaultCommand(new RunCommand(() -> m_robotLime.limeOff(), m_robotLime));
     }
-      
 
     /**
-    * Use this method to define your button->command mappings.  Buttons can be created by
-    * instantiating a {@link GenericHID} or one of its subclasses ({@link
-    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a
-    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-    */
+     * Use this method to define your button->command mappings. Buttons can be
+     * created by instantiating a {@link GenericHID} or one of its subclasses
+     * ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
+     * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+     */
     private void configureButtonBindings() {
         /* Test Buttons */
         // A driver test button
@@ -129,8 +162,8 @@ public class RobotContainer {
 
         // X driver test button
         new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
-            .whenPressed(new DriveStraightToPositionPID(m_robotDrive, 36));
-     
+            .whenPressed(new InstantCommand());
+      
         /* Driver Buttons */
         // sets solenoids into high gear
         new JoystickButton(getDriverJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
@@ -140,21 +173,19 @@ public class RobotContainer {
         new JoystickButton(getDriverJoystick(), XboxController.LEFT_BUMPER_BUTTON)
             .whenPressed(new InstantCommand(() -> m_robotPneumatics.setShiftState(false), m_robotDrive));
 
+
         /* Operator Buttons */
-        //TODO: Shooter Buttons
+
         // shoots until released
-        //new JoystickButton(getOperatorJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
-        //    .whileHeld(new ShootShooter(m_robotShooter, m_robotStorage, 5));
+        new JoystickButton(getOperatorJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
+            .whileHeld(new ShootFullGroup(m_robotShooter, m_robotShooterAim, m_robotStorage), false)
+            .whenReleased(new RunCommand(() -> m_robotLime.limeOff()));
 
         // shoots one ball
-        //new JoystickButton(getOperatorJoystick(), XboxController.LEFT_BUMPER_BUTTON)
-        //    .whileHeld(new ShootShooter(m_robotShooter, m_robotStorage, 1));
-            
-        // aims the turret
-        new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
-            .whileHeld(new TrackTarget(m_robotShooter));
-            //.whenPressed(new RunCommand(() -> m_robotStorage.storeAim()));
-        
+        new JoystickButton(getOperatorJoystick(), XboxController.LEFT_BUMPER_BUTTON)
+            .whenPressed(new ShootFullGroup(m_robotShooter, m_robotShooterAim, m_robotStorage), false)
+            .whenReleased(new RunCommand(() -> m_robotLime.limeOff()));
+
         // extends or retracts the extender
         new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
             .whenPressed(new RunExtenderOutIn(m_robotIntake));
@@ -164,17 +195,38 @@ public class RobotContainer {
             .whenPressed(new InstantCommand(() -> m_robotClimber.setSafetyPressed(), m_robotClimber))
             .whenReleased(new InstantCommand(() -> m_robotClimber.setSafetyNotPressed(), m_robotClimber));
 
-        /* Storage Neo PID Test */
+        // starts tracking target
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
-            .whileHeld(new TrackTarget(m_robotShooter));
+            .whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotStorage))
+            .whenReleased(new StoragePrepIntake(m_robotIntake, m_robotStorage));
+            
 
         //Prepares storage for intaking
         new JoystickButton(getOperatorJoystick(), XboxController.LEFT_TRIGGER_AXIS)
-            .whileHeld(new StorageIntakeGroup(m_robotIntake, m_robotStorage));
+            .whileHeld(new StorageIntake(m_robotIntake, m_robotStorage));
             
         //Runs storage to outtake
         new JoystickButton(getOperatorJoystick(), XboxController.RIGHT_TRIGGER_AXIS)
-            .whileHeld(new storageOutake(m_robotStorage));
+            .whileHeld(new StorageOutake(m_robotStorage));
+
+        //TEST FOR HOOD
+        new JoystickButton(getOperatorJoystick(), XboxController.Y_BUTTON)
+            .whileHeld(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(0.3)))
+            .whenReleased(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(0)));
+
+        //TEST FOR HOOD
+        new JoystickButton(getOperatorJoystick(), XboxController.B_BUTTON)
+            .whileHeld(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(-0.3)))
+            .whenReleased(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(0)));
+
+        //Trims shooter
+        new JoystickButton(getOperatorJoystick(), XboxController.TOP_BOTTOM_DPAD_AXIS)
+            .whenPressed(new TrimShooter(m_robotShooter));
+
+        //Calibrates turret and hood
+        new JoystickButton(getOperatorJoystick(), XboxController.START_BUTTON)
+            .whileHeld(new CalibrateShooter(m_robotShooter, m_robotShooterAim));
+
     }
 
     /**

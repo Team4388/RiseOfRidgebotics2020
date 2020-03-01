@@ -11,6 +11,7 @@ import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoSource;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
@@ -38,8 +39,7 @@ public class Camera extends SubsystemBase {
     catch(Exception e){
       System.err.println("Camera broken, pls nerf");
     }
-
-  }
+  }  
 
   @Override
   public void periodic() {

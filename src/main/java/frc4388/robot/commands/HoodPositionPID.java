@@ -12,32 +12,31 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.Constants.ShooterConstants;
 import frc4388.robot.subsystems.Shooter;
 
-public class ShooterVelocityControlPID extends CommandBase {
+public class HoodPositionPID extends CommandBase {
   Shooter m_shooter;
-  double m_targetVel;
-  double m_actualVel;
+  double firingAngle;
   /**
-   * Runs the drum at a velocity
-   * @param subsystem The Shooter subsytem
+   * Creates a new HoodPositionPID.
    */
-  public ShooterVelocityControlPID(Shooter subsystem) {
-    m_shooter = subsystem;
-    addRequirements(m_shooter);
+  public HoodPositionPID(Shooter subSystem) {
+    m_shooter = subSystem;
+    //addRequirements(m_shooter);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooter.runDrumShooterVelocityPID(m_shooter.addFireVel(), m_shooter.m_shooterFalcon.getSelectedSensorVelocity());
-    m_shooter.runAngleAdjustPID(m_shooter.addFireAngle());
-    SmartDashboard.putNumber("Fire Velocity", m_shooter.addFireVel());
-    SmartDashboard.putNumber("Fire Angle", m_shooter.addFireAngle());
+    double slope = ShooterConstants.HOOD_CONVERT_SLOPE;
+    double b = ShooterConstants.HOOD_CONVERT_B;
+    firingAngle = (-slope*m_shooter.addFireAngle())+b;
+    SmartDashboard.putNumber("Shoot Angle From Equation", m_shooter.addFireAngle());
+    SmartDashboard.putNumber("Fire Angle", firingAngle);
+    m_shooter.runAngleAdjustPID(firingAngle);
   }
 
   // Called once the command ends or is interrupted.
@@ -48,16 +47,10 @@ public class ShooterVelocityControlPID extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //Tells whether the target velocity has been reached
-    double upperBound = m_targetVel + ShooterConstants.DRUM_VELOCITY_BOUND;
-    double lowerBound = m_targetVel - ShooterConstants.DRUM_VELOCITY_BOUND;
-    if (m_actualVel < upperBound && m_actualVel > lowerBound){
-      SmartDashboard.putBoolean("ShooterVelocityPID Finished", true);
+    double encoderPos = m_shooter.m_angleAdjustMotor.getEncoder().getPosition();
+    if(encoderPos < firingAngle + 1 || encoderPos < firingAngle - 1){
       return true;
     }
-    else{
-      SmartDashboard.putBoolean("ShooterVelocityPID Finished", false);
-      return false;
-    }
+    return false;
   }
 }
