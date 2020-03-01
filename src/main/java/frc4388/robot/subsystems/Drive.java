@@ -127,7 +127,15 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.configNeutralDeadband(DriveConstants.NEUTRAL_DEADBAND, DriveConstants.DRIVE_TIMEOUT_MS);
 
     /* PID for Front Motor Control in Teleop */
-    setRightMotorGains(false);
+    try {
+      if (m_pneumaticsSubsystem.m_isSpeedShiftHigh) {
+        setRightMotorGains(true);
+      } else {
+        setRightMotorGains(false);
+      }
+    } catch (Exception e) {
+      System.err.println("Error while trying to switch gains.");
+    }
 
     /* PID for Back Motor Control in Tank Drive Vel */
     m_rightBackMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);

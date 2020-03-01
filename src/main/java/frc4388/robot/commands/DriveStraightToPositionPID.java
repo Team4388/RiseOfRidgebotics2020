@@ -11,9 +11,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.Constants.DriveConstants;
 import frc4388.robot.subsystems.Drive;
+import frc4388.robot.subsystems.Pneumatics;
 
 public class DriveStraightToPositionPID extends CommandBase {
   Drive m_drive;
+  Pneumatics m_pneumatics;
   double m_targetPosIn;
   double m_targetPosOut;
   double m_targetGyro;
@@ -24,10 +26,19 @@ public class DriveStraightToPositionPID extends CommandBase {
    * @param subsystem drive subsystem
    * @param targetPos distance to travel in inches
    */
-  public DriveStraightToPositionPID(Drive subsystem, double targetPos) {
+  public DriveStraightToPositionPID(Drive subsystem, Pneumatics subsystem2, double targetPos) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = subsystem;
-    m_targetPosIn = targetPos * DriveConstants.TICKS_PER_INCH_LOW * 2;
+    m_pneumatics = subsystem2;
+    try {
+      if (m_pneumatics.m_isSpeedShiftHigh) {
+        m_targetPosIn = targetPos * DriveConstants.TICKS_PER_INCH_HIGH * 2;
+      } else {
+        m_targetPosIn = targetPos * DriveConstants.TICKS_PER_INCH_LOW * 2;
+      }
+    } catch (Exception e) {
+      System.err.println("Error In Motion Magic Switch Gains.");
+    }
     addRequirements(m_drive);
     //SmartDashboard.putNumber("Distance Target Inches", targetPos);
   }
