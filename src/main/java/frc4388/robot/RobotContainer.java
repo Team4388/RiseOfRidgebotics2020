@@ -16,22 +16,26 @@ import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc4388.robot.Constants.*;
+import frc4388.robot.commands.CalibrateShooter;
 import frc4388.robot.commands.DrivePositionMPAux;
 import frc4388.robot.commands.DriveWithJoystick;
 import frc4388.robot.commands.DriveStraightToPositionMM;
 import frc4388.robot.commands.DriveStraightToPositionPID;
 import frc4388.robot.commands.DriveWithJoystickUsingDeadAssistPID;
 import frc4388.robot.commands.HoldTarget;
+import frc4388.robot.commands.HoodPositionPID;
 import frc4388.robot.commands.DriveWithJoystickDriveStraight;
 import frc4388.robot.commands.RunClimberWithTriggers;
 import frc4388.robot.commands.RunExtenderOutIn;
@@ -169,14 +173,18 @@ public class RobotContainer {
 
         // safety for climber and leveler
         new JoystickButton(getOperatorJoystick(), XboxController.BACK_BUTTON)
-            .whenPressed(new InstantCommand(() -> m_robotClimber.setSafetyPressed(), m_robotClimber))
-            .whenReleased(new InstantCommand(() -> m_robotClimber.setSafetyNotPressed(), m_robotClimber));
+            //.whenPressed(new InstantCommand(() -> m_robotClimber.setSafetyPressed(), m_robotClimber))
+            //.whenReleased(new InstantCommand(() -> m_robotClimber.setSafetyNotPressed(), m_robotClimber));
+            .whileHeld(new RunCommand(() -> SmartDashboard.putNumber("Angle Current", m_robotShooter.m_angleAdjustMotor.getOutputCurrent())))
+            .whileHeld(new RunCommand(() -> SmartDashboard.putNumber("Rotate Current", m_robotShooterAim.m_shooterRotateMotor.getOutputCurrent())));
 
         // starts tracking target
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
-            .whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotStorage))
-            //.whileHeld(new TrackTarget(m_robotShooter,m_robotShooterAim))
-            .whenReleased(new StoragePrepIntake(m_robotIntake, m_robotStorage));
+            //.whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotStorage))
+            .whileHeld(new ParallelCommandGroup(
+                new HoldTarget(m_robotShooter,m_robotShooterAim),
+                new HoodPositionPID(m_robotShooter)));
+            //.whenReleased(new StoragePrepIntake(m_robotIntake, m_robotStorage));
             //.whenReleased(new RunCommand(() -> m_robotLime.limeOff()));
 
         //Prepares storage for intaking
@@ -188,16 +196,17 @@ public class RobotContainer {
             .whileHeld(new StorageOutake(m_robotStorage));
 
         new JoystickButton(getOperatorJoystick(), XboxController.Y_BUTTON)
-            .whileHeld(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(0.2)))
+            .whileHeld(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(0.3)))
             .whenReleased(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(0)));
 
         new JoystickButton(getOperatorJoystick(), XboxController.B_BUTTON)
-            .whileHeld(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(-0.2)))
+            .whileHeld(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(-0.3)))
             .whenReleased(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(0)));
 
         new JoystickButton(getOperatorJoystick(), XboxController.START_BUTTON)
-            .whileHeld(new RunCommand(() -> m_robotStorage.runStoragePositionPID(7)))
-            .whenReleased(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(0)));
+            .whileHeld(new CalibrateShooter(m_robotShooter, m_robotShooterAim));
+            
+        
     }
 
     /**

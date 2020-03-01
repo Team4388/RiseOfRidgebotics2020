@@ -122,7 +122,7 @@ public final class Constants {
         //public static final Gains DRUM_SHOOTER_GAINS = new Gains(0.4, 0.0005, 13, 0.05, 0, 1.0);
         public static final Gains DRUM_SHOOTER_GAINS = new Gains(0.2, 0.0, 0, 0.0453, 0, 1.0);
         public static final Gains SHOOTER_TURRET_GAINS = new Gains(0.0, 0.0, 0.0, 0.0, 0, 1.0);
-        public static final Gains SHOOTER_ANGLE_GAINS = new Gains(0.5, 0.0, 0.0, 0.0, 0, 1.0);
+        public static final Gains SHOOTER_ANGLE_GAINS = new Gains(0.05, 0.0, 0.0, 0.0, 0, 1.0);
         public static final double SHOOTER_TURRET_MIN = -1.0;
         public static final double ENCODER_TICKS_PER_REV = 2048;
         public static final double NEO_UNITS_PER_REV = 42;
@@ -169,8 +169,8 @@ public final class Constants {
     
     public static final class VisionConstants {
         public static final double FOV = 29.8; //Field of view of limelight
-        public static final double TARGET_HEIGHT = 82.75;
-        public static final double LIME_ANGLE = 18.7366;
+        public static final double TARGET_HEIGHT = 64;
+        public static final double LIME_ANGLE = 25;
         public static final double TURN_P_VALUE = 0.65;
         public static final double X_ANGLE_ERROR = 1.3;
         public static final double MOTOR_DEAD_ZONE = 0.3;

@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
@@ -35,7 +36,7 @@ public class Shooter extends SubsystemBase {
   public CANSparkMax m_angleAdjustMotor = new CANSparkMax(ShooterConstants.SHOOTER_ANGLE_ADJUST_ID, MotorType.kBrushless);
 
   CANPIDController m_angleAdjustPIDController = m_angleAdjustMotor.getPIDController();
-  CANEncoder m_angleEncoder = m_angleAdjustMotor.getEncoder();
+  public CANEncoder m_angleEncoder = m_angleAdjustMotor.getEncoder();
 
   public static Gains m_drumShooterGains = ShooterConstants.DRUM_SHOOTER_GAINS;
   public static Gains m_angleAdjustGains = ShooterConstants.SHOOTER_ANGLE_GAINS;
@@ -57,10 +58,10 @@ public class Shooter extends SubsystemBase {
    */
   public Shooter() {
     //Testing purposes reseting gyros
-    resetGyroAngleAdj();
+    //resetGyroAngleAdj();
     m_shooterFalcon.configFactoryDefault();
     m_shooterFalcon.setNeutralMode(NeutralMode.Coast);
-    m_shooterFalcon.setInverted(false);
+    m_shooterFalcon.setInverted(true);
     m_angleAdjustMotor.setIdleMode(IdleMode.kBrake);
     m_shooterFalcon.configOpenloopRamp(1, ShooterConstants.SHOOTER_TIMEOUT_MS);
     setShooterGains();
@@ -91,6 +92,11 @@ public class Shooter extends SubsystemBase {
     m_hoodDownLimit = m_angleAdjustMotor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
     m_hoodUpLimit.enableLimitSwitch(true);
     m_hoodDownLimit.enableLimitSwitch(true);
+
+    m_angleAdjustMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+    m_angleAdjustMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+    m_angleAdjustMotor.setSoftLimit(SoftLimitDirection.kForward, 33);
+    m_angleAdjustMotor.setSoftLimit(SoftLimitDirection.kReverse, 3);
   }
 
   @Override
@@ -105,6 +111,7 @@ public class Shooter extends SubsystemBase {
   public double addFireAngle() {
     return m_fireAngle;
   }
+
 
   /**
    * Runs drum shooter motor.
@@ -126,9 +133,8 @@ public class Shooter extends SubsystemBase {
   }
 
   /* Angle Adjustment PID Control */
-  public void runAngleAdjustPID(double mmtargetAngle)
+  public void runAngleAdjustPID(double targetAngle)
   {
-    double targetAngle = addFireAngle();
     // Set PID Coefficients
     m_angleAdjustPIDController.setP(m_angleAdjustGains.m_kP);
     m_angleAdjustPIDController.setI(m_angleAdjustGains.m_kI);
@@ -136,9 +142,6 @@ public class Shooter extends SubsystemBase {
     m_angleAdjustPIDController.setIZone(m_angleAdjustGains.m_kIzone);
     m_angleAdjustPIDController.setFF(m_angleAdjustGains.m_kF);
     m_angleAdjustPIDController.setOutputRange(ShooterConstants.SHOOTER_TURRET_MIN, m_angleAdjustGains.m_kPeakOutput); 
-
-    // Convert input angle in degrees to rotations of the motor
-    targetAngle = targetAngle/ShooterConstants.DEGREES_PER_ROT;
 
     m_angleAdjustPIDController.setReference(targetAngle, ControlType.kPosition);
   }
@@ -161,5 +164,9 @@ public class Shooter extends SubsystemBase {
 
   public void resetGyroAngleAdj(){
       m_angleEncoder.setPosition(0);
+  }
+
+  public double getAnglePosition(){
+    return m_angleAdjustMotor.getEncoder().getPosition();
   }
 }

@@ -14,9 +14,11 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Gains;
 import frc4388.robot.Constants.ShooterConstants;
@@ -28,18 +30,24 @@ public class ShooterAim extends SubsystemBase {
 
     // Configure PID Controllers
     CANPIDController m_shooterRotatePIDController = m_shooterRotateMotor.getPIDController();
-    CANEncoder m_shooterRotateEncoder = m_shooterRotateMotor.getEncoder();
+    public CANEncoder m_shooterRotateEncoder = m_shooterRotateMotor.getEncoder();
+
   /**
    * Creates a new ShooterAim.
    */
   public ShooterAim() {
-    resetGyroShooterRotate();
+    //resetGyroShooterRotate();
     m_shooterRotateMotor.setIdleMode(IdleMode.kBrake);
 
-    m_shooterRightLimit = m_shooterRotateMotor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
-    m_shooterLeftLimit = m_shooterRotateMotor.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
+    m_shooterLeftLimit = m_shooterRotateMotor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
+    m_shooterRightLimit = m_shooterRotateMotor.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
     m_shooterRightLimit.enableLimitSwitch(true);
     m_shooterLeftLimit.enableLimitSwitch(true);
+
+    m_shooterRotateMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
+    m_shooterRotateMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+    m_shooterRotateMotor.setSoftLimit(SoftLimitDirection.kForward, -2);
+    m_shooterRotateMotor.setSoftLimit(SoftLimitDirection.kReverse, -56);
   }
 
   public void runShooterWithInput(double input) {
@@ -64,11 +72,13 @@ public class ShooterAim extends SubsystemBase {
     m_shooterRotatePIDController.setReference(targetAngle, ControlType.kPosition);
   }
 
-  
-    /* For Testing Purposes, reseting gyro for shooter rotation */
     public void resetGyroShooterRotate()
     {
-      m_shooterRotateEncoder.setPosition(0);
+        m_shooterRotateEncoder.setPosition(0);
+    }
+
+    public double getShooterRotatePosition(){
+      return m_shooterRotateMotor.getEncoder().getPosition();
     }
 
   @Override

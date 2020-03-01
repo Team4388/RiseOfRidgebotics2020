@@ -74,7 +74,7 @@ public class TrackTarget extends CommandBase {
       } else if (turnAmount < 0 && turnAmount > -VisionConstants.MOTOR_DEAD_ZONE) {
         turnAmount = -VisionConstants.MOTOR_DEAD_ZONE;
       }
-      m_shooterAim.runShooterWithInput(turnAmount);
+      m_shooterAim.runShooterWithInput(-turnAmount);
 
       // Finding Distance
       distance = VisionConstants.TARGET_HEIGHT / Math.tan((VisionConstants.LIME_ANGLE + yAngle) * (Math.PI / 180));
@@ -84,17 +84,17 @@ public class TrackTarget extends CommandBase {
       double xVel = (distance * VisionConstants.GRAV) / (yVel);
 
       fireVel = Math.sqrt((Math.pow(xVel, 2)) + (Math.pow(yVel, 2)));
-      fireAngle = Math.atan(yVel / xVel);
+      fireAngle = Math.atan(yVel / xVel) * (180/Math.PI);
       m_shooter.m_fireVel = fireVel;
       m_shooter.m_fireAngle = fireAngle;
-
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1);
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(0);
   }
 
   // Returns true when the command should end.
