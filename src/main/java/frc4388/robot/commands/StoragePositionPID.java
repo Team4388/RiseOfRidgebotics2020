@@ -15,7 +15,8 @@ public class StoragePositionPID extends CommandBase {
   public Storage m_storage;
   double startPos;
   /**
-   * Creates a new StoragePositionPID.
+   * Moves the storage a number of rotations
+   * @param subsystem The Storage subsystem
    */
   public StoragePositionPID(Storage subsystem) {
     m_storage = subsystem;

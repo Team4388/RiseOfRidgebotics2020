@@ -57,7 +57,7 @@ public class Shooter extends SubsystemBase {
   public Trims shooterTrims;
   
   /*
-   * Creates a new Shooter subsystem.
+   * Creates a new Shooter subsystem, with the drum shooter and the angle adjsuter.
    */
   public Shooter() {
     //Testing purposes reseting gyros
@@ -100,8 +100,8 @@ public class Shooter extends SubsystemBase {
 
     m_angleAdjustMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
     m_angleAdjustMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-    m_angleAdjustMotor.setSoftLimit(SoftLimitDirection.kForward, 33);
-    m_angleAdjustMotor.setSoftLimit(SoftLimitDirection.kReverse, 3);
+    m_angleAdjustMotor.setSoftLimit(SoftLimitDirection.kForward, ShooterConstants.HOOD_UP_SOFT_LIMIT);
+    m_angleAdjustMotor.setSoftLimit(SoftLimitDirection.kReverse, ShooterConstants.HOOD_DOWN_SOFT_LIMIT);
     
   }
 
@@ -159,7 +159,7 @@ public class Shooter extends SubsystemBase {
    */
   public void runDrumShooterVelocityPID(double targetVel, double actualVel) {
     SmartDashboard.putNumber("shoot", actualVel);
-    if (actualVel < targetVel - 1000){
+    if (actualVel < targetVel - ShooterConstants.DRUM_RAMP_LIMIT){
       m_shooterFalcon.set(TalonFXControlMode.PercentOutput, 1);//Ramp up
     }
     else{ //PID Based on targetVel

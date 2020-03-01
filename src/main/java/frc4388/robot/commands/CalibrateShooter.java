@@ -11,6 +11,7 @@ import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc4388.robot.Constants.ShooterConstants;
 import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.ShooterAim;
 
@@ -18,7 +19,9 @@ public class CalibrateShooter extends CommandBase {
   Shooter m_shooter;
   ShooterAim m_shooterAim;
   /**
-   * Creates a new CalibrateShooter.
+   * Calibrates the turret by moving the hood all the way down and moving the turret all the way right, then reseting the encoders
+   * @param shootSub The Shooter subsystem
+   * @param aimSub The ShooterAim subsystem
    */
   public CalibrateShooter(Shooter shootSub, ShooterAim aimSub) {
     m_shooter = shootSub;
@@ -37,12 +40,12 @@ public class CalibrateShooter extends CommandBase {
     m_shooter.m_angleAdjustMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
     m_shooter.m_angleAdjustMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
     m_shooter.m_angleEncoder.setPosition(0);
-    m_shooter.m_angleAdjustMotor.set(-0.1);
+    m_shooter.m_angleAdjustMotor.set(-ShooterConstants.HOOD_CALIBRATE_SPEED);
 
     m_shooterAim.m_shooterRotateMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
     m_shooterAim.m_shooterRotateMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
     m_shooterAim.m_shooterRotateEncoder.setPosition(0);
-    m_shooterAim.m_shooterRotateMotor.set(0.075);
+    m_shooterAim.m_shooterRotateMotor.set(ShooterConstants.TURRET_CALIBRATE_SPEED);
   }
 
   // Called once the command ends or is interrupted.

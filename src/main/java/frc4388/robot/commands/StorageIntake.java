@@ -18,7 +18,9 @@ public class StorageIntake extends CommandBase {
   public Storage m_storage;
   public boolean intook;
   /**
-   * Creates a new storageIntake.
+   * Runs the Storage in for intaking
+   * @param inSub The Intake subsystem
+   * @param storeSub The Storage subsytem
    */
   public StorageIntake(Intake inSub, Storage storeSub) {
     m_intake = inSub;

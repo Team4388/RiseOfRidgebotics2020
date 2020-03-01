@@ -23,7 +23,8 @@ public class TrimShooter extends CommandBase {
 
   public Shooter m_shooter;
   /**
-   * Creates a new TrimShooter.
+   * Trims the shooter based on the D-Pad inputs
+   * @param shootSub The Shooter subsytems
    */
   public TrimShooter(Shooter shootSub) {
     m_shooter = shootSub;

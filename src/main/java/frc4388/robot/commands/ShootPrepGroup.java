@@ -18,7 +18,7 @@ import frc4388.robot.subsystems.Storage;
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
 public class ShootPrepGroup extends ParallelCommandGroup {
   /**
-   * Preps the Shooter to be fired
+   * Prepares the Shooter to be fired
    * @param m_shooter The Shooter subsytem
    * @param m_shooterAim The ShooterAim subsystem
    * @param m_storage The Storage subsytem

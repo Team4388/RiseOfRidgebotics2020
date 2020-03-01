@@ -9,6 +9,7 @@ package frc4388.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc4388.robot.Constants.ShooterConstants;
 import frc4388.robot.subsystems.Shooter;
 
 public class ShooterVelocityControlPID extends CommandBase {
@@ -16,9 +17,8 @@ public class ShooterVelocityControlPID extends CommandBase {
   double m_targetVel;
   double m_actualVel;
   /**
-   * Creates a new ShooterVelocityControlPID.
+   * Runs the drum at a velocity
    * @param subsystem The Shooter subsytem
-   * @param targetVel The target velocity
    */
   public ShooterVelocityControlPID(Shooter subsystem) {
     m_shooter = subsystem;
@@ -48,9 +48,9 @@ public class ShooterVelocityControlPID extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //Tells wether the target velocity has been reached
-    double upperBound = m_targetVel + 300;
-    double lowerBound = m_targetVel - 300;
+    //Tells whether the target velocity has been reached
+    double upperBound = m_targetVel + ShooterConstants.DRUM_VELOCITY_BOUND;
+    double lowerBound = m_targetVel - ShooterConstants.DRUM_VELOCITY_BOUND;
     if (m_actualVel < upperBound && m_actualVel > lowerBound){
       SmartDashboard.putBoolean("ShooterVelocityPID Finished", true);
       return true;

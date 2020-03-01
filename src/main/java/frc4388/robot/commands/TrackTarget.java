@@ -44,6 +44,8 @@ public class TrackTarget extends CommandBase {
 
   /**
    * Uses the Limelight to track the target
+   * @param shooterSubsystem The Shooter subsystem
+   * @param aimSubsystem The ShooterAim subsystem
    */
   public TrackTarget(Shooter shooterSubsystem, ShooterAim aimSubsystem) {
     m_shooterAim = aimSubsystem;

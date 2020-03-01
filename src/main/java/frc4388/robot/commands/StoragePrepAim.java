@@ -14,8 +14,10 @@ import frc4388.robot.subsystems.Storage;
 
 public class StoragePrepAim extends CommandBase {
   Storage m_storage;
+  double startTime;
   /**
-   * Creates a new storagePrepAim.
+   * Prepares the Storage for aiming
+   * @param storeSub The Storage subsystem
    */
   public StoragePrepAim(Storage storeSub) {
     m_storage = storeSub;
@@ -25,6 +27,7 @@ public class StoragePrepAim extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    startTime = System.currentTimeMillis();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -46,7 +49,7 @@ public class StoragePrepAim extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (!m_storage.getBeam(1)){
+    if (!m_storage.getBeam(1) || startTime + StorageConstants.STORAGE_TIMEOUT <= System.currentTimeMillis()){
       SmartDashboard.putBoolean("StoragePrepAim Finished", true);
       return true;
     }

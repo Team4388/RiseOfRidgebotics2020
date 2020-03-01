@@ -18,7 +18,9 @@ public class StoragePrepIntake extends CommandBase {
   public double startTime;
 
   /**
-   * Creates a new StoragePrepIntake.
+   * Prepares the Storage for intaking
+   * @param inSub The Intake subsystem
+   * @param storeSub the Storage subsystem
    */
   public StoragePrepIntake(Intake inSub, Storage storeSub) {
     m_intake = inSub;
@@ -52,7 +54,7 @@ public class StoragePrepIntake extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (!m_storage.getBeam(0) || startTime + 2000 <= System.currentTimeMillis()){
+    if (!m_storage.getBeam(0) || startTime + StorageConstants.STORAGE_TIMEOUT <= System.currentTimeMillis()){
       return true;
     }
     return false;

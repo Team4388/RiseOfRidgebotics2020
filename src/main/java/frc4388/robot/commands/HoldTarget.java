@@ -40,6 +40,8 @@ public class HoldTarget extends CommandBase {
 
   /**
    * Uses the Limelight to track the target
+   * @param shooterSubsystem The Shooter subsystem
+   * @param aimSubsystem The ShooterAim subsystem
    */
   public HoldTarget(Shooter shooterSubsystem, ShooterAim aimSubsystem) {
     m_shooterAim = aimSubsystem;

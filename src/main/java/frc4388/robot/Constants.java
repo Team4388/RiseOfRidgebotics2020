@@ -127,6 +127,20 @@ public final class Constants {
         public static final double ENCODER_TICKS_PER_REV = 2048;
         public static final double NEO_UNITS_PER_REV = 42;
         public static final double DEGREES_PER_ROT = 360;
+
+        public static final int TURRET_RIGHT_SOFT_LIMIT = -2;
+        public static final int TURRET_LEFT_SOFT_LIMIT = -55;
+        public static final double TURRET_SPEED_MULTIPLIER = 0.3;
+        public static final double TURRET_CALIBRATE_SPEED = 0.075;
+
+        public static final int HOOD_UP_SOFT_LIMIT = 33;
+        public static final int HOOD_DOWN_SOFT_LIMIT = 3;
+        public static final double HOOD_CONVERT_SLOPE = 0.47;
+        public static final double HOOD_CONVERT_B = 40.5;
+        public static final double HOOD_CALIBRATE_SPEED = 0.1;
+
+        public static final double DRUM_RAMP_LIMIT = 1000;
+        public static final double DRUM_VELOCITY_BOUND = 300;
     }
     
     public static final class ClimberConstants {
@@ -142,6 +156,7 @@ public final class Constants {
         public static final double STORAGE_PARTIAL_BALL = 2;
         public static final double STORAGE_FULL_BALL = 7;
         public static final double STORAGE_SPEED = 0.5;
+        public static final double STORAGE_TIMEOUT = 2000;
        
         /* Ball Indexes */
         public static final int BEAM_SENSOR_DIO_0 = 0;

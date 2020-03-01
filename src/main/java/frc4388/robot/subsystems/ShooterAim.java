@@ -34,7 +34,7 @@ public class ShooterAim extends SubsystemBase {
 
 
   /**
-   * Creates a new ShooterAim.
+   * Creates a subsytem for the turret aiming
    */
   public ShooterAim() {
     //resetGyroShooterRotate();
@@ -47,12 +47,12 @@ public class ShooterAim extends SubsystemBase {
 
     m_shooterRotateMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
     m_shooterRotateMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-    m_shooterRotateMotor.setSoftLimit(SoftLimitDirection.kForward, -2);
-    m_shooterRotateMotor.setSoftLimit(SoftLimitDirection.kReverse, -56);
+    m_shooterRotateMotor.setSoftLimit(SoftLimitDirection.kForward, ShooterConstants.TURRET_RIGHT_SOFT_LIMIT);
+    m_shooterRotateMotor.setSoftLimit(SoftLimitDirection.kReverse, ShooterConstants.TURRET_LEFT_SOFT_LIMIT);
   }
 
   public void runShooterWithInput(double input) {
-    m_shooterRotateMotor.set(input/3);
+    m_shooterRotateMotor.set(input*ShooterConstants.TURRET_SPEED_MULTIPLIER);
   }
 
 

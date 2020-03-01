@@ -14,7 +14,8 @@ import frc4388.robot.subsystems.Storage;
 public class StorageOutake extends CommandBase {
   Storage m_storage;
   /**
-   * Creates a new storageOutake.
+   * Runs the Storage out for outaking
+   * @param storeSub The Storage subsystem
    */
   public StorageOutake(Storage storeSub) {
     m_storage = storeSub;
