@@ -144,11 +144,11 @@ public final class Constants {
     }
     
     public static final class ClimberConstants {
-        public static final int CLIMBER_SPARK_ID = -10;
+        public static final int CLIMBER_SPARK_ID = 14;
     }
   
     public static final class LevelerConstants {
-        public static final int LEVELER_CAN_ID = -1;
+        public static final int LEVELER_CAN_ID = 15;
     }
   
     public static final class StorageConstants {
@@ -157,7 +157,7 @@ public final class Constants {
         public static final double STORAGE_FULL_BALL = 7;
         public static final double STORAGE_SPEED = 0.5;
         public static final double STORAGE_TIMEOUT = 2000;
-       
+
         /* Ball Indexes */
         public static final int BEAM_SENSOR_DIO_0 = 0;
         public static final int BEAM_SENSOR_DIO_1 = 1;

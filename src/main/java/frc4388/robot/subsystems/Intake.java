@@ -41,9 +41,9 @@ public class Intake extends SubsystemBase {
     m_extenderMotor.setInverted(false);
     
     m_extenderForwardLimit = m_extenderMotor.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyClosed);
-    m_extenderReverseLimit = m_extenderMotor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyClosed);
-    m_extenderForwardLimit.enableLimitSwitch(false);
-    m_extenderReverseLimit.enableLimitSwitch(false);
+    m_extenderReverseLimit = m_extenderMotor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
+    m_extenderForwardLimit.enableLimitSwitch(true);
+    m_extenderReverseLimit.enableLimitSwitch(true);
   }
 
   @Override
