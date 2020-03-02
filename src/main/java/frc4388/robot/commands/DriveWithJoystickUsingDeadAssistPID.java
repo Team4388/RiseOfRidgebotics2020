@@ -82,7 +82,7 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
     }
 
     /* If move stick is being used */
-    if (true) {
+    if (moveInput != 0) {
       m_deadTimeMove = m_currTime;
       m_stopPos = m_drive.m_rightFrontMotor.getSelectedSensorPosition()
                   + (m_drive.m_rightFrontMotor.getSelectedSensorVelocity());
