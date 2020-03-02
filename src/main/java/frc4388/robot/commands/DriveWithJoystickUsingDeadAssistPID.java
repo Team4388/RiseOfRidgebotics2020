@@ -12,10 +12,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc4388.robot.Constants.DriveConstants;
 import frc4388.robot.subsystems.Drive;
+import frc4388.robot.subsystems.Pneumatics;
 import frc4388.utility.controller.IHandController;
 
 public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
   Drive m_drive;
+  Pneumatics m_pneumatics;
   double m_targetGyro, m_currentGyro;
   double m_stopPos;
   long m_currTime, m_deltaTime;
@@ -44,14 +46,15 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
    * Creates a new DriveWithJoystickUsingDeadAssistPID to control the drivetrain with an Xbox controller.
    * Applies a curved ramp to the input from the controllers to make the robot less "touchy".
    * Also uses PIDs to keep the robot on course when given a "dead" or 0 input.
-   * @param subsystem pass the Drive subsystem from {@link frc4388.robot.RobotContainer#RobotContainer() RobotContainer}
+   * @param subsystemDrive pass the Drive subsystem from {@link frc4388.robot.RobotContainer#RobotContainer() RobotContainer}
    * @param controller pass the Driver {@link frc4388.utility.controller.IHandController#getClass() IHandController} using the
    * {@link frc4388.robot.RobotContainer#getDriverJoystick() getDriverJoystick()} method in
    * {@link frc4388.robot.RobotContainer#RobotContainer() RobotContainer}
    */
-  public DriveWithJoystickUsingDeadAssistPID(Drive subsystem, IHandController controller) {
+  public DriveWithJoystickUsingDeadAssistPID(Drive subsystemDrive, Pneumatics subsystemPneumatics, IHandController controller) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_drive = subsystem;
+    m_drive = subsystemDrive;
+    m_pneumatics = subsystemPneumatics;
     m_controller = controller;
     addRequirements(m_drive);
   }
@@ -96,7 +99,7 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
       moveOutput = Math.cos(1.571*moveInput)-1;
     }
 
-    if (m_drive.m_isSpeedShiftHigh) {
+    if (m_pneumatics.m_isSpeedShiftHigh) {
       runDriveWithInput(moveOutput, steerInput);
       resetGyroTarget();
     }
@@ -119,14 +122,14 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
   }
 
   private void runDriveWithInput(double move, double steerInput) {
-    double cosMultiplier = .55;
+    double cosMultiplier = .70;
     double steerOutput = 0;
-    double deadzone = .2;
+    double deadzone = .1;
     /* Curves the steer output to be similarily gradual */
     if (steerInput > 0){
-      steerOutput = -cosMultiplier*Math.cos(1.571*steerInput)+(cosMultiplier+deadzone);
+      steerOutput = -(cosMultiplier - deadzone)*Math.cos(1.571*steerInput)+(cosMultiplier);
     } else if (steerInput < 0) {
-      steerOutput = cosMultiplier*Math.cos(1.571*steerInput)-(cosMultiplier+deadzone);
+      steerOutput = (cosMultiplier - deadzone)*Math.cos(1.571*steerInput)-(cosMultiplier);
     }
 
     m_drive.driveWithInput(move, steerOutput);

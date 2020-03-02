@@ -21,6 +21,7 @@ public class DriveWithJoystickDriveStraight extends CommandBase {
   long m_deadTimeSteer, m_deadTimeMove;
   long m_deadTimeout = 100;
   IHandController m_controller;
+  boolean m_isInterrupted;
 
   /**
    * Creates a new DriveWithJoystickDriveStraight to control the drivetrain with an Xbox controller.
@@ -54,6 +55,11 @@ public class DriveWithJoystickDriveStraight extends CommandBase {
     m_deltaTime = System.currentTimeMillis() - m_currTime;
     m_currTime = System.currentTimeMillis();
 
+    if (m_isInterrupted) {
+      resetGyroTarget();
+      m_isInterrupted = false;
+    }
+
     /* If steer stick is being used */
     if (steerInput != 0) {
       m_deadTimeSteer = m_currTime;
@@ -78,14 +84,14 @@ public class DriveWithJoystickDriveStraight extends CommandBase {
   }
 
   private void runDriveWithInput(double move, double steer) {
-    double cosMultiplier = .45;
+    double cosMultiplier = .7;
     double steerOutput = 0;
-    double deadzone = .2;
+    double deadzone = .1;
     /* Curves the steer output to be similarily gradual */
-    if (steer > 0){
-      steerOutput = -cosMultiplier*Math.cos(1.571*steer)+(cosMultiplier+deadzone);
-    } else {
-      steerOutput = cosMultiplier*Math.cos(1.571*steer)-(cosMultiplier+deadzone);
+    if (steer > 0) {
+      steerOutput = -(cosMultiplier - deadzone) * Math.cos(1.571*steer) + cosMultiplier;
+    } else if (steer < 0) {
+      steerOutput = (cosMultiplier - deadzone) * Math.cos(1.571*steer) - cosMultiplier;
     }
     m_drive.driveWithInput(move, steerOutput);
     System.out.println("Driving With Input");
@@ -108,6 +114,7 @@ public class DriveWithJoystickDriveStraight extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_isInterrupted = interrupted;
   }
 
   // Returns true when the command should end.

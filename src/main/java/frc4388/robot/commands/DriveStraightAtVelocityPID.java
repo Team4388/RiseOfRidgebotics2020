@@ -37,7 +37,7 @@ public class DriveStraightAtVelocityPID extends CommandBase {
   @Override
   public void execute() {
     //System.err.println(m_drive.m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_TURN));
-    m_drive.runDriveVelocityPID(-m_targetVel, m_targetGyro);
+    m_drive.runDriveVelocityPID(m_targetVel, m_targetGyro);
   }
 
   // Called once the command ends or is interrupted.

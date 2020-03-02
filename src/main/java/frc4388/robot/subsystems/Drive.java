@@ -36,22 +36,24 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc4388.robot.Constants.DriveConstants;
+import frc4388.robot.Constants.PneumaticsConstants;
 import frc4388.robot.Gains;
 
 public class Drive extends SubsystemBase {
-  /* Create Motors, Gyros, Solenoids, etc */
+  /* Create Motors, Gyros, etc */
   public WPI_TalonFX m_leftFrontMotor = new WPI_TalonFX(DriveConstants.DRIVE_LEFT_FRONT_CAN_ID);
   public WPI_TalonFX m_rightFrontMotor = new WPI_TalonFX(DriveConstants.DRIVE_RIGHT_FRONT_CAN_ID);
   public WPI_TalonFX m_leftBackMotor = new WPI_TalonFX(DriveConstants.DRIVE_LEFT_BACK_CAN_ID);
   public WPI_TalonFX m_rightBackMotor = new WPI_TalonFX(DriveConstants.DRIVE_RIGHT_BACK_CAN_ID);
   public static PigeonIMU m_pigeon = new PigeonIMU(DriveConstants.PIGEON_ID);
-  public DoubleSolenoid m_speedShift = new DoubleSolenoid(7,0,1);
-  public DoubleSolenoid m_coolFalcon = new DoubleSolenoid(7,3,2);
   
   /* Drive objects to manage Drive Train */
   public DifferentialDrive m_driveTrain;
   public final DifferentialDriveOdometry m_odometry;
   public Orchestra m_orchestra;
+
+  /* Pneumatics Subsystem */
+  Pneumatics m_pneumaticsSubsystem;
 
   /* Low Gear Gains */
   public static Gains m_gainsDistanceLow = DriveConstants.DRIVE_DISTANCE_GAINS_LOW;
@@ -86,11 +88,11 @@ public class Drive extends SubsystemBase {
   public double m_lastAngleYaw = 0;
   public double m_currentAngleYaw = 0;
 
+  public double m_lastAngleGotoCoordinates;
   /* Smart Dashboard Objects */
   SendableChooser<String> m_songChooser = new SendableChooser<String>();
   
   /* Misc */
-  public boolean m_isSpeedShiftHigh;
   String m_currentSong = "";
 
   /**
@@ -105,12 +107,6 @@ public class Drive extends SubsystemBase {
     m_pigeon.configFactoryDefault();
     resetGyroYaw();
 
-    /* flip input so forward becomes back, etc */
-    m_leftFrontMotor.setInverted(DriveConstants.isLeftMotorInverted);
-    m_rightFrontMotor.setInverted(DriveConstants.isRightMotorInverted);
-    m_leftBackMotor.setInverted(DriveConstants.isLeftMotorInverted);
-    m_rightBackMotor.setInverted(DriveConstants.isRightMotorInverted);
-    m_driveTrain.setRightSideInverted(DriveConstants.isRightArcadeInverted);
 
     /* Config Open Loop Ramp so we don't make sudden output changes */
     m_rightFrontMotor.configOpenloopRamp(DriveConstants.OPEN_LOOP_RAMP_RATE, DriveConstants.DRIVE_TIMEOUT_MS);
@@ -118,11 +114,16 @@ public class Drive extends SubsystemBase {
     m_leftFrontMotor.configOpenloopRamp(DriveConstants.OPEN_LOOP_RAMP_RATE, DriveConstants.DRIVE_TIMEOUT_MS);
     m_leftBackMotor.configOpenloopRamp(DriveConstants.OPEN_LOOP_RAMP_RATE, DriveConstants.DRIVE_TIMEOUT_MS);
 
+    m_rightFrontMotor.configClosedloopRamp(DriveConstants.OPEN_LOOP_RAMP_RATE, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightBackMotor.configClosedloopRamp(DriveConstants.OPEN_LOOP_RAMP_RATE, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftFrontMotor.configClosedloopRamp(DriveConstants.OPEN_LOOP_RAMP_RATE, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftBackMotor.configClosedloopRamp(DriveConstants.OPEN_LOOP_RAMP_RATE, DriveConstants.DRIVE_TIMEOUT_MS);
+
     /* Config Supply Current Limit (Use only for debugging) */
-    m_rightFrontMotor.configSupplyCurrentLimit(DriveConstants.SUPPLY_CURRENT_LIMIT_CONFIG);
-    m_leftFrontMotor.configSupplyCurrentLimit(DriveConstants.SUPPLY_CURRENT_LIMIT_CONFIG);
-    m_rightBackMotor.configSupplyCurrentLimit(DriveConstants.SUPPLY_CURRENT_LIMIT_CONFIG);
-    m_leftBackMotor.configSupplyCurrentLimit(DriveConstants.SUPPLY_CURRENT_LIMIT_CONFIG);
+    //m_rightFrontMotor.configSupplyCurrentLimit(DriveConstants.SUPPLY_CURRENT_LIMIT_CONFIG);
+    //m_leftFrontMotor.configSupplyCurrentLimit(DriveConstants.SUPPLY_CURRENT_LIMIT_CONFIG);
+    //m_rightBackMotor.configSupplyCurrentLimit(DriveConstants.SUPPLY_CURRENT_LIMIT_CONFIG);
+    //m_leftBackMotor.configSupplyCurrentLimit(DriveConstants.SUPPLY_CURRENT_LIMIT_CONFIG);
 
     /* Config deadbands so that  */
     m_leftBackMotor.configNeutralDeadband(DriveConstants.NEUTRAL_DEADBAND, DriveConstants.DRIVE_TIMEOUT_MS);
@@ -131,7 +132,15 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.configNeutralDeadband(DriveConstants.NEUTRAL_DEADBAND, DriveConstants.DRIVE_TIMEOUT_MS);
 
     /* PID for Front Motor Control in Teleop */
-    setRightMotorGains(false);
+    try {
+      if (m_pneumaticsSubsystem.m_isSpeedShiftHigh) {
+        setRightMotorGains(true);
+      } else {
+        setRightMotorGains(false);
+      }
+    } catch (Exception e) {
+      System.err.println("Error while trying to switch gains.");
+    }
 
     /* PID for Back Motor Control in Tank Drive Vel */
     m_rightBackMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
@@ -251,6 +260,13 @@ public class Drive extends SubsystemBase {
 
     /* Set up Orchestra */
     m_orchestra = new Orchestra();
+
+    /* flip input so forward becomes back, etc */
+    m_leftFrontMotor.setInverted(DriveConstants.isLeftMotorInverted);
+    m_rightFrontMotor.setInverted(DriveConstants.isRightMotorInverted);
+    m_leftBackMotor.setInverted(DriveConstants.isLeftMotorInverted);
+    m_rightBackMotor.setInverted(DriveConstants.isRightMotorInverted);
+    //m_driveTrain.setRightSideInverted(DriveConstants.isRightArcadeInverted);
     
     /* Set up music for drive train */
     m_orchestra.addInstrument(m_leftBackMotor);
@@ -273,14 +289,33 @@ public class Drive extends SubsystemBase {
 
   @Override
   public void periodic() {
+    updateTime();
+    updateAngles();
+    updatePosition();
+    updateSmartDashboard();
+  }
+
+  /**
+   * Passes subsystem needed.
+   * @param subsystem Subsystem needed.
+   */
+  public void passRequiredSubsystem(Pneumatics subsystem) {
+    m_pneumaticsSubsystem = subsystem;
+  }
+
+  public void updateTime() {
     m_lastTimeMs = m_currentTimeMs;
     m_currentTimeMs = System.currentTimeMillis();
     m_currentTimeSec = m_currentTimeMs / 1000;
     m_deltaTimeMs = m_currentTimeMs - m_lastTimeMs;
+  }
 
+  public void updateAngles() {
     m_lastAngleYaw = m_currentAngleYaw;
     m_currentAngleYaw = getGyroYaw();
+  }
 
+  public void updatePosition() {
     m_rightFrontMotorPos = m_rightFrontMotor.getSelectedSensorPosition();
     m_rightFrontMotorVel = m_rightFrontMotor.getSelectedSensorVelocity();
 
@@ -295,9 +330,6 @@ public class Drive extends SubsystemBase {
     m_odometry.update(Rotation2d.fromDegrees( getHeading()),
                                               getDistanceInches(m_leftFrontMotor),
                                               -getDistanceInches(m_rightFrontMotor));
-
-    runFalconCooling();
-    updateSmartDashboard();
   }
 
   /**
@@ -429,47 +461,6 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.follow(m_rightBackMotor);
 
     m_driveTrain.feedWatchdog();
-  }
-
-  /**
-   * Set to high or low gear based on boolean state, true = high, false = low
-   * @param state Chooses between high or low gear
-   */
-  public void setShiftState(boolean state) {
-    if (state == true) {
-			m_speedShift.set(DoubleSolenoid.Value.kReverse);
-    }
-		if (state == false) {
-			m_speedShift.set(DoubleSolenoid.Value.kForward);
-    }
-    setRightMotorGains(state);
-    m_isSpeedShiftHigh = state;
-  }
-
-  /**
-   * Set to open or close solenoid that cools the falcon, true = open, false = close
-   * @param state Chooses between open and close
-   */
-  public void coolFalcon(boolean state) {
-    if (state == true) {
-      m_coolFalcon.set(DoubleSolenoid.Value.kForward);
-    }
-    if (state == false) {
-      m_coolFalcon.set(DoubleSolenoid.Value.kReverse);
-    }
-  }
-
-  /**
-   * 
-   */
-  public void runFalconCooling() {
-    if (m_currentTimeSec % 30 == 0) {
-      coolFalcon(true);
-      SmartDashboard.putBoolean("Solenoid", true);
-    } else if ((m_currentTimeSec - 1) % 30 == 0) {
-      coolFalcon(false);
-      SmartDashboard.putBoolean("Solenoid", false);
-    }
   }
 
   /**
@@ -624,7 +615,7 @@ public class Drive extends SubsystemBase {
    * @return The converted value in inches
    */
   public double  ticksToInches(double ticks) {
-    if (m_isSpeedShiftHigh) {
+    if (m_pneumaticsSubsystem.m_isSpeedShiftHigh) {
       return ticks * DriveConstants.INCHES_PER_TICK_HIGH;
     } else {
       return ticks * DriveConstants.INCHES_PER_TICK_LOW;
@@ -637,7 +628,7 @@ public class Drive extends SubsystemBase {
    * @return The converted value in ticks
    */
   public double inchesToTicks(double inches) {
-    if (m_isSpeedShiftHigh) {
+    if (m_pneumaticsSubsystem.m_isSpeedShiftHigh) {
       return inches * DriveConstants.TICKS_PER_INCH_HIGH;
     } else {
       return inches * DriveConstants.TICKS_PER_INCH_LOW;
@@ -747,8 +738,14 @@ public class Drive extends SubsystemBase {
       //SmartDashboard.putNumber("Pigeon Roll", getGyroRoll());
       SmartDashboard.putNumber("Left Front Output", m_leftFrontMotor.get());
       SmartDashboard.putNumber("Right Front Output", m_rightFrontMotor.get());
-      SmartDashboard.putNumber("Left Back Output", m_leftBackMotor.get());
-      SmartDashboard.putNumber("Right Back Output", m_rightBackMotor.get());
+      //SmartDashboard.putNumber("Left Back Output", m_leftBackMotor.get());
+      //SmartDashboard.putNumber("Right Back Output", m_rightBackMotor.get());
+
+      double leftRPM = ticksToInches(m_leftFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
+      double rightRPM = ticksToInches(m_rightFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
+
+      SmartDashboard.putNumber("Left Motor RPM", leftRPM);
+      SmartDashboard.putNumber("Right Motor RPM", rightRPM);
 
       //SmartDashboard.putNumber("Left Back Motor Velocity Raw", m_leftBackMotor.getSelectedSensorVelocity());
       //SmartDashboard.putNumber("Right Back Motor Velocity Raw", m_rightBackMotor.getSelectedSensorVelocity());
@@ -780,9 +777,9 @@ public class Drive extends SubsystemBase {
       SmartDashboard.putNumber("Left Back Motor Current Stator", m_leftBackMotor.getStatorCurrent());
 
       //SmartDashboard.putNumber("PID 0 Error", m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_PRIMARY));
-      //SmartDashboard.putNumber("PID 1 Error", m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_TURN));
+      SmartDashboard.putNumber("PID 1 Error", m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_TURN));
       //SmartDashboard.putNumber("PID 0 Target", m_rightFrontMotor.getClosedLoopTarget(DriveConstants.PID_PRIMARY));
-      //SmartDashboard.putNumber("PID 1 Target", m_rightFrontMotor.getClosedLoopTarget(DriveConstants.PID_TURN));
+      SmartDashboard.putNumber("PID 1 Target", m_rightFrontMotor.getClosedLoopTarget(DriveConstants.PID_TURN));
       //SmartDashboard.putNumber("PID 0 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_PRIMARY));
       //SmartDashboard.putNumber("PID 1 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_TURN));
 
@@ -790,7 +787,7 @@ public class Drive extends SubsystemBase {
       //SmartDashboard.putNumber("Odometry Heading", getHeading());
 
       //SmartDashboard.putNumber("Time Seconds", m_currentTimeSec);
-      //SmartDashboard.putNumber("Delta Time", m_deltaTime);
+      SmartDashboard.putNumber("Delta Time", m_deltaTimeMs);
 
       if (m_currentSong != m_songChooser.getSelected()){
         m_currentSong = m_songChooser.getSelected();

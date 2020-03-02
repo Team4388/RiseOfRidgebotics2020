@@ -8,38 +8,31 @@
 package frc4388.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc4388.robot.subsystems.Intake;
+import frc4388.robot.Constants.StorageConstants;
 import frc4388.robot.subsystems.Storage;
 
-public class storageIntake extends CommandBase {
-  public Intake m_intake;
+public class StoragePositionPID extends CommandBase {
   public Storage m_storage;
+  double startPos;
   /**
-   * Creates a new storageIntake.
+   * Moves the storage a number of rotations
+   * @param subsystem The Storage subsystem
    */
-  public storageIntake(Intake inSub, Storage storeSub) {
-    m_intake = inSub;
-    m_storage = storeSub;
-    addRequirements(m_intake);
+  public StoragePositionPID(Storage subsystem) {
+    m_storage = subsystem;
     addRequirements(m_storage);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-    if (m_storage.getBeam(0)){
-      m_storage.setStoragePID(m_storage.getEncoderPos() + 2);
-      m_intake.runExtender(-0.3); 
-    }
-    else{
-      m_intake.runExtender(0.3); 
-    }
+    m_storage.runStoragePositionPID(StorageConstants.STORAGE_FULL_BALL);
   }
 
   // Called once the command ends or is interrupted.
@@ -50,9 +43,10 @@ public class storageIntake extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (m_storage.getBeam(0)){
+    /*if (startPos + StorageConstants.STORAGE_FULL_BALL == m_storage.getEncoderPos())
+    {
       return true;
-    }
+    }*/
     return false;
   }
 }

@@ -9,50 +9,36 @@ package frc4388.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc4388.robot.Constants.StorageConstants;
+import frc4388.robot.subsystems.Storage;
 
-public class Wait extends CommandBase {
-
-  long m_startTime;
-  long m_waitTime;
-  long m_currentTime;
-  SubsystemBase m_subsystem;
-  int m_waitNum;
-
-  int counter  = 0;
-
+public class StoragePrepAim extends CommandBase {
+  Storage m_storage;
+  double startTime;
   /**
-   * Creates a new WaitCommand.
+   * Prepares the Storage for aiming
+   * @param storeSub The Storage subsystem
    */
-  public Wait(SubsystemBase subsystem, double seconds, int waitNum) {
-    // Use addRequirements() here to declare subsystem dependencies.
-
-    m_waitTime = (long) (seconds * 1000);
-    m_subsystem = subsystem;
-    m_waitNum = waitNum;
-
-    addRequirements(m_subsystem);
+  public StoragePrepAim(Storage storeSub) {
+    m_storage = storeSub;
+    addRequirements(m_storage);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_currentTime = System.currentTimeMillis();
-    m_startTime = m_currentTime;
+    startTime = System.currentTimeMillis();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-    if (counter == 0) {
-      SmartDashboard.putNumber("Wait Coordinates" + m_waitNum, m_currentTime);
+    if (m_storage.getBeam(1)){
+      m_storage.runStorage(StorageConstants.STORAGE_SPEED);
     }
-
-    m_currentTime = System.currentTimeMillis();
-    SmartDashboard.putNumber("Time Difference for Wait", (m_currentTime - m_startTime));
-
-    counter ++;
+    else{
+      m_storage.runStorage(0);
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -63,10 +49,11 @@ public class Wait extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if ((m_currentTime - m_startTime) >= m_waitTime) {
+    if (!m_storage.getBeam(1) || startTime + StorageConstants.STORAGE_TIMEOUT <= System.currentTimeMillis()){
+      SmartDashboard.putBoolean("StoragePrepAim Finished", true);
       return true;
-    } else {
-      return false;
     }
+    SmartDashboard.putBoolean("StoragePrepAim Finished", false);
+    return false;
   }
 }
