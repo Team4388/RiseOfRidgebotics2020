@@ -53,7 +53,7 @@ public class Drive extends SubsystemBase {
   public Orchestra m_orchestra;
 
   /* Pneumatics Subsystem */
-  Pneumatics m_pneumaticsSubsystem;
+  public Pneumatics m_pneumaticsSubsystem;
 
   /* Low Gear Gains */
   public static Gains m_gainsDistanceLow = DriveConstants.DRIVE_DISTANCE_GAINS_LOW;
