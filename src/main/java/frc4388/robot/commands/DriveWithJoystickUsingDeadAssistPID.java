@@ -122,14 +122,14 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
   }
 
   private void runDriveWithInput(double move, double steerInput) {
-    double cosMultiplier = .55;
+    double cosMultiplier = .70;
     double steerOutput = 0;
-    double deadzone = .2;
+    double deadzone = .1;
     /* Curves the steer output to be similarily gradual */
     if (steerInput > 0){
-      steerOutput = -cosMultiplier*Math.cos(1.571*steerInput)+(cosMultiplier+deadzone);
+      steerOutput = -(cosMultiplier - deadzone)*Math.cos(1.571*steerInput)+(cosMultiplier);
     } else if (steerInput < 0) {
-      steerOutput = cosMultiplier*Math.cos(1.571*steerInput)-(cosMultiplier+deadzone);
+      steerOutput = (cosMultiplier - deadzone)*Math.cos(1.571*steerInput)-(cosMultiplier);
     }
 
     m_drive.driveWithInput(move, steerOutput);

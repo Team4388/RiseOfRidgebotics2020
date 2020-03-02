@@ -127,7 +127,7 @@ public class RobotContainer {
         /* Default Commands */
         // drives the robot with a two-axis input from the driver controller
         
-        m_robotDrive.setDefaultCommand(new DriveWithJoystick(m_robotDrive, m_robotPneumatics, getDriverController()));
+        m_robotDrive.setDefaultCommand(new DriveWithJoystickDriveStraight(m_robotDrive, getDriverController()));
         //m_robotDrive.setDefaultCommand(new DriveWithJoystickUsingDeadAssistPID(m_robotDrive, m_robotPneumatics, getDriverController()));
         
         // drives intake with input from triggers on the opperator controller
