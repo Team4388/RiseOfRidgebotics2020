@@ -50,10 +50,11 @@ public class StoragePrepAim extends CommandBase {
   @Override
   public boolean isFinished() {
     if (!m_storage.getBeam(1) || startTime + StorageConstants.STORAGE_TIMEOUT <= System.currentTimeMillis()){
-      SmartDashboard.putBoolean("StoragePrepAim Finished", true);
+      m_storage.m_isStorageReadyToFire = true;
       return true;
+    } else {
+      m_storage.m_isStorageReadyToFire = false;
+      return false;
     }
-    SmartDashboard.putBoolean("StoragePrepAim Finished", false);
-    return false;
   }
 }

@@ -116,10 +116,11 @@ public class TrackTarget extends CommandBase {
   public boolean isFinished() {
     if (xAngle < 1 && xAngle > -1 && target == 1)
     {
-      SmartDashboard.putBoolean("TrackTarget Finished", true);
-      return true;
+      m_shooterAim.m_isAimReady = true;
+    } else {
+      m_shooterAim.m_isAimReady = false;
     }
-    SmartDashboard.putBoolean("TrackTarget Finished", false);
+
     return false;
   }
 }

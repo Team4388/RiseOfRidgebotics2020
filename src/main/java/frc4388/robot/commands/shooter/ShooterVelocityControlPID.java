@@ -54,12 +54,12 @@ public class ShooterVelocityControlPID extends CommandBase {
     double upperBound = m_targetVel + ShooterConstants.DRUM_VELOCITY_BOUND;
     double lowerBound = m_targetVel - ShooterConstants.DRUM_VELOCITY_BOUND;
     if (m_actualVel < upperBound && m_actualVel > lowerBound){
-      SmartDashboard.putBoolean("ShooterVelocityPID Finished", true);
-      return true;
+      m_shooter.m_isDrumReady = true;
     }
     else{
-      SmartDashboard.putBoolean("ShooterVelocityPID Finished", false);
-      return false;
+      m_shooter.m_isDrumReady = false;
     }
+
+    return false;
   }
 }

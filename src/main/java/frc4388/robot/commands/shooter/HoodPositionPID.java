@@ -48,7 +48,9 @@ public class HoodPositionPID extends CommandBase {
   public boolean isFinished() {
     double encoderPos = m_shooterHood.m_angleAdjustMotor.getEncoder().getPosition();
     if(encoderPos < firingAngle + 1 || encoderPos < firingAngle - 1){
-      return true;
+      m_shooterHood.m_isHoodReady = true;
+    } else {
+      m_shooterHood.m_isHoodReady = false;
     }
     return false;
   }

@@ -31,6 +31,7 @@ public class Storage extends SubsystemBase {
 
   Intake m_intake;
 
+  public boolean m_isStorageReadyToFire = false;
 
   /**
    * Creates a new Storage.

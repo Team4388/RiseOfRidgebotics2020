@@ -33,6 +33,8 @@ public class ShooterHood extends SubsystemBase {
   public CANPIDController m_angleAdjustPIDController = m_angleAdjustMotor.getPIDController();
   public CANEncoder m_angleEncoder = m_angleAdjustMotor.getEncoder();
 
+  public boolean m_isHoodReady = false;
+
   public double m_fireAngle;
   public CANDigitalInput m_hoodUpLimit, m_hoodDownLimit;
 

@@ -28,6 +28,8 @@ public class ShooterAim extends SubsystemBase {
   public static Gains m_shooterTurretGains = ShooterConstants.SHOOTER_TURRET_GAINS;
   CANDigitalInput m_shooterRightLimit, m_shooterLeftLimit;
 
+  public boolean m_isAimReady = false;
+
   // Configure PID Controllers
   CANPIDController m_shooterRotatePIDController = m_shooterRotateMotor.getPIDController();
   public CANEncoder m_shooterRotateEncoder = m_shooterRotateMotor.getEncoder();

@@ -32,7 +32,7 @@ public class Shooter extends SubsystemBase {
 
   public ShooterTables m_shooterTable;
   
-  public boolean velReached;
+  public boolean m_isDrumReady = false;
   public double m_fireVel;
 
   public Trims shooterTrims;

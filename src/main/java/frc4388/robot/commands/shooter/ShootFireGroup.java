@@ -26,11 +26,10 @@ public class ShootFireGroup extends ParallelRaceGroup {
    * @param m_storage The Storage subsytem
    */
   public ShootFireGroup(Shooter m_shooter, ShooterAim m_shooterAim, ShooterHood m_shooterHood, Storage m_storage) {
-
     addCommands(
       new RunCommand(() -> m_shooter.runDrumShooterVelocityPID(m_shooter.addFireVel()), m_shooter),
       new RunCommand(() -> m_shooterHood.runAngleAdjustPID(m_shooterHood.addFireAngle()), m_shooterHood),
-      new HoldTarget(m_shooterAim),
+      new TrackTarget(m_shooterAim),
       new StorageRun(m_storage)
     );
   }

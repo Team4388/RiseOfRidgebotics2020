@@ -36,7 +36,6 @@ import frc4388.robot.commands.drive.DriveWithJoystick;
 import frc4388.robot.commands.drive.TurnDegrees;
 import frc4388.robot.commands.intake.RunIntakeWithTriggers;
 import frc4388.robot.commands.shooter.CalibrateShooter;
-import frc4388.robot.commands.shooter.HoldTarget;
 import frc4388.robot.commands.shooter.ShootFullGroup;
 import frc4388.robot.commands.shooter.ShootPrepGroup;
 import frc4388.robot.commands.shooter.TrimShooter;
