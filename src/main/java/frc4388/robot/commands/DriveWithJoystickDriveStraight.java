@@ -7,20 +7,27 @@
 
 package frc4388.robot.commands;
 
+import java.security.PublicKey;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc4388.robot.Constants.DriveConstants;
 import frc4388.robot.subsystems.Drive;
+import frc4388.robot.subsystems.Pneumatics;
 import frc4388.utility.controller.IHandController;
 
 public class DriveWithJoystickDriveStraight extends CommandBase {
   Drive m_drive;
+  Pneumatics m_pneumatics;
   double m_targetGyro, m_currentGyro;
   double m_stopPos;
   long m_currTime, m_deltaTime;
   long m_deadTimeSteer, m_deadTimeMove;
   long m_deadTimeout = 100;
   IHandController m_controller;
+  boolean m_isInterrupted;
+  double highGearMultiplier = 1;
+  double lowGearMultiplier = 1;
 
   /**
    * Creates a new DriveWithJoystickDriveStraight to control the drivetrain with an Xbox controller.
@@ -34,6 +41,7 @@ public class DriveWithJoystickDriveStraight extends CommandBase {
   public DriveWithJoystickDriveStraight(Drive subsystem, IHandController controller) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = subsystem;
+    m_pneumatics = m_drive.m_pneumaticsSubsystem;
     m_controller = controller;
     addRequirements(m_drive);
   }
@@ -53,6 +61,11 @@ public class DriveWithJoystickDriveStraight extends CommandBase {
     double moveOutput = 0;
     m_deltaTime = System.currentTimeMillis() - m_currTime;
     m_currTime = System.currentTimeMillis();
+
+    if (m_isInterrupted) {
+      resetGyroTarget();
+      m_isInterrupted = false;
+    }
 
     /* If steer stick is being used */
     if (steerInput != 0) {
@@ -78,14 +91,22 @@ public class DriveWithJoystickDriveStraight extends CommandBase {
   }
 
   private void runDriveWithInput(double move, double steer) {
-    double cosMultiplier = .45;
+
+    double cosMultiplier;    
     double steerOutput = 0;
-    double deadzone = .2;
-    /* Curves the steer output to be similarily gradual */
-    if (steer > 0){
-      steerOutput = -cosMultiplier*Math.cos(1.571*steer)+(cosMultiplier+deadzone);
+    double deadzone = .1;
+
+    if (m_pneumatics.m_isSpeedShiftHigh) {
+      cosMultiplier = DriveConstants.COS_MULTIPLIER_HIGH;
     } else {
-      steerOutput = cosMultiplier*Math.cos(1.571*steer)-(cosMultiplier+deadzone);
+      cosMultiplier = DriveConstants.COS_MULTIPLIER_LOW;
+    }
+
+    /* Curves the steer output to be similarily gradual */
+    if (steer > 0) {
+      steerOutput = -(cosMultiplier - deadzone) * Math.cos(1.571*steer) + cosMultiplier;
+    } else if (steer < 0) {
+      steerOutput = (cosMultiplier - deadzone) * Math.cos(1.571*steer) - cosMultiplier;
     }
     m_drive.driveWithInput(move, steerOutput);
     System.out.println("Driving With Input");
@@ -101,13 +122,19 @@ public class DriveWithJoystickDriveStraight extends CommandBase {
    */
   private void resetGyroTarget() {
     //m_targetGyro = m_currentGyro;
-    m_targetGyro =  m_currentGyro
-                    + m_drive.getTurnRate();
+    if (m_pneumatics.m_isSpeedShiftHigh) {
+      m_targetGyro =  m_currentGyro
+                    + highGearMultiplier * m_drive.getTurnRate();
+    } else {
+      m_targetGyro =  m_currentGyro
+                    + lowGearMultiplier * m_drive.getTurnRate();
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_isInterrupted = interrupted;
   }
 
   // Returns true when the command should end.

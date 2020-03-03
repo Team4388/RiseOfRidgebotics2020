@@ -42,6 +42,8 @@ public final class Constants {
         public static final SupplyCurrentLimitConfiguration SUPPLY_CURRENT_LIMIT_CONFIG =
             new SupplyCurrentLimitConfiguration(false, 60, 40, 2);
         public static final int CLOSED_LOOP_TIME_MS = 1; // Higher numbers mean slower control loops
+        public static final double COS_MULTIPLIER_LOW = 1.0;
+        public static final double COS_MULTIPLIER_HIGH = 0.8; 
 
         /* Drive Train Characteristics */
         public static final double MOTOR_ROT_PER_WHEEL_ROT_HIGH = 5.13;
@@ -52,16 +54,16 @@ public final class Constants {
 
         /* PID Constants Drive*/
         public static final Gains DRIVE_DISTANCE_GAINS_LOW = new Gains(0.1, 0.0, 1.0, 0.0, 0, 0.5);
-        public static final Gains DRIVE_VELOCITY_GAINS_LOW = new Gains(0.1, 0.0, 0.2, 0.025, 0, 1.0);
-        public static final Gains DRIVE_TURNING_GAINS_LOW = new Gains(0.5, 0.0, 0.0, 0.0, 0, 0.55);
-        public static final Gains DRIVE_MOTION_MAGIC_GAINS_LOW = new Gains(0.2, 0.0, 0.0, 0.0, 0, 1.0);
-        public static final int DRIVE_CRUISE_VELOCITY = 25000;
-        public static final int DRIVE_ACCELERATION = 21000;
+        public static final Gains DRIVE_VELOCITY_GAINS_LOW = new Gains(0.05, 0.0, 1.0, 0.025, 0, 1.0);
+        public static final Gains DRIVE_TURNING_GAINS_LOW = new Gains(0.5, 0.0, 2.0, 0.0, 0, 0.55);
+        public static final Gains DRIVE_MOTION_MAGIC_GAINS_LOW = new Gains(0.1, 0.0, 0, 0.025, 0, 1.0);
+        public static final int DRIVE_CRUISE_VELOCITY = 30000;
+        public static final int DRIVE_ACCELERATION = 23000;
 
-        public static final Gains DRIVE_DISTANCE_GAINS_HIGH = new Gains(0.0, 0.0, 0.0, 0.0, 0, 0.5);
-        public static final Gains DRIVE_VELOCITY_GAINS_HIGH = new Gains(0.0, 0.0, 0.0, 0.0, 0, 1.0);
-        public static final Gains DRIVE_TURNING_GAINS_HIGH = new Gains(0.0, 0.0, 0.0, 0.0, 0, 0.55);
-        public static final Gains DRIVE_MOTION_MAGIC_GAINS_HIGH = new Gains(0.0, 0.0, 0.0, 0.0, 0, 1.0);
+        public static final Gains DRIVE_DISTANCE_GAINS_HIGH = new Gains(0.1, 0.0, 0.0, 0.0, 0, 0.5);
+        public static final Gains DRIVE_VELOCITY_GAINS_HIGH = new Gains(0.1, 0.0, 0.0, 0.0, 0, 1.0);
+        public static final Gains DRIVE_TURNING_GAINS_HIGH = new Gains(0.2, 0.0, 0.0, 0.0, 0, 0.55);
+        public static final Gains DRIVE_MOTION_MAGIC_GAINS_HIGH = new Gains(0.1, 0.0, 0.0, 0.0, 0, 1.0);
         public static final int DRIVE_CRUISE_VELOCITY_HIGH = 20000;
         public static final int DRIVE_ACCELERATION_HIGH = 7000;
 

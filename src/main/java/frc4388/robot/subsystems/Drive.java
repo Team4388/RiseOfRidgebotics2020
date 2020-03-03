@@ -53,7 +53,7 @@ public class Drive extends SubsystemBase {
   public Orchestra m_orchestra;
 
   /* Pneumatics Subsystem */
-  Pneumatics m_pneumaticsSubsystem;
+  public Pneumatics m_pneumaticsSubsystem;
 
   /* Low Gear Gains */
   public static Gains m_gainsDistanceLow = DriveConstants.DRIVE_DISTANCE_GAINS_LOW;
@@ -114,6 +114,11 @@ public class Drive extends SubsystemBase {
     m_leftFrontMotor.configOpenloopRamp(DriveConstants.OPEN_LOOP_RAMP_RATE, DriveConstants.DRIVE_TIMEOUT_MS);
     m_leftBackMotor.configOpenloopRamp(DriveConstants.OPEN_LOOP_RAMP_RATE, DriveConstants.DRIVE_TIMEOUT_MS);
 
+    m_rightFrontMotor.configClosedloopRamp(DriveConstants.OPEN_LOOP_RAMP_RATE, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightBackMotor.configClosedloopRamp(DriveConstants.OPEN_LOOP_RAMP_RATE, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftFrontMotor.configClosedloopRamp(DriveConstants.OPEN_LOOP_RAMP_RATE, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftBackMotor.configClosedloopRamp(DriveConstants.OPEN_LOOP_RAMP_RATE, DriveConstants.DRIVE_TIMEOUT_MS);
+
     /* Config Supply Current Limit (Use only for debugging) */
     //m_rightFrontMotor.configSupplyCurrentLimit(DriveConstants.SUPPLY_CURRENT_LIMIT_CONFIG);
     //m_leftFrontMotor.configSupplyCurrentLimit(DriveConstants.SUPPLY_CURRENT_LIMIT_CONFIG);
@@ -127,7 +132,15 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.configNeutralDeadband(DriveConstants.NEUTRAL_DEADBAND, DriveConstants.DRIVE_TIMEOUT_MS);
 
     /* PID for Front Motor Control in Teleop */
-    setRightMotorGains(false);
+    try {
+      if (m_pneumaticsSubsystem.m_isSpeedShiftHigh) {
+        setRightMotorGains(true);
+      } else {
+        setRightMotorGains(false);
+      }
+    } catch (Exception e) {
+      System.err.println("Error while trying to switch gains.");
+    }
 
     /* PID for Back Motor Control in Tank Drive Vel */
     m_rightBackMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);

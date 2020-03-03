@@ -17,15 +17,19 @@ public class Wait extends CommandBase {
   long m_waitTime;
   long m_currentTime;
   SubsystemBase m_subsystem;
+  int m_waitNum;
+
+  int counter  = 0;
 
   /**
    * Creates a new WaitCommand.
    */
-  public Wait(float seconds, SubsystemBase subsystem) {
+  public Wait(SubsystemBase subsystem, double seconds, int waitNum) {
     // Use addRequirements() here to declare subsystem dependencies.
 
     m_waitTime = (long) (seconds * 1000);
     m_subsystem = subsystem;
+    m_waitNum = waitNum;
 
     addRequirements(m_subsystem);
   }
@@ -40,8 +44,15 @@ public class Wait extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
+    if (counter == 0) {
+      SmartDashboard.putNumber("Wait Coordinates" + m_waitNum, m_currentTime);
+    }
+
     m_currentTime = System.currentTimeMillis();
     SmartDashboard.putNumber("Time Difference for Wait", (m_currentTime - m_startTime));
+
+    counter ++;
   }
 
   // Called once the command ends or is interrupted.

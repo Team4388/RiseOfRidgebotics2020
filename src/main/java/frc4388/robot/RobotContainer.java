@@ -29,12 +29,15 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc4388.robot.Constants.*;
+import frc4388.robot.commands.AutoPath1FromCenter;
+import frc4388.robot.commands.AutoPath2FromRight;
 import frc4388.robot.commands.CalibrateShooter;
 import frc4388.robot.commands.DrivePositionMPAux;
 import frc4388.robot.commands.DriveStraightAtVelocityPID;
 import frc4388.robot.commands.DriveStraightToPositionMM;
 import frc4388.robot.commands.DriveStraightToPositionPID;
 import frc4388.robot.commands.DriveWithJoystick;
+import frc4388.robot.commands.DriveWithJoystickUsingDeadAssistPID;
 import frc4388.robot.commands.DriveStraightToPositionMM;
 import frc4388.robot.commands.DriveStraightToPositionPID;
 import frc4388.robot.commands.DriveWithJoystickUsingDeadAssistPID;
@@ -123,7 +126,10 @@ public class RobotContainer {
 
         /* Default Commands */
         // drives the robot with a two-axis input from the driver controller
-        m_robotDrive.setDefaultCommand(new DriveWithJoystick(m_robotDrive, getDriverController()));
+        
+        m_robotDrive.setDefaultCommand(new DriveWithJoystick(m_robotDrive, m_robotPneumatics, getDriverController()));
+        //m_robotDrive.setDefaultCommand(new DriveWithJoystickUsingDeadAssistPID(m_robotDrive, m_robotPneumatics, getDriverController()));
+        
         // drives intake with input from triggers on the opperator controller
         m_robotIntake.setDefaultCommand(new RunIntakeWithTriggers(m_robotIntake, getOperatorController()));
         // runs the turret with joystick
@@ -151,15 +157,15 @@ public class RobotContainer {
         /* Test Buttons */
         // A driver test button
         new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-            .whenPressed(new DriveStraightToPositionMM(m_robotDrive, 192));
+            .whenPressed(new DriveStraightToPositionMM(m_robotDrive, m_robotPneumatics, 24.0));
         
         // B driver test button
         new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
-            .whileHeld(new DriveStraightAtVelocityPID(m_robotDrive, 6000));
+            .whenPressed(new TurnDegrees(m_robotDrive, 90));
 
         // Y driver test button
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
-            .whenPressed(new GotoCoordinates(m_robotDrive, 12, 12, 0));
+            .whenPressed(new Wait(m_robotDrive, 0, 0));
 
         // X driver test button
         new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
@@ -249,31 +255,9 @@ public class RobotContainer {
         RamseteCommand ramseteCommand = getRamseteCommand(trajectory);
         // Run path following command, then stop at the end.
         //return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-       
-        //Runs an Autonomous command group that would shoot our preloaded balls, pick up 3 more from the trench, and shoot those
-        //This assumes that we are positioned against the right wall with our shooter facing the target.
-        return new SequentialCommandGroup(new Wait(0, m_robotDrive), 
-                                    //add aim command
-                                    //add shooter command
-                                    //new DriveStraightToPositionMM(m_robotDrive, 48.0),
-                                    /*new ParallelCommandGroup(
-                                        new StorageIntakeGroup(m_robotIntake, m_robotStorage),
-                                            new DriveStraightToPositionMM(m_robotDrive, 36.0)),
-                                    new ParallelCommandGroup(
-                                         new StorageIntakeGroup(m_robotIntake, m_robotStorage),
-                                            new DriveStraightToPositionMM(m_robotDrive, 36.0)),
-                                    new StorageIntakeGroup(m_robotIntake, m_robotStorage),*/
-                                    //add aim command 
-                                    //add shooter command
-//Below this would be the picking up additional balls outside of those in the trench directly behind us
+        return new AutoPath1FromCenter(m_robotDrive, m_robotPneumatics);
+        //return new AutoPath2FromRight(m_robotDrive, m_robotPneumatics);
 
-                                    //new GotoCoordinates(m_robotDrive, 36, 36),
-                                    new GotoCoordinates(m_robotDrive, 36, 36, -90));//,
-                                    //new StorageIntakeGroup(m_robotIntake, m_robotStorage),
-                                    //new TurnDegrees(m_robotDrive, 75),
-                                    //new DriveStraightToPositionMM(m_robotDrive, 18.0),
-                                    //new TurnDegrees(m_robotDrive, -45),
-                                    //new DriveStraightToPositionMM(m_robotDrive, 12.0));
     }
     TrajectoryConfig getTrajectoryConfig() {
         return new TrajectoryConfig(
