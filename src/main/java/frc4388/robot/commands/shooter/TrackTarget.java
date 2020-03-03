@@ -19,9 +19,11 @@ import frc4388.utility.controller.IHandController;
 
 public class TrackTarget extends CommandBase {
   // Setup
-  NetworkTableEntry xEntry;
   ShooterAim m_shooterAim;
   Shooter m_shooter;
+  ShooterHood m_shooterHood;
+
+  NetworkTableEntry xEntry;
   IHandController m_driverController;
   // Aiming
   double turnAmount = 0;
@@ -34,16 +36,15 @@ public class TrackTarget extends CommandBase {
 
   public double m_hoodTrim;
   public double m_turretTrim;
-  private ShooterHood m_shooterHood;
 
   /**
    * Uses the Limelight to track the target
    * @param shooterSubsystem The Shooter subsystem
    * @param aimSubsystem The ShooterAim subsystem
    */
-  public TrackTarget(Shooter shooterSubsystem, ShooterAim aimSubsystem) {
+  public TrackTarget(ShooterAim aimSubsystem) {
     m_shooterAim = aimSubsystem;
-    m_shooter = shooterSubsystem;
+    m_shooter = m_shooterAim.m_shooterSubsystem;
     m_shooterHood = m_shooter.m_shooterHoodSubsystem;
     addRequirements(m_shooterAim);
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1);

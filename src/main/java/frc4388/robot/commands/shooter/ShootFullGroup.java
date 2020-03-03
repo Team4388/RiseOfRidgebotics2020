@@ -10,6 +10,7 @@ package frc4388.robot.commands.shooter;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.ShooterAim;
+import frc4388.robot.subsystems.ShooterHood;
 import frc4388.robot.subsystems.Storage;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -22,10 +23,10 @@ public class ShootFullGroup extends SequentialCommandGroup {
    * @param m_shooterAim The ShooterAim subsystem
    * @param m_storage The Storage subsytem
    */
-  public ShootFullGroup(Shooter m_shooter, ShooterAim m_shooterAim, Storage m_storage) {
+  public ShootFullGroup(Shooter m_shooter, ShooterAim m_shooterAim, ShooterHood m_shooterHood, Storage m_storage) {
     addCommands(
-      new ShootPrepGroup(m_shooter, m_shooterAim, m_storage), 
-      new ShootFireGroup(m_shooter, m_shooterAim, m_storage)
+      new ShootPrepGroup(m_shooter, m_shooterAim, m_shooterHood, m_storage), 
+      new ShootFireGroup(m_shooter, m_shooterAim, m_shooterHood, m_storage)
     );
   }
 }

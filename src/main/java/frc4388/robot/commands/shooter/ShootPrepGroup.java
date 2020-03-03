@@ -9,8 +9,10 @@ package frc4388.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc4388.robot.commands.storage.StoragePrepAim;
 import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.ShooterAim;
+import frc4388.robot.subsystems.ShooterHood;
 import frc4388.robot.subsystems.Storage;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -23,12 +25,13 @@ public class ShootPrepGroup extends ParallelCommandGroup {
    * @param m_shooterAim The ShooterAim subsystem
    * @param m_storage The Storage subsytem
    */
-  public ShootPrepGroup(Shooter m_shooter, ShooterAim m_shooterAim, Storage m_storage) {
+  public ShootPrepGroup(Shooter m_shooter, ShooterAim m_shooterAim, ShooterHood m_shooterHood, Storage m_storage) {
     addCommands(
-      //new TrackTarget(m_shooter, m_shooterAim),
-      //new ShooterVelocityControlPID(m_shooter)
-      new RunCommand(() -> m_shooter.runDrumShooterVelocityPID(m_shooter.addFireVel()))
-      //new StoragePrepAim(m_storage)
+      new TrackTarget(m_shooterAim),
+      new ShooterVelocityControlPID(m_shooter),
+      new HoodPositionPID(m_shooterHood),
+      //new RunCommand(() -> m_shooter.runDrumShooterVelocityPID(m_shooter.addFireVel())),
+      new StoragePrepAim(m_storage)
     );
   }
 }

@@ -41,9 +41,9 @@ public class HoldTarget extends CommandBase {
    * @param shooterSubsystem The Shooter subsystem
    * @param aimSubsystem The ShooterAim subsystem
    */
-  public HoldTarget(Shooter shooterSubsystem, ShooterAim aimSubsystem) {
+  public HoldTarget(ShooterAim aimSubsystem) {
     m_shooterAim = aimSubsystem;
-    m_shooter = shooterSubsystem;
+    m_shooter = m_shooterAim.m_shooterSubsystem;
     m_shooterHood = m_shooter.m_shooterHoodSubsystem;
     addRequirements(m_shooterAim);
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1);

@@ -164,13 +164,13 @@ public class RobotContainer {
         /* Operator Buttons */
         // shoots until released
         new JoystickButton(getOperatorJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
-            .whileHeld(new ShootFullGroup(m_robotShooter, m_robotShooterAim, m_robotStorage), false)
+            .whileHeld(new ShootFullGroup(m_robotShooter, m_robotShooterAim, m_robotShooterHood, m_robotStorage), false)
             .whenReleased(new RunCommand(() -> m_robotLime.limeOff()));
             //.whileHeld(new RunCommand(() -> m_robotStorage.runStorage(0.8)));
 
         // shoots one ball
         new JoystickButton(getOperatorJoystick(), XboxController.LEFT_BUMPER_BUTTON)
-            .whenPressed(new ShootFullGroup(m_robotShooter, m_robotShooterAim, m_robotStorage), false)
+            .whenPressed(new ShootFullGroup(m_robotShooter, m_robotShooterAim, m_robotShooterHood, m_robotStorage), false)
             .whenReleased(new RunCommand(() -> m_robotLime.limeOff()));
             //.whileHeld(new RunCommand(() -> m_robotStorage.runStorage(-0.8)));
 
@@ -189,7 +189,7 @@ public class RobotContainer {
 
         // starts tracking target
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
-            .whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotStorage))
+            .whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotShooterHood, m_robotStorage))
             .whenReleased(new StoragePrepIntake(m_robotIntake, m_robotStorage));
             //.whileHeld(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(13000)));
             //.whileHeld(new HoldTarget(m_robotShooter, m_robotShooterAim))

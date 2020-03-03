@@ -7,14 +7,13 @@
 
 package frc4388.robot.commands.shooter;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.ShooterHood;
 
 public class HoodPositionPID extends CommandBase {
+  ShooterHood m_shooterHood;
   double firingAngle;
-  private ShooterHood m_shooterHood;
+
   /**
    * Creates a new HoodPositionPID.
    */
@@ -49,7 +48,7 @@ public class HoodPositionPID extends CommandBase {
   public boolean isFinished() {
     double encoderPos = m_shooterHood.m_angleAdjustMotor.getEncoder().getPosition();
     if(encoderPos < firingAngle + 1 || encoderPos < firingAngle - 1){
-      return false;
+      return true;
     }
     return false;
   }
