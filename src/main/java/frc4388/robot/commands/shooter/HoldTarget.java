@@ -14,15 +14,17 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.Constants.VisionConstants;
 import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.ShooterAim;
+import frc4388.robot.subsystems.ShooterHood;
 import frc4388.utility.controller.IHandController;
 
 public class HoldTarget extends CommandBase {
-    //Setup
+  // Setup
   NetworkTableEntry xEntry;
   ShooterAim m_shooterAim;
   Shooter m_shooter;
+  ShooterHood m_shooterHood;
   IHandController m_driverController;
-    //Aiming
+  // Aiming
   double turnAmount = 0;
   double xAngle = 0;
   double yAngle = 0;
@@ -42,6 +44,7 @@ public class HoldTarget extends CommandBase {
   public HoldTarget(Shooter shooterSubsystem, ShooterAim aimSubsystem) {
     m_shooterAim = aimSubsystem;
     m_shooter = shooterSubsystem;
+    m_shooterHood = m_shooter.m_shooterHoodSubsystem;
     addRequirements(m_shooterAim);
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1);
   }
@@ -99,7 +102,7 @@ public class HoldTarget extends CommandBase {
 
       
       m_shooter.m_fireVel = fireVel;
-      m_shooter.m_fireAngle = fireAngle;// + m_shooter.shooterTrims.m_hoodTrim;
+      m_shooterHood.m_fireAngle = fireAngle;// + m_shooter.shooterTrims.m_hoodTrim;
     }
   }
 

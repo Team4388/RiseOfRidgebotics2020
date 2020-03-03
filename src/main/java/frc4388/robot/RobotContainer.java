@@ -51,6 +51,7 @@ import frc4388.robot.subsystems.LimeLight;
 import frc4388.robot.subsystems.Pneumatics;
 import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.ShooterAim;
+import frc4388.robot.subsystems.ShooterHood;
 import frc4388.robot.subsystems.Storage;
 import frc4388.utility.controller.IHandController;
 import frc4388.utility.controller.XboxController;
@@ -71,6 +72,7 @@ public class RobotContainer {
     private final Intake m_robotIntake = new Intake();
     private final Shooter m_robotShooter = new Shooter();
     private final ShooterAim m_robotShooterAim = new ShooterAim();
+    private final ShooterHood m_robotShooterHood = new ShooterHood();
     private final Climber m_robotClimber = new Climber();
     private final Leveler m_robotLeveler = new Leveler();
     private final Storage m_robotStorage = new Storage();
@@ -92,6 +94,10 @@ public class RobotContainer {
         /* Passing Drive and Pneumatics Subsystems */
         m_robotPneumatics.passRequiredSubsystem(m_robotDrive);
         m_robotDrive.passRequiredSubsystem(m_robotPneumatics);
+        
+        m_robotShooter.passRequiredSubsystem(m_robotShooterHood, m_robotShooterAim);
+        m_robotShooterHood.passRequiredSubsystem(m_robotShooter);
+        m_robotShooterAim.passRequiredSubsystem(m_robotShooter);
 
         configureButtonBindings();
 
@@ -195,7 +201,7 @@ public class RobotContainer {
 
         //Calibrates turret and hood
         new JoystickButton(getOperatorJoystick(), XboxController.START_BUTTON)
-            .whileHeld(new CalibrateShooter(m_robotShooter, m_robotShooterAim));
+            .whileHeld(new CalibrateShooter(m_robotShooter, m_robotShooterAim, m_robotShooterHood));
         
         //Prepares storage for intaking
         new XboxTriggerButton(m_operatorXbox, XboxTriggerButton.LEFT_TRIGGER)

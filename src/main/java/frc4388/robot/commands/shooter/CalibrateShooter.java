@@ -13,19 +13,23 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.Constants.ShooterConstants;
 import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.ShooterAim;
+import frc4388.robot.subsystems.ShooterHood;
 
 public class CalibrateShooter extends CommandBase {
   Shooter m_shooter;
   ShooterAim m_shooterAim;
+  ShooterHood m_shooterHood;
+
   /**
    * Calibrates the turret by moving the hood all the way down and moving the turret all the way right, then reseting the encoders
    * @param shootSub The Shooter subsystem
    * @param aimSub The ShooterAim subsystem
    */
-  public CalibrateShooter(Shooter shootSub, ShooterAim aimSub) {
+  public CalibrateShooter(Shooter shootSub, ShooterAim aimSub, ShooterHood hoodSub) {
     m_shooter = shootSub;
     m_shooterAim = aimSub;
-    addRequirements(m_shooter, m_shooterAim);
+    m_shooterHood = hoodSub;
+    addRequirements(m_shooter, m_shooterHood, m_shooterAim);
   }
 
   // Called when the command is initially scheduled.
@@ -36,10 +40,10 @@ public class CalibrateShooter extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooter.m_angleAdjustMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
-    m_shooter.m_angleAdjustMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
-    m_shooter.m_angleEncoder.setPosition(0);
-    m_shooter.m_angleAdjustMotor.set(-ShooterConstants.HOOD_CALIBRATE_SPEED);
+    m_shooterHood.m_angleAdjustMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
+    m_shooterHood.m_angleAdjustMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
+    m_shooterHood.m_angleEncoder.setPosition(0);
+    m_shooterHood.m_angleAdjustMotor.set(-ShooterConstants.HOOD_CALIBRATE_SPEED);
 
     m_shooterAim.m_shooterRotateMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
     m_shooterAim.m_shooterRotateMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
@@ -50,8 +54,8 @@ public class CalibrateShooter extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_shooter.m_angleAdjustMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
-    m_shooter.m_angleAdjustMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+    m_shooterHood.m_angleAdjustMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+    m_shooterHood.m_angleAdjustMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
 
     m_shooterAim.m_shooterRotateMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
     m_shooterAim.m_shooterRotateMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);

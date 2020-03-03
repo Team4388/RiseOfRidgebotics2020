@@ -22,14 +22,15 @@ import frc4388.robot.Constants.ShooterConstants;
 import frc4388.utility.Gains;
 
 public class ShooterAim extends SubsystemBase {
+  public Shooter m_shooterSubsystem;
+  
   public CANSparkMax m_shooterRotateMotor = new CANSparkMax(ShooterConstants.SHOOTER_ROTATE_ID, MotorType.kBrushless);
   public static Gains m_shooterTurretGains = ShooterConstants.SHOOTER_TURRET_GAINS;
   CANDigitalInput m_shooterRightLimit, m_shooterLeftLimit;
 
-    // Configure PID Controllers
-    CANPIDController m_shooterRotatePIDController = m_shooterRotateMotor.getPIDController();
-    public CANEncoder m_shooterRotateEncoder = m_shooterRotateMotor.getEncoder();
-
+  // Configure PID Controllers
+  CANPIDController m_shooterRotatePIDController = m_shooterRotateMotor.getPIDController();
+  public CANEncoder m_shooterRotateEncoder = m_shooterRotateMotor.getEncoder();
 
   /**
    * Creates a subsytem for the turret aiming
@@ -47,6 +48,19 @@ public class ShooterAim extends SubsystemBase {
     m_shooterRotateMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
     m_shooterRotateMotor.setSoftLimit(SoftLimitDirection.kForward, ShooterConstants.TURRET_RIGHT_SOFT_LIMIT);
     m_shooterRotateMotor.setSoftLimit(SoftLimitDirection.kReverse, ShooterConstants.TURRET_LEFT_SOFT_LIMIT);
+  }
+
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+  }
+
+  /**
+   * Passes subsystem needed.
+   * @param subsystem Subsystem needed.
+   */
+  public void passRequiredSubsystem(Shooter subsystem) {
+    m_shooterSubsystem = subsystem;
   }
 
   public void runShooterWithInput(double input) {
@@ -71,17 +85,13 @@ public class ShooterAim extends SubsystemBase {
     m_shooterRotatePIDController.setReference(targetAngle, ControlType.kPosition);
   }
 
-    public void resetGyroShooterRotate()
-    {
-        m_shooterRotateEncoder.setPosition(0);
-    }
+  public void resetGyroShooterRotate()
+  {
+    m_shooterRotateEncoder.setPosition(0);
+  }
 
-    public double getShooterRotatePosition(){
-      return m_shooterRotateMotor.getEncoder().getPosition();
-    }
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
+  public double getShooterRotatePosition()
+  {
+    return m_shooterRotateMotor.getEncoder().getPosition();
   }
 }

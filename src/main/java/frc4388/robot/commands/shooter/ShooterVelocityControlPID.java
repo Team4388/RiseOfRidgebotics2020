@@ -11,18 +11,22 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.Constants.ShooterConstants;
 import frc4388.robot.subsystems.Shooter;
+import frc4388.robot.subsystems.ShooterHood;
 
 public class ShooterVelocityControlPID extends CommandBase {
   Shooter m_shooter;
   double m_targetVel;
   double m_actualVel;
+  private ShooterHood m_shooterHood;
+  
   /**
    * Runs the drum at a velocity
    * @param subsystem The Shooter subsytem
    */
-  public ShooterVelocityControlPID(Shooter subsystem) {
+  public ShooterVelocityControlPID(Shooter subsystem, ShooterHood subHood) {
     m_shooter = subsystem;
-    addRequirements(m_shooter);
+    m_shooterHood = subHood;
+    addRequirements(m_shooter, m_shooterHood);
   }
 
   // Called when the command is initially scheduled.
@@ -35,7 +39,7 @@ public class ShooterVelocityControlPID extends CommandBase {
   @Override
   public void execute() {
     m_shooter.runDrumShooterVelocityPID(/*m_shooter.addFireVel()*/13000);
-    m_shooter.runAngleAdjustPID(m_shooter.addFireAngle());
+    m_shooterHood.runAngleAdjustPID(m_shooterHood.addFireAngle());
     //SmartDashboard.putNumber("Fire Velocity", m_shooter.addFireVel());
     //SmartDashboard.putNumber("Fire Angle", m_shooter.addFireAngle());
   }

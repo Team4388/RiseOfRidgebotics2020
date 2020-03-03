@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc4388.robot.commands.storage.StorageRun;
 import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.ShooterAim;
+import frc4388.robot.subsystems.ShooterHood;
 import frc4388.robot.subsystems.Storage;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -25,9 +26,11 @@ public class ShootFireGroup extends ParallelRaceGroup {
    * @param m_storage The Storage subsytem
    */
   public ShootFireGroup(Shooter m_shooter, ShooterAim m_shooterAim, Storage m_storage) {
+    ShooterHood m_shooterHood = m_shooter.m_shooterHoodSubsystem;
+
     addCommands(
       new RunCommand(() -> m_shooter.runDrumShooterVelocityPID(m_shooter.addFireVel())),
-      new RunCommand(() -> m_shooter.runAngleAdjustPID(m_shooter.addFireAngle())),
+      new RunCommand(() -> m_shooterHood.runAngleAdjustPID(m_shooterHood.addFireAngle())),
       new HoldTarget(m_shooter, m_shooterAim),
       new StorageRun(m_storage)
     );

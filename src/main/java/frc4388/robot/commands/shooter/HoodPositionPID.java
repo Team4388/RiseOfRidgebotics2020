@@ -10,16 +10,17 @@ package frc4388.robot.commands.shooter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.subsystems.Shooter;
+import frc4388.robot.subsystems.ShooterHood;
 
 public class HoodPositionPID extends CommandBase {
-  Shooter m_shooter;
   double firingAngle;
+  private ShooterHood m_shooterHood;
   /**
    * Creates a new HoodPositionPID.
    */
-  public HoodPositionPID(Shooter subSystem) {
-    m_shooter = subSystem;
-    //addRequirements(m_shooter);
+  public HoodPositionPID(ShooterHood subSystem) {
+    m_shooterHood = subSystem;
+    addRequirements(m_shooterHood);
   }
 
   // Called when the command is initially scheduled.
@@ -35,7 +36,7 @@ public class HoodPositionPID extends CommandBase {
     firingAngle = (-slope*m_shooter.addFireAngle())+b;*/
     //SmartDashboard.putNumber("Shoot Angle From Equation", m_shooter.addFireAngle());
     //SmartDashboard.putNumber("Fire Angle", firingAngle);
-    m_shooter.runAngleAdjustPID(firingAngle);
+    m_shooterHood.runAngleAdjustPID(firingAngle);
   }
 
   // Called once the command ends or is interrupted.
@@ -46,7 +47,7 @@ public class HoodPositionPID extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    double encoderPos = m_shooter.m_angleAdjustMotor.getEncoder().getPosition();
+    double encoderPos = m_shooterHood.m_angleAdjustMotor.getEncoder().getPosition();
     if(encoderPos < firingAngle + 1 || encoderPos < firingAngle - 1){
       return false;
     }

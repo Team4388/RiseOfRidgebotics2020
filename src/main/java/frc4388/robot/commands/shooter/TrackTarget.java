@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.Constants.VisionConstants;
 import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.ShooterAim;
+import frc4388.robot.subsystems.ShooterHood;
 import frc4388.utility.controller.IHandController;
 
 public class TrackTarget extends CommandBase {
@@ -33,6 +34,7 @@ public class TrackTarget extends CommandBase {
 
   public double m_hoodTrim;
   public double m_turretTrim;
+  private ShooterHood m_shooterHood;
 
   /**
    * Uses the Limelight to track the target
@@ -42,6 +44,7 @@ public class TrackTarget extends CommandBase {
   public TrackTarget(Shooter shooterSubsystem, ShooterAim aimSubsystem) {
     m_shooterAim = aimSubsystem;
     m_shooter = shooterSubsystem;
+    m_shooterHood = m_shooter.m_shooterHoodSubsystem;
     addRequirements(m_shooterAim);
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1);
   }
@@ -97,7 +100,7 @@ public class TrackTarget extends CommandBase {
 
       
       m_shooter.m_fireVel = fireVel;
-      m_shooter.m_fireAngle = fireAngle;// + m_shooter.shooterTrims.m_hoodTrim;
+      m_shooterHood.m_fireAngle = fireAngle;// + m_shooter.shooterTrims.m_hoodTrim;
     }
   }
 
