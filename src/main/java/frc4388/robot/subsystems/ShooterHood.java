@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.ShooterConstants;
 import frc4388.utility.Gains;
-import frc4388.utility.controller.IHandController;
 
 public class ShooterHood extends SubsystemBase {
   public Shooter m_shooterSubsystem;

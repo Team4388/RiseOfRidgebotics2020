@@ -7,11 +7,9 @@
 
 package frc4388.robot.commands.shooter;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.Constants.ShooterConstants;
 import frc4388.robot.subsystems.Shooter;
-import frc4388.robot.subsystems.ShooterHood;
 
 public class ShooterVelocityControlPID extends CommandBase {
   Shooter m_shooter;
