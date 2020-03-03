@@ -232,10 +232,10 @@ public class RobotContainer {
         //return new AutoPath2FromRight(m_robotDrive, m_robotPneumatics);
       
         if (Constants.SELECTED_AUTO == 1) {
-          return new SequentialCommandGroup(new Wait(5, m_robotDrive),
-                                            new TurnDegrees(45, m_robotDrive),
-                                            new InstantCommand(() -> m_robotDrive.setShiftState(false), m_robotDrive),
-                                            new TurnDegrees(315, m_robotDrive)
+          return new SequentialCommandGroup(new Wait(m_robotDrive, 5, 0),
+                                            new TurnDegrees(m_robotDrive, 45),
+                                            new InstantCommand(() -> m_robotPneumatics.setShiftState(false), m_robotDrive),
+                                            new TurnDegrees(m_robotDrive, 315)
           );
         }
 
