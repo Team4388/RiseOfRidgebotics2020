@@ -92,14 +92,14 @@ public class DriveWithJoystickDriveStraight extends CommandBase {
 
   private void runDriveWithInput(double move, double steer) {
 
-    double cosMultiplier = 0.7;    
+    double cosMultiplier;    
     double steerOutput = 0;
     double deadzone = .1;
 
     if (m_pneumatics.m_isSpeedShiftHigh) {
-      cosMultiplier = 0.7;
+      cosMultiplier = DriveConstants.COS_MULTIPLIER_HIGH_DRIVE_STRAIGHT;
     } else {
-      cosMultiplier = 0.7;
+      cosMultiplier = DriveConstants.COS_MULTIPLIER_LOW_DRIVE_STRAIGHT;
     }
 
     /* Curves the steer output to be similarily gradual */

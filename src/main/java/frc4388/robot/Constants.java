@@ -42,6 +42,8 @@ public final class Constants {
         public static final SupplyCurrentLimitConfiguration SUPPLY_CURRENT_LIMIT_CONFIG =
             new SupplyCurrentLimitConfiguration(false, 60, 40, 2);
         public static final int CLOSED_LOOP_TIME_MS = 1; // Higher numbers mean slower control loops
+        public static final double COS_MULTIPLIER_LOW_DRIVE_STRAIGHT = 0.7;
+        public static final double COS_MULTIPLIER_HIGH_DRIVE_STRAIGHT = 0.7; 
 
         /* Drive Train Characteristics */
         public static final double MOTOR_ROT_PER_WHEEL_ROT_HIGH = 5.13;
