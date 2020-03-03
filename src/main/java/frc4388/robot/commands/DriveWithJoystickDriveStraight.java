@@ -97,9 +97,9 @@ public class DriveWithJoystickDriveStraight extends CommandBase {
     double deadzone = .1;
 
     if (m_pneumatics.m_isSpeedShiftHigh) {
-      cosMultiplier = DriveConstants.COS_MULTIPLIER_HIGH_DRIVE_STRAIGHT;
+      cosMultiplier = DriveConstants.COS_MULTIPLIER_HIGH;
     } else {
-      cosMultiplier = DriveConstants.COS_MULTIPLIER_LOW_DRIVE_STRAIGHT;
+      cosMultiplier = DriveConstants.COS_MULTIPLIER_LOW;
     }
 
     /* Curves the steer output to be similarily gradual */

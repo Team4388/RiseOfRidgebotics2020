@@ -9,6 +9,7 @@ package frc4388.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc4388.robot.Constants.DriveConstants;
 import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Pneumatics;
 import frc4388.utility.controller.IHandController;
@@ -52,13 +53,13 @@ public class DriveWithJoystick extends CommandBase {
       moveOutput = Math.cos(1.571*moveInput)-1;
     }
 
-    double cosMultiplier = 1.0;
+    double cosMultiplier;
     double deadzone = .1;
 
     if (m_pneumatics.m_isSpeedShiftHigh) {
-      cosMultiplier = 0.8;
+      cosMultiplier = DriveConstants.COS_MULTIPLIER_HIGH;
     } else {
-      cosMultiplier = 1.0;
+      cosMultiplier = DriveConstants.COS_MULTIPLIER_LOW;
     }
 
     if (steerInput > 0){
