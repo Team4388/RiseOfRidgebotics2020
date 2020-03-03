@@ -216,7 +216,7 @@ public class RobotContainer {
             //.whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotStorage))
             //.whenReleased(new StoragePrepIntake(m_robotIntake, m_robotStorage));
             //.whileHeld(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(13000)));
-            .whileHeld(new HoldTarget(m_robotShooter, m_robotShooterAim))
+            .whileHeld(new TrackTarget(m_robotShooter, m_robotShooterAim))
             .whileHeld(new RunCommand(() -> m_robotShooter.runAngleAdjustPID(30)));
         //Prepares storage for intaking
         //new JoystickButton(getOperatorJoystick(), XboxController.LEFT_TRIGGER_AXIS)
@@ -229,12 +229,8 @@ public class RobotContainer {
         //Run drum
         new JoystickButton(getOperatorJoystick(), XboxController.B_BUTTON)
             //.whenPressed(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotStorage));
-            .whenPressed(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(13000)));
-            //.whenReleased(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(0)));
-
-        //Trims shooter
-        new JoystickButton(getOperatorJoystick(), XboxController.TOP_BOTTOM_DPAD_AXIS)
-            .whenPressed(new TrimShooter(m_robotShooter));
+            .whenPressed(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(13000)))
+            .whenReleased(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(0)));
 
         //Calibrates turret and hood
         new JoystickButton(getOperatorJoystick(), XboxController.START_BUTTON)

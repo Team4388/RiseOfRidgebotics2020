@@ -164,11 +164,10 @@ public class Shooter extends SubsystemBase {
 
   /**
    * Runs drum shooter velocity PID.
-   * @param falcon Motor to use
    * @param targetVel Target velocity to run motor at
    */
   public void runDrumShooterVelocityPID(double targetVel) {
-    System.out.println("dddddddddddddddddddddddd" + targetVel);
+    System.out.println("Target Velocity" + targetVel);
     m_shooterFalcon.set(TalonFXControlMode.Velocity, targetVel); //Init PID
   }
 
