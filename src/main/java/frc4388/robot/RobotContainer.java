@@ -93,7 +93,7 @@ public class RobotContainer {
         /* Passing Drive and Pneumatics Subsystems */
         m_robotPneumatics.passRequiredSubsystem(m_robotDrive);
         m_robotDrive.passRequiredSubsystem(m_robotPneumatics);
-        
+
         m_robotShooter.passRequiredSubsystem(m_robotShooterHood, m_robotShooterAim);
         m_robotShooterHood.passRequiredSubsystem(m_robotShooter);
         m_robotShooterAim.passRequiredSubsystem(m_robotShooter);
@@ -102,10 +102,10 @@ public class RobotContainer {
 
         /* Default Commands */
         // drives the robot with a two-axis input from the driver controller
-        
+
         m_robotDrive.setDefaultCommand(new DriveWithJoystick(m_robotDrive, m_robotPneumatics, getDriverController()));
         //m_robotDrive.setDefaultCommand(new DriveWithJoystickUsingDeadAssistPID(m_robotDrive, m_robotPneumatics, getDriverController()));
-        
+
         // drives intake with input from triggers on the opperator controller
         m_robotIntake.setDefaultCommand(new RunIntakeWithTriggers(m_robotIntake, getOperatorController()));
         // runs the turret with joystick
@@ -134,7 +134,7 @@ public class RobotContainer {
         // A driver test button
         new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
             .whenPressed(new DriveStraightToPositionMM(m_robotDrive, m_robotPneumatics, 24.0));
-        
+
         // B driver test button
         new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
             .whenPressed(new TurnDegrees(m_robotDrive, 90));
@@ -146,7 +146,7 @@ public class RobotContainer {
         // X driver test button
         new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
             .whenPressed(new InstantCommand());
-      
+
 
 
         /* Driver Buttons */
@@ -201,12 +201,12 @@ public class RobotContainer {
         //Calibrates turret and hood
         new JoystickButton(getOperatorJoystick(), XboxController.START_BUTTON)
             .whileHeld(new CalibrateShooter(m_robotShooter, m_robotShooterAim, m_robotShooterHood));
-        
+
         //Prepares storage for intaking
         new XboxTriggerButton(m_operatorXbox, XboxTriggerButton.LEFT_TRIGGER)
             .whileHeld(new RunCommand(() -> m_robotStorage.runStorage(-0.8)))
             .whenReleased(new RunCommand(() -> m_robotStorage.runStorage(0.0)));
-            
+
         //Runs storage to outtake
         new XboxTriggerButton(m_operatorXbox, XboxTriggerButton.RIGHT_TRIGGER)
             .whileHeld(new RunCommand(() -> m_robotStorage.runStorage(0.8)))
@@ -257,7 +257,7 @@ public class RobotContainer {
             config);
             // 10 = 20, 20 = 35, 30 = 53.5
             // (0,10) = (8,22)
-        
+
         return exampleTrajectory;
     }
 
@@ -265,11 +265,11 @@ public class RobotContainer {
         RamseteCommand ramseteCommand = new RamseteCommand(
             trajectory,
             m_robotDrive::getPose,
-            new RamseteController(), 
+            new RamseteController(),
             DriveConstants.kDriveKinematics,
             m_robotDrive::tankDriveVelocity,
             m_robotDrive);
-        
+
         return ramseteCommand;
     }
 
@@ -290,7 +290,7 @@ public class RobotContainer {
     }
 
     /**
-     * 
+     *
      */
     public void resetOdometry() {
         m_robotDrive.resetGyroAngles();
@@ -304,7 +304,7 @@ public class RobotContainer {
     public IHandController getDriverController() {
         return m_driverXbox;
     }
-    
+
     /**
      * Used for analog inputs like triggers and axises.
      * @return The IHandController interface for the Operator Controller.
@@ -313,7 +313,7 @@ public class RobotContainer {
     {
         return m_operatorXbox;
     }
-    
+
     /**
      * Gets the {@link edu.wpi.first.wpilibj.GenericHID#GenericHID(int) Generic HID} for the Operator Xbox Controller.
      * Generic HIDs/Joysticks can be used to set up JoystickButtons.
@@ -323,7 +323,7 @@ public class RobotContainer {
     {
         return m_operatorXbox.getJoyStick();
     }
-    
+
     /**
      * Gets the {@link edu.wpi.first.wpilibj.GenericHID#GenericHID(int) Generic HID} for the Driver Xbox Controller.
      * Generic HIDs/Joysticks can be used to set up JoystickButtons.

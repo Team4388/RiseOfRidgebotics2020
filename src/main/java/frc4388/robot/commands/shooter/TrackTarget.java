@@ -77,25 +77,23 @@ public class TrackTarget extends CommandBase {
       } else if (turnAmount < 0 && turnAmount > -VisionConstants.MOTOR_DEAD_ZONE) {
         turnAmount = -VisionConstants.MOTOR_DEAD_ZONE;
       }
-      m_shooterAim.runShooterWithInput(-turnAmount - m_shooter.shooterTrims.m_turretTrim);
+      m_shooterAim.runShooterWithInput(-turnAmount);// - m_shooter.shooterTrims.m_turretTrim);
 
       // Finding Distance
       distance = VisionConstants.TARGET_HEIGHT / Math.tan((VisionConstants.LIME_ANGLE + yAngle) * (Math.PI / 180));
       SmartDashboard.putNumber("Distance to Target", distance);
 
         //START Equation Code
-        /*
       double yVel = Math.sqrt(2 * VisionConstants.GRAV * VisionConstants.TARGET_HEIGHT);
       double xVel = (distance * VisionConstants.GRAV) / (yVel);
 
-      fireVel = Math.sqrt((Math.pow(xVel, 2))+(Math.pow(yVel,2)));
+      //fireVel = Math.sqrt((Math.pow(xVel, 2))+(Math.pow(yVel,2)));
       fireAngle = Math.atan(yVel/xVel) * (180/Math.PI);
-      */
         //END Equation Code
 
         //START CSV Code
       fireVel = m_shooter.m_shooterTable.getVelocity(distance);
-      fireAngle = m_shooter.m_shooterTable.getHood(distance); //Note: Ensure to follow because units are different
+      //fireAngle = m_shooter.m_shooterTable.getHood(distance); //Note: Ensure to follow because units are different
       //fireAngle = 33;
         //END CSV Code
 
