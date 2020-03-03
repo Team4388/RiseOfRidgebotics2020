@@ -14,6 +14,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.IntakeConstants;
 
@@ -38,10 +39,10 @@ public class Intake extends SubsystemBase {
     m_intakeMotor.setIdleMode(IdleMode.kCoast);
     m_extenderMotor.setIdleMode(IdleMode.kBrake);
     m_intakeMotor.setInverted(false);
-    m_extenderMotor.setInverted(false);
+    m_extenderMotor.setInverted(true);
     
-    m_extenderForwardLimit = m_extenderMotor.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyClosed);
-    m_extenderReverseLimit = m_extenderMotor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
+    m_extenderForwardLimit = m_extenderMotor.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
+    m_extenderReverseLimit = m_extenderMotor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyClosed);
     m_extenderForwardLimit.enableLimitSwitch(true);
     m_extenderReverseLimit.enableLimitSwitch(true);
   }
@@ -58,7 +59,14 @@ public class Intake extends SubsystemBase {
   public void runIntake(double input) {
     m_intakeMotor.set(input);
   }
+
+  public void runIntakeIn(double input){
+    m_extenderMotor.set(-input);
+  }
   
+  public void runIntakeOut(double input){
+    m_extenderMotor.set(input);
+  }
    /**
    * Runs extender motor
    * @param input the percent output to run motor at
@@ -67,8 +75,11 @@ public class Intake extends SubsystemBase {
     if (m_extenderForwardLimit.get()) {
       isExtended = true;
     }
-    if (m_extenderReverseLimit.get()) {
+    else if (m_extenderReverseLimit.get()) {
       isExtended = false;
+    }
+    else{
+      m_extenderMotor.set(-input);
     }
     
     if (isExtended == false) {

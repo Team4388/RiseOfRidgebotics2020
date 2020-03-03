@@ -136,7 +136,8 @@ public class RobotContainer {
         m_robotLeveler.setDefaultCommand(new RunLevelerWithJoystick(m_robotLeveler, getDriverController()));
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
-        //m_robotStorage.setDefaultCommand(new RunCommand(() -> m_robotStorage.runStorage(0), m_robotStorage));
+        // runs the storage not
+        m_robotStorage.setDefaultCommand(new RunCommand(() -> m_robotStorage.runStorage(0), m_robotStorage));
         //m_robotLime.setDefaultCommand(new RunCommand(() -> m_robotLime.limeOff(), m_robotLime));
     }
 
@@ -188,8 +189,8 @@ public class RobotContainer {
 
         // extends or retracts the extender
         new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
-            .whenPressed(new RunExtenderOutIn(m_robotIntake));
-
+            //.whenPressed(new RunExtenderOutIn(m_robotIntake));
+            .whileHeld(new RunCommand(() -> m_robotStorage.runStorage(0.3)));
         // safety for climber and leveler
         new JoystickButton(getOperatorJoystick(), XboxController.BACK_BUTTON)
             .whenPressed(new InstantCommand(() -> m_robotClimber.setSafetyPressed(), m_robotClimber))
@@ -197,27 +198,34 @@ public class RobotContainer {
 
         // starts tracking target
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
-            .whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotStorage))
-            .whenReleased(new StoragePrepIntake(m_robotIntake, m_robotStorage));
+            //.whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotStorage))
+            //.whenReleased(new StoragePrepIntake(m_robotIntake, m_robotStorage));
+            .whileHeld(new RunCommand(() -> m_robotStorage.runStorage(-0.3)));
             
 
         //Prepares storage for intaking
-        new JoystickButton(getOperatorJoystick(), XboxController.LEFT_TRIGGER_AXIS)
-            .whileHeld(new StorageIntake(m_robotIntake, m_robotStorage));
+        //new JoystickButton(getOperatorJoystick(), XboxController.LEFT_TRIGGER_AXIS)
+        //    .whileHeld(new StorageIntake(m_robotIntake, m_robotStorage));
             
         //Runs storage to outtake
-        new JoystickButton(getOperatorJoystick(), XboxController.RIGHT_TRIGGER_AXIS)
-            .whileHeld(new StorageOutake(m_robotStorage));
+        //new JoystickButton(getOperatorJoystick(), XboxController.RIGHT_TRIGGER_AXIS)
+        //    .whileHeld(new StorageOutake(m_robotStorage));
 
         //TEST FOR HOOD
         new JoystickButton(getOperatorJoystick(), XboxController.Y_BUTTON)
-            .whileHeld(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(0.3)))
-            .whenReleased(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(0)));
+            //.whileHeld(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(0.3)))
+            //.whenReleased(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(0)));
+            .whileHeld(new RunCommand(() -> m_robotIntake.runIntakeOut(0.1)))
+            .whenReleased(new RunCommand(() -> m_robotIntake.runIntakeOut(0.0)));
+            //.whileHeld(new RunCommand(() -> m_robotStorage.runStorage(-0.3)));
 
         //TEST FOR HOOD
         new JoystickButton(getOperatorJoystick(), XboxController.B_BUTTON)
-            .whileHeld(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(-0.3)))
-            .whenReleased(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(0)));
+            //.whileHeld(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(-0.3)))
+            //.whenReleased(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(0)));
+            .whileHeld(new RunCommand(() -> m_robotIntake.runIntakeIn(0.1)))
+            .whenReleased(new RunCommand(() -> m_robotIntake.runIntakeIn(0.0)));
+
 
         //Trims shooter
         new JoystickButton(getOperatorJoystick(), XboxController.TOP_BOTTOM_DPAD_AXIS)

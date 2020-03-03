@@ -38,7 +38,7 @@ public class StoragePrepIntake extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (m_storage.getBeam(0)){
+    if (m_storage.getBeam(StorageConstants.BEAM_SENSOR_STORAGE)){
       m_storage.runStorage(-StorageConstants.STORAGE_SPEED);
     }
     else{
@@ -54,7 +54,7 @@ public class StoragePrepIntake extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (!m_storage.getBeam(0) || startTime + StorageConstants.STORAGE_TIMEOUT <= System.currentTimeMillis()){
+    if (!m_storage.getBeam(StorageConstants.BEAM_SENSOR_INTAKE) || startTime + StorageConstants.STORAGE_TIMEOUT <= System.currentTimeMillis()){
       return true;
     }
     return false;

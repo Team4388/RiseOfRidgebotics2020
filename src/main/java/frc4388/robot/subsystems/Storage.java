@@ -43,12 +43,10 @@ public class Storage extends SubsystemBase {
    */
   public Storage() {
     resetEncoder();
-    m_beamSensors[0] = new DigitalInput(StorageConstants.BEAM_SENSOR_DIO_0);
-    m_beamSensors[1] = new DigitalInput(StorageConstants.BEAM_SENSOR_DIO_1);
-    m_beamSensors[2] = new DigitalInput(StorageConstants.BEAM_SENSOR_DIO_2);
-    m_beamSensors[3] = new DigitalInput(StorageConstants.BEAM_SENSOR_DIO_3);
-    m_beamSensors[4] = new DigitalInput(StorageConstants.BEAM_SENSOR_DIO_4);
-    m_beamSensors[5] = new DigitalInput(StorageConstants.BEAM_SENSOR_DIO_5);
+    m_beamSensors[1] = new DigitalInput(StorageConstants.BEAM_SENSOR_SHOOTER);
+    m_beamSensors[2] = new DigitalInput(StorageConstants.BEAM_SENSOR_USELESS);
+    m_beamSensors[3] = new DigitalInput(StorageConstants.BEAM_SENSOR_STORAGE);
+    m_beamSensors[4] = new DigitalInput(StorageConstants.BEAM_SENSOR_INTAKE);
   }
 
   @Override

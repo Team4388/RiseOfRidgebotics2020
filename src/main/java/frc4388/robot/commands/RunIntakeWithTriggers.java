@@ -41,15 +41,11 @@ public class RunIntakeWithTriggers extends CommandBase {
     double rightTrigger = m_controller.getRightTriggerAxis();
     double leftTrigger = m_controller.getLeftTriggerAxis();
     double output = 0;
-    if (leftTrigger < .5) {
-      if(leftTrigger > rightTrigger) {
-        output = leftTrigger;
-      }
-      if (rightTrigger > leftTrigger) {
-        output = -leftTrigger;
-      }
-    } else {
+    if(leftTrigger >= rightTrigger) {
       output = leftTrigger;
+    }
+    if (rightTrigger > leftTrigger) {
+      output = -rightTrigger;
     }
     m_intake.runIntake(output);
   }

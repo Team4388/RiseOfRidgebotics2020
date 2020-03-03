@@ -38,9 +38,9 @@ public class RunExtenderOutIn extends CommandBase {
     addRequirements(m_intake);
 
     m_extenderForwardLimit = m_extenderMotor.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyClosed);
-    m_extenderReverseLimit = m_extenderMotor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyClosed);
-    m_extenderForwardLimit.enableLimitSwitch(false);
-    m_extenderReverseLimit.enableLimitSwitch(false);
+    m_extenderReverseLimit = m_extenderMotor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
+    m_extenderForwardLimit.enableLimitSwitch(true);
+    m_extenderReverseLimit.enableLimitSwitch(true);
   }
 
   // Called when the command is initially scheduled.

@@ -159,12 +159,10 @@ public final class Constants {
         public static final double STORAGE_TIMEOUT = 2000;
 
         /* Ball Indexes */
-        public static final int BEAM_SENSOR_DIO_0 = 0;
-        public static final int BEAM_SENSOR_DIO_1 = 1;
-        public static final int BEAM_SENSOR_DIO_2 = 2;
-        public static final int BEAM_SENSOR_DIO_3 = 3;
-        public static final int BEAM_SENSOR_DIO_4 = 4;
-        public static final int BEAM_SENSOR_DIO_5 = 5;
+        public static final int BEAM_SENSOR_SHOOTER = 1;
+        public static final int BEAM_SENSOR_USELESS = 2;
+        public static final int BEAM_SENSOR_STORAGE = 3;
+        public static final int BEAM_SENSOR_INTAKE = 4;
 
         /* PID Values */
         public static final int SLOT_DISTANCE = 0;
