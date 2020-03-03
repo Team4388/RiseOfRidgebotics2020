@@ -8,6 +8,7 @@
 package frc4388.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc4388.robot.Constants.ShooterConstants;
 import frc4388.robot.subsystems.ShooterHood;
 
 public class HoodPositionPID extends CommandBase {
@@ -32,7 +33,7 @@ public class HoodPositionPID extends CommandBase {
   public void execute() {
     double slope = ShooterConstants.HOOD_CONVERT_SLOPE;
     double b = ShooterConstants.HOOD_CONVERT_B;
-    firingAngle = (-slope*m_shooter.addFireAngle())+b;*/
+    firingAngle = (-slope*m_shooterHood.addFireAngle())+b;
     //SmartDashboard.putNumber("Shoot Angle From Equation", m_shooter.addFireAngle());
     //SmartDashboard.putNumber("Fire Angle", firingAngle);
     m_shooterHood.runAngleAdjustPID(firingAngle);
