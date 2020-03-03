@@ -10,6 +10,7 @@ package frc4388.robot;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import frc4388.utility.Gains;
 import frc4388.utility.LEDPatterns;
 
 /**

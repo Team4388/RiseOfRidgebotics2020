@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc4388.robot;
+package frc4388.utility;
 
 public class Trims{
     public double m_turretTrim;

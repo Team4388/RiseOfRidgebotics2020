@@ -7,14 +7,10 @@
 
 package frc4388.robot.commands;
 
-import edu.wpi.first.wpilibj.Joystick;
-import frc4388.utility.controller.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc4388.robot.RobotContainer;
-import frc4388.robot.Trims;
 import frc4388.robot.Constants.OIConstants;
 import frc4388.robot.subsystems.Shooter;
-import frc4388.robot.subsystems.ShooterAim;
+import frc4388.utility.controller.XboxController;
 
 public class TrimShooter extends CommandBase {
   private final XboxController m_operatorXbox = new XboxController(OIConstants.XBOX_OPERATOR_ID);
