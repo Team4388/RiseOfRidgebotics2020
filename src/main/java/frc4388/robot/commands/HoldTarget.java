@@ -13,6 +13,7 @@ import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.LimeLight;
 import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.ShooterAim;
+import frc4388.utility.ShooterTables;
 import frc4388.utility.controller.IHandController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.networktables.NetworkTable;
@@ -56,7 +57,7 @@ public class HoldTarget extends CommandBase {
       //Vision Processing Mode
       NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0);
       NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
-  }
+    }
 
 
 
@@ -67,39 +68,44 @@ public class HoldTarget extends CommandBase {
     xAngle = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
     yAngle = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
     
-    if (target == 1.0){ //If target in view
-        //Aiming Left/Right
-      turnAmount = (xAngle/VisionConstants.FOV)*VisionConstants.TURN_P_VALUE;
-      if (Math.abs(xAngle) < VisionConstants.X_ANGLE_ERROR){turnAmount = 0;} //Angle Error Zone 
-        //Deadzones
-      else if(turnAmount > 0 && turnAmount < VisionConstants.MOTOR_DEAD_ZONE){turnAmount = VisionConstants.MOTOR_DEAD_ZONE;} 
-      else if(turnAmount < 0 && turnAmount > -VisionConstants.MOTOR_DEAD_ZONE){turnAmount = -VisionConstants.MOTOR_DEAD_ZONE;}
+    if (target == 1.0) { // If target in view
+      // Aiming Left/Right
+      turnAmount = (xAngle / VisionConstants.FOV) * VisionConstants.TURN_P_VALUE;
+      if (Math.abs(xAngle) < VisionConstants.X_ANGLE_ERROR) {
+        turnAmount = 0;
+      } // Angle Error Zone
+      // Deadzones
+      else if (turnAmount > 0 && turnAmount < VisionConstants.MOTOR_DEAD_ZONE) {
+        turnAmount = VisionConstants.MOTOR_DEAD_ZONE;
+      } else if (turnAmount < 0 && turnAmount > -VisionConstants.MOTOR_DEAD_ZONE) {
+        turnAmount = -VisionConstants.MOTOR_DEAD_ZONE;
+      }
       m_shooterAim.runShooterWithInput(-turnAmount - m_shooter.shooterTrims.m_turretTrim);
 
-        //Finding Distance
-      distance = VisionConstants.TARGET_HEIGHT/Math.tan((VisionConstants.LIME_ANGLE + yAngle)*(Math.PI/180));
+      // Finding Distance
+      distance = VisionConstants.TARGET_HEIGHT / Math.tan((VisionConstants.LIME_ANGLE + yAngle) * (Math.PI / 180));
       SmartDashboard.putNumber("Distance to Target", distance);
 
-      double yVel = Math.sqrt(2*VisionConstants.GRAV*VisionConstants.TARGET_HEIGHT);
-      double xVel = (distance*VisionConstants.GRAV)/(yVel);
+        //START Equation Code
+        /*
+      double yVel = Math.sqrt(2 * VisionConstants.GRAV * VisionConstants.TARGET_HEIGHT);
+      double xVel = (distance * VisionConstants.GRAV) / (yVel);
 
       fireVel = Math.sqrt((Math.pow(xVel, 2))+(Math.pow(yVel,2)));
       fireAngle = Math.atan(yVel/xVel) * (180/Math.PI);
-      m_shooter.m_fireVel = fireVel;
-      m_shooter.m_fireAngle = fireAngle + m_shooter.shooterTrims.m_hoodTrim;
+      */
+        //END Equation Code
 
-    }/*
-    else{
-      System.err.println("Shooter Pos: " + m_shooterAim.getShooterRotatePosition());
-      double curveInput = -Math.abs(-Math.cos(Math.PI * ((2*m_shooterAim.getShooterRotatePosition())/55))+1) * 0.1;
-      if (m_shooterAim.getShooterRotatePosition() >= -3 || m_shooterAim.getShooterRotatePosition() <= -54){
-        curveInput = -curveInput;
-      }
-      System.err.println("Curve Input: " + curveInput);
+        //START CSV Code
+      fireVel = m_shooter.m_shooterTable.getVelocity(distance);
+      fireAngle = m_shooter.m_shooterTable.getHood(distance); //Note: Ensure to follow because units are different
+      //fireAngle = 33;
+        //END CSV Code
+
       
-      m_shooterAim.runShooterWithInput(curveInput);
+      m_shooter.m_fireVel = fireVel;
+      m_shooter.m_fireAngle = fireAngle;// + m_shooter.shooterTrims.m_hoodTrim;
     }
-    */
   }
 
   // Called once the command ends or is interrupted.

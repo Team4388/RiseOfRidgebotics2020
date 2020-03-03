@@ -36,11 +36,6 @@ public class RunExtenderOutIn extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
     m_intake = subsystem;
     addRequirements(m_intake);
-
-    m_extenderForwardLimit = m_extenderMotor.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyClosed);
-    m_extenderReverseLimit = m_extenderMotor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
-    m_extenderForwardLimit.enableLimitSwitch(true);
-    m_extenderReverseLimit.enableLimitSwitch(true);
   }
 
   // Called when the command is initially scheduled.

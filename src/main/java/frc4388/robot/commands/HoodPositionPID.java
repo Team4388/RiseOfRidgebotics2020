@@ -31,9 +31,9 @@ public class HoodPositionPID extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double slope = ShooterConstants.HOOD_CONVERT_SLOPE;
+    /*double slope = ShooterConstants.HOOD_CONVERT_SLOPE;
     double b = ShooterConstants.HOOD_CONVERT_B;
-    firingAngle = (-slope*m_shooter.addFireAngle())+b;
+    firingAngle = (-slope*m_shooter.addFireAngle())+b;*/
     SmartDashboard.putNumber("Shoot Angle From Equation", m_shooter.addFireAngle());
     SmartDashboard.putNumber("Fire Angle", firingAngle);
     m_shooter.runAngleAdjustPID(firingAngle);
@@ -49,7 +49,7 @@ public class HoodPositionPID extends CommandBase {
   public boolean isFinished() {
     double encoderPos = m_shooter.m_angleAdjustMotor.getEncoder().getPosition();
     if(encoderPos < firingAngle + 1 || encoderPos < firingAngle - 1){
-      return true;
+      return false;
     }
     return false;
   }

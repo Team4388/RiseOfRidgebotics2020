@@ -786,7 +786,7 @@ public class Drive extends SubsystemBase {
       //SmartDashboard.putString("Odometry Values Meters", getPose().toString());
       //SmartDashboard.putNumber("Odometry Heading", getHeading());
 
-      //SmartDashboard.putNumber("Time Seconds", m_currentTimeSec);
+      SmartDashboard.putNumber("Time Seconds", m_currentTimeSec);
       SmartDashboard.putNumber("Delta Time", m_deltaTimeMs);
 
       if (m_currentSong != m_songChooser.getSelected()){

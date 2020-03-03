@@ -47,7 +47,7 @@ public class Shooter extends SubsystemBase {
   double velP;
   double input;
 
-  ShooterTables m_shooterTable;
+  public ShooterTables m_shooterTable;
   
   public boolean velReached;
   public double m_fireVel;
@@ -69,6 +69,7 @@ public class Shooter extends SubsystemBase {
     m_shooterFalcon.setInverted(true);
     m_angleAdjustMotor.setIdleMode(IdleMode.kBrake);
     m_shooterFalcon.configOpenloopRamp(1, ShooterConstants.SHOOTER_TIMEOUT_MS);
+    m_shooterFalcon.configClosedloopRamp(1, ShooterConstants.SHOOTER_TIMEOUT_MS);
     setShooterGains();
 
     m_shooterFalcon.configPeakOutputReverse(0, ShooterConstants.SHOOTER_TIMEOUT_MS);
@@ -77,7 +78,6 @@ public class Shooter extends SubsystemBase {
     
     int closedLoopTimeMs = 1;
     m_shooterFalcon.configClosedLoopPeriod(0, closedLoopTimeMs, ShooterConstants.SHOOTER_TIMEOUT_MS);
-    m_shooterFalcon.configClosedLoopPeriod(1, closedLoopTimeMs, ShooterConstants.SHOOTER_TIMEOUT_MS);
 
     m_shooterTable = new ShooterTables();
 
@@ -90,8 +90,6 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("CSV A 10", m_shooterTable.getAngleDisplacement(10));
     SmartDashboard.putNumber("CSV A 5", m_shooterTable.getAngleDisplacement(5));
     SmartDashboard.putNumber("CSV A 30", m_shooterTable.getAngleDisplacement(30));
-
-
 
     m_hoodUpLimit = m_angleAdjustMotor.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
     m_hoodDownLimit = m_angleAdjustMotor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
@@ -108,7 +106,19 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Shooter Velocity", m_shooterFalcon.getSelectedSensorVelocity()*600/ShooterConstants.ENCODER_TICKS_PER_REV);
+    try{
+    SmartDashboard.putNumber("Drum Velocity", m_shooterFalcon.getSelectedSensorVelocity());
+
+    SmartDashboard.putNumber("Fire Velocity From CSV", m_fireVel);
+    SmartDashboard.putNumber("Fire Angle From CSV", m_fireAngle);
+
+    //SmartDashboard.putNumber("Hood Position", m_shooter.getAnglePosition());
+    }
+
+    catch(Exception e)
+    {
+      
+    }
   }
 
   public double addFireVel() {
@@ -157,15 +167,9 @@ public class Shooter extends SubsystemBase {
    * @param falcon Motor to use
    * @param targetVel Target velocity to run motor at
    */
-  public void runDrumShooterVelocityPID(double targetVel, double actualVel) {
-    SmartDashboard.putNumber("shoot", actualVel);
-    if (actualVel < targetVel - ShooterConstants.DRUM_RAMP_LIMIT){
-      m_shooterFalcon.set(TalonFXControlMode.PercentOutput, 1);//Ramp up
-    }
-    else{ //PID Based on targetVel
-      m_shooterFalcon.set(TalonFXControlMode.Velocity, targetVel); //Init PID
-    }
-    m_shooterFalcon.feed();
+  public void runDrumShooterVelocityPID(double targetVel) {
+    System.out.println("dddddddddddddddddddddddd" + targetVel);
+    m_shooterFalcon.set(TalonFXControlMode.Velocity, targetVel); //Init PID
   }
 
   public void resetGyroAngleAdj(){
@@ -173,6 +177,6 @@ public class Shooter extends SubsystemBase {
   }
 
   public double getAnglePosition(){
-    return m_angleAdjustMotor.getEncoder().getPosition();
+    return m_angleEncoder.getPosition();
   }
 }
