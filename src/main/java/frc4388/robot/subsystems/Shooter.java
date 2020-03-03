@@ -78,15 +78,15 @@ public class Shooter extends SubsystemBase {
 
     m_shooterTable = new ShooterTables();
 
-    SmartDashboard.putNumber("CSV 10", m_shooterTable.getVelocity(10));
-    SmartDashboard.putNumber("CSV 200", m_shooterTable.getVelocity(200));
-    SmartDashboard.putNumber("CSV 250", m_shooterTable.getVelocity(250));
-    SmartDashboard.putNumber("CSV 500", m_shooterTable.getVelocity(500));
+    //SmartDashboard.putNumber("CSV 10", m_shooterTable.getVelocity(10));
+    //SmartDashboard.putNumber("CSV 200", m_shooterTable.getVelocity(200));
+    //SmartDashboard.putNumber("CSV 250", m_shooterTable.getVelocity(250));
+    //SmartDashboard.putNumber("CSV 500", m_shooterTable.getVelocity(500));
 
-    SmartDashboard.putNumber("CSV A -30", m_shooterTable.getAngleDisplacement(-30));
-    SmartDashboard.putNumber("CSV A 10", m_shooterTable.getAngleDisplacement(10));
-    SmartDashboard.putNumber("CSV A 5", m_shooterTable.getAngleDisplacement(5));
-    SmartDashboard.putNumber("CSV A 30", m_shooterTable.getAngleDisplacement(30));
+    //SmartDashboard.putNumber("CSV A -30", m_shooterTable.getAngleDisplacement(-30));
+    //SmartDashboard.putNumber("CSV A 10", m_shooterTable.getAngleDisplacement(10));
+    //SmartDashboard.putNumber("CSV A 5", m_shooterTable.getAngleDisplacement(5));
+    //SmartDashboard.putNumber("CSV A 30", m_shooterTable.getAngleDisplacement(30));
 
     m_hoodUpLimit = m_angleAdjustMotor.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
     m_hoodDownLimit = m_angleAdjustMotor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
@@ -106,8 +106,8 @@ public class Shooter extends SubsystemBase {
     try{
     SmartDashboard.putNumber("Drum Velocity", m_shooterFalcon.getSelectedSensorVelocity());
 
-    SmartDashboard.putNumber("Fire Velocity From CSV", m_fireVel);
-    SmartDashboard.putNumber("Fire Angle From CSV", m_fireAngle);
+    SmartDashboard.putNumber("Drum Velocity CSV", m_fireVel);
+    SmartDashboard.putNumber("Fire Angle CSV", m_fireAngle);
 
     //SmartDashboard.putNumber("Hood Position", m_shooter.getAnglePosition());
     }

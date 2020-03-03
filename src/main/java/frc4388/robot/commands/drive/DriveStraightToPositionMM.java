@@ -61,7 +61,7 @@ public class DriveStraightToPositionMM extends CommandBase {
     //System.err.println("Sensor Error \n" + m_drive.m_rightFrontMotor.getClosedLoopError(DriveConstants.PID_TURN));
     //System.err.println("Sensor Target \n" + m_drive.m_rightFrontMotor.getClosedLoopTarget(DriveConstants.PID_TURN));
     m_drive.runMotionMagicPID(m_targetPosOut, m_targetGyro);
-    SmartDashboard.putBoolean("MM Run", true);
+    //SmartDashboard.putBoolean("MM Run", true);
     i++;
   }
 
@@ -74,7 +74,7 @@ public class DriveStraightToPositionMM extends CommandBase {
   @Override
   public boolean isFinished() {
     if (Math.abs((int)m_drive.m_rightFrontMotor.getSelectedSensorVelocity(DriveConstants.PID_PRIMARY)) < 5 && isGoneFast){
-      SmartDashboard.putBoolean("MM Run", false);
+      //SmartDashboard.putBoolean("MM Run", false);
       return true;
     } else {
       if ((m_drive.m_rightFrontMotor.getSelectedSensorVelocity(DriveConstants.PID_PRIMARY) > 100)) {

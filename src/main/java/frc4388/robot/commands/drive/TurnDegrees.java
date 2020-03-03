@@ -50,8 +50,8 @@ public class TurnDegrees extends CommandBase {
 
     m_drive.runTurningPID(m_targetAngleTicksOut);
 
-    SmartDashboard.putNumber("Turning Error", Math.abs(m_currentYawInTicks - m_targetAngleTicksOut));
-    SmartDashboard.putNumber("Turning Target", m_targetAngleTicksOut);
+    //SmartDashboard.putNumber("Turning Error", Math.abs(m_currentYawInTicks - m_targetAngleTicksOut));
+    //SmartDashboard.putNumber("Turning Target", m_targetAngleTicksOut);
 
     i++;
   }

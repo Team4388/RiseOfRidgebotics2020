@@ -36,8 +36,8 @@ public class ShooterVelocityControlPID extends CommandBase {
   public void execute() {
     m_shooter.runDrumShooterVelocityPID(/*m_shooter.addFireVel()*/13000);
     m_shooter.runAngleAdjustPID(m_shooter.addFireAngle());
-    SmartDashboard.putNumber("Fire Velocity", m_shooter.addFireVel());
-    SmartDashboard.putNumber("Fire Angle", m_shooter.addFireAngle());
+    //SmartDashboard.putNumber("Fire Velocity", m_shooter.addFireVel());
+    //SmartDashboard.putNumber("Fire Angle", m_shooter.addFireAngle());
   }
 
   // Called once the command ends or is interrupted.

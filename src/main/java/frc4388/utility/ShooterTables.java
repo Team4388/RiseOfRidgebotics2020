@@ -85,12 +85,12 @@ public class ShooterTables {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        SmartDashboard.putNumber("Row 2 Column 1", m_angle[1][0]);
-        SmartDashboard.putNumber("Row 4 Column 2", m_angle[3][1]);
-        SmartDashboard.putNumber("m_distanceLength", m_distanceLength);
-        SmartDashboard.putNumber("Distance last row 0", m_distance[m_distanceLength-1][0]);
-        SmartDashboard.putNumber("Distance last row 1", m_distance[m_distanceLength-1][1]);
-        SmartDashboard.putNumber("Distance last row 2", m_distance[m_distanceLength-1][2]);
+        //SmartDashboard.putNumber("Row 2 Column 1", m_angle[1][0]);
+        //SmartDashboard.putNumber("Row 4 Column 2", m_angle[3][1]);
+        //SmartDashboard.putNumber("m_distanceLength", m_distanceLength);
+        //SmartDashboard.putNumber("Distance last row 0", m_distance[m_distanceLength-1][0]);
+        //SmartDashboard.putNumber("Distance last row 1", m_distance[m_distanceLength-1][1]);
+        //SmartDashboard.putNumber("Distance last row 2", m_distance[m_distanceLength-1][2]);
     }
 
     public double getHood(double distance) { //Rotations of motor

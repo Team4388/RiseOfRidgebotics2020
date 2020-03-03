@@ -106,12 +106,12 @@ public class DriveWithJoystickDriveStraight extends CommandBase {
       steerOutput = (cosMultiplier - deadzone) * Math.cos(1.571*steer) - cosMultiplier;
     }
     m_drive.driveWithInput(move, steerOutput);
-    System.out.println("Driving With Input");
+    //System.out.println("Driving With Input");
   }
 
   private void runDriveStraight(double move) {
     m_drive.driveWithInputAux(move * 3/4, m_targetGyro);
-    System.out.println("Driving Straight with Target: " + m_targetGyro);
+    //System.out.println("Driving Straight with Target: " + m_targetGyro);
   }
 
   /**

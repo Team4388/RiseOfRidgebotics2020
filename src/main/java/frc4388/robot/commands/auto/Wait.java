@@ -46,11 +46,11 @@ public class Wait extends CommandBase {
   public void execute() {
 
     if (counter == 0) {
-      SmartDashboard.putNumber("Wait Coordinates" + m_waitNum, m_currentTime);
+      //SmartDashboard.putNumber("Wait Coordinates" + m_waitNum, m_currentTime);
     }
 
     m_currentTime = System.currentTimeMillis();
-    SmartDashboard.putNumber("Time Difference for Wait", (m_currentTime - m_startTime));
+    //SmartDashboard.putNumber("Time Difference for Wait", (m_currentTime - m_startTime));
 
     counter ++;
   }

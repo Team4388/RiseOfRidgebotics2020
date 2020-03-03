@@ -132,12 +132,12 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
     }
 
     m_drive.driveWithInput(move, steerOutput);
-    System.out.println("Driving With Input");
+    //System.out.println("Driving With Input");
   }
 
   private void runDriveStraight(double move) {
     m_drive.driveWithInputAux(move * 3/4, m_targetGyro);
-    System.out.println("Driving Straight with Target: " + m_targetGyro);
+    //System.out.println("Driving Straight with Target: " + m_targetGyro);
   }
 
   private void runStoppedTurn(double steer) {
@@ -158,7 +158,7 @@ public class DriveWithJoystickUsingDeadAssistPID extends CommandBase {
     } else {
       m_drive.driveWithInputAux(0, m_targetGyro);
     }
-    System.out.println("Turning with Target: " + m_targetGyro);
+    //System.out.println("Turning with Target: " + m_targetGyro);
   }
 
   /**

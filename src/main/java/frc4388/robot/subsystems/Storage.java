@@ -77,8 +77,8 @@ public class Storage extends SubsystemBase {
     m_storagePIDController.setFF(storageGains.m_kF);
     m_storagePIDController.setOutputRange(StorageConstants.STORAGE_MIN_OUTPUT, storageGains.m_kmaxOutput);
 
-    SmartDashboard.putNumber("Storage Position PID Target", targetPos);
-    SmartDashboard.putNumber("Storage Position Pos", getEncoderPos());
+    //SmartDashboard.putNumber("Storage Position PID Target", targetPos);
+    //SmartDashboard.putNumber("Storage Position Pos", getEncoderPos());
     m_storagePIDController.setReference(targetPos, ControlType.kPosition);
   }
 

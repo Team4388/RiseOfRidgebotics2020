@@ -59,9 +59,9 @@ public class DriveWithJoystickAuxPID extends CommandBase {
 
     m_drive.driveWithInputAux(moveOutput, m_targetGyro);
 
-    System.err.println("Target: " + m_targetGyro);
-    System.err.println("Current: " + currentGyro);
-    System.err.println();
+    //System.err.println("Target: " + m_targetGyro);
+    //System.err.println("Current: " + currentGyro);
+    //System.err.println();
   }
 
   // Called once the command ends or is interrupted.

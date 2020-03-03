@@ -206,7 +206,6 @@ public class RobotContainer {
         //Calibrates turret and hood
         new JoystickButton(getOperatorJoystick(), XboxController.START_BUTTON)
             .whileHeld(new CalibrateShooter(m_robotShooter, m_robotShooterAim));
-
     }
 
     /**
