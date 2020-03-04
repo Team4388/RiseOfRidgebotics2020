@@ -50,6 +50,8 @@ public class ShooterAim extends SubsystemBase {
     m_shooterRotateMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
     m_shooterRotateMotor.setSoftLimit(SoftLimitDirection.kForward, ShooterConstants.TURRET_RIGHT_SOFT_LIMIT);
     m_shooterRotateMotor.setSoftLimit(SoftLimitDirection.kReverse, ShooterConstants.TURRET_LEFT_SOFT_LIMIT);
+
+    m_shooterRotateMotor.setInverted(false);
   }
 
   @Override

@@ -55,7 +55,7 @@ public class StoragePrepIntake extends CommandBase {
   @Override
   public boolean isFinished() {
     if (!m_storage.getBeam(StorageConstants.BEAM_SENSOR_INTAKE) || startTime + StorageConstants.STORAGE_TIMEOUT <= System.currentTimeMillis()){
-      return true;
+      return false;
     }
     return false;
   }

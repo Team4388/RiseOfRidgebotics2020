@@ -38,7 +38,7 @@ public class StorageIntake extends CommandBase {
   @Override
   public void execute() {
 
-    if (m_storage.getBeam(StorageConstants.BEAM_SENSOR_STORAGE) && m_storage.getBeam(StorageConstants.BEAM_SENSOR_INTAKE)){
+    if (!m_storage.getBeam(StorageConstants.BEAM_SENSOR_STORAGE) && !m_storage.getBeam(StorageConstants.BEAM_SENSOR_INTAKE)){
       m_storage.runStorage(StorageConstants.STORAGE_SPEED);
       intook = true;
     }

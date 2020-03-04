@@ -40,8 +40,6 @@ public class CalibrateShooter extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooterHood.m_angleAdjustMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
-    m_shooterHood.m_angleAdjustMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
     m_shooterHood.m_angleEncoder.setPosition(0);
     m_shooterHood.m_angleAdjustMotor.set(-ShooterConstants.HOOD_CALIBRATE_SPEED);
 
@@ -54,9 +52,6 @@ public class CalibrateShooter extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_shooterHood.m_angleAdjustMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
-    m_shooterHood.m_angleAdjustMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-
     m_shooterAim.m_shooterRotateMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
     m_shooterAim.m_shooterRotateMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
   }

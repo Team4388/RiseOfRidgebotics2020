@@ -31,7 +31,6 @@ public class ShootPrepGroup extends ParallelDeadlineGroup {
       new ShooterVelocityControlPID(m_shooter),
       new HoodPositionPID(m_shooterHood),
       new StoragePrepAim(m_storage)
-      //new RunCommand(() -> m_shooter.runDrumShooterVelocityPID(m_shooter.addFireVel())),
     );
   }
 }

@@ -48,10 +48,10 @@ public class ShooterHood extends SubsystemBase {
     m_hoodUpLimit.enableLimitSwitch(true);
     m_hoodDownLimit.enableLimitSwitch(true);
 
-    m_angleAdjustMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
-    m_angleAdjustMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-    m_angleAdjustMotor.setSoftLimit(SoftLimitDirection.kForward, ShooterConstants.HOOD_UP_SOFT_LIMIT);
-    m_angleAdjustMotor.setSoftLimit(SoftLimitDirection.kReverse, ShooterConstants.HOOD_DOWN_SOFT_LIMIT);
+    //m_angleAdjustMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
+    //m_angleAdjustMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+    //m_angleAdjustMotor.setSoftLimit(SoftLimitDirection.kForward, ShooterConstants.HOOD_UP_SOFT_LIMIT);
+    //m_angleAdjustMotor.setSoftLimit(SoftLimitDirection.kReverse, ShooterConstants.HOOD_DOWN_SOFT_LIMIT);
   }
 
   @Override

@@ -34,7 +34,7 @@ public class StoragePrepAim extends CommandBase {
   @Override
   public void execute() {
     if (m_storage.getBeam(1)){
-      m_storage.runStorage(StorageConstants.STORAGE_SPEED);
+      //m_storage.runStorage(StorageConstants.STORAGE_SPEED);
     }
     else{
       m_storage.runStorage(0);
@@ -49,12 +49,13 @@ public class StoragePrepAim extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (!m_storage.getBeam(1) || startTime + StorageConstants.STORAGE_TIMEOUT <= System.currentTimeMillis()){
+    /*if (!m_storage.getBeam(1) || startTime + StorageConstants.STORAGE_TIMEOUT <= System.currentTimeMillis()){
       m_storage.m_isStorageReadyToFire = true;
       return true;
     } else {
       m_storage.m_isStorageReadyToFire = false;
       return false;
-    }
+    }*/
+    return true;
   }
 }

@@ -47,12 +47,14 @@ public class Shooter extends SubsystemBase {
     //Testing purposes reseting gyros
     //resetGyroAngleAdj();
     shooterTrims = new Trims(0, 0);
+    //SmartDashboard.putNumber("Velocity Target", 10000);
+    //SmartDashboard.putNumber("Angle Target", 3);
 
     m_shooterFalcon.configFactoryDefault();
     m_shooterFalcon.setNeutralMode(NeutralMode.Coast);
     m_shooterFalcon.setInverted(true);
     m_shooterFalcon.configOpenloopRamp(1, ShooterConstants.SHOOTER_TIMEOUT_MS);
-    m_shooterFalcon.configClosedloopRamp(1, ShooterConstants.SHOOTER_TIMEOUT_MS);
+    m_shooterFalcon.configClosedloopRamp(1.0, ShooterConstants.SHOOTER_TIMEOUT_MS);
     setShooterGains();
 
     m_shooterFalcon.configPeakOutputReverse(0, ShooterConstants.SHOOTER_TIMEOUT_MS);
@@ -63,6 +65,8 @@ public class Shooter extends SubsystemBase {
     m_shooterFalcon.configClosedLoopPeriod(0, closedLoopTimeMs, ShooterConstants.SHOOTER_TIMEOUT_MS);
 
     m_shooterTable = new ShooterTables();
+
+    m_shooterFalcon.configSupplyCurrentLimit(ShooterConstants.SUPPLY_CURRENT_LIMIT_CONFIG, ShooterConstants.SHOOTER_TIMEOUT_MS);
 
     //SmartDashboard.putNumber("CSV 10", m_shooterTable.getVelocity(10));
     //SmartDashboard.putNumber("CSV 200", m_shooterTable.getVelocity(200));
@@ -82,6 +86,10 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Drum Velocity", m_shooterFalcon.getSelectedSensorVelocity());
 
     SmartDashboard.putNumber("Drum Velocity CSV", m_fireVel);
+
+    SmartDashboard.putNumber("Shooter Temp C", m_shooterFalcon.getTemperature());
+
+    SmartDashboard.putNumber("Shooter Current", m_shooterFalcon.getSupplyCurrent());
 
     //SmartDashboard.putNumber("Hood Position", m_shooter.getAnglePosition());
     }
@@ -129,7 +137,7 @@ public class Shooter extends SubsystemBase {
    * @param targetVel Target velocity to run motor at
    */
   public void runDrumShooterVelocityPID(double targetVel) {
-    System.out.println("Target Velocity" + targetVel);
+    //System.out.println("Target Velocity" + targetVel);
     m_shooterFalcon.set(TalonFXControlMode.Velocity, targetVel); //Init PID
   }
 }

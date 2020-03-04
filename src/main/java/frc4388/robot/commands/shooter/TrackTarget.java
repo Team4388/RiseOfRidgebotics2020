@@ -88,14 +88,17 @@ public class TrackTarget extends CommandBase {
       double xVel = (distance * VisionConstants.GRAV) / (yVel);
 
       //fireVel = Math.sqrt((Math.pow(xVel, 2))+(Math.pow(yVel,2)));
-      fireAngle = Math.atan(yVel/xVel) * (180/Math.PI);
+      //fireAngle = Math.atan(yVel/xVel) * (180/Math.PI);
         //END Equation Code
 
         //START CSV Code
       fireVel = m_shooter.m_shooterTable.getVelocity(distance);
-      //fireAngle = m_shooter.m_shooterTable.getHood(distance); //Note: Ensure to follow because units are different
+      fireAngle = m_shooter.m_shooterTable.getHood(distance); //Note: Ensure to follow because units are different
       //fireAngle = 33;
         //END CSV Code
+
+      //fireVel = SmartDashboard.getNumber("Velocity Target", 0);
+      //fireAngle = SmartDashboard.getNumber("Angle Target", 3);
 
       
       m_shooter.m_fireVel = fireVel;
