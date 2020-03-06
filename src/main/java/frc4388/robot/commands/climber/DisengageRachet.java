@@ -8,24 +8,17 @@
 package frc4388.robot.commands.climber;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc4388.robot.subsystems.Leveler;
-import frc4388.utility.controller.IHandController;
+import frc4388.robot.subsystems.Climber;
 
-public class RunLevelerWithJoystick extends CommandBase {
-  private Leveler m_leveler;
-  private IHandController m_controller;
-
+public class DisengageRachet extends CommandBase {
+  Climber m_climber;
+  
   /**
-   * Creates a new RunLevelerWithJoystick to control the leveler with an Xbox controller.
-   * @param subsystem pass the Drive subsystem from {@link frc4388.robot.RobotContainer#RobotContainer() RobotContainer}
-   * @param controller pass the Driver {@link frc4388.utility.controller.IHandController#getClass() IHandController} using the
-   * {@link frc4388.robot.RobotContainer#getDriverJoystick() getDriverJoystick()} method in
-   * {@link frc4388.robot.RobotContainer#RobotContainer() RobotContainer}
+   * Creates a new DisengageRachet command.
    */
-  public RunLevelerWithJoystick(Leveler subsystem, IHandController controller) {
-    m_leveler = subsystem;
-    m_controller = controller;
-    addRequirements(m_leveler);
+  public DisengageRachet(Climber subsystem) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    m_climber = subsystem;
   }
 
   // Called when the command is initially scheduled.
@@ -36,8 +29,9 @@ public class RunLevelerWithJoystick extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double input = m_controller.getRightXAxis();
-    m_leveler.runLeveler(input);
+    if (m_climber.climberSafety) {
+      m_climber.shiftServo(false);
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -48,6 +42,6 @@ public class RunLevelerWithJoystick extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

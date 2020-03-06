@@ -29,6 +29,7 @@ import frc4388.robot.Constants.DriveConstants;
 import frc4388.robot.Constants.OIConstants;
 import frc4388.robot.commands.auto.AutoPath1FromCenter;
 import frc4388.robot.commands.auto.Wait;
+import frc4388.robot.commands.climber.DisengageRachet;
 import frc4388.robot.commands.climber.RunClimberWithTriggers;
 import frc4388.robot.commands.climber.RunLevelerWithJoystick;
 import frc4388.robot.commands.drive.DriveStraightToPositionMM;
@@ -101,6 +102,8 @@ public class RobotContainer {
         m_robotShooterHood.passRequiredSubsystem(m_robotShooter);
         m_robotShooterAim.passRequiredSubsystem(m_robotShooter);
 
+        m_robotLeveler.passRequiredSubsystem(m_robotClimber);
+
         configureButtonBindings();
 
         /* Default Commands */
@@ -118,7 +121,7 @@ public class RobotContainer {
         // drives climber with input from triggers on the opperator controller
         m_robotClimber.setDefaultCommand(new RunClimberWithTriggers(m_robotClimber, getDriverController()));
         // drives the leveler with an axis input from the driver controller
-        m_robotLeveler.setDefaultCommand(new RunLevelerWithJoystick(m_robotLeveler, getDriverController()));
+        m_robotLeveler.setDefaultCommand(new RunLevelerWithJoystick(m_robotLeveler, getOperatorController()));
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
         // runs the storage not
@@ -161,7 +164,9 @@ public class RobotContainer {
         new JoystickButton(getDriverJoystick(), XboxController.LEFT_BUMPER_BUTTON)
             .whenPressed(new InstantCommand(() -> m_robotPneumatics.setShiftState(false), m_robotDrive));
 
-
+        // Disengages the rachet to allow for a climb
+        new JoystickButton(getOperatorJoystick(), XboxController.BACK_BUTTON)
+            .whileHeld(new DisengageRachet(m_robotClimber));
 
         /* Operator Buttons */
         // shoots until released
