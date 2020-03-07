@@ -90,6 +90,9 @@ public class RobotContainer {
     private final XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
     private final XboxController m_operatorXbox = new XboxController(OIConstants.XBOX_OPERATOR_ID);
 
+    /* Autos */
+    SixBallAutoMiddle m_sixBallAutoMiddle;
+
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -106,6 +109,9 @@ public class RobotContainer {
         m_robotLeveler.passRequiredSubsystem(m_robotClimber);
 
         configureButtonBindings();
+
+        /* Builds Autos */
+        buildAutos();
 
         /* Default Commands */
         // drives the robot with a two-axis input from the driver controller
@@ -232,6 +238,14 @@ public class RobotContainer {
             .whenReleased(new InstantCommand(() -> m_robotLime.limeOff()));
     }
 
+    public void buildAutos() {
+        String[] sixBallAutoMiddlePaths = new String[]{
+            "FirstPath0",
+            "FirstPath1"
+        };
+        m_sixBallAutoMiddle = new SixBallAutoMiddle(m_robotDrive, buildPaths(sixBallAutoMiddlePaths));
+    }
+
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *
@@ -242,17 +256,9 @@ public class RobotContainer {
         TrajectoryConfig config = getTrajectoryConfig();
         //Trajectory trajectory = getTrajectory(config);
 
-        String trajectoryJSON0 = "paths/FirstPath0.wpilib.json";
-        String trajectoryJSON1 = "paths/FirstPath1.wpilib.json"; 
-
-        String[] sixBallAutoMiddlePaths = new String[]{
-            "FirstPath0",
-            "FirstPath1"
-        };
-
         // Run path following command, then stop at the end.
         //SequentialCommandGroup ramseteCommands = new SequentialCommandGroup(ramseteCommand0, ramseteCommand1);
-        return new SixBallAutoMiddle(buildPaths(sixBallAutoMiddlePaths)).andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+        return m_sixBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
 
         //return new AutoPath1FromCenter(m_robotDrive, m_robotPneumatics);
         //return new AutoPath2FromRight(m_robotDrive, m_robotPneumatics);

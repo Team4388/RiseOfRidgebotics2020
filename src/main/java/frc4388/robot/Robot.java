@@ -36,7 +36,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    SmartDashboard.putString("Auto?", "NAH");
+    SmartDashboard.putString("Is Auto Start?", "NAH");
   }
 
   /**
@@ -64,6 +64,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     m_robotContainer.setDriveNeutralMode(NeutralMode.Coast);
+    SmartDashboard.putString("Is Auto Start?", "NAH");
   }
 
   @Override
@@ -75,6 +76,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     m_robotContainer.setDriveNeutralMode(NeutralMode.Brake);
@@ -91,8 +93,8 @@ public class Robot extends TimedRobot {
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-      System.err.println("Auto Start");
+      //m_autonomousCommand.schedule();
+      SmartDashboard.putString("Is Auto Start?", "YEA");
     }
   }
 
