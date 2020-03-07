@@ -12,6 +12,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.Constants.VisionConstants;
+import frc4388.robot.subsystems.LimeLight;
 import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.ShooterAim;
 import frc4388.robot.subsystems.ShooterHood;
@@ -48,6 +49,7 @@ public class TrackTarget extends CommandBase {
     m_shooterHood = m_shooter.m_shooterHoodSubsystem;
     addRequirements(m_shooterAim);
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1);
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(0);
   }
 
   // Called when the command is initially scheduled.
@@ -82,7 +84,8 @@ public class TrackTarget extends CommandBase {
       // Finding Distance
       distance = VisionConstants.TARGET_HEIGHT / Math.tan((VisionConstants.LIME_ANGLE + yAngle) * (Math.PI / 180));
       SmartDashboard.putNumber("Distance to Target", distance);
-
+      SmartDashboard.putNumber("ts Skew or Rotation", NetworkTableInstance.getDefault().getTable("limelight").getEntry("ts").getDouble(0));
+      SmartDashboard.putNumber("ta Area", NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta").getDouble(0));
         //START Equation Code
       double yVel = Math.sqrt(2 * VisionConstants.GRAV * VisionConstants.TARGET_HEIGHT);
       double xVel = (distance * VisionConstants.GRAV) / (yVel);
@@ -115,7 +118,7 @@ public class TrackTarget extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (xAngle < 1 && xAngle > -1 && target == 1)
+    if (xAngle < 0.5 && xAngle > -0.5 && target == 1)
     {
       m_shooterAim.m_isAimReady = true;
     } else {
