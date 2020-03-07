@@ -64,6 +64,9 @@ public class Drive extends SubsystemBase {
   public static Gains m_gainsTurningHigh = DriveConstants.DRIVE_TURNING_GAINS_HIGH;
   public static Gains m_gainsMotionMagicHigh = DriveConstants.DRIVE_MOTION_MAGIC_GAINS_HIGH;
 
+  /* Back Motor Gains */
+  public static Gains m_gainsVelocityBack = DriveConstants.DRIVE_VELOCITY_GAINS_BACK;
+
   /* Timey Whimey */
   public long m_currentTimeMs = System.currentTimeMillis();
   public long m_lastTimeMs = m_currentTimeMs;
@@ -141,18 +144,18 @@ public class Drive extends SubsystemBase {
 
     /* PID for Back Motor Control in Tank Drive Vel */
     m_rightBackMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
-    m_rightBackMotor.config_kF(DriveConstants.SLOT_VELOCITY, m_gainsVelocityLow.m_kF, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightBackMotor.config_kP(DriveConstants.SLOT_VELOCITY, m_gainsVelocityLow.m_kP, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightBackMotor.config_kI(DriveConstants.SLOT_VELOCITY, m_gainsVelocityLow.m_kI, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightBackMotor.config_kD(DriveConstants.SLOT_VELOCITY, m_gainsVelocityLow.m_kD, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightBackMotor.configClosedLoopPeakOutput(DriveConstants.SLOT_VELOCITY, m_gainsVelocityLow.m_kPeakOutput, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightBackMotor.config_kF(DriveConstants.SLOT_VELOCITY, m_gainsVelocityBack.m_kF, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightBackMotor.config_kP(DriveConstants.SLOT_VELOCITY, m_gainsVelocityBack.m_kP, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightBackMotor.config_kI(DriveConstants.SLOT_VELOCITY, m_gainsVelocityBack.m_kI, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightBackMotor.config_kD(DriveConstants.SLOT_VELOCITY, m_gainsVelocityBack.m_kD, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightBackMotor.configClosedLoopPeakOutput(DriveConstants.SLOT_VELOCITY, m_gainsVelocityBack.m_kPeakOutput, DriveConstants.DRIVE_TIMEOUT_MS);
 
     m_leftBackMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
-    m_leftBackMotor.config_kF(DriveConstants.SLOT_VELOCITY, m_gainsVelocityLow.m_kF, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_leftBackMotor.config_kP(DriveConstants.SLOT_VELOCITY, m_gainsVelocityLow.m_kP, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_leftBackMotor.config_kI(DriveConstants.SLOT_VELOCITY, m_gainsVelocityLow.m_kI, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_leftBackMotor.config_kD(DriveConstants.SLOT_VELOCITY, m_gainsVelocityLow.m_kD, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_leftBackMotor.configClosedLoopPeakOutput(DriveConstants.SLOT_VELOCITY, m_gainsVelocityLow.m_kPeakOutput, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftBackMotor.config_kF(DriveConstants.SLOT_VELOCITY, m_gainsVelocityBack.m_kF, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftBackMotor.config_kP(DriveConstants.SLOT_VELOCITY, m_gainsVelocityBack.m_kP, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftBackMotor.config_kI(DriveConstants.SLOT_VELOCITY, m_gainsVelocityBack.m_kI, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftBackMotor.config_kD(DriveConstants.SLOT_VELOCITY, m_gainsVelocityBack.m_kD, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftBackMotor.configClosedLoopPeakOutput(DriveConstants.SLOT_VELOCITY, m_gainsVelocityBack.m_kPeakOutput, DriveConstants.DRIVE_TIMEOUT_MS);
 
     /* Reset Sensors for WPI_TalonFXs */
     resetEncoders();
@@ -325,8 +328,8 @@ public class Drive extends SubsystemBase {
     m_totalLeftDistanceInches += ticksToInches(m_currentLeftPosTicks - m_lastLeftPosTicks);
 
     m_odometry.update(Rotation2d.fromDegrees( getHeading()),
-                                              getDistanceInches(m_leftFrontMotor),
-                                              -getDistanceInches(m_rightFrontMotor));
+                                              inchesToMeters(getDistanceInches(m_leftFrontMotor)),
+                                              -inchesToMeters(getDistanceInches(m_rightFrontMotor)));
   }
 
   /**
@@ -439,8 +442,8 @@ public class Drive extends SubsystemBase {
     //                                          m_currentAngleYaw-(360),
     //                                          m_currentAngleYaw+(360));
     //double targetGyro = (m_kinematicsTargetAngle / 360) * DriveConstants.TICKS_PER_GYRO_REV;
-    double moveVelLeft = inchesToTicks(leftSpeed)/DriveConstants.SECONDS_TO_TICK_TIME;
-    double moveVelRight = inchesToTicks(rightSpeed)/DriveConstants.SECONDS_TO_TICK_TIME;
+    double moveVelLeft = inchesToTicks(metersToInches(leftSpeed))/DriveConstants.SECONDS_TO_TICK_TIME;
+    double moveVelRight = inchesToTicks(metersToInches(rightSpeed))/DriveConstants.SECONDS_TO_TICK_TIME;
 
     //SmartDashboard.putNumber("Move Vel Left", moveVelLeft);
     //SmartDashboard.putNumber("Move Vel Right", moveVelRight);
@@ -449,8 +452,6 @@ public class Drive extends SubsystemBase {
 
     m_rightBackMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
     m_leftBackMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
-
-    System.err.println(moveVelLeft);
 
     m_rightBackMotor.set(TalonFXControlMode.Velocity, moveVelRight);
     m_leftBackMotor.set(TalonFXControlMode.Velocity, moveVelLeft);
@@ -751,8 +752,11 @@ public class Drive extends SubsystemBase {
       
       //SmartDashboard.putNumber("Right Motor Velocity Int Sensor", m_rightFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
       //SmartDashboard.putNumber("Left Motor Velocity Int Sensor", m_leftFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
-      //SmartDashboard.putNumber("Left Motor Pos Inches", getDistanceInches(m_rightFrontMotor));
-      //SmartDashboard.putNumber("Right Motor Pos Inches", getDistanceInches(m_leftFrontMotor));
+      SmartDashboard.putNumber("Left Motor Pos Inches", getDistanceInches(m_rightFrontMotor));
+      SmartDashboard.putNumber("Right Motor Pos Inches", getDistanceInches(m_leftFrontMotor));
+
+      SmartDashboard.putNumber("Left Motor Pos Meters", inchesToMeters(getDistanceInches(m_rightFrontMotor)));
+      SmartDashboard.putNumber("Right Motor Pos Meters", inchesToMeters(getDistanceInches(m_leftFrontMotor)));
 
       /*SmartDashboard.putNumber("Right Front Velocity", m_rightFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
       SmartDashboard.putNumber("Left Front Velocity", m_leftFrontMotor.getSensorCollection().getIntegratedSensorVelocity());

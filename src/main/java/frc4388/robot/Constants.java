@@ -70,9 +70,11 @@ public final class Constants {
         public static final int DRIVE_CRUISE_VELOCITY_HIGH = 20000;
         public static final int DRIVE_ACCELERATION_HIGH = 7000;
 
+        public static final Gains DRIVE_VELOCITY_GAINS_BACK = new Gains(0.0, 0.0, 0.0, 0.0518, 0, 1.0);
+
         /* Trajectory Constants */
-        public static final double MAX_SPEED_METERS_PER_SECOND = 3;
-        public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 3;
+        public static final double MAX_SPEED_METERS_PER_SECOND = 1;
+        public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 1.0;
         public static final double TRACK_WIDTH_METERS = 0.648;
         public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
  
