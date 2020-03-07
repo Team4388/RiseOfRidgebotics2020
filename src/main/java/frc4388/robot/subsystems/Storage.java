@@ -7,23 +7,17 @@
 
 package frc4388.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
-import com.revrobotics.SparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
+import com.revrobotics.ControlType;
+
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc4388.robot.Gains;
 import frc4388.robot.Constants.StorageConstants;
+import frc4388.utility.Gains;
 
 public class Storage extends SubsystemBase {
   public CANSparkMax m_storageMotor = new CANSparkMax(StorageConstants.STORAGE_CAN_ID, MotorType.kBrushless);
@@ -37,18 +31,17 @@ public class Storage extends SubsystemBase {
 
   Intake m_intake;
 
+  public boolean m_isStorageReadyToFire = false;
 
   /**
    * Creates a new Storage.
    */
   public Storage() {
     resetEncoder();
-    m_beamSensors[0] = new DigitalInput(StorageConstants.BEAM_SENSOR_DIO_0);
-    m_beamSensors[1] = new DigitalInput(StorageConstants.BEAM_SENSOR_DIO_1);
-    m_beamSensors[2] = new DigitalInput(StorageConstants.BEAM_SENSOR_DIO_2);
-    m_beamSensors[3] = new DigitalInput(StorageConstants.BEAM_SENSOR_DIO_3);
-    m_beamSensors[4] = new DigitalInput(StorageConstants.BEAM_SENSOR_DIO_4);
-    m_beamSensors[5] = new DigitalInput(StorageConstants.BEAM_SENSOR_DIO_5);
+    m_beamSensors[1] = new DigitalInput(StorageConstants.BEAM_SENSOR_SHOOTER);
+    m_beamSensors[2] = new DigitalInput(StorageConstants.BEAM_SENSOR_USELESS);
+    m_beamSensors[3] = new DigitalInput(StorageConstants.BEAM_SENSOR_STORAGE);
+    m_beamSensors[4] = new DigitalInput(StorageConstants.BEAM_SENSOR_INTAKE);
   }
 
   @Override
@@ -85,8 +78,8 @@ public class Storage extends SubsystemBase {
     m_storagePIDController.setFF(storageGains.m_kF);
     m_storagePIDController.setOutputRange(StorageConstants.STORAGE_MIN_OUTPUT, storageGains.m_kmaxOutput);
 
-    SmartDashboard.putNumber("Storage Position PID Target", targetPos);
-    SmartDashboard.putNumber("Storage Position Pos", getEncoderPos());
+    //SmartDashboard.putNumber("Storage Position PID Target", targetPos);
+    //SmartDashboard.putNumber("Storage Position Pos", getEncoderPos());
     m_storagePIDController.setReference(targetPos, ControlType.kPosition);
   }
 

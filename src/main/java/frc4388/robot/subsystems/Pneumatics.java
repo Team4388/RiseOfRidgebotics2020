@@ -8,9 +8,7 @@
 package frc4388.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc4388.robot.RobotContainer;
 import frc4388.robot.Constants.PneumaticsConstants;
 
 public class Pneumatics extends SubsystemBase {

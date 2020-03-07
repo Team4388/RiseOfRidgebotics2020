@@ -7,22 +7,17 @@
 
 package frc4388.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.LevelerConstants;
-import frc4388.robot.subsystems.*;
 
 public class Leveler extends SubsystemBase {
   CANSparkMax m_levelerMotor = new CANSparkMax(LevelerConstants.LEVELER_CAN_ID, MotorType.kBrushless);
 
-  private final Climber m_robotClimber = new Climber();
+  Climber m_climberSubsystem;
 
   /**
    * Creates a new Leveler.
@@ -44,11 +39,19 @@ public class Leveler extends SubsystemBase {
    * @param input the percent output to run motor at
    */
   public void runLeveler(double input) {
-    if(m_robotClimber.climberSafety){
+    if(m_climberSubsystem.climberSafety){
       m_levelerMotor.set(input);
     }
     else{
       m_levelerMotor.set(0);
     }
+  }
+
+  /**
+   * Passes subsystem needed.
+   * @param subsystem Subsystem needed.
+   */
+  public void passRequiredSubsystem(Climber subsystem) {
+    m_climberSubsystem = subsystem;
   }
 }
