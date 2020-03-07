@@ -32,6 +32,7 @@ public class TrackTarget extends CommandBase {
   double yAngle = 0;
   double target = 0;
   public double distance;
+  public double realDistance;
   public static double fireVel;
   public static double fireAngle;
 
@@ -83,7 +84,8 @@ public class TrackTarget extends CommandBase {
 
       // Finding Distance
       distance = VisionConstants.TARGET_HEIGHT / Math.tan((VisionConstants.LIME_ANGLE + yAngle) * (Math.PI / 180));
-      SmartDashboard.putNumber("Distance to Target", distance);
+      realDistance = (1.13 * distance) - 14.3;
+      SmartDashboard.putNumber("Distance to Target", realDistance);
       SmartDashboard.putNumber("ts Skew or Rotation", NetworkTableInstance.getDefault().getTable("limelight").getEntry("ts").getDouble(0));
       SmartDashboard.putNumber("ta Area", NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta").getDouble(0));
         //START Equation Code
@@ -95,8 +97,8 @@ public class TrackTarget extends CommandBase {
         //END Equation Code
 
         //START CSV Code
-      fireVel = m_shooter.m_shooterTable.getVelocity(distance);
-      fireAngle = m_shooter.m_shooterTable.getHood(distance); //Note: Ensure to follow because units are different
+      fireVel = m_shooter.m_shooterTable.getVelocity(realDistance);
+      fireAngle = m_shooter.m_shooterTable.getHood(realDistance); //Note: Ensure to follow because units are different
       //fireAngle = 33;
         //END CSV Code
 
