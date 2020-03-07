@@ -44,6 +44,7 @@ public class RunClimberWithTriggers extends CommandBase {
       if (leftTrigger > rightTrigger) {
         output = -leftTrigger;
         m_climber.shiftServo(true);
+        System.err.println("Engage Rachet");
       }
     } else {
       output = rightTrigger;

@@ -109,6 +109,8 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     m_robotContainer.setDriveNeutralMode(NeutralMode.Brake);
     m_robotContainer.setDriveGearState(false);
+
+    m_robotContainer.shiftClimberRachet(false);
     //m_robotContainer.configDriveTrainSensors(FeedbackDevice.IntegratedSensor);
     
     // This makes sure that the autonomous stops running when
