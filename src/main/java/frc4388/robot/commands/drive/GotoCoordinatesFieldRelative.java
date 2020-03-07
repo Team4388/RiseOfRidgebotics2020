@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc4388.robot.commands;
+package frc4388.robot.commands.drive;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc4388.robot.subsystems.Drive;
