@@ -17,6 +17,7 @@ import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.ControlType;
 
+import edu.wpi.first.wpilibj.GyroBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.ShooterConstants;
@@ -28,6 +29,7 @@ public class ShooterAim extends SubsystemBase {
   public CANSparkMax m_shooterRotateMotor = new CANSparkMax(ShooterConstants.SHOOTER_ROTATE_ID, MotorType.kBrushless);
   public static Gains m_shooterTurretGains = ShooterConstants.SHOOTER_TURRET_GAINS;
   CANDigitalInput m_shooterRightLimit, m_shooterLeftLimit;
+  public GyroBase m_turretGyro;
 
   public boolean m_isAimReady = false;
 
@@ -41,6 +43,8 @@ public class ShooterAim extends SubsystemBase {
   public ShooterAim() {
     //resetGyroShooterRotate();
     m_shooterRotateMotor.setIdleMode(IdleMode.kBrake);
+
+    m_turretGyro = getGyroInterface();
 
     m_shooterLeftLimit = m_shooterRotateMotor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
     m_shooterRightLimit = m_shooterRotateMotor.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
@@ -61,8 +65,44 @@ public class ShooterAim extends SubsystemBase {
     SmartDashboard.putNumber("Turret Angle Raw", getShooterRotatePosition());
 
     SmartDashboard.putBoolean("Aim Ready", m_isAimReady);
+
+    SmartDashboard.putData("Turret Angle", m_turretGyro);
   }
 
+  public GyroBase getGyroInterface() {
+    return new GyroBase(){
+    
+      @Override
+      public void close() throws Exception {
+        // TODO Auto-generated method stub
+        
+      }
+    
+      @Override
+      public void reset() {
+        // TODO Auto-generated method stub
+        
+      }
+    
+      @Override
+      public double getRate() {
+        // TODO Auto-generated method stub
+        return 0;
+      }
+    
+      @Override
+      public double getAngle() {
+        // TODO Auto-generated method stub
+        return getShooterRotatePosition();
+      }
+    
+      @Override
+      public void calibrate() {
+        // TODO Auto-generated method stub
+        
+      }
+    };
+  }
   /**
    * Passes subsystem needed.
    * @param subsystem Subsystem needed.

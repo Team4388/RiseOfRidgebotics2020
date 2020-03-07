@@ -83,21 +83,16 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     try{
-    SmartDashboard.putNumber("Drum Velocity", m_shooterFalcon.getSelectedSensorVelocity());
+      SmartDashboard.putNumber("Drum Velocity", m_shooterFalcon.getSelectedSensorVelocity());
 
-    SmartDashboard.putNumber("Drum Velocity CSV", m_fireVel);
+      SmartDashboard.putNumber("Drum Velocity CSV", m_fireVel);
 
-    SmartDashboard.putNumber("Shooter Temp C", m_shooterFalcon.getTemperature());
+      SmartDashboard.putNumber("Shooter Temp C", m_shooterFalcon.getTemperature());
 
-    SmartDashboard.putNumber("Shooter Current", m_shooterFalcon.getSupplyCurrent());
+      SmartDashboard.putNumber("Shooter Current", m_shooterFalcon.getSupplyCurrent());
 
-    SmartDashboard.putBoolean("Drum Ready", m_isDrumReady);
-
-    //SmartDashboard.putNumber("Hood Position", m_shooter.getAnglePosition());
-    }
-
-    catch(Exception e)
-    {
+      SmartDashboard.putBoolean("Drum Ready", m_isDrumReady);
+    } catch(Exception e) {
       
     }
   }
