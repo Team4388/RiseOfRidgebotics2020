@@ -17,6 +17,7 @@ import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.ControlType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.ShooterConstants;
 import frc4388.utility.Gains;
@@ -57,6 +58,9 @@ public class ShooterAim extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Turret Angle Raw", getShooterRotatePosition());
+
+    SmartDashboard.putBoolean("Aim Ready", m_isAimReady);
   }
 
   /**

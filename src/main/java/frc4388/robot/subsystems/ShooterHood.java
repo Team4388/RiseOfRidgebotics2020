@@ -58,6 +58,8 @@ public class ShooterHood extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Fire Angle CSV", m_fireAngle);
+
+    SmartDashboard.putNumber("Hood Angle Raw", getAnglePosition());
   }
 
   /**
