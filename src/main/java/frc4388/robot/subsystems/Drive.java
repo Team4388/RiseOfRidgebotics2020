@@ -269,7 +269,7 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.setInverted(DriveConstants.isRightMotorInverted);
     m_leftBackMotor.setInverted(DriveConstants.isLeftMotorInverted);
     m_rightBackMotor.setInverted(DriveConstants.isRightMotorInverted);
-    // m_driveTrain.setRightSideInverted(DriveConstants.isRightArcadeInverted);
+    m_driveTrain.setRightSideInverted(DriveConstants.isRightArcadeInverted);
 
     /* Set up music for drive train */
     m_orchestra.addInstrument(m_leftBackMotor);
@@ -340,7 +340,7 @@ public class Drive extends SubsystemBase {
    * using the Differential Drive class to manage the two inputs
    */
   public void driveWithInput(double move, double steer) {
-    m_driveTrain.arcadeDrive(steer, move);
+    m_driveTrain.arcadeDrive(move, steer);
     m_leftBackMotor.follow(m_leftFrontMotor);
     m_rightBackMotor.follow(m_rightFrontMotor);
   }
@@ -832,6 +832,7 @@ public class Drive extends SubsystemBase {
 
       SmartDashboard.putData("Pigeon Gyro", m_pigeonGyro);
       SmartDashboard.putData("Drive Train", m_driveTrain);
+
 
       //SmartDashboard.putNumber("Left Front Output", m_leftFrontMotor.get());
       //SmartDashboard.putNumber("Right Front Output", m_rightFrontMotor.get());
