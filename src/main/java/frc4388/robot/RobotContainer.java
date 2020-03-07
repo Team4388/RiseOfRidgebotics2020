@@ -252,24 +252,13 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        // Create config for trajectory
-        TrajectoryConfig config = getTrajectoryConfig();
+        // Create custom trajectories
+        //TrajectoryConfig config = getTrajectoryConfig();
         //Trajectory trajectory = getTrajectory(config);
+        //RamseteCommand ramseteCommand = getRamseteCommand(trajectory);
 
         // Run path following command, then stop at the end.
-        //SequentialCommandGroup ramseteCommands = new SequentialCommandGroup(ramseteCommand0, ramseteCommand1);
         return m_sixBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-
-        //return new AutoPath1FromCenter(m_robotDrive, m_robotPneumatics);
-        //return new AutoPath2FromRight(m_robotDrive, m_robotPneumatics);
-
-        /*if (Constants.SELECTED_AUTO == 1) {
-          return new SequentialCommandGroup(new Wait(m_robotDrive, 5, 0),
-                                            new TurnDegrees(m_robotDrive, 45),
-                                            new InstantCommand(() -> m_robotPneumatics.setShiftState(false), m_robotDrive),
-                                            new TurnDegrees(m_robotDrive, 315)
-          );
-        }*/
 
         //return new InstantCommand();
     }
