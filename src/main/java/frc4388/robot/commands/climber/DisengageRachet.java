@@ -29,8 +29,9 @@ public class DisengageRachet extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (m_climber.climberSafety) {
+    if (m_climber.m_climberSafety) {
       m_climber.shiftServo(false);
+      System.err.println("Disengage Rachet");
     }
   }
 
