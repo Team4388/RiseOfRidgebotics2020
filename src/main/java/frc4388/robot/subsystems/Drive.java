@@ -195,6 +195,8 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.configSelectedFeedbackSensor(FeedbackDevice.SensorDifference, DriveConstants.PID_PRIMARY,
         DriveConstants.DRIVE_TIMEOUT_MS);
 
+    m_rightFrontMotor.configSelectedFeedbackCoefficient(0.5, DriveConstants.PID_PRIMARY, DriveConstants.DRIVE_TIMEOUT_MS);
+
     /*
      * Configure the Pigeon IMU to the other Remote Slot available on the right
      * Talon
@@ -826,6 +828,9 @@ public class Drive extends SubsystemBase {
 
   public void updateSmartDashboard() {
     try {
+      
+
+
       // SmartDashboard.putNumber("Pigeon Yaw", getGyroYaw());
       // SmartDashboard.putNumber("Pigeon Pitch", getGyroPitch());
       // SmartDashboard.putNumber("Pigeon Roll", getGyroRoll());

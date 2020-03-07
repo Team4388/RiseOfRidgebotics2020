@@ -31,9 +31,9 @@ public class DriveStraightToPositionPID extends CommandBase {
     m_pneumatics = subsystem2;
     try {
       if (m_pneumatics.m_isSpeedShiftHigh) {
-        m_targetPosIn = targetPos * DriveConstants.TICKS_PER_INCH_HIGH * 2;
+        m_targetPosIn = targetPos * DriveConstants.TICKS_PER_INCH_HIGH;
       } else {
-        m_targetPosIn = targetPos * DriveConstants.TICKS_PER_INCH_LOW * 2;
+        m_targetPosIn = targetPos * DriveConstants.TICKS_PER_INCH_LOW;
       }
     } catch (Exception e) {
       System.err.println("Error In Motion Magic Switch Gains.");
