@@ -70,7 +70,7 @@ public final class Constants {
         public static final int DRIVE_CRUISE_VELOCITY_HIGH = 20000;
         public static final int DRIVE_ACCELERATION_HIGH = 7000;
 
-        public static final Gains DRIVE_VELOCITY_GAINS_BACK = new Gains(0.0, 0.0, 0.0, 0.0518, 0, 1.0);
+        public static final Gains DRIVE_VELOCITY_GAINS_BACK = new Gains(0.16, 0.0, 0.0, 0.058, 0, 1.0);
 
         /* Trajectory Constants */
         public static final double MAX_SPEED_METERS_PER_SECOND = 1.0;
