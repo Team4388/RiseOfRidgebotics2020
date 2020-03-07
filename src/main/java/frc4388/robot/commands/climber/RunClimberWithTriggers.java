@@ -40,7 +40,6 @@ public class RunClimberWithTriggers extends CommandBase {
     if (rightTrigger < .5) {
       if(rightTrigger > leftTrigger) {
         output = rightTrigger;
-        m_climber.shiftServo(false);
       }
       if (leftTrigger > rightTrigger) {
         output = -leftTrigger;
@@ -48,7 +47,6 @@ public class RunClimberWithTriggers extends CommandBase {
       }
     } else {
       output = rightTrigger;
-      m_climber.shiftServo(false);
     }
     m_climber.runClimber(output);
   }
