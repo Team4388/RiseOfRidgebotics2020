@@ -228,20 +228,20 @@ public class RobotContainer {
         Trajectory trajectory = getTrajectory(config);
         RamseteCommand ramseteCommand = getRamseteCommand(trajectory);
         // Run path following command, then stop at the end.
-        //return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-        
+        return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+
         //return new AutoPath1FromCenter(m_robotDrive, m_robotPneumatics);
         //return new AutoPath2FromRight(m_robotDrive, m_robotPneumatics);
       
-        if (Constants.SELECTED_AUTO == 1) {
+        /*if (Constants.SELECTED_AUTO == 1) {
           return new SequentialCommandGroup(new Wait(m_robotDrive, 5, 0),
                                             new TurnDegrees(m_robotDrive, 45),
                                             new InstantCommand(() -> m_robotPneumatics.setShiftState(false), m_robotDrive),
                                             new TurnDegrees(m_robotDrive, 315)
           );
-        }
+        }*/
 
-        return new InstantCommand();
+        //return new InstantCommand();
     }
     TrajectoryConfig getTrajectoryConfig() {
         return new TrajectoryConfig(
@@ -257,14 +257,12 @@ public class RobotContainer {
             new Pose2d(0, 0, new Rotation2d(0)),
             // Pass through these two interior waypoints, making an 's' curve path
             List.of(
-                new Translation2d(10, 0)
+                new Translation2d(0, 50)
             ),
             // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(20, 20, new Rotation2d(0)),
+            new Pose2d(50, 50, new Rotation2d(0)),
             // Pass config
             config);
-            // 10 = 20, 20 = 35, 30 = 53.5
-            // (0,10) = (8,22)
         
         return exampleTrajectory;
     }

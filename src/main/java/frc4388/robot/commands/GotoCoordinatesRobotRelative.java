@@ -15,7 +15,7 @@ import frc4388.robot.subsystems.Pneumatics;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class GotoCoordinates extends SequentialCommandGroup {
+public class GotoCoordinatesRobotRelative extends SequentialCommandGroup {
   Drive m_drive;
   Pneumatics m_pneumatics;
 
@@ -28,7 +28,7 @@ public class GotoCoordinates extends SequentialCommandGroup {
   /**
    * Creates a new GotoPosition.
    */
-  public GotoCoordinates(Drive subsystem, Pneumatics subsystem2, double xTarget, double yTarget, double endAngle) {
+  public GotoCoordinatesRobotRelative(Drive subsystem, Pneumatics subsystem2, double xTarget, double yTarget, double endAngle) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     m_drive = subsystem;
@@ -49,7 +49,7 @@ public class GotoCoordinates extends SequentialCommandGroup {
                   new TurnDegrees(m_drive, m_endAngle - m_currentAngle));
   }
 
-  public GotoCoordinates(Drive subsystem, Pneumatics subsystem2, double xTarget, double yTarget) {
+  public GotoCoordinatesRobotRelative(Drive subsystem, Pneumatics subsystem2, double xTarget, double yTarget) {
     m_drive = subsystem;
     m_pneumatics = subsystem2;
 

@@ -442,8 +442,8 @@ public class Drive extends SubsystemBase {
     //                                          m_currentAngleYaw-(360),
     //                                          m_currentAngleYaw+(360));
     //double targetGyro = (m_kinematicsTargetAngle / 360) * DriveConstants.TICKS_PER_GYRO_REV;
-    double moveVelLeft = inchesToTicks(metersToInches(leftSpeed))/DriveConstants.SECONDS_TO_TICK_TIME;
-    double moveVelRight = inchesToTicks(metersToInches(rightSpeed))/DriveConstants.SECONDS_TO_TICK_TIME;
+    double moveVelLeft = inchesToTicks(leftSpeed)/DriveConstants.SECONDS_TO_TICK_TIME;
+    double moveVelRight = inchesToTicks(rightSpeed)/DriveConstants.SECONDS_TO_TICK_TIME;
 
     //SmartDashboard.putNumber("Move Vel Left", moveVelLeft);
     //SmartDashboard.putNumber("Move Vel Right", moveVelRight);
@@ -783,7 +783,7 @@ public class Drive extends SubsystemBase {
       //SmartDashboard.putNumber("PID 0 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_PRIMARY));
       //SmartDashboard.putNumber("PID 1 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_TURN));
 
-      //SmartDashboard.putString("Odometry Values Meters", getPose().toString());
+      SmartDashboard.putString("Odometry Values Meters", getPose().toString());
       //SmartDashboard.putNumber("Odometry Heading", getHeading());
 
       //SmartDashboard.putNumber("Time Seconds", m_currentTimeSec);

@@ -28,24 +28,24 @@ public class AutoPath2FromRight extends SequentialCommandGroup {
     m_pneumatics = subsystem2;
     
     addCommands(  new Wait(m_drive, 0, 1),
-                  new GotoCoordinates(m_drive, m_pneumatics, 0, 77),
+                  new GotoCoordinatesRobotRelative(m_drive, m_pneumatics, 0, 77),
                   //Start Intake Ball 1
-                  new GotoCoordinates(m_drive, m_pneumatics, 0, 8),
-                  new GotoCoordinates(m_drive, m_pneumatics, 0, 28),
+                  new GotoCoordinatesRobotRelative(m_drive, m_pneumatics, 0, 8),
+                  new GotoCoordinatesRobotRelative(m_drive, m_pneumatics, 0, 28),
                   //Start Intake Ball 2
-                  new GotoCoordinates(m_drive, m_pneumatics, 0, 8),
+                  new GotoCoordinatesRobotRelative(m_drive, m_pneumatics, 0, 8),
                   //Shoot 5 Balls
-                  new GotoCoordinates(m_drive, m_pneumatics, 0, 28),
+                  new GotoCoordinatesRobotRelative(m_drive, m_pneumatics, 0, 28),
                   //Start Intake Ball 6 (Ball 1 second round)
-                  new GotoCoordinates(m_drive, m_pneumatics, 0, 8),
+                  new GotoCoordinatesRobotRelative(m_drive, m_pneumatics, 0, 8),
                   //Move to 7th Ball
-                  new GotoCoordinates(m_drive, m_pneumatics, 86.7, -64.11, -180),
+                  new GotoCoordinatesRobotRelative(m_drive, m_pneumatics, 86.7, -64.11, -180),
                   //Move to 8th Ball
-                  new GotoCoordinates(m_drive, m_pneumatics, -6.34, 15.31, 90),
+                  new GotoCoordinatesRobotRelative(m_drive, m_pneumatics, -6.34, 15.31, 90),
                   //Move to 9th Ball
-                  new GotoCoordinates(m_drive, m_pneumatics, 7.11, 24.41, 0),
+                  new GotoCoordinatesRobotRelative(m_drive, m_pneumatics, 7.11, 24.41, 0),
                   //Move to 10th Ball
-                  new GotoCoordinates(m_drive, m_pneumatics, -6.34, 13.30),
+                  new GotoCoordinatesRobotRelative(m_drive, m_pneumatics, -6.34, 13.30),
                   //Shoot 5 more Balls (Total 10 Ball Autonomous Path)
                   new Wait(m_drive, 0, 2)
                   );
