@@ -49,7 +49,7 @@ public final class Constants {
         public static final double COS_MULTIPLIER_HIGH = 0.8; 
 
         /* Drive Train Characteristics */
-        public static final double MOTOR_ROT_PER_WHEEL_ROT_HIGH = 5.13;
+        public static final double MOTOR_ROT_PER_WHEEL_ROT_HIGH = 7.29;
         public static final double MOTOR_ROT_PER_WHEEL_ROT_LOW = 15;
         public static final double WHEEL_DIAMETER_INCHES = 6;
         public static final double TICKS_PER_GYRO_REV = 8192;
