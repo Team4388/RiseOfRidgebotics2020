@@ -15,6 +15,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.ClimberConstants;
 
@@ -25,7 +26,8 @@ public class Climber extends SubsystemBase {
   Servo m_servo;
   //Spark m_spark = new Spark(4);
 
-  public boolean climberSafety = false;
+  public boolean m_climberSafety = false;
+  public boolean m_isRachetEngaged = true;
 
   /**
    * Creates a new Climber.
@@ -47,6 +49,8 @@ public class Climber extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putBoolean("Climber Safety", m_climberSafety);
+    SmartDashboard.putBoolean("Rachet", m_isRachetEngaged);
   }
 
   /**
@@ -54,7 +58,7 @@ public class Climber extends SubsystemBase {
    * @param input the voltage to run motor at
    */
   public void runClimber(double input) {
-    if(climberSafety){
+    if(m_climberSafety){
       input *= 1.0;
       m_climberMotor.set(input);
     }
@@ -66,13 +70,13 @@ public class Climber extends SubsystemBase {
   /* Safety Button for Climber */
   public void setSafetyPressed()
   {
-    climberSafety = true;
+    m_climberSafety = true;
   }
 
   /* Safety Button for Climber set back to false */
   public void setSafetyNotPressed()
   {
-    climberSafety = false;
+    m_climberSafety = false;
   }
 
   /**
@@ -80,9 +84,10 @@ public class Climber extends SubsystemBase {
    */
   public void shiftServo(boolean shift) {
     if (shift) {
-      m_servo.setPosition(0.5);
+      m_servo.setPosition(0.48);
     } else {
       m_servo.setPosition(0.56);
-    }
+    }        
+    m_isRachetEngaged = shift;
   }
 }

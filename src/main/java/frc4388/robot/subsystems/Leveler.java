@@ -39,7 +39,7 @@ public class Leveler extends SubsystemBase {
    * @param input the percent output to run motor at
    */
   public void runLeveler(double input) {
-    if(m_climberSubsystem.climberSafety){
+    if(m_climberSubsystem.m_climberSafety){
       m_levelerMotor.set(input);
     }
     else{

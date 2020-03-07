@@ -34,11 +34,11 @@ public final class Constants {
         public static final boolean isRightMotorInverted = true;
         public static final boolean isLeftMotorInverted = false;
         public static final boolean isRightArcadeInverted = false;
-        public static final boolean isAuxPIDInverted = false;
+        public static final boolean isAuxPIDInverted = true;
 
         /* Drive Configuration */
         public static final int DRIVE_TIMEOUT_MS = 30; // Use for all motor config
-        public static final double OPEN_LOOP_RAMP_RATE = 0.1; // Seconds from 0 to full power on motor
+        public static final double OPEN_LOOP_RAMP_RATE = 0.2; // Seconds from 0 to full power on motor
         public static final double NEUTRAL_DEADBAND = 0.04;
         public static final SupplyCurrentLimitConfiguration SUPPLY_CURRENT_LIMIT_CONFIG =
             new SupplyCurrentLimitConfiguration(false, 60, 40, 2);
