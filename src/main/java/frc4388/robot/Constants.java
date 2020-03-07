@@ -21,7 +21,7 @@ import frc4388.utility.LEDPatterns;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static final int SELECTED_AUTO = 1;
+    public static final int SELECTED_AUTO = 0;
 
     public static final class DriveConstants {
         /* Drive Train IDs */

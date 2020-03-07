@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc4388.robot.Constants.*;
+import frc4388.robot.commands.AutoPath2FromRight;
 import frc4388.robot.commands.CalibrateShooter;
 import frc4388.robot.commands.DrivePositionMPAux;
 import frc4388.robot.commands.DriveStraightAtVelocityPID;
@@ -228,6 +229,7 @@ public class RobotContainer {
         RamseteCommand ramseteCommand = getRamseteCommand(trajectory);
         // Run path following command, then stop at the end.
         //return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+        
         //return new AutoPath1FromCenter(m_robotDrive, m_robotPneumatics);
         //return new AutoPath2FromRight(m_robotDrive, m_robotPneumatics);
       
@@ -240,7 +242,6 @@ public class RobotContainer {
         }
 
         return new InstantCommand();
-        // return new DrivePositionMPAux(m_robotDrive, 500.0, 12.0, 2, 60.0, 0.0);
     }
     TrajectoryConfig getTrajectoryConfig() {
         return new TrajectoryConfig(
