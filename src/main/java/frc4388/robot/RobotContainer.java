@@ -11,23 +11,20 @@ import java.util.List;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
 import frc4388.robot.Constants.*;
 import frc4388.robot.commands.AutoPath2FromRight;
 import frc4388.robot.commands.CalibrateShooter;
@@ -60,12 +57,40 @@ import frc4388.robot.commands.StorageOutake;
 import frc4388.robot.commands.StoragePrepAim;
 import frc4388.robot.commands.StoragePrepIntake;
 import frc4388.robot.subsystems.Camera;
+import frc4388.robot.Constants.DriveConstants;
+import frc4388.robot.Constants.OIConstants;
+import frc4388.robot.commands.auto.AutoPath1FromCenter;
+import frc4388.robot.commands.auto.Wait;
+import frc4388.robot.commands.climber.DisengageRachet;
+import frc4388.robot.commands.climber.RunClimberWithTriggers;
+import frc4388.robot.commands.climber.RunLevelerWithJoystick;
+import frc4388.robot.commands.drive.DriveStraightToPositionMM;
+import frc4388.robot.commands.drive.DriveWithJoystick;
+import frc4388.robot.commands.drive.TurnDegrees;
+import frc4388.robot.commands.intake.RunIntakeWithTriggers;
+import frc4388.robot.commands.shooter.CalibrateShooter;
+import frc4388.robot.commands.shooter.ShootFireGroup;
+import frc4388.robot.commands.shooter.ShootFullGroup;
+import frc4388.robot.commands.shooter.ShootPrepGroup;
+import frc4388.robot.commands.shooter.TrackTarget;
+import frc4388.robot.commands.shooter.TrimShooter;
+import frc4388.robot.commands.storage.StorageIntake;
+import frc4388.robot.commands.storage.StoragePrepIntake;
+import frc4388.robot.subsystems.Camera;
+import frc4388.robot.subsystems.Climber;
+import frc4388.robot.subsystems.Drive;
+import frc4388.robot.subsystems.Intake;
+import frc4388.robot.subsystems.LED;
 import frc4388.robot.subsystems.Leveler;
 import frc4388.robot.subsystems.LimeLight;
 import frc4388.robot.subsystems.Pneumatics;
+import frc4388.robot.subsystems.Shooter;
+import frc4388.robot.subsystems.ShooterAim;
+import frc4388.robot.subsystems.ShooterHood;
 import frc4388.robot.subsystems.Storage;
 import frc4388.utility.controller.IHandController;
 import frc4388.utility.controller.XboxController;
+import frc4388.utility.controller.XboxTriggerButton;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -82,6 +107,7 @@ public class RobotContainer {
     private final Intake m_robotIntake = new Intake();
     private final Shooter m_robotShooter = new Shooter();
     private final ShooterAim m_robotShooterAim = new ShooterAim();
+    private final ShooterHood m_robotShooterHood = new ShooterHood();
     private final Climber m_robotClimber = new Climber();
     private final Leveler m_robotLeveler = new Leveler();
     private final Storage m_robotStorage = new Storage();
@@ -104,14 +130,20 @@ public class RobotContainer {
         m_robotPneumatics.passRequiredSubsystem(m_robotDrive);
         m_robotDrive.passRequiredSubsystem(m_robotPneumatics);
 
+        m_robotShooter.passRequiredSubsystem(m_robotShooterHood, m_robotShooterAim);
+        m_robotShooterHood.passRequiredSubsystem(m_robotShooter);
+        m_robotShooterAim.passRequiredSubsystem(m_robotShooter);
+
+        m_robotLeveler.passRequiredSubsystem(m_robotClimber);
+
         configureButtonBindings();
 
         /* Default Commands */
         // drives the robot with a two-axis input from the driver controller
-        
-        m_robotDrive.setDefaultCommand(new DriveWithJoystickDriveStraight(m_robotDrive, getDriverController()));
+
+        m_robotDrive.setDefaultCommand(new DriveWithJoystick(m_robotDrive, m_robotPneumatics, getDriverController()));
         //m_robotDrive.setDefaultCommand(new DriveWithJoystickUsingDeadAssistPID(m_robotDrive, m_robotPneumatics, getDriverController()));
-        
+
         // drives intake with input from triggers on the opperator controller
         m_robotIntake.setDefaultCommand(new RunIntakeWithTriggers(m_robotIntake, getOperatorController()));
         // runs the turret with joystick
@@ -121,10 +153,12 @@ public class RobotContainer {
         // drives climber with input from triggers on the opperator controller
         m_robotClimber.setDefaultCommand(new RunClimberWithTriggers(m_robotClimber, getDriverController()));
         // drives the leveler with an axis input from the driver controller
-        m_robotLeveler.setDefaultCommand(new RunLevelerWithJoystick(m_robotLeveler, getDriverController()));
+        m_robotLeveler.setDefaultCommand(new RunLevelerWithJoystick(m_robotLeveler, getOperatorController()));
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
+        // runs the storage not
         //m_robotStorage.setDefaultCommand(new RunCommand(() -> m_robotStorage.runStorage(0), m_robotStorage));
+        m_robotStorage.setDefaultCommand(new RunCommand(() -> m_robotStorage.runStorage(0), m_robotStorage));
         //m_robotLime.setDefaultCommand(new RunCommand(() -> m_robotLime.limeOff(), m_robotLime));
     }
 
@@ -139,11 +173,10 @@ public class RobotContainer {
         // A driver test button
         new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
             .whenPressed(new DriveStraightToPositionMM(m_robotDrive, m_robotPneumatics, 24.0));
-        
+
         // B driver test button
         new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
             .whenPressed(new TurnDegrees(m_robotDrive, 90));
-
         // Y driver test button
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
             .whenPressed(new Wait(m_robotDrive, 0, 0));
@@ -151,7 +184,9 @@ public class RobotContainer {
         // X driver test button
         new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
             .whenPressed(new InstantCommand());
-      
+
+
+
         /* Driver Buttons */
         // sets solenoids into high gear
         new JoystickButton(getDriverJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
@@ -161,22 +196,32 @@ public class RobotContainer {
         new JoystickButton(getDriverJoystick(), XboxController.LEFT_BUMPER_BUTTON)
             .whenPressed(new InstantCommand(() -> m_robotPneumatics.setShiftState(false), m_robotDrive));
 
+        // Disengages the rachet to allow for a climb
+        new JoystickButton(getOperatorJoystick(), XboxController.BACK_BUTTON)
+            .whileHeld(new DisengageRachet(m_robotClimber));
 
         /* Operator Buttons */
-
         // shoots until released
         new JoystickButton(getOperatorJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
-            .whileHeld(new ShootFullGroup(m_robotShooter, m_robotShooterAim, m_robotStorage), false)
-            .whenReleased(new RunCommand(() -> m_robotLime.limeOff()));
+            //.whileHeld(new ShootFullGroup(m_robotShooter, m_robotShooterAim, m_robotShooterHood, m_robotStorage), false)
+            //.whenReleased(new RunCommand(() -> m_robotLime.limeOff()));
+            .whenPressed(new RunCommand(() -> m_robotStorage.runStorage(-1), m_robotStorage))
+            .whenReleased(new RunCommand(() -> m_robotStorage.runStorage(0.0), m_robotStorage));
 
         // shoots one ball
         new JoystickButton(getOperatorJoystick(), XboxController.LEFT_BUMPER_BUTTON)
-            .whenPressed(new ShootFullGroup(m_robotShooter, m_robotShooterAim, m_robotStorage), false)
-            .whenReleased(new RunCommand(() -> m_robotLime.limeOff()));
+            //.whenPressed(new ShootFullGroup(m_robotShooter, m_robotShooterAim, m_robotShooterHood, m_robotStorage), false)
+            //.whenReleased(new RunCommand(() -> m_robotLime.limeOff()));
+            .whenPressed(new RunCommand(() -> m_robotStorage.runStorage(1), m_robotStorage))
+            .whenReleased(new RunCommand(() -> m_robotStorage.runStorage(0.0), m_robotStorage));
 
         // extends or retracts the extender
         new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
-            .whenPressed(new RunExtenderOutIn(m_robotIntake));
+            .whileHeld(new RunCommand(() -> m_robotIntake.runExtender(0.5)))
+            .whenReleased(new InstantCommand(() -> m_robotIntake.runExtender(0)));
+        new JoystickButton(getOperatorJoystick(), XboxController.Y_BUTTON)
+            .whileHeld(new RunCommand(() -> m_robotIntake.runExtender(-0.5)))
+            .whenReleased(new InstantCommand(() -> m_robotIntake.runExtender(0)));
 
         // safety for climber and leveler
         new JoystickButton(getOperatorJoystick(), XboxController.BACK_BUTTON)
@@ -185,27 +230,13 @@ public class RobotContainer {
 
         // starts tracking target
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
-            .whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotStorage))
-            .whenReleased(new StoragePrepIntake(m_robotIntake, m_robotStorage));
-            
-
-        //Prepares storage for intaking
-        new JoystickButton(getOperatorJoystick(), XboxController.LEFT_TRIGGER_AXIS)
-            .whileHeld(new StorageIntake(m_robotIntake, m_robotStorage));
-            
-        //Runs storage to outtake
-        new JoystickButton(getOperatorJoystick(), XboxController.RIGHT_TRIGGER_AXIS)
-            .whileHeld(new StorageOutake(m_robotStorage));
-
-        //TEST FOR HOOD
-        new JoystickButton(getOperatorJoystick(), XboxController.Y_BUTTON)
-            .whileHeld(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(0.3)))
-            .whenReleased(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(0)));
-
-        //TEST FOR HOOD
-        new JoystickButton(getOperatorJoystick(), XboxController.B_BUTTON)
-            .whileHeld(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(-0.3)))
-            .whenReleased(new RunCommand(() -> m_robotShooter.m_angleAdjustMotor.set(0)));
+            .whileHeld(new TrackTarget(m_robotShooterAim))
+            .whileHeld(new RunCommand(() -> m_robotShooterHood.runAngleAdjustPID(m_robotShooterHood.addFireAngle())))
+            //.whenReleased(new StoragePrepIntake(m_robotIntake, m_robotStorage))
+            .whenReleased(new InstantCommand(() -> m_robotLime.limeOff()));
+            //.whileHeld(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(13000)));
+            //.whileHeld(new HoldTarget(m_robotShooter, m_robotShooterAim))
+            //.whileHeld(new RunCommand(() -> m_robotShooter.runAngleAdjustPID(30)));
 
         //Trims shooter
         new JoystickButton(getOperatorJoystick(), XboxController.TOP_BOTTOM_DPAD_AXIS)
@@ -213,8 +244,23 @@ public class RobotContainer {
 
         //Calibrates turret and hood
         new JoystickButton(getOperatorJoystick(), XboxController.START_BUTTON)
-            .whileHeld(new CalibrateShooter(m_robotShooter, m_robotShooterAim));
+            .whileHeld(new CalibrateShooter(m_robotShooter, m_robotShooterAim, m_robotShooterHood));
 
+        //Prepares storage for intaking
+        //new XboxTriggerButton(m_operatorXbox, XboxTriggerButton.LEFT_TRIGGER)
+            //.whileHeld(new RunCommand(() -> m_robotStorage.runStorage(0.8)))
+            //.whenReleased(new RunCommand(() -> m_robotStorage.runStorage(0.0)));
+            //.whileHeld(new StorageIntake(m_robotIntake, m_robotStorage));
+
+        //Runs storage to outtake
+       //new XboxTriggerButton(m_operatorXbox, XboxTriggerButton.RIGHT_TRIGGER)
+            //.whileHeld(new RunCommand(() -> m_robotStorage.runStorage(-0.8)))
+            //.whenReleased(new RunCommand(() -> m_robotStorage.runStorage(0.0)));
+
+        //Run drum
+        new JoystickButton(getOperatorJoystick(), XboxController.B_BUTTON)
+            .whileHeld(new ShootFireGroup(m_robotShooter, m_robotShooterAim, m_robotShooterHood, m_robotStorage), false)
+            .whenReleased(new InstantCommand(() -> m_robotLime.limeOff()));
     }
 
     /**
@@ -232,7 +278,7 @@ public class RobotContainer {
 
         //return new AutoPath1FromCenter(m_robotDrive, m_robotPneumatics);
         //return new AutoPath2FromRight(m_robotDrive, m_robotPneumatics);
-      
+
         /*if (Constants.SELECTED_AUTO == 1) {
           return new SequentialCommandGroup(new Wait(m_robotDrive, 5, 0),
                                             new TurnDegrees(m_robotDrive, 45),
@@ -263,7 +309,6 @@ public class RobotContainer {
             new Pose2d(50, 50, new Rotation2d(0)),
             // Pass config
             config);
-        
         return exampleTrajectory;
     }
 
@@ -271,11 +316,11 @@ public class RobotContainer {
         RamseteCommand ramseteCommand = new RamseteCommand(
             trajectory,
             m_robotDrive::getPose,
-            new RamseteController(), 
+            new RamseteController(),
             DriveConstants.kDriveKinematics,
             m_robotDrive::tankDriveVelocity,
             m_robotDrive);
-        
+
         return ramseteCommand;
     }
 
@@ -296,7 +341,7 @@ public class RobotContainer {
     }
 
     /**
-     * 
+     *
      */
     public void resetOdometry() {
         m_robotDrive.resetGyroAngles();
@@ -310,7 +355,7 @@ public class RobotContainer {
     public IHandController getDriverController() {
         return m_driverXbox;
     }
-    
+
     /**
      * Used for analog inputs like triggers and axises.
      * @return The IHandController interface for the Operator Controller.
@@ -319,7 +364,7 @@ public class RobotContainer {
     {
         return m_operatorXbox;
     }
-    
+
     /**
      * Gets the {@link edu.wpi.first.wpilibj.GenericHID#GenericHID(int) Generic HID} for the Operator Xbox Controller.
      * Generic HIDs/Joysticks can be used to set up JoystickButtons.
@@ -329,7 +374,7 @@ public class RobotContainer {
     {
         return m_operatorXbox.getJoyStick();
     }
-    
+
     /**
      * Gets the {@link edu.wpi.first.wpilibj.GenericHID#GenericHID(int) Generic HID} for the Driver Xbox Controller.
      * Generic HIDs/Joysticks can be used to set up JoystickButtons.

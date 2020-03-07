@@ -50,6 +50,6 @@ public class LED extends SubsystemBase {
 
   @Override
   public void periodic(){
-    SmartDashboard.putNumber("LED", currentLED);
+    //SmartDashboard.putNumber("LED", currentLED);
   }
 }
