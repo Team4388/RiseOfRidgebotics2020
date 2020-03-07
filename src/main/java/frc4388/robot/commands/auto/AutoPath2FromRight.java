@@ -8,7 +8,7 @@
 package frc4388.robot.commands.auto;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc4388.robot.commands.drive.GotoCoordinates;
+import frc4388.robot.commands.drive.GotoCoordinatesRobotRelative;
 import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Pneumatics;
 
