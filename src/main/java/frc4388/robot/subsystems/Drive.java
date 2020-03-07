@@ -105,7 +105,7 @@ public class Drive extends SubsystemBase {
     m_leftBackMotor.configFactoryDefault();
     m_rightBackMotor.configFactoryDefault();
     m_pigeon.configFactoryDefault();
-    resetGyroYaw();
+    resetGyroYaw(0);
 
 
     /* Config Open Loop Ramp so we don't make sudden output changes */
@@ -497,24 +497,25 @@ public class Drive extends SubsystemBase {
    */
   public void setOdometry(Pose2d pose) {
     resetEncoders();
+    resetGyroYaw(pose.getRotation().getDegrees());
     m_odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
   }
 
   /**
    * Resets the yaw of the pigeon
    */
-  public void resetGyroYaw() {
-    m_pigeon.setYaw(0);
-    m_pigeon.setAccumZAngle(0);
-    resetGyroAngles();
+  public void resetGyroYaw(double angle) {
+    m_pigeon.setYaw(angle);
+    m_pigeon.setAccumZAngle(angle);
+    resetGyroAngles(angle);
   }
 
   /**
    * Add docs here
    */
-  public void resetGyroAngles() {
-    m_lastAngleYaw = 0;
-    m_currentAngleYaw = 0;
+  public void resetGyroAngles(double angle) {
+    m_lastAngleYaw = angle;
+    m_currentAngleYaw = angle;
   }
 
   /**

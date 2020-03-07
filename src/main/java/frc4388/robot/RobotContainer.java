@@ -7,26 +7,33 @@
 
 package frc4388.robot;
 
+import java.nio.file.Path;
 import java.util.List;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.DriveConstants;
 import frc4388.robot.Constants.OIConstants;
+import frc4388.robot.commands.auto.SixBallAutoMiddle;
 import frc4388.robot.commands.auto.Wait;
 import frc4388.robot.commands.climber.DisengageRachet;
 import frc4388.robot.commands.climber.RunClimberWithTriggers;
@@ -233,10 +240,19 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         // Create config for trajectory
         TrajectoryConfig config = getTrajectoryConfig();
-        Trajectory trajectory = getTrajectory(config);
-        RamseteCommand ramseteCommand = getRamseteCommand(trajectory);
+        //Trajectory trajectory = getTrajectory(config);
+
+        String trajectoryJSON0 = "paths/FirstPath0.wpilib.json";
+        String trajectoryJSON1 = "paths/FirstPath1.wpilib.json"; 
+
+        String[] sixBallAutoMiddlePaths = new String[]{
+            "FirstPath0",
+            "FirstPath1"
+        };
+
         // Run path following command, then stop at the end.
-        return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+        //SequentialCommandGroup ramseteCommands = new SequentialCommandGroup(ramseteCommand0, ramseteCommand1);
+        return new SixBallAutoMiddle(buildPaths(sixBallAutoMiddlePaths)).andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
 
         //return new AutoPath1FromCenter(m_robotDrive, m_robotPneumatics);
         //return new AutoPath2FromRight(m_robotDrive, m_robotPneumatics);
@@ -262,25 +278,19 @@ public class RobotContainer {
     Trajectory getTrajectory(TrajectoryConfig config) {
         Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing the +X direction
-            new Pose2d(0, 0, new Rotation2d(0)),
+            new Pose2d(2.9, -2.4, new Rotation2d(0)),
             // Pass through these two interior waypoints, making an 's' curve path
             List.of(
-                new Translation2d(1, -1),
-                new Translation2d(2, 0.0),
-                new Translation2d(1, 1),
-                new Translation2d(0, 0),
-                new Translation2d(1, -1),
-                new Translation2d(2, 0.0),
-                new Translation2d(1, 1)
+                new Translation2d(4.1, -1.7)
             ),
             // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(0, 0, new Rotation2d(0)),
+            new Pose2d(5.1, -0.7, new Rotation2d(0)),
             // Pass config
             config);
         return exampleTrajectory;
     }
 
-    RamseteCommand getRamseteCommand(Trajectory trajectory) {
+    public RamseteCommand getRamseteCommand(Trajectory trajectory) {
         RamseteCommand ramseteCommand = new RamseteCommand(
             trajectory,
             m_robotDrive::getPose,
@@ -290,6 +300,36 @@ public class RobotContainer {
             m_robotDrive);
 
         return ramseteCommand;
+    }
+
+    public RamseteCommand[] buildPaths(String[] paths) {
+        RamseteCommand[] ramseteCommands = new RamseteCommand[paths.length];
+        Trajectory initialTrajectory;
+
+        try {
+            if (true) {
+                String path = paths[0];
+                String trajectoryJSON = "paths/" + path + ".wpilib.json";
+                Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+                Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+                initialTrajectory = trajectory;
+                RamseteCommand ramseteCommand = getRamseteCommand(trajectory.relativeTo(initialTrajectory.getInitialPose()));
+                ramseteCommands[0] = ramseteCommand;
+            }
+
+            for(int i = 1; i < paths.length; i++) {
+                String path = paths[i];
+                String trajectoryJSON = "paths/" + path + ".wpilib.json";
+                Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+                Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+                RamseteCommand ramseteCommand = getRamseteCommand(trajectory.relativeTo(initialTrajectory.getInitialPose()));
+                ramseteCommands[i] = ramseteCommand;
+            }
+        } catch (Exception e) {
+            DriverStation.reportError("Unable to open trajectory", e.getStackTrace());
+        }
+
+        return ramseteCommands;
     }
 
     /**
@@ -311,9 +351,8 @@ public class RobotContainer {
     /**
      *
      */
-    public void resetOdometry() {
-        m_robotDrive.resetGyroAngles();
-        m_robotDrive.setOdometry(new Pose2d());
+    public void resetOdometry(Pose2d pose) {
+        m_robotDrive.setOdometry(pose);
     }
 
     /**
