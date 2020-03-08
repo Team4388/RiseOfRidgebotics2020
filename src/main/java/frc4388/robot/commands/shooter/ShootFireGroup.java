@@ -7,6 +7,7 @@
 
 package frc4388.robot.commands.shooter;
 
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc4388.robot.commands.storage.StorageFire;
@@ -18,7 +19,7 @@ import frc4388.robot.subsystems.Storage;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class ShootFireGroup extends ParallelRaceGroup {
+public class ShootFireGroup extends ParallelDeadlineGroup {
   /**
    * Fires the shooter
    * @param m_shooter The Shooter subsytem
@@ -26,11 +27,11 @@ public class ShootFireGroup extends ParallelRaceGroup {
    * @param m_storage The Storage subsytem
    */
   public ShootFireGroup(Shooter m_shooter, ShooterAim m_shooterAim, ShooterHood m_shooterHood, Storage m_storage) {
-    addCommands(
-      new RunCommand(() -> m_shooter.runDrumShooterVelocityPID(m_shooter.addFireVel()), m_shooter),
-      new RunCommand(() -> m_shooterHood.runAngleAdjustPID(m_shooterHood.addFireAngle()), m_shooterHood),
+    super(
+      new StorageFire(m_storage),
       new TrackTarget(m_shooterAim),
-      new StorageFire(m_storage)
+      new ShooterVelocityControlPID(m_shooter),
+      new HoodPositionPID(m_shooterHood)
     );
   }
 }

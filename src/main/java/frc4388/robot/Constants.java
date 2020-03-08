@@ -163,7 +163,7 @@ public final class Constants {
         public static final int STORAGE_CAN_ID = 11;
         public static final double STORAGE_PARTIAL_BALL = 2;
         public static final double STORAGE_FULL_BALL = 7;
-        public static final double STORAGE_SPEED = 0.5;
+        public static final double STORAGE_SPEED = 1.0;
         public static final double STORAGE_TIMEOUT = 3000;
 
         /* Storage Characteristics */

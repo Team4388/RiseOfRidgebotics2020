@@ -32,7 +32,11 @@ public class StoragePrep extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_storage.runStorage(StorageConstants.STORAGE_SPEED);
+    if (!m_storage.m_isStorageReadyToFire) {
+      m_storage.runStorage(StorageConstants.STORAGE_SPEED);
+    } else {
+      m_storage.runStorage(0);
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -45,10 +49,10 @@ public class StoragePrep extends CommandBase {
   public boolean isFinished() {
     if (!m_storage.getBeamShooter() || (startTime + StorageConstants.STORAGE_TIMEOUT) < System.currentTimeMillis()) {
       m_storage.m_isStorageReadyToFire = true;
-      return true;
     } else {
       m_storage.m_isStorageReadyToFire = false;
-      return false;
     }
+
+    return false;
   }
 }

@@ -14,7 +14,7 @@ import frc4388.robot.subsystems.Storage;
 public class StorageFire extends CommandBase {
   Storage m_storage;
   /**
-   * Runs the Storage at a speed
+   * Runs the Storage until shoot beam is empty, then ends
    * @param storageSub The Storage subsytem
    */
   public StorageFire(Storage storageSub) {
@@ -40,6 +40,9 @@ public class StorageFire extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (m_storage.getBeamShooter()) {
+      return true;
+    }
     return false;
   }
 }

@@ -27,7 +27,7 @@ public class ManageStorage extends CommandBase {
   /* Used for intaking a ball. Keeps track off when the 2nd ball in storage has moved */
   boolean m_isStorageEmpty = true;
 
-  enum StorageMode{IDLE, INTAKE, RESET};
+  public enum StorageMode{IDLE, INTAKE, RESET};
   StorageMode m_storageMode = StorageMode.IDLE;
   
   /**
