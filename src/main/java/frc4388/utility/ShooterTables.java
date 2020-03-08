@@ -80,6 +80,9 @@ public class ShooterTables {
 
             m_angleLength = lineNum-1;
 
+            distanceReader.close();
+            angleReader.close();
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
