@@ -46,7 +46,10 @@ public class Storage extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // NO
+    //SmartDashboard.putBoolean("Beam 0", m_beamSensors[0].get());
+    //SmartDashboard.putBoolean("Beam 1", m_beamSensors[1].get());
+    //SmartDashboard.putBoolean("Beam 0", m_beamSensors[0].get());
+    //SmartDashboard.putBoolean("Beam 1", m_beamSensors[1].get());
   }
 
   /**

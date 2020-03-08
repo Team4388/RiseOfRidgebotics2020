@@ -8,6 +8,7 @@
 package frc4388.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.PneumaticsConstants;
 
@@ -36,6 +37,8 @@ public class Pneumatics extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     runFalconCooling();
+
+    SmartDashboard.putBoolean("Gear Shift", m_isSpeedShiftHigh);
   }
   
   /**

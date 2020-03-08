@@ -165,7 +165,7 @@ public class RobotContainer {
             .whenPressed(new InstantCommand(() -> m_robotPneumatics.setShiftState(false), m_robotDrive));
 
         // Disengages the rachet to allow for a climb
-        new JoystickButton(getOperatorJoystick(), XboxController.BACK_BUTTON)
+        new JoystickButton(getDriverJoystick(), XboxController.BACK_BUTTON)
             .whileHeld(new DisengageRachet(m_robotClimber));
 
         /* Operator Buttons */
@@ -187,6 +187,7 @@ public class RobotContainer {
         new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
             .whileHeld(new RunCommand(() -> m_robotIntake.runExtender(0.5)))
             .whenReleased(new InstantCommand(() -> m_robotIntake.runExtender(0)));
+            
         new JoystickButton(getOperatorJoystick(), XboxController.Y_BUTTON)
             .whileHeld(new RunCommand(() -> m_robotIntake.runExtender(-0.5)))
             .whenReleased(new InstantCommand(() -> m_robotIntake.runExtender(0)));
@@ -299,6 +300,13 @@ public class RobotContainer {
      */
     public void setDriveGearState(boolean state) {
         m_robotPneumatics.setShiftState(state);
+    }
+
+    /**
+     * 
+     */
+    public void shiftClimberRachet(boolean state) {
+        m_robotClimber.shiftServo(state);
     }
 
     /**
