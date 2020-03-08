@@ -44,9 +44,9 @@ public class StorageFirePID extends CommandBase {
   @Override
   public boolean isFinished() {
     double error = (m_intakeStartPos + StorageConstants.STORAGE_FULL_BALL) - m_storage.getEncoderPosInches();
-      if (m_storage.getEncoderVel() == 0 && Math.abs(error) < 0.5) {
-        return true;
-      }
+    if (m_storage.getEncoderVel() == 0 && Math.abs(error) < 0.5) {
+      return true;
+    }
     return false;
   }
 }
