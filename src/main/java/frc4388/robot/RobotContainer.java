@@ -42,8 +42,6 @@ import frc4388.robot.commands.shooter.ShootFullGroup;
 import frc4388.robot.commands.shooter.ShootPrepGroup;
 import frc4388.robot.commands.shooter.TrackTarget;
 import frc4388.robot.commands.shooter.TrimShooter;
-import frc4388.robot.commands.storage.StorageIntake;
-import frc4388.robot.commands.storage.StoragePrepIntake;
 import frc4388.robot.subsystems.Camera;
 import frc4388.robot.subsystems.Climber;
 import frc4388.robot.subsystems.Drive;
