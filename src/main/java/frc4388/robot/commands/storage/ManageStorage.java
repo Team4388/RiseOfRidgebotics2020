@@ -119,8 +119,10 @@ public class ManageStorage extends CommandBase {
   private void runReset() {
     m_storage.runStorage(-StorageConstants.STORAGE_SPEED);
 
-    if (isBallInIntake || (m_resetStartTime + StorageConstants.STORAGE_TIMEOUT) < System.currentTimeMillis()) {
+    if (isBallInIntake) {
       m_storageMode = StorageMode.INTAKE;
+    } else if (m_resetStartTime + StorageConstants.STORAGE_TIMEOUT < System.currentTimeMillis()) {
+      m_storageMode = StorageMode.IDLE;
     }
     m_isStorageEmpty = !isBallInStorage;
   }
