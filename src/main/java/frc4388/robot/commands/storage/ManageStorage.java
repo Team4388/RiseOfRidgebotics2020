@@ -15,6 +15,9 @@ import frc4388.robot.subsystems.Storage;
 public class ManageStorage extends CommandBase {
   Storage m_storage;
 
+  /* Timer */
+  long m_resetStartTime;
+
   /* Keeps track of which beam breaks are pressed */
   boolean isBallInIntake = false;
   boolean isBallInStorage = false;
@@ -46,6 +49,10 @@ public class ManageStorage extends CommandBase {
     isBallInShooter = !m_storage.getBeamShooter();
 
     m_isStorageEmpty = !isBallInStorage;
+
+    if (m_storageMode == StorageMode.RESET) {
+      m_resetStartTime = System.currentTimeMillis();
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -76,13 +83,17 @@ public class ManageStorage extends CommandBase {
    * storage sensor and the intake ball has taken its place.
    */
   private void runIntake() {
-    m_storage.runStorage(StorageConstants.STORAGE_SPEED);
+    if (!isBallInShooter) { // Intake balls as long as there is not a ball at the shooter
+      m_storage.runStorage(StorageConstants.STORAGE_SPEED);
 
-    if (!m_isStorageEmpty && !isBallInStorage) {
-      m_isStorageEmpty = true;
-    }
-    if (m_isStorageEmpty && isBallInStorage) {
-      m_isStorageEmpty = false;
+      if (!m_isStorageEmpty && !isBallInStorage) { // If ball moves out of storage, set storage to empty
+        m_isStorageEmpty = true;
+      }
+      if (m_isStorageEmpty && isBallInStorage) { // If Ball moves into storage, set storage to full and swtich to idle mode
+        m_isStorageEmpty = false;
+        m_storageMode = StorageMode.IDLE;
+      }
+    } else {
       m_storageMode = StorageMode.IDLE;
     }
   }
@@ -108,7 +119,7 @@ public class ManageStorage extends CommandBase {
   private void runReset() {
     m_storage.runStorage(-StorageConstants.STORAGE_SPEED);
 
-    if (isBallInIntake) {
+    if (isBallInIntake || (m_resetStartTime + StorageConstants.STORAGE_TIMEOUT) < System.currentTimeMillis()) {
       m_storageMode = StorageMode.INTAKE;
     }
     m_isStorageEmpty = !isBallInStorage;

@@ -162,7 +162,7 @@ public final class Constants {
         public static final double STORAGE_PARTIAL_BALL = 2;
         public static final double STORAGE_FULL_BALL = 7;
         public static final double STORAGE_SPEED = 0.5;
-        public static final double STORAGE_TIMEOUT = 2000;
+        public static final double STORAGE_TIMEOUT = 3000;
 
         /* Storage Characteristics */
         public static final double MOTOR_ROTS_PER_STORAGE_ROT = 1; //For the first storage belt
