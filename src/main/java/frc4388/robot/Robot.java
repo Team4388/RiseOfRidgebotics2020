@@ -80,7 +80,7 @@ public class Robot extends TimedRobot {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     m_robotContainer.setDriveNeutralMode(NeutralMode.Brake);
-    m_robotContainer.setDriveGearState(false);
+    m_robotContainer.setDriveGearState(true);
     m_robotContainer.resetOdometry(new Pose2d());
     //m_robotContainer.configDriveTrainSensors(FeedbackDevice.IntegratedSensor);
 
@@ -93,7 +93,7 @@ public class Robot extends TimedRobot {
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
-      //m_autonomousCommand.schedule();
+      m_autonomousCommand.schedule();
       SmartDashboard.putString("Is Auto Start?", "YEA");
     }
   }
@@ -108,7 +108,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     m_robotContainer.setDriveNeutralMode(NeutralMode.Brake);
-    m_robotContainer.setDriveGearState(false);
+    m_robotContainer.setDriveGearState(true);
 
     m_robotContainer.shiftClimberRachet(false);
     //m_robotContainer.configDriveTrainSensors(FeedbackDevice.IntegratedSensor);

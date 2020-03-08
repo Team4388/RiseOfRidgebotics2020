@@ -29,7 +29,6 @@ public class SixBallAutoMiddle extends SequentialCommandGroup {
     // super(new FooCommand(), new BarCommand());
 
     addCommands(
-      new Wait(drive, 0, 1),
       paths[0],
       paths[1]
     );

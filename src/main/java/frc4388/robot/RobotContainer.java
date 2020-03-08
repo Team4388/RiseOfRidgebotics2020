@@ -259,9 +259,13 @@ public class RobotContainer {
         //RamseteCommand ramseteCommand = getRamseteCommand(trajectory);
 
         // Run path following command, then stop at the end.
-        return m_sixBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+        try {
+            return m_sixBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+        } catch (Exception e) {
+            System.err.println("ERROR");
+        }
 
-        //return new InstantCommand();
+        return new InstantCommand();
     }
     TrajectoryConfig getTrajectoryConfig() {
         return new TrajectoryConfig(
