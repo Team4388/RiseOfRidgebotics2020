@@ -18,6 +18,7 @@ public class ManageStorage extends CommandBase {
   /* Keeps track of which beam breaks are pressed */
   boolean isBallInIntake = false;
   boolean isBallInStorage = false;
+  boolean isBallInUseless = false;
   boolean isBallInShooter = false;
 
   /* Used for intaking a ball. Keeps track off when the 2nd ball in storage has moved */
@@ -39,9 +40,10 @@ public class ManageStorage extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    isBallInIntake = !m_storage.getBeam(StorageConstants.BEAM_SENSOR_INTAKE);
-    isBallInStorage = !m_storage.getBeam(StorageConstants.BEAM_SENSOR_STORAGE);
-    isBallInShooter = !m_storage.getBeam(StorageConstants.BEAM_SENSOR_SHOOTER);
+    isBallInIntake = !m_storage.getBeamIntake();
+    isBallInStorage = !m_storage.getBeamStorage();
+    isBallInUseless = !m_storage.getBeamUseless();
+    isBallInShooter = !m_storage.getBeamShooter();
 
     m_isStorageEmpty = !isBallInStorage;
   }
@@ -49,13 +51,15 @@ public class ManageStorage extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    isBallInIntake = !m_storage.getBeam(StorageConstants.BEAM_SENSOR_INTAKE);
-    isBallInStorage = !m_storage.getBeam(StorageConstants.BEAM_SENSOR_STORAGE);
-    isBallInShooter = !m_storage.getBeam(StorageConstants.BEAM_SENSOR_SHOOTER);
+    isBallInIntake = !m_storage.getBeamIntake();
+    isBallInStorage = !m_storage.getBeamStorage();
+    isBallInUseless = !m_storage.getBeamUseless();
+    isBallInShooter = !m_storage.getBeamShooter();
 
-    SmartDashboard.putBoolean("Ball in Intake", isBallInIntake);
-    SmartDashboard.putBoolean("Ball in Storage", isBallInStorage);
-    SmartDashboard.putBoolean("Ball in Shooter", isBallInShooter);
+    /// TODO: Delete/Comment these when done
+    SmartDashboard.putBoolean("!Ball in Intake!", isBallInIntake);
+    SmartDashboard.putBoolean("!Ball Storage!", isBallInStorage);
+    SmartDashboard.putBoolean("!Ball Shooter!", isBallInShooter);
 
     if (m_storageMode == StorageMode.IDLE) {
       runIdle();

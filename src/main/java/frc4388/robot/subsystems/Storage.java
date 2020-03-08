@@ -21,7 +21,10 @@ import frc4388.utility.Gains;
 
 public class Storage extends SubsystemBase {
   public CANSparkMax m_storageMotor = new CANSparkMax(StorageConstants.STORAGE_CAN_ID, MotorType.kBrushless);
-  private DigitalInput[] m_beamSensors = new DigitalInput[6];
+  private DigitalInput m_beamShooter = new DigitalInput(StorageConstants.BEAM_SENSOR_SHOOTER);
+  private DigitalInput m_beamUseless = new DigitalInput(StorageConstants.BEAM_SENSOR_USELESS);
+  private DigitalInput m_beamStorage = new DigitalInput(StorageConstants.BEAM_SENSOR_STORAGE);
+  private DigitalInput m_beamIntake = new DigitalInput(StorageConstants.BEAM_SENSOR_INTAKE);
 
   CANPIDController m_storagePIDController = m_storageMotor.getPIDController();
 
@@ -38,10 +41,14 @@ public class Storage extends SubsystemBase {
    */
   public Storage() {
     resetEncoder();
-    m_beamSensors[1] = new DigitalInput(StorageConstants.BEAM_SENSOR_SHOOTER);
-    m_beamSensors[2] = new DigitalInput(StorageConstants.BEAM_SENSOR_USELESS);
-    m_beamSensors[3] = new DigitalInput(StorageConstants.BEAM_SENSOR_STORAGE);
-    m_beamSensors[4] = new DigitalInput(StorageConstants.BEAM_SENSOR_INTAKE);
+
+    // Set PID Coefficients
+    m_storagePIDController.setP(storageGains.m_kP);
+    m_storagePIDController.setI(storageGains.m_kI);
+    m_storagePIDController.setD(storageGains.m_kD);
+    m_storagePIDController.setIZone(storageGains.m_kIzone);
+    m_storagePIDController.setFF(storageGains.m_kF);
+    m_storagePIDController.setOutputRange(storageGains.m_kminOutput, storageGains.m_kmaxOutput);
   }
 
   @Override
@@ -55,9 +62,8 @@ public class Storage extends SubsystemBase {
   /**
    * Runs storage motor
    * 
-   * @param input the voltage to run motor at
+   * @param input the percent output to run motor at
    */
-  
   public void runStorage(double input) {
     m_storageMotor.set(input);
   }
@@ -66,36 +72,58 @@ public class Storage extends SubsystemBase {
     m_encoder.setPosition(0);
   }
 
-  public void testBeams(){
-    SmartDashboard.putBoolean("Beam 0", m_beamSensors[0].get());
-    SmartDashboard.putBoolean("Beam 1", m_beamSensors[1].get());
-  }
-
-  /* Storage PID Control */
+  /**
+   * Runs Storage to a particular position
+   * @param targetPos in inches
+   */
   public void runStoragePositionPID(double targetPos){
-    // Set PID Coefficients
-    m_storagePIDController.setP(storageGains.m_kP);
-    m_storagePIDController.setI(storageGains.m_kI);
-    m_storagePIDController.setD(storageGains.m_kD);
-    m_storagePIDController.setIZone(storageGains.m_kIzone);
-    m_storagePIDController.setFF(storageGains.m_kF);
-    m_storagePIDController.setOutputRange(StorageConstants.STORAGE_MIN_OUTPUT, storageGains.m_kmaxOutput);
-
     //SmartDashboard.putNumber("Storage Position PID Target", targetPos);
     //SmartDashboard.putNumber("Storage Position Pos", getEncoderPos());
+    targetPos = InchesToMotorRots(targetPos);
     m_storagePIDController.setReference(targetPos, ControlType.kPosition);
   }
 
+  /**
+   * Runs Storage to a particular position
+   * @param position in motor rotations
+   */
+  public void setStoragePID(double position){
+    m_storagePIDController.setReference(position, ControlType.kPosition);
+  }
 
   public double getEncoderPos(){
     return m_encoder.getPosition();
   }
 
-  public boolean getBeam(int id){
-    return m_beamSensors[id].get();
+  /**
+   * @param motorRots
+   * @return inches
+   */
+  public double motorRotsToInches(double motorRots) {
+    return motorRots * (1/StorageConstants.MOTOR_ROTS_PER_STORAGE_ROT) * (StorageConstants.INCHES_PER_STORAGE_ROT);
   }
 
-  public void setStoragePID(double position){
-    m_storagePIDController.setReference(position , ControlType.kPosition);
+  /**
+   * @param inches
+   * @return motorRots
+   */
+  public double InchesToMotorRots(double inches) {
+    return inches * (1/StorageConstants.INCHES_PER_STORAGE_ROT) * (StorageConstants.MOTOR_ROTS_PER_STORAGE_ROT);
+  }
+
+  public boolean getBeamShooter(){
+    return m_beamShooter.get();
+  }
+
+  public boolean getBeamUseless(){
+    return m_beamUseless.get();
+  }
+
+  public boolean getBeamStorage(){
+    return m_beamStorage.get();
+  }
+
+  public boolean getBeamIntake(){
+    return m_beamIntake.get();
   }
 }

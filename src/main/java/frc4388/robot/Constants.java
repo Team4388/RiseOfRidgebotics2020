@@ -164,21 +164,24 @@ public final class Constants {
         public static final double STORAGE_SPEED = 0.5;
         public static final double STORAGE_TIMEOUT = 2000;
 
+        /* Storage Characteristics */
+        public static final double MOTOR_ROTS_PER_STORAGE_ROT = 1; //For the first storage belt
+        public static final double INCHES_PER_STORAGE_ROT = 1; //Circumference of the first storage belt
+
         /* Ball Indexes */
         public static final int BEAM_SENSOR_SHOOTER = 1;
         public static final int BEAM_SENSOR_USELESS = 2;
         public static final int BEAM_SENSOR_STORAGE = 3;
         public static final int BEAM_SENSOR_INTAKE = 4;
 
+        /* PID Gains */
+        public static final Gains STORAGE_GAINS = new Gains(0.1, 0.0, 0.0, 0.0, 0, 1.0);
+
         /* PID Values */
         public static final int SLOT_DISTANCE = 0;
 
         /* PID Indexes */
         public static final int PID_PRIMARY = 0;
-
-        /* PID Gains */
-        public static final double STORAGE_MIN_OUTPUT = -1.0;
-        public static final Gains STORAGE_GAINS = new Gains(0.1, 0.0, 0.0, 0.0, 0, 1.0);
     }
 
     public static final class PneumaticsConstants {
