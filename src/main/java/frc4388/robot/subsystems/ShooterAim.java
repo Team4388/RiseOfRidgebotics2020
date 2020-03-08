@@ -69,40 +69,6 @@ public class ShooterAim extends SubsystemBase {
     SmartDashboard.putData("Turret Angle", m_turretGyro);
   }
 
-  public GyroBase getGyroInterface() {
-    return new GyroBase(){
-    
-      @Override
-      public void close() throws Exception {
-        // TODO Auto-generated method stub
-        
-      }
-    
-      @Override
-      public void reset() {
-        // TODO Auto-generated method stub
-        
-      }
-    
-      @Override
-      public double getRate() {
-        // TODO Auto-generated method stub
-        return 0;
-      }
-    
-      @Override
-      public double getAngle() {
-        // TODO Auto-generated method stub
-        return getShooterRotatePosition();
-      }
-    
-      @Override
-      public void calibrate() {
-        // TODO Auto-generated method stub
-        
-      }
-    };
-  }
   /**
    * Passes subsystem needed.
    * @param subsystem Subsystem needed.
@@ -140,6 +106,46 @@ public class ShooterAim extends SubsystemBase {
 
   public double getShooterRotatePosition()
   {
-    return m_shooterRotateMotor.getEncoder().getPosition();
+    return m_shooterRotateEncoder.getPosition();
+  }
+
+  public double getShooterRotatePositionDegrees()
+  {
+    return (m_shooterRotateEncoder.getPosition() - ShooterConstants.TURRET_MOTOR_POS_AT_ZERO_ROT) * 360/ShooterConstants.TURRET_MOTOR_ROTS_PER_ROT;
+  }
+
+  public GyroBase getGyroInterface() {
+    return new GyroBase(){
+    
+      @Override
+      public void close() throws Exception {
+        // TODO Auto-generated method stub
+        
+      }
+    
+      @Override
+      public void reset() {
+        // TODO Auto-generated method stub
+        
+      }
+    
+      @Override
+      public double getRate() {
+        // TODO Auto-generated method stub
+        return 0;
+      }
+    
+      @Override
+      public double getAngle() {
+        // TODO Auto-generated method stub
+        return getShooterRotatePositionDegrees();
+      }
+    
+      @Override
+      public void calibrate() {
+        // TODO Auto-generated method stub
+        
+      }
+    };
   }
 }

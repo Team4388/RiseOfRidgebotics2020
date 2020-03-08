@@ -138,12 +138,16 @@ public final class Constants {
         public static final int TURRET_LEFT_SOFT_LIMIT = -55;
         public static final double TURRET_SPEED_MULTIPLIER = 0.3;
         public static final double TURRET_CALIBRATE_SPEED = 0.075;
+        public static final double TURRET_MOTOR_ROTS_PER_ROT = 1; //TODO: Find
+        public static final double TURRET_MOTOR_POS_AT_ZERO_ROT = 0; //TODO: Find
 
         public static final int HOOD_UP_SOFT_LIMIT = 33;
         public static final int HOOD_DOWN_SOFT_LIMIT = 3;
         public static final double HOOD_CONVERT_SLOPE = 0.47;
         public static final double HOOD_CONVERT_B = 40.5;
         public static final double HOOD_CALIBRATE_SPEED = 0.2;
+        public static final double HOOD_MOTOR_ROTS_PER_ROT = 1; //TODO: Find
+        public static final double HOOD_MOTOR_POS_AT_ZERO_ROT = 0; //TODO: Find
 
         public static final double DRUM_RAMP_LIMIT = 1000;
         public static final double DRUM_VELOCITY_BOUND = 300;
