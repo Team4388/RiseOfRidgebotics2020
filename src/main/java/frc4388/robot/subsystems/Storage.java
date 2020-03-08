@@ -95,6 +95,14 @@ public class Storage extends SubsystemBase {
     return m_encoder.getPosition();
   }
 
+  public double getEncoderPosInches(){
+    return motorRotsToInches(getEncoderPos());
+  }
+
+  public double getEncoderVel(){
+    return m_encoder.getVelocity();
+  }
+
   /**
    * @param motorRots
    * @return inches

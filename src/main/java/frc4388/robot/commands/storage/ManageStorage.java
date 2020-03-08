@@ -19,10 +19,10 @@ public class ManageStorage extends CommandBase {
   long m_resetStartTime;
 
   /* Keeps track of which beam breaks are pressed */
-  boolean isBallInIntake = false;
-  boolean isBallInStorage = false;
-  boolean isBallInUseless = false;
-  boolean isBallInShooter = false;
+  boolean m_isBallInIntake = false;
+  boolean m_isBallInStorage = false;
+  boolean m_isBallInUseless = false;
+  boolean m_isBallInShooter = false;
 
   /* Used for intaking a ball. Keeps track off when the 2nd ball in storage has moved */
   boolean m_isStorageEmpty = true;
@@ -43,12 +43,12 @@ public class ManageStorage extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    isBallInIntake = !m_storage.getBeamIntake();
-    isBallInStorage = !m_storage.getBeamStorage();
-    isBallInUseless = !m_storage.getBeamUseless();
-    isBallInShooter = !m_storage.getBeamShooter();
+    m_isBallInIntake = !m_storage.getBeamIntake();
+    m_isBallInStorage = !m_storage.getBeamStorage();
+    m_isBallInUseless = !m_storage.getBeamUseless();
+    m_isBallInShooter = !m_storage.getBeamShooter();
 
-    m_isStorageEmpty = !isBallInStorage;
+    m_isStorageEmpty = !m_isBallInStorage;
 
     if (m_storageMode == StorageMode.RESET) {
       m_resetStartTime = System.currentTimeMillis();
@@ -58,15 +58,15 @@ public class ManageStorage extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    isBallInIntake = !m_storage.getBeamIntake();
-    isBallInStorage = !m_storage.getBeamStorage();
-    isBallInUseless = !m_storage.getBeamUseless();
-    isBallInShooter = !m_storage.getBeamShooter();
+    m_isBallInIntake = !m_storage.getBeamIntake();
+    m_isBallInStorage = !m_storage.getBeamStorage();
+    m_isBallInUseless = !m_storage.getBeamUseless();
+    m_isBallInShooter = !m_storage.getBeamShooter();
 
     /// TODO: Delete/Comment these when done
-    SmartDashboard.putBoolean("!Ball in Intake!", isBallInIntake);
-    SmartDashboard.putBoolean("!Ball Storage!", isBallInStorage);
-    SmartDashboard.putBoolean("!Ball Shooter!", isBallInShooter);
+    SmartDashboard.putBoolean("!Ball in Intake!", m_isBallInIntake);
+    SmartDashboard.putBoolean("!Ball Storage!", m_isBallInStorage);
+    SmartDashboard.putBoolean("!Ball Shooter!", m_isBallInShooter);
 
     if (m_storageMode == StorageMode.IDLE) {
       runIdle();
@@ -83,13 +83,13 @@ public class ManageStorage extends CommandBase {
    * storage sensor and the intake ball has taken its place.
    */
   private void runIntake() {
-    if (!isBallInShooter) { // Intake balls as long as there is not a ball at the shooter
+    if (!m_isBallInShooter) { // Intake balls as long as there is not a ball at the shooter
       m_storage.runStorage(StorageConstants.STORAGE_SPEED);
 
-      if (!m_isStorageEmpty && !isBallInStorage) { // If ball moves out of storage, set storage to empty
+      if (!m_isStorageEmpty && !m_isBallInStorage) { // If ball moves out of storage, set storage to empty
         m_isStorageEmpty = true;
       }
-      if (m_isStorageEmpty && isBallInStorage) { // If Ball moves into storage, set storage to full and swtich to idle mode
+      if (m_isStorageEmpty && m_isBallInStorage) { // If Ball moves into storage, set storage to full and swtich to idle mode
         m_isStorageEmpty = false;
         m_storageMode = StorageMode.IDLE;
       }
@@ -105,10 +105,10 @@ public class ManageStorage extends CommandBase {
   private void runIdle() {
     m_storage.runStorage(0);
 
-    if (isBallInIntake) {
+    if (m_isBallInIntake) {
       m_storageMode = StorageMode.INTAKE;
     }
-    m_isStorageEmpty = !isBallInStorage;
+    m_isStorageEmpty = !m_isBallInStorage;
   }
 
   /**
@@ -119,12 +119,12 @@ public class ManageStorage extends CommandBase {
   private void runReset() {
     m_storage.runStorage(-StorageConstants.STORAGE_SPEED);
 
-    if (isBallInIntake) {
+    if (m_isBallInIntake) {
       m_storageMode = StorageMode.INTAKE;
     } else if (m_resetStartTime + StorageConstants.STORAGE_TIMEOUT < System.currentTimeMillis()) {
       m_storageMode = StorageMode.IDLE;
     }
-    m_isStorageEmpty = !isBallInStorage;
+    m_isStorageEmpty = !m_isBallInStorage;
   }
 
   // Called once the command ends or is interrupted.
