@@ -44,8 +44,10 @@ public class StoragePrep extends CommandBase {
   @Override
   public boolean isFinished() {
     if (!m_storage.getBeamShooter() || (startTime + StorageConstants.STORAGE_TIMEOUT) < System.currentTimeMillis()) {
+      m_storage.m_isStorageReadyToFire = true;
       return true;
     } else {
+      m_storage.m_isStorageReadyToFire = false;
       return false;
     }
   }

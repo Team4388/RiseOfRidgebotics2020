@@ -105,12 +105,6 @@ public final class Constants {
         public static final double TICKS_PER_INCH_LOW = TICKS_PER_WHEEL_REV_LOW/INCHES_PER_WHEEL_REV;
         public static final double INCHES_PER_TICK_LOW = 1/TICKS_PER_INCH_LOW;
     }
-    
-    public static final class IntakeConstants {;
-        public static final double EXTENDER_SPEED = 0.3;
-        public static final int INTAKE_SPARK_ID = 12;
-        public static final int EXTENDER_SPARK_ID = 13;
-    }
   
     public static final class ShooterConstants {
         /* Motor IDs */
@@ -155,6 +149,14 @@ public final class Constants {
   
     public static final class LevelerConstants {
         public static final int LEVELER_CAN_ID = 15;
+    }
+
+    public static final class IntakeConstants {;
+        public static final double EXTENDER_SPEED = 0.3;
+        public static final double INTAKE_SPEED = 1.0;
+
+        public static final int INTAKE_SPARK_ID = 12;
+        public static final int EXTENDER_SPARK_ID = 13;
     }
   
     public static final class StorageConstants {
