@@ -9,7 +9,7 @@ package frc4388.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import frc4388.robot.commands.storage.StorageRun;
+import frc4388.robot.commands.storage.StorageFire;
 import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.ShooterAim;
 import frc4388.robot.subsystems.ShooterHood;
@@ -30,7 +30,7 @@ public class ShootFireGroup extends ParallelRaceGroup {
       new RunCommand(() -> m_shooter.runDrumShooterVelocityPID(m_shooter.addFireVel()), m_shooter),
       new RunCommand(() -> m_shooterHood.runAngleAdjustPID(m_shooterHood.addFireAngle()), m_shooterHood),
       new TrackTarget(m_shooterAim)
-      //new StorageRun(m_storage)
+      //new StorageFire(m_storage)
     );
   }
 }
