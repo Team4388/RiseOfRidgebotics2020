@@ -68,8 +68,14 @@ public class TrackTarget extends CommandBase {
     xAngle = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
     yAngle = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
 
+    // Finding Distance
+    distance = VisionConstants.TARGET_HEIGHT / Math.tan((VisionConstants.LIME_ANGLE + yAngle) * (Math.PI / 180));
+    realDistance = (1.09 * distance) - 12.8;
+
+
     if (target == 1.0) { // If target in view
       // Aiming Left/Right
+      xAngle = xAngle + m_shooter.m_shooterTable.getCenterDisplacement(realDistance);
       turnAmount = (xAngle / VisionConstants.FOV) * VisionConstants.TURN_P_VALUE;
       if (Math.abs(xAngle) < VisionConstants.X_ANGLE_ERROR) {
         turnAmount = 0;
@@ -82,12 +88,8 @@ public class TrackTarget extends CommandBase {
       }
       m_shooterAim.runShooterWithInput(-turnAmount);// - m_shooter.shooterTrims.m_turretTrim);
 
-      // Finding Distance
-      distance = VisionConstants.TARGET_HEIGHT / Math.tan((VisionConstants.LIME_ANGLE + yAngle) * (Math.PI / 180));
-      realDistance = (1.13 * distance) - 14.3;
       SmartDashboard.putNumber("Distance to Target", realDistance);
-      SmartDashboard.putNumber("ts Skew or Rotation", NetworkTableInstance.getDefault().getTable("limelight").getEntry("ts").getDouble(0));
-      SmartDashboard.putNumber("ta Area", NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta").getDouble(0));
+      SmartDashboard.putNumber("Center Displacement", m_shooter.m_shooterTable.getCenterDisplacement(realDistance));
         //START Equation Code
       double yVel = Math.sqrt(2 * VisionConstants.GRAV * VisionConstants.TARGET_HEIGHT);
       double xVel = (distance * VisionConstants.GRAV) / (yVel);
