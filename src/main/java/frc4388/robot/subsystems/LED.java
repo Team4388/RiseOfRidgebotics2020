@@ -17,6 +17,7 @@ import frc4388.utility.LEDPatterns;
 public class LED extends SubsystemBase {
 
   public static float currentLED;
+  public static float defaultLED;
   public static Spark LEDController;
 
   /**
@@ -25,7 +26,8 @@ public class LED extends SubsystemBase {
    */
   public LED(){
     LEDController = new Spark(LEDConstants.LED_SPARK_ID);
-    setPattern(LEDConstants.DEFAULT_PATTERN);
+    defaultLED = LEDConstants.DEFAULT_PATTERN.getValue();
+    runDefaultLED();
     LEDController.set(currentLED);
     System.err.println("In the Beginning, there was Joe.\nAnd he said, 'Let there be LEDs.'\nAnd it was good.");
   }
@@ -36,6 +38,37 @@ public class LED extends SubsystemBase {
    */
   public void updateLED(){
     LEDController.set(currentLED);
+  }
+
+  /**
+   * 
+   */
+  public void runDefaultLED() {
+    setPattern(defaultLED);
+  }
+
+  /**
+   * Changes the default LED by an amount
+   * @param amount the amount to increment led by
+   */
+  public void incrementLED(float amount) {
+    defaultLED += amount;
+    if (defaultLED > 1) {
+      defaultLED -= 2;
+    }
+    if (defaultLED < -1) {
+      defaultLED += 2;
+    }
+  }
+
+  /**
+   * Sets the current LED pattern. This method should only be run
+   * whenever you want to change the current LED.
+   * @param pattern LEDPattern to set the Blinkin to.
+   */
+  public void setPattern(float pattern){
+    currentLED = pattern;
+    LEDController.set(pattern);
   }
 
   /**
