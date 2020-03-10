@@ -1,9 +1,10 @@
 Distance (in),Hood Ext. (u),Drum Velocity (u/ds),Center Displacment (deg)
-1,10,7000,2
-70,20,8000,2, double check
+1,10,8000,2
+70,21,8000,2, check
 100,24,9000,2
-145,28,10000,1,Add a 200
+145,28,10000,1
 230,31,12000,0,Add a 270
+246,32,15000,0
 320,32,17000,0,change 17000 and mark them lower
 331,33,17000,0
 397,33,16000,0
