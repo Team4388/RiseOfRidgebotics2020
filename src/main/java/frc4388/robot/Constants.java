@@ -171,10 +171,10 @@ public final class Constants {
         public static final double INCHES_PER_STORAGE_ROT = 1; //Circumference of the first storage belt
 
         /* Ball Indexes */
-        public static final int BEAM_SENSOR_SHOOTER = 1;
-        public static final int BEAM_SENSOR_USELESS = 2;
-        public static final int BEAM_SENSOR_STORAGE = 3;
-        public static final int BEAM_SENSOR_INTAKE = 4;
+        public static final int BEAM_SENSOR_SHOOTER = 11;
+        public static final int BEAM_SENSOR_USELESS = 12;
+        public static final int BEAM_SENSOR_STORAGE = 13;
+        public static final int BEAM_SENSOR_INTAKE = 14;
 
         /* PID Gains */
         public static final Gains STORAGE_GAINS = new Gains(0.1, 0.0, 0.0, 0.0, 0, 1.0);

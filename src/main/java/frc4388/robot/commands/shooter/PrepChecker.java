@@ -68,7 +68,7 @@ public class PrepChecker extends CommandBase {
   @Override
   public boolean isFinished() {
     if (m_isDrumReady && m_isAimReady && m_isHoodReady && m_isStorageReady) {
-      return true;
+      //return true;
     }
     return false;
   }

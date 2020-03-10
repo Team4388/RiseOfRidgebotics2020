@@ -27,7 +27,7 @@ public class ShootPrepGroup extends ParallelDeadlineGroup {
   public ShootPrepGroup(Shooter m_shooter, ShooterAim m_shooterAim, ShooterHood m_shooterHood, Storage m_storage) { 
     super(
       new PrepChecker(m_shooter, m_storage),
-      new StoragePrep(m_storage),
+      //new StoragePrep(m_storage),
       new TrackTarget(m_shooterAim),
       new ShooterVelocityControlPID(m_shooter),
       new HoodPositionPID(m_shooterHood)
