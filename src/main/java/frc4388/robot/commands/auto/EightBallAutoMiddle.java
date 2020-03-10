@@ -7,27 +7,21 @@
 
 package frc4388.robot.commands.auto;
 
-import java.nio.file.Path;
-
-import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc4388.robot.RobotContainer;
 import frc4388.robot.subsystems.Drive;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class SixBallAutoMiddle extends SequentialCommandGroup {
+public class EightBallAutoMiddle extends SequentialCommandGroup {
   /**
-   * Creates a new SixBallAutoMiddle.
+   * Creates a new EightBallAutoMiddle.
    */
-  public SixBallAutoMiddle(Drive drive, RamseteCommand[] paths) {
+  public EightBallAutoMiddle(Drive drive, RamseteCommand[] paths) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-
+    
     addCommands(
       paths[0]
     );

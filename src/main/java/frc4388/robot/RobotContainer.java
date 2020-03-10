@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.DriveConstants;
 import frc4388.robot.Constants.OIConstants;
+import frc4388.robot.commands.auto.EightBallAutoMiddle;
 import frc4388.robot.commands.auto.SixBallAutoMiddle;
 import frc4388.robot.commands.auto.Wait;
 import frc4388.robot.commands.climber.DisengageRachet;
@@ -93,6 +94,8 @@ public class RobotContainer {
     /* Autos */
     SixBallAutoMiddle m_sixBallAutoMiddle;
     double m_totalTimeAuto;
+
+    EightBallAutoMiddle m_eightBallAutoMiddle;
 
 
     /**
@@ -242,10 +245,14 @@ public class RobotContainer {
 
     public void buildAutos() {
         String[] sixBallAutoMiddlePaths = new String[]{
-            "FirstPath0",
-            "FirstPath1"
+            "SixBallMidComplete"
         };
         m_sixBallAutoMiddle = new SixBallAutoMiddle(m_robotDrive, buildPaths(sixBallAutoMiddlePaths));
+
+        String[] eightBallAutoMiddlePaths = new String[]{
+            "EightBallMidComplete"
+        };
+        m_eightBallAutoMiddle = new EightBallAutoMiddle(m_robotDrive, buildPaths(eightBallAutoMiddlePaths));
     }
 
     /**
@@ -262,7 +269,10 @@ public class RobotContainer {
         // Run path following command, then stop at the end.
         try {
             SmartDashboard.putNumber("Trajectory Total Time", m_totalTimeAuto);
+            
             return m_sixBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+            //return m_eightBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+
         } catch (Exception e) {
             System.err.println("ERROR");
         }
