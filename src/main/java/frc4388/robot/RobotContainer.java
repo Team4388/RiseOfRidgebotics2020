@@ -119,7 +119,7 @@ public class RobotContainer {
         // runs the turret with joystick
         m_robotShooterAim.setDefaultCommand(new RunCommand(() -> m_robotShooterAim.runShooterWithInput(-m_operatorXbox.getLeftXAxis()), m_robotShooterAim));
         // moves the drum not
-        m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runDrumShooter(0), m_robotShooter));
+        m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(1500), m_robotShooter));
         // drives climber with input from triggers on the opperator controller
         m_robotClimber.setDefaultCommand(new RunClimberWithTriggers(m_robotClimber, getDriverController()));
         // drives the leveler with an axis input from the driver controller
