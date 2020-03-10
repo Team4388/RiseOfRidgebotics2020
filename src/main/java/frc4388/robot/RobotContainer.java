@@ -92,6 +92,7 @@ public class RobotContainer {
 
     /* Autos */
     SixBallAutoMiddle m_sixBallAutoMiddle;
+    double m_totalTimeAuto;
 
 
     /**
@@ -260,6 +261,7 @@ public class RobotContainer {
 
         // Run path following command, then stop at the end.
         try {
+            SmartDashboard.putNumber("Trajectory Total Time", m_totalTimeAuto);
             return m_sixBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
         } catch (Exception e) {
             System.err.println("ERROR");
@@ -304,7 +306,9 @@ public class RobotContainer {
 
     public RamseteCommand[] buildPaths(String[] paths) {
         RamseteCommand[] ramseteCommands = new RamseteCommand[paths.length];
+        double[] times = new double[paths.length];
         Trajectory initialTrajectory;
+        m_totalTimeAuto = 0;
 
         try {
             if (true) {
@@ -315,6 +319,7 @@ public class RobotContainer {
                 initialTrajectory = trajectory;
                 RamseteCommand ramseteCommand = getRamseteCommand(trajectory.relativeTo(initialTrajectory.getInitialPose()));
                 ramseteCommands[0] = ramseteCommand;
+                times[0] = initialTrajectory.getTotalTimeSeconds();
             }
 
             for(int i = 1; i < paths.length; i++) {
@@ -324,9 +329,14 @@ public class RobotContainer {
                 Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
                 RamseteCommand ramseteCommand = getRamseteCommand(trajectory.relativeTo(initialTrajectory.getInitialPose()));
                 ramseteCommands[i] = ramseteCommand;
+                times[i] = trajectory.getTotalTimeSeconds();
             }
         } catch (Exception e) {
             DriverStation.reportError("Unable to open trajectory", e.getStackTrace());
+        }
+
+        for (int i = 0; i < times.length; i++) {
+            m_totalTimeAuto += times[i];
         }
 
         return ramseteCommands;
