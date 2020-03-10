@@ -105,12 +105,6 @@ public final class Constants {
         public static final double TICKS_PER_INCH_LOW = TICKS_PER_WHEEL_REV_LOW/INCHES_PER_WHEEL_REV;
         public static final double INCHES_PER_TICK_LOW = 1/TICKS_PER_INCH_LOW;
     }
-    
-    public static final class IntakeConstants {;
-        public static final double EXTENDER_SPEED = 0.3;
-        public static final int INTAKE_SPARK_ID = 12;
-        public static final int EXTENDER_SPARK_ID = 13;
-    }
   
     public static final class ShooterConstants {
         /* Motor IDs */
@@ -155,29 +149,40 @@ public final class Constants {
     public static final class LevelerConstants {
         public static final int LEVELER_CAN_ID = 15;
     }
+
+    public static final class IntakeConstants {;
+        public static final double EXTENDER_SPEED = 0.3;
+        public static final double INTAKE_SPEED = 1.0;
+
+        public static final int INTAKE_SPARK_ID = 12;
+        public static final int EXTENDER_SPARK_ID = 13;
+    }
   
     public static final class StorageConstants {
         public static final int STORAGE_CAN_ID = 11;
         public static final double STORAGE_PARTIAL_BALL = 2;
         public static final double STORAGE_FULL_BALL = 7;
-        public static final double STORAGE_SPEED = 0.5;
-        public static final double STORAGE_TIMEOUT = 2000;
+        public static final double STORAGE_SPEED = 1.0;
+        public static final double STORAGE_TIMEOUT = 3000;
+
+        /* Storage Characteristics */
+        public static final double MOTOR_ROTS_PER_STORAGE_ROT = 1; //For the first storage belt
+        public static final double INCHES_PER_STORAGE_ROT = 1; //Circumference of the first storage belt
 
         /* Ball Indexes */
-        public static final int BEAM_SENSOR_SHOOTER = 1;
-        public static final int BEAM_SENSOR_USELESS = 2;
-        public static final int BEAM_SENSOR_STORAGE = 3;
-        public static final int BEAM_SENSOR_INTAKE = 4;
+        public static final int BEAM_SENSOR_SHOOTER = 11;
+        public static final int BEAM_SENSOR_USELESS = 12;
+        public static final int BEAM_SENSOR_STORAGE = 13;
+        public static final int BEAM_SENSOR_INTAKE = 14;
+
+        /* PID Gains */
+        public static final Gains STORAGE_GAINS = new Gains(0.1, 0.0, 0.0, 0.0, 0, 1.0);
 
         /* PID Values */
         public static final int SLOT_DISTANCE = 0;
 
         /* PID Indexes */
         public static final int PID_PRIMARY = 0;
-
-        /* PID Gains */
-        public static final double STORAGE_MIN_OUTPUT = -1.0;
-        public static final Gains STORAGE_GAINS = new Gains(0.1, 0.0, 0.0, 0.0, 0, 1.0);
     }
 
     public static final class PneumaticsConstants {
