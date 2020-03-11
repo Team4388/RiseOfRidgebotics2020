@@ -27,7 +27,7 @@ public class ManageStorage extends CommandBase {
   /* Used for intaking a ball. Keeps track off when the 2nd ball in storage has moved */
   boolean m_isStorageEmpty = true;
 
-  public enum StorageMode{IDLE, INTAKE, RESET};
+  public enum StorageMode{IDLE, INTAKE, RESET, MANUAL};
   StorageMode m_storageMode = StorageMode.IDLE;
   
   /**
@@ -74,6 +74,8 @@ public class ManageStorage extends CommandBase {
       runIntake();
     } else if (m_storageMode == StorageMode.RESET) {
       runReset();
+    } else if (m_storageMode == StorageMode.MANUAL) {
+      runManual();
     }
   }
 
@@ -125,6 +127,13 @@ public class ManageStorage extends CommandBase {
       m_storageMode = StorageMode.IDLE;
     }
     m_isStorageEmpty = !m_isBallInStorage;
+  }
+
+  /**
+   * Switches Storage to Manual only
+   */
+  private void runManual() {
+    m_storage.runStorage(0);
   }
 
   // Called once the command ends or is interrupted.

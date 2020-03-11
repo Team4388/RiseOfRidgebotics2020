@@ -35,6 +35,7 @@ import frc4388.robot.commands.climber.RunClimberWithTriggers;
 import frc4388.robot.commands.climber.RunLevelerWithJoystick;
 import frc4388.robot.commands.drive.DriveStraightToPositionMM;
 import frc4388.robot.commands.drive.DriveWithJoystick;
+import frc4388.robot.commands.drive.PlaySongDrive;
 import frc4388.robot.commands.drive.TurnDegrees;
 import frc4388.robot.commands.intake.RunIntakeWithTriggers;
 import frc4388.robot.commands.shooter.CalibrateShooter;
@@ -56,6 +57,7 @@ import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.ShooterAim;
 import frc4388.robot.subsystems.ShooterHood;
 import frc4388.robot.subsystems.Storage;
+import frc4388.utility.controller.ButtonFox;
 import frc4388.utility.controller.IHandController;
 import frc4388.utility.controller.XboxController;
 import frc4388.utility.controller.XboxTriggerButton;
@@ -169,6 +171,9 @@ public class RobotContainer {
         new JoystickButton(getDriverJoystick(), XboxController.BACK_BUTTON)
             .whileHeld(new DisengageRachet(m_robotClimber));
 
+
+
+
         /* Operator Buttons */
         // shoots until released
         new JoystickButton(getOperatorJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
@@ -235,6 +240,35 @@ public class RobotContainer {
             .whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotShooterHood, m_robotStorage), false)
             //.whenReleased(new ManageStorage(m_robotStorage, StorageMode.RESET))
             .whenReleased(new InstantCommand(() -> m_robotLime.limeOff()));
+
+
+
+
+        /* Button Fox */
+        // Storage Manual
+        new JoystickButton(getButtonFox(), ButtonFox.LEFT_SWITCH)
+            .whileHeld(new ManageStorage(m_robotStorage, StorageMode.MANUAL))
+            .whenReleased(new ManageStorage(m_robotStorage, StorageMode.RESET));
+
+        // Meg
+        new JoystickButton(getButtonFox(), ButtonFox.MIDDLE_SWITCH)
+            .whileHeld(new PlaySongDrive(m_robotDrive))
+            .whenReleased(new InterruptSubystem(m_robotDrive));
+
+        // Shooter Manual
+        new JoystickButton(getButtonFox(), ButtonFox.RIGHT_SWITCH)
+            .whileHeld(new PlaySongDrive(m_robotDrive))
+            .whenReleased(new InterruptSubystem(m_robotDrive));
+
+        // Goal Shooter Position
+        new JoystickButton(getButtonFox(), ButtonFox.LEFT_BUTTON)
+            .whileHeld(new PlaySongDrive(m_robotDrive))
+            .whenReleased(new InterruptSubystem(m_robotDrive));
+
+        // Trench Shooter Position
+        new JoystickButton(getButtonFox(), ButtonFox.RIGHT_BUTTON)
+            .whileHeld(new PlaySongDrive(m_robotDrive))
+            .whenReleased(new InterruptSubystem(m_robotDrive));
     }
 
     /**
@@ -339,6 +373,11 @@ public class RobotContainer {
         return m_operatorXbox;
     }
 
+    public IHandController getButtonFoxObject()
+    {
+        return m_buttonFox;
+    }
+
     /**
      * Gets the {@link edu.wpi.first.wpilibj.GenericHID#GenericHID(int) Generic HID} for the Operator Xbox Controller.
      * Generic HIDs/Joysticks can be used to set up JoystickButtons.
@@ -358,4 +397,15 @@ public class RobotContainer {
     {
         return m_driverXbox.getJoyStick();
     }
+
+    /**
+     * Gets the {@link edu.wpi.first.wpilibj.GenericHID#GenericHID(int) Generic HID} for the Button Fox.
+     * Generic HIDs/Joysticks can be used to set up JoystickButtons.
+     * @return The IHandController interface for the Button Fox.
+     */
+    public Joystick getButtonFox()
+    {
+        return m_buttonFox.getJoyStick();
+    }
+
 }
