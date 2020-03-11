@@ -25,11 +25,14 @@ import frc4388.utility.Gains;
 
 public class ShooterAim extends SubsystemBase {
   public Shooter m_shooterSubsystem;
+  public Drive m_driveSubsystem;
   
   public CANSparkMax m_shooterRotateMotor = new CANSparkMax(ShooterConstants.SHOOTER_ROTATE_ID, MotorType.kBrushless);
   public static Gains m_shooterTurretGains = ShooterConstants.SHOOTER_TURRET_GAINS;
   CANDigitalInput m_shooterRightLimit, m_shooterLeftLimit;
   public GyroBase m_turretGyro;
+
+  public double m_targetDistance = 0;
 
   public boolean m_isAimReady = false;
 
@@ -73,8 +76,9 @@ public class ShooterAim extends SubsystemBase {
    * Passes subsystem needed.
    * @param subsystem Subsystem needed.
    */
-  public void passRequiredSubsystem(Shooter subsystem) {
-    m_shooterSubsystem = subsystem;
+  public void passRequiredSubsystem(Shooter subsystem0, Drive subsystem1) {
+    m_shooterSubsystem = subsystem0;
+    m_driveSubsystem = subsystem1;
   }
 
   public void runShooterWithInput(double input) {
@@ -109,9 +113,31 @@ public class ShooterAim extends SubsystemBase {
     return m_shooterRotateEncoder.getPosition();
   }
 
-  public double getShooterRotatePositionDegrees()
-  {
+  public double getShooterAngleDegrees() {
     return (m_shooterRotateEncoder.getPosition() - ShooterConstants.TURRET_MOTOR_POS_AT_ZERO_ROT) * 360/ShooterConstants.TURRET_MOTOR_ROTS_PER_ROT;
+  }
+
+  /**
+   * Gets the angle of the Shooter relative to the target.
+   */
+  public double getTargetAngleDegrees() {
+    return m_driveSubsystem.getHeading() + getShooterAngleDegrees();
+  }
+
+  public double getTargetXDisplacement() {
+    return m_targetDistance * Math.cos(getTargetAngleDegrees());
+  }
+
+  public double getTargetYDisplacement() {
+    return m_targetDistance * Math.sin(getTargetAngleDegrees());
+  }
+
+  /**
+   * Gets the angle of the Shooter relative to the inner port.
+   * Use for tuning the Shooter Displacement
+   */
+  public double getInnerPortAngleDegrees() {
+    return Math.atan( getTargetYDisplacement() / (getTargetXDisplacement() + 29.25) );
   }
 
   public GyroBase getGyroInterface() {
@@ -138,7 +164,7 @@ public class ShooterAim extends SubsystemBase {
       @Override
       public double getAngle() {
         // TODO Auto-generated method stub
-        return getShooterRotatePositionDegrees();
+        return getShooterAngleDegrees();
       }
     
       @Override

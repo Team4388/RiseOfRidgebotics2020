@@ -138,7 +138,7 @@ public final class Constants {
         public static final int TURRET_LEFT_SOFT_LIMIT = -55;
         public static final double TURRET_SPEED_MULTIPLIER = 0.3;
         public static final double TURRET_CALIBRATE_SPEED = 0.075;
-        public static final double TURRET_MOTOR_ROTS_PER_ROT = 1; //TODO: Find
+        public static final double TURRET_MOTOR_ROTS_PER_ROT = 89.56696;
         public static final double TURRET_MOTOR_POS_AT_ZERO_ROT = 0; //TODO: Find
 
         public static final int HOOD_UP_SOFT_LIMIT = 33;

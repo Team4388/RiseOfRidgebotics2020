@@ -100,7 +100,7 @@ public class RobotContainer {
 
         m_robotShooter.passRequiredSubsystem(m_robotShooterHood, m_robotShooterAim);
         m_robotShooterHood.passRequiredSubsystem(m_robotShooter);
-        m_robotShooterAim.passRequiredSubsystem(m_robotShooter);
+        m_robotShooterAim.passRequiredSubsystem(m_robotShooter, m_robotDrive);
 
         m_robotLeveler.passRequiredSubsystem(m_robotClimber);
 
