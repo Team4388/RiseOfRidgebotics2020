@@ -88,7 +88,7 @@ public class RobotContainer {
     /* Controllers */
     private final XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
     private final XboxController m_operatorXbox = new XboxController(OIConstants.XBOX_OPERATOR_ID);
-    private final XboxController m_buttonBox = new XboxController(OIConstants. BUTTON_BOX_ID);
+    private final XboxController m_buttonFox = new XboxController(OIConstants. BUTTON_FOX_ID);
 
 
     /**
