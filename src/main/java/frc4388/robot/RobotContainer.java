@@ -37,6 +37,7 @@ import frc4388.robot.Constants.OIConstants;
 import frc4388.robot.commands.auto.DriveOffLineBackward;
 import frc4388.robot.commands.auto.DriveOffLineForward;
 import frc4388.robot.commands.auto.EightBallAutoMiddle;
+import frc4388.robot.commands.auto.FiveBallAutoMiddle;
 import frc4388.robot.commands.auto.SixBallAutoMiddle;
 import frc4388.robot.commands.InterruptSubystem;
 import frc4388.robot.commands.auto.AutoPath1FromCenter;
@@ -111,6 +112,8 @@ public class RobotContainer {
     DriveOffLineForward m_driveOffLineForward;
 
     DriveOffLineBackward m_driveOffLineBackward;
+
+    FiveBallAutoMiddle m_fiveBallAutoMiddle;
 
 
     /**
@@ -267,25 +270,31 @@ public class RobotContainer {
             "SixBallMidComplete"
         };
 
-        m_sixBallAutoMiddle = new SixBallAutoMiddle(m_robotDrive, buildPaths(sixBallAutoMiddlePaths, false));
+        m_sixBallAutoMiddle = new SixBallAutoMiddle(m_robotDrive, buildPaths(sixBallAutoMiddlePaths));
 
         String[] eightBallAutoMiddlePaths = new String[]{
             "EightBallMidComplete"
         };
 
-        m_eightBallAutoMiddle = new EightBallAutoMiddle(m_robotDrive, buildPaths(eightBallAutoMiddlePaths, false));
+        m_eightBallAutoMiddle = new EightBallAutoMiddle(m_robotDrive, buildPaths(eightBallAutoMiddlePaths));
 
         String[] driveOffLineForwardPaths = new String[]{
             "DriveOffLineForward"
         };
 
-        m_driveOffLineForward = new DriveOffLineForward(m_robotDrive, buildPaths(driveOffLineForwardPaths, false));
+        m_driveOffLineForward = new DriveOffLineForward(m_robotDrive, buildPaths(driveOffLineForwardPaths));
 
         String[] driveOffLineBackwardPaths = new String[]{
             "DriveOffLineBackward"
         };
 
-        m_driveOffLineBackward = new DriveOffLineBackward(m_robotDrive, buildPaths(driveOffLineBackwardPaths, true));
+        m_driveOffLineBackward = new DriveOffLineBackward(m_robotDrive, buildPaths(driveOffLineBackwardPaths));
+        
+        String[] fiveBallAutoMiddlePaths = new String[]{
+            "FiveBallMidComplete"
+        };
+
+        m_fiveBallAutoMiddle = new FiveBallAutoMiddle(m_robotDrive, buildPaths(fiveBallAutoMiddlePaths));
     }
 
     /**
@@ -306,7 +315,8 @@ public class RobotContainer {
             //return m_sixBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_eightBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_driveOffLineForward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-            return m_driveOffLineBackward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+            //return m_driveOffLineBackward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+            return m_fiveBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
 
         } catch (Exception e) {
             System.err.println("ERROR");
@@ -349,7 +359,7 @@ public class RobotContainer {
         return ramseteCommand;
     }
 
-    public RamseteCommand[] buildPaths(String[] paths, boolean isReversed) {
+    public RamseteCommand[] buildPaths(String[] paths) {
         RamseteCommand[] ramseteCommands = new RamseteCommand[paths.length];
         double[] times = new double[paths.length];
         Trajectory initialTrajectory;
