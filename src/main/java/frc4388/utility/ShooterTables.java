@@ -20,12 +20,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * Add your docs here.
  */
 public class ShooterTables {
-    double[][] m_distance = new double[50][3];
+    double[][] m_distance = new double[50][4];
     double[][] m_angle = new double[50][2];
 
     final int m_columnDistance = 0;
     final int m_columnHood = 1;
     final int m_columnVel = 2;
+    final int m_columnCenterDisplacement = 3;
     final int m_columnAngle = 0;
     final int m_columnDisplacement = 1;
 
@@ -55,6 +56,7 @@ public class ShooterTables {
                     m_distance[lineNum - 1][m_columnDistance] = Double.parseDouble(values[0]);
                     m_distance[lineNum - 1][m_columnHood] = Double.parseDouble(values[1]);
                     m_distance[lineNum - 1][m_columnVel] = Double.parseDouble(values[2]);
+                    m_distance[lineNum - 1][m_columnCenterDisplacement] = Double.parseDouble(values[3]);
                     
                     lineNum ++;
                 }
@@ -79,6 +81,9 @@ public class ShooterTables {
             }
 
             m_angleLength = lineNum-1;
+
+            distanceReader.close();
+            angleReader.close();
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -122,6 +127,23 @@ public class ShooterTables {
             return linearInterpolation(i, distance, m_columnVel, m_distance);
         }
     }
+
+    public double getCenterDisplacement(double distance) { //Degrees of Lime FOV
+        int i = 0;
+        while ((i < m_distanceLength) && (m_distance[i][m_columnDistance] < distance)) {
+            i ++;
+        }
+        if ((i < m_distanceLength) && (m_distance[i][m_columnDistance] == distance)) {
+            return m_distance[i][m_columnCenterDisplacement];
+        } else {
+            if (i >= m_distanceLength) {
+                i = m_distanceLength - 1;
+            }
+            return linearInterpolation(i, distance, m_columnCenterDisplacement, m_distance);
+        }
+    }
+
+    
 
     public double getAngleDisplacement(double angle) {
         int i = 0;
