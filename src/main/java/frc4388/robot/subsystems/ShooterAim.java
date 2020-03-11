@@ -70,6 +70,8 @@ public class ShooterAim extends SubsystemBase {
     SmartDashboard.putBoolean("Aim Ready", m_isAimReady);
 
     SmartDashboard.putData("Turret Angle", m_turretGyro);
+    
+    SmartDashboard.putBoolean("Turret Aimed" , m_isAimReady);
   }
 
   /**
