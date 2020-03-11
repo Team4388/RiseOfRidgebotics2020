@@ -215,5 +215,6 @@ public final class Constants {
     public static final class OIConstants {
         public static final int XBOX_DRIVER_ID = 0;
         public static final int XBOX_OPERATOR_ID = 1;
+        public static final int BUTTON_BOX_ID = 2;
     }
 }
