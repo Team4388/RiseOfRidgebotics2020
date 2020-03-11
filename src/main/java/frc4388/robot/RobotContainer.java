@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Transform2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
@@ -33,6 +34,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.DriveConstants;
 import frc4388.robot.Constants.OIConstants;
+import frc4388.robot.commands.auto.DriveOffLineBackward;
+import frc4388.robot.commands.auto.DriveOffLineForward;
 import frc4388.robot.commands.auto.EightBallAutoMiddle;
 import frc4388.robot.commands.auto.SixBallAutoMiddle;
 import frc4388.robot.commands.auto.Wait;
@@ -92,10 +95,15 @@ public class RobotContainer {
     private final XboxController m_operatorXbox = new XboxController(OIConstants.XBOX_OPERATOR_ID);
 
     /* Autos */
-    SixBallAutoMiddle m_sixBallAutoMiddle;
     double m_totalTimeAuto;
 
+    SixBallAutoMiddle m_sixBallAutoMiddle;
+
     EightBallAutoMiddle m_eightBallAutoMiddle;
+
+    DriveOffLineForward m_driveOffLineForward;
+
+    DriveOffLineBackward m_driveOffLineBackward;
 
 
     /**
@@ -247,12 +255,26 @@ public class RobotContainer {
         String[] sixBallAutoMiddlePaths = new String[]{
             "SixBallMidComplete"
         };
-        m_sixBallAutoMiddle = new SixBallAutoMiddle(m_robotDrive, buildPaths(sixBallAutoMiddlePaths));
+
+        m_sixBallAutoMiddle = new SixBallAutoMiddle(m_robotDrive, buildPaths(sixBallAutoMiddlePaths, false));
 
         String[] eightBallAutoMiddlePaths = new String[]{
             "EightBallMidComplete"
         };
-        m_eightBallAutoMiddle = new EightBallAutoMiddle(m_robotDrive, buildPaths(eightBallAutoMiddlePaths));
+
+        m_eightBallAutoMiddle = new EightBallAutoMiddle(m_robotDrive, buildPaths(eightBallAutoMiddlePaths, false));
+
+        String[] driveOffLineForwardPaths = new String[]{
+            "DriveOffLineForward"
+        };
+
+        m_driveOffLineForward = new DriveOffLineForward(m_robotDrive, buildPaths(driveOffLineForwardPaths, false));
+
+        String[] driveOffLineBackwardPaths = new String[]{
+            "DriveOffLineBackward"
+        };
+
+        m_driveOffLineBackward = new DriveOffLineBackward(m_robotDrive, buildPaths(driveOffLineBackwardPaths, true));
     }
 
     /**
@@ -271,7 +293,9 @@ public class RobotContainer {
             SmartDashboard.putNumber("Trajectory Total Time", m_totalTimeAuto);
 
             //return m_sixBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-            return m_eightBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+            //return m_eightBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+            //return m_driveOffLineForward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+            return m_driveOffLineBackward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
 
         } catch (Exception e) {
             System.err.println("ERROR");
@@ -314,7 +338,7 @@ public class RobotContainer {
         return ramseteCommand;
     }
 
-    public RamseteCommand[] buildPaths(String[] paths) {
+    public RamseteCommand[] buildPaths(String[] paths, boolean isReversed) {
         RamseteCommand[] ramseteCommands = new RamseteCommand[paths.length];
         double[] times = new double[paths.length];
         Trajectory initialTrajectory;
@@ -327,6 +351,7 @@ public class RobotContainer {
                 Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
                 Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
                 initialTrajectory = trajectory;
+
                 RamseteCommand ramseteCommand = getRamseteCommand(trajectory.relativeTo(initialTrajectory.getInitialPose()));
                 ramseteCommands[0] = ramseteCommand;
                 times[0] = initialTrajectory.getTotalTimeSeconds();
