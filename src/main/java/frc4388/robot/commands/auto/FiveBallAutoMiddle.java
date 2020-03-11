@@ -21,7 +21,8 @@ public class FiveBallAutoMiddle extends SequentialCommandGroup {
   public FiveBallAutoMiddle(Drive drive, RamseteCommand[] paths) {
     // Use addRequirements() here to declare subsystem dependencies.
     addCommands(
-      paths[0]
+      paths[0],
+      new TankDriveVelocity(drive, -3.1, -0.3, 0.97)
     );
   }
 }
