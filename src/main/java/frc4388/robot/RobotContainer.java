@@ -44,7 +44,6 @@ import frc4388.robot.commands.shooter.TrackTarget;
 import frc4388.robot.commands.shooter.TrimShooter;
 import frc4388.robot.commands.storage.ManageStorage;
 import frc4388.robot.commands.storage.StoragePrep;
-import frc4388.robot.commands.storage.ManageStorage.StorageMode;
 import frc4388.robot.subsystems.Camera;
 import frc4388.robot.subsystems.Climber;
 import frc4388.robot.subsystems.Drive;
@@ -57,6 +56,7 @@ import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.ShooterAim;
 import frc4388.robot.subsystems.ShooterHood;
 import frc4388.robot.subsystems.Storage;
+import frc4388.robot.subsystems.Storage.StorageMode;
 import frc4388.utility.controller.ButtonFox;
 import frc4388.utility.controller.IHandController;
 import frc4388.utility.controller.XboxController;
@@ -129,7 +129,7 @@ public class RobotContainer {
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
         // runs the storage not
         //m_robotStorage.setDefaultCommand(new RunCommand(() -> m_robotStorage.runStorage(0), m_robotStorage));
-        m_robotStorage.setDefaultCommand(new ManageStorage(m_robotStorage, StorageMode.IDLE));
+        m_robotStorage.setDefaultCommand(new InstantCommand(() -> m_robotStorage.changeStorageMode(StorageMode.IDLE)));
         //m_robotLime.setDefaultCommand(new RunCommand(() -> m_robotLime.limeOff(), m_robotLime));
     }
 
@@ -247,8 +247,8 @@ public class RobotContainer {
         /* Button Fox */
         // Storage Manual
         new JoystickButton(getButtonFox(), ButtonFox.LEFT_SWITCH)
-            .whileHeld(new ManageStorage(m_robotStorage, StorageMode.MANUAL))
-            .whenReleased(new ManageStorage(m_robotStorage, StorageMode.RESET));
+            .whenPressed(new InstantCommand(() -> m_robotStorage.changeStorageMode(StorageMode.MANUAL)))
+            .whenReleased(new InstantCommand(() -> m_robotStorage.changeStorageMode(StorageMode.RESET)));
 
         // Meg
         new JoystickButton(getButtonFox(), ButtonFox.MIDDLE_SWITCH)

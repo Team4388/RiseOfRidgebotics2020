@@ -36,6 +36,9 @@ public class Storage extends SubsystemBase {
 
   public boolean m_isStorageReadyToFire = false;
 
+  public enum StorageMode{IDLE, INTAKE, RESET, MANUAL};
+  public StorageMode m_storageMode = StorageMode.IDLE;
+
   /**
    * Creates a new Storage.
    */
@@ -133,5 +136,9 @@ public class Storage extends SubsystemBase {
 
   public boolean getBeamIntake(){
     return m_beamIntake.get();
+  }
+
+  public void changeStorageMode(StorageMode storageMode){
+    m_storageMode = storageMode;
   }
 }
