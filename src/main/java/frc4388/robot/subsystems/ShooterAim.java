@@ -67,8 +67,6 @@ public class ShooterAim extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Turret Angle Raw", getShooterRotatePosition());
 
-    SmartDashboard.putBoolean("Aim Ready", m_isAimReady);
-
     SmartDashboard.putData("Turret Angle", m_turretGyro);
     
     SmartDashboard.putBoolean("Turret Aimed" , m_isAimReady);
