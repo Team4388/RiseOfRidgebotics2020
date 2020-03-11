@@ -40,6 +40,8 @@ import frc4388.robot.commands.drive.TurnDegrees;
 import frc4388.robot.commands.intake.RunIntakeWithTriggers;
 import frc4388.robot.commands.shooter.CalibrateShooter;
 import frc4388.robot.commands.shooter.ShootPrepGroup;
+import frc4388.robot.commands.shooter.ShooterGoalPosition;
+import frc4388.robot.commands.shooter.ShooterTrenchPosition;
 import frc4388.robot.commands.shooter.TrackTarget;
 import frc4388.robot.commands.shooter.TrimShooter;
 import frc4388.robot.commands.storage.ManageStorage;
@@ -262,13 +264,17 @@ public class RobotContainer {
 
         // Goal Shooter Position
         new JoystickButton(getButtonFox(), ButtonFox.LEFT_BUTTON)
-            .whileHeld(new PlaySongDrive(m_robotDrive))
-            .whenReleased(new InterruptSubystem(m_robotDrive));
+            .whileHeld(new ShooterGoalPosition(m_robotShooter, m_robotShooterHood, m_robotShooterAim))
+            .whenReleased(new InterruptSubystem(m_robotShooter))
+            .whenReleased(new InterruptSubystem(m_robotShooterHood))
+            .whenReleased(new InterruptSubystem(m_robotShooterAim));
 
         // Trench Shooter Position
         new JoystickButton(getButtonFox(), ButtonFox.RIGHT_BUTTON)
-            .whileHeld(new PlaySongDrive(m_robotDrive))
-            .whenReleased(new InterruptSubystem(m_robotDrive));
+            .whileHeld(new ShooterTrenchPosition(m_robotShooter, m_robotShooterHood, m_robotShooterAim))
+            .whenReleased(new InterruptSubystem(m_robotShooter))
+            .whenReleased(new InterruptSubystem(m_robotShooterHood))
+            .whenReleased(new InterruptSubystem(m_robotShooterAim));
     }
 
     /**
