@@ -92,6 +92,8 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Shooter Current", m_shooterFalcon.getSupplyCurrent());
 
     //SmartDashboard.putNumber("Hood Position", m_shooter.getAnglePosition());
+
+    SmartDashboard.putBoolean("Drum Ready" , m_isDrumReady);
     }
 
     catch(Exception e)

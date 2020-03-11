@@ -5,16 +5,18 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc4388.robot.commands.storage;
+package frc4388.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class StorageIntakeFinal extends CommandBase {
+public class InterruptSubystem extends CommandBase {
   /**
-   * Creates a new StorageIntakeFinal.
+   * Creates a new InterruptSubystem.
    */
-  public StorageIntakeFinal() {
+  public InterruptSubystem(SubsystemBase subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(subsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -35,6 +37,6 @@ public class StorageIntakeFinal extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }
