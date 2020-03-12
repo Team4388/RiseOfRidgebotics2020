@@ -39,9 +39,12 @@ import frc4388.robot.commands.drive.PlaySongDrive;
 import frc4388.robot.commands.drive.TurnDegrees;
 import frc4388.robot.commands.intake.RunIntakeWithTriggers;
 import frc4388.robot.commands.shooter.CalibrateShooter;
+import frc4388.robot.commands.shooter.RunHoodWithJoystick;
 import frc4388.robot.commands.shooter.ShootPrepGroup;
 import frc4388.robot.commands.shooter.ShooterGoalPosition;
+import frc4388.robot.commands.shooter.ShooterManual;
 import frc4388.robot.commands.shooter.ShooterTrenchPosition;
+import frc4388.robot.commands.shooter.ShooterVelocityControlPID;
 import frc4388.robot.commands.shooter.TrackTarget;
 import frc4388.robot.commands.shooter.TrimShooter;
 import frc4388.robot.commands.storage.ManageStorage;
@@ -61,6 +64,7 @@ import frc4388.robot.subsystems.Storage;
 import frc4388.robot.subsystems.Storage.StorageMode;
 import frc4388.utility.controller.ButtonFox;
 import frc4388.utility.controller.IHandController;
+import frc4388.utility.controller.JoystickManualButton;
 import frc4388.utility.controller.XboxController;
 import frc4388.utility.controller.XboxTriggerButton;
 
@@ -90,10 +94,12 @@ public class RobotContainer {
     private final LimeLight m_robotLime = new LimeLight();
 
     /* Controllers */
-    private final XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
-    private final XboxController m_operatorXbox = new XboxController(OIConstants.XBOX_OPERATOR_ID);
-    private final XboxController m_buttonFox = new XboxController(OIConstants. BUTTON_FOX_ID);
+    private static XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
+    private static XboxController m_operatorXbox = new XboxController(OIConstants.XBOX_OPERATOR_ID);
+    private static XboxController m_buttonFox = new XboxController(OIConstants. BUTTON_FOX_ID);
+    private static XboxController m_manualXbox = new XboxController(3);
 
+    public static boolean m_isShooterManual = false;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -121,6 +127,8 @@ public class RobotContainer {
         m_robotIntake.setDefaultCommand(new RunIntakeWithTriggers(m_robotIntake, getOperatorController()));
         // runs the turret with joystick
         m_robotShooterAim.setDefaultCommand(new RunCommand(() -> m_robotShooterAim.runShooterWithInput(-m_operatorXbox.getLeftXAxis()), m_robotShooterAim));
+        // runs the hood with joystick
+        m_robotShooterHood.setDefaultCommand(new RunHoodWithJoystick(m_robotShooterHood, getOperatorController()));
         // moves the drum not
         m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(1500), m_robotShooter));
         // drives climber with input from triggers on the opperator controller
@@ -226,22 +234,17 @@ public class RobotContainer {
         new JoystickButton(getOperatorJoystick(), XboxController.START_BUTTON)
             .whileHeld(new CalibrateShooter(m_robotShooter, m_robotShooterAim, m_robotShooterHood));
 
-        //Prepares storage for intaking
-        //new XboxTriggerButton(m_operatorXbox, XboxTriggerButton.LEFT_TRIGGER)
-            //.whileHeld(new RunCommand(() -> m_robotStorage.runStorage(0.8)))
-            //.whenReleased(new RunCommand(() -> m_robotStorage.runStorage(0.0)));
-            //.whileHeld(new StorageIntake(m_robotIntake, m_robotStorage));
-
-        //Runs storage to outtake
-       //new XboxTriggerButton(m_operatorXbox, XboxTriggerButton.RIGHT_TRIGGER)
-            //.whileHeld(new RunCommand(() -> m_robotStorage.runStorage(-0.8)))
-            //.whenReleased(new RunCommand(() -> m_robotStorage.runStorage(0.0)));
 
         //Run drum
-        new JoystickButton(getOperatorJoystick(), XboxController.B_BUTTON)
+        new JoystickManualButton(getOperatorJoystick(), XboxController.B_BUTTON, false)
             .whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotShooterHood, m_robotStorage), false)
             //.whenReleased(new ManageStorage(m_robotStorage, StorageMode.RESET))
             .whenReleased(new InstantCommand(() -> m_robotLime.limeOff()));
+
+        //Run drum manual
+        new JoystickManualButton(getOperatorJoystick(), XboxController.B_BUTTON, true)
+            .whileHeld(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(10000)))
+            .whenReleased(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(0)));
 
 
 
@@ -259,8 +262,8 @@ public class RobotContainer {
 
         // Shooter Manual
         new JoystickButton(getButtonFox(), ButtonFox.RIGHT_SWITCH)
-            .whileHeld(new PlaySongDrive(m_robotDrive))
-            .whenReleased(new InterruptSubystem(m_robotDrive));
+            .whileHeld(new ShooterManual(true))
+            .whenReleased(new ShooterManual(false));
 
         // Goal Shooter Position
         new JoystickButton(getButtonFox(), ButtonFox.LEFT_BUTTON)
@@ -383,6 +386,7 @@ public class RobotContainer {
     {
         return m_buttonFox;
     }
+
 
     /**
      * Gets the {@link edu.wpi.first.wpilibj.GenericHID#GenericHID(int) Generic HID} for the Operator Xbox Controller.
