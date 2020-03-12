@@ -136,7 +136,7 @@ public class RobotContainer {
         configureButtonBindings();
 
         /* Builds Autos */
-        buildAutos();
+        //buildAutos();
 
         /* Default Commands */
         // drives the robot with a two-axis input from the driver controller
@@ -321,11 +321,11 @@ public class RobotContainer {
         try {
             SmartDashboard.putNumber("Trajectory Total Time", m_totalTimeAuto);
 
-            //return m_sixBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+            return m_sixBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_eightBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_driveOffLineForward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_driveOffLineBackward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-            return m_fiveBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+            //return m_fiveBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_tenBallAutoMiddle.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
 
         } catch (Exception e) {
@@ -380,6 +380,9 @@ public class RobotContainer {
                 String path = paths[0];
                 String trajectoryJSON = "paths/" + path + ".wpilib.json";
                 Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+                
+                SmartDashboard.putString("trajectoryPath Initial", trajectoryPath.toString());
+
                 Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
                 initialTrajectory = trajectory;
 

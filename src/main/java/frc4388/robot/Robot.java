@@ -64,6 +64,8 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     m_robotContainer.setDriveNeutralMode(NeutralMode.Coast);
+    /* Builds Autos */
+    m_robotContainer.buildAutos();
     SmartDashboard.putString("Is Auto Start?", "NAH");
   }
 
@@ -82,7 +84,8 @@ public class Robot extends TimedRobot {
     m_robotContainer.setDriveNeutralMode(NeutralMode.Brake);
     m_robotContainer.setDriveGearState(true);
     m_robotContainer.resetOdometry(new Pose2d());
-    m_robotContainer.resetGyroYawRobotContainer(0);
+
+    //m_robotContainer.resetGyroYawRobotContainer(0);
 
     //m_robotContainer.configDriveTrainSensors(FeedbackDevice.IntegratedSensor);
 
