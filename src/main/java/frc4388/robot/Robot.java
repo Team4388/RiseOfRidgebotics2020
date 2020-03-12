@@ -82,6 +82,8 @@ public class Robot extends TimedRobot {
     m_robotContainer.setDriveNeutralMode(NeutralMode.Brake);
     m_robotContainer.setDriveGearState(true);
     m_robotContainer.resetOdometry(new Pose2d());
+    m_robotContainer.resetGyroYawRobotContainer(0);
+
     //m_robotContainer.configDriveTrainSensors(FeedbackDevice.IntegratedSensor);
 
     /*

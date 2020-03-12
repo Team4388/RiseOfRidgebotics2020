@@ -22,7 +22,7 @@ public class FiveBallAutoMiddle extends SequentialCommandGroup {
     // Use addRequirements() here to declare subsystem dependencies.
     addCommands(
       paths[0],
-      new TankDriveVelocity(drive, -3.1, -0.3, 0.97)
+      new TankDriveVelocity(drive, -3.2, -0.2, 0.8)
     );
   }
 }

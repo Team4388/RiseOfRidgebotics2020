@@ -325,8 +325,8 @@ public class RobotContainer {
             //return m_eightBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_driveOffLineForward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_driveOffLineBackward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-            //return m_fiveBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-            return m_tenBallAutoMiddle.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+            return m_fiveBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+            //return m_tenBallAutoMiddle.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
 
         } catch (Exception e) {
             System.err.println("ERROR");
@@ -436,6 +436,10 @@ public class RobotContainer {
      */
     public void resetOdometry(Pose2d pose) {
         m_robotDrive.setOdometry(pose);
+    }
+
+    public void resetGyroYawRobotContainer(double angle) {
+        m_robotDrive.resetGyroYaw(angle);
     }
 
     /**
