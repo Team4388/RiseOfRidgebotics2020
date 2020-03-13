@@ -58,6 +58,8 @@ public class ShooterHood extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Fire Angle CSV", m_fireAngle);
+
+    SmartDashboard.putNumber("Hood Angle Raw", getAnglePositionDegrees());
   }
 
   /**
@@ -92,5 +94,9 @@ public class ShooterHood extends SubsystemBase {
 
   public double getAnglePosition(){
     return m_angleEncoder.getPosition();
+  }
+
+  public double getAnglePositionDegrees(){
+    return ((m_angleEncoder.getPosition() - ShooterConstants.HOOD_MOTOR_POS_AT_ZERO_ROT) * 360/ShooterConstants.HOOD_MOTOR_ROTS_PER_ROT) - 90;
   }
 }

@@ -195,6 +195,8 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.configSelectedFeedbackSensor(FeedbackDevice.SensorDifference, DriveConstants.PID_PRIMARY,
         DriveConstants.DRIVE_TIMEOUT_MS);
 
+    m_rightFrontMotor.configSelectedFeedbackCoefficient(0.5, DriveConstants.PID_PRIMARY, DriveConstants.DRIVE_TIMEOUT_MS);
+
     /*
      * Configure the Pigeon IMU to the other Remote Slot available on the right
      * Talon
@@ -707,6 +709,16 @@ public class Drive extends SubsystemBase {
     return meters * DriveConstants.INCHES_PER_METER;
   }
 
+  /**
+   * Converts a value in inches per second to miles per hour
+   * @param ips The value in inches per second to convert
+   * @return The value in miles per hour
+   */
+  public double inchesPerSecondToMilesPerHour(double ips) {
+    double mph = ips * (3600) * (1/63360);
+    return mph;
+  }
+
   public void setRightMotorGains(boolean isHighGear) {
     if (!isHighGear) {
       m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
@@ -826,6 +838,7 @@ public class Drive extends SubsystemBase {
 
   public void updateSmartDashboard() {
     try {
+
       // SmartDashboard.putNumber("Pigeon Yaw", getGyroYaw());
       // SmartDashboard.putNumber("Pigeon Pitch", getGyroPitch());
       // SmartDashboard.putNumber("Pigeon Roll", getGyroRoll());
@@ -833,6 +846,14 @@ public class Drive extends SubsystemBase {
       SmartDashboard.putData("Pigeon Gyro", m_pigeonGyro);
       SmartDashboard.putData("Drive Train", m_driveTrain);
 
+      SmartDashboard.putNumber("Left Motor Position Raw", m_leftFrontMotor.getSensorCollection().getIntegratedSensorPosition());
+      SmartDashboard.putNumber("Right Motor Position Raw", m_rightFrontMotor.getSensorCollection().getIntegratedSensorPosition());
+
+      SmartDashboard.putNumber("Average Motor Position Raw", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_PRIMARY));
+
+      double avgSpeedMPH = inchesPerSecondToMilesPerHour(10 * ticksToInches(m_rightFrontMotor.getSelectedSensorVelocity(DriveConstants.PID_PRIMARY)));
+
+      SmartDashboard.putNumber("Avg Speed MPH", avgSpeedMPH);
 
       //SmartDashboard.putNumber("Left Front Output", m_leftFrontMotor.get());
       //SmartDashboard.putNumber("Right Front Output", m_rightFrontMotor.get());
@@ -847,8 +868,6 @@ public class Drive extends SubsystemBase {
 
       //SmartDashboard.putNumber("Left Back Motor Velocity Raw", m_leftBackMotor.getSelectedSensorVelocity());
       //SmartDashboard.putNumber("Right Back Motor Velocity Raw", m_rightBackMotor.getSelectedSensorVelocity());
-      //SmartDashboard.putNumber("Left Motor Position Raw", m_leftFrontMotor.getSelectedSensorPosition());
-      //SmartDashboard.putNumber("Right Motor Position Raw", m_rightFrontMotor.getSelectedSensorPosition(0));
       
       //SmartDashboard.putNumber("Right Motor Velocity Int Sensor", m_rightFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
       //SmartDashboard.putNumber("Left Motor Velocity Int Sensor", m_leftFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
@@ -884,8 +903,8 @@ public class Drive extends SubsystemBase {
       //SmartDashboard.putString("Odometry Values Meters", getPose().toString());
       //SmartDashboard.putNumber("Odometry Heading", getHeading());
 
-      SmartDashboard.putNumber("Time Seconds", m_currentTimeSec);
-      SmartDashboard.putNumber("Delta Time", m_deltaTimeMs);
+      //SmartDashboard.putNumber("Time Seconds", m_currentTimeSec);
+      //SmartDashboard.putNumber("Delta Time", m_deltaTimeMs);
 
       if (m_currentSong != m_songChooser.getSelected()){
         m_currentSong = m_songChooser.getSelected();
