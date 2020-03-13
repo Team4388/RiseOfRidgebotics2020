@@ -37,7 +37,7 @@ public class RunHoodWithJoystick extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double input = m_controller.getRightXAxis();
+    double input = m_controller.getRightYAxis();
     m_hood.runHood(input);
   }
 

@@ -139,7 +139,7 @@ public class RobotContainer {
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
         // runs the storage not
         //m_robotStorage.setDefaultCommand(new RunCommand(() -> m_robotStorage.runStorage(0), m_robotStorage));
-        m_robotStorage.setDefaultCommand(new InstantCommand(() -> m_robotStorage.changeStorageMode(StorageMode.IDLE)));
+        m_robotStorage.setDefaultCommand(new ManageStorage(m_robotStorage));
         //m_robotLime.setDefaultCommand(new RunCommand(() -> m_robotLime.limeOff(), m_robotLime));
     }
 
@@ -257,7 +257,7 @@ public class RobotContainer {
 
         // Meg
         new JoystickButton(getButtonFox(), ButtonFox.MIDDLE_SWITCH)
-            .whileHeld(new PlaySongDrive(m_robotDrive))
+            .whenPressed(new PlaySongDrive(m_robotDrive))
             .whenReleased(new InterruptSubystem(m_robotDrive));
 
         // Shooter Manual
