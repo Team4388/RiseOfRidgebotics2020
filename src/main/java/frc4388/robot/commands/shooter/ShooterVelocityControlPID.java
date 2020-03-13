@@ -34,7 +34,18 @@ public class ShooterVelocityControlPID extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooter.runDrumShooterVelocityPID(m_shooter.addFireVel());
+    //Tells whether the target velocity has been reached
+    m_actualVel = m_shooter.m_shooterFalcon.getSelectedSensorPosition();
+    m_targetVel = m_shooter.addFireVel();
+    double error = m_actualVel - m_targetVel;
+    if (Math.abs(error) < ShooterConstants.DRUM_VELOCITY_BOUND){
+      m_shooter.m_isDrumReady = true;
+      m_shooter.runDrumShooterVelocityPID(m_targetVel);
+    }
+    else{
+      m_shooter.m_isDrumReady = false;
+      m_shooter.runDrumShooterVelocityPID(m_targetVel);
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -45,16 +56,6 @@ public class ShooterVelocityControlPID extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //Tells whether the target velocity has been reached
-    double upperBound = m_targetVel + ShooterConstants.DRUM_VELOCITY_BOUND;
-    double lowerBound = m_targetVel - ShooterConstants.DRUM_VELOCITY_BOUND;
-    if (m_actualVel < upperBound && m_actualVel > lowerBound){
-      m_shooter.m_isDrumReady = true;
-    }
-    else{
-      m_shooter.m_isDrumReady = false;
-    }
-
     return false;
   }
 }

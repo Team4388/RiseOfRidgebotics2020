@@ -1,0 +1,9 @@
+@import "/edu/wpi/first/shuffleboard/app/midnight.css";
+
+.root{
+	-swatch-100: #66FF66;
+	-swatch-200: #4DFF4D;
+	-swatch-300: #1AFF1A;
+	-swatch-400: #00CC00;
+	-swatch-500: #009900;
+}
