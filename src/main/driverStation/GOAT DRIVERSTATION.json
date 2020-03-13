@@ -17,88 +17,11 @@
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Shooter Current",
-              "_title": "Shooter Current"
+              "_source0": "network_table:///SmartDashboard/limelight_Stream",
+              "_title": "limelight_Stream"
             }
           },
           "1,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Delta Time",
-              "_title": "Delta Time"
-            }
-          },
-          "2,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Time Seconds",
-              "_title": "Time Seconds"
-            }
-          },
-          "3,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Shooter Temp C",
-              "_title": "Shooter Temp C"
-            }
-          },
-          "4,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Auto?",
-              "_title": "Auto?"
-            }
-          },
-          "5,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Fire Angle CSV",
-              "_title": "Fire Angle CSV"
-            }
-          },
-          "6,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Drum Velocity",
-              "_title": "Drum Velocity"
-            }
-          },
-          "7,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Drum Velocity CSV",
-              "_title": "Drum Velocity CSV"
-            }
-          },
-          "8,0": {
             "size": [
               1,
               1
@@ -109,7 +32,7 @@
               "_title": "limelight_PipelineName"
             }
           },
-          "9,0": {
+          "2,0": {
             "size": [
               1,
               1
@@ -120,18 +43,18 @@
               "_title": "limelight_Interface"
             }
           },
-          "0,1": {
+          "3,0": {
             "size": [
               1,
               1
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/limelight_Stream",
-              "_title": "limelight_Stream"
+              "_source0": "network_table:///SmartDashboard/Auto?",
+              "_title": "Auto?"
             }
           },
-          "1,1": {
+          "4,0": {
             "size": [
               2,
               2
@@ -146,33 +69,7 @@
               "Visuals/Counter clockwise": false
             }
           },
-          "3,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/Climber Safety",
-              "_title": "Climber Safety",
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "4,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/Rachet",
-              "_title": "Rachet",
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "5,1": {
+          "6,0": {
             "size": [
               3,
               2
@@ -186,7 +83,51 @@
               "Visuals/Show velocity vectors": true
             }
           },
-          "8,1": {
+          "9,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Left Motor Position Raw",
+              "_title": "Left Motor Position Raw"
+            }
+          },
+          "0,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Right Motor Position Raw",
+              "_title": "Right Motor Position Raw"
+            }
+          },
+          "1,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Average Motor Position Raw",
+              "_title": "Average Motor Position Raw"
+            }
+          },
+          "2,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Avg Speed MPH",
+              "_title": "Avg Speed MPH"
+            }
+          },
+          "3,1": {
             "size": [
               1,
               1
@@ -205,11 +146,9 @@
               1
             ],
             "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/Drum Ready",
-              "_title": "Drum Ready",
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Drum Velocity",
+              "_title": "Drum Velocity"
             }
           },
           "0,2": {
@@ -218,11 +157,31 @@
               1
             ],
             "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/Shooter Beam",
-              "_title": "Shooter Beam",
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Drum Velocity CSV",
+              "_title": "Drum Velocity CSV"
+            }
+          },
+          "1,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Shooter Temp C",
+              "_title": "Shooter Temp C"
+            }
+          },
+          "2,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Shooter Current",
+              "_title": "Shooter Current"
             }
           },
           "3,2": {
@@ -232,13 +191,39 @@
             ],
             "content": {
               "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/Upper Beam",
-              "_title": "Upper Beam",
+              "_source0": "network_table:///SmartDashboard/Drum Ready",
+              "_title": "Drum Ready",
               "Colors/Color when true": "#7CFC00FF",
               "Colors/Color when false": "#8B0000FF"
             }
           },
           "4,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Turret Angle Raw",
+              "_title": "Turret Angle Raw"
+            }
+          },
+          "5,2": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Gyro",
+              "_source0": "network_table:///SmartDashboard/Turret Angle",
+              "_title": "Turret Angle",
+              "Visuals/Major tick spacing": 45.0,
+              "Visuals/Starting angle": 180.0,
+              "Visuals/Show tick mark ring": true,
+              "Visuals/Counter clockwise": false
+            }
+          },
+          "7,2": {
             "size": [
               1,
               1
@@ -257,6 +242,54 @@
               1
             ],
             "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Fire Angle CSV",
+              "_title": "Fire Angle CSV"
+            }
+          },
+          "9,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Hood Angle Raw",
+              "_title": "Hood Angle Raw"
+            }
+          },
+          "0,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Climber Safety",
+              "_title": "Climber Safety",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "1,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Rachet",
+              "_title": "Rachet",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "2,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
               "_type": "Boolean Box",
               "_source0": "network_table:///SmartDashboard/Intake Beam",
               "_title": "Intake Beam",
@@ -264,7 +297,7 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "9,2": {
+          "3,3": {
             "size": [
               1,
               1
@@ -277,225 +310,30 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "0,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Left Motor Position Raw",
-              "_title": "Left Motor Position Raw"
-            }
-          },
-          "1,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Right Motor Position Raw",
-              "_title": "Right Motor Position Raw"
-            }
-          },
-          "2,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Average Motor Position Raw",
-              "_title": "Average Motor Position Raw"
-            }
-          },
-          "3,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Avg Speed MPH",
-              "_title": "Avg Speed MPH"
-            }
-          },
           "4,3": {
             "size": [
               1,
               1
             ],
             "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Turret Angle Raw",
-              "_title": "Turret Angle Raw"
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Upper Beam",
+              "_title": "Upper Beam",
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
             }
           },
-          "5,3": {
+          "7,3": {
             "size": [
               1,
               1
             ],
             "content": {
               "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/Aim Ready",
-              "_title": "Aim Ready",
+              "_source0": "network_table:///SmartDashboard/Shooter Beam",
+              "_title": "Shooter Beam",
               "Colors/Color when true": "#7CFC00FF",
               "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "6,3": {
-            "size": [
-              2,
-              2
-            ],
-            "content": {
-              "_type": "Gyro",
-              "_source0": "network_table:///SmartDashboard/Turret Angle",
-              "_title": "Turret Angle",
-              "Visuals/Major tick spacing": 45.0,
-              "Visuals/Starting angle": 180.0,
-              "Visuals/Show tick mark ring": true,
-              "Visuals/Counter clockwise": false
-            }
-          },
-          "8,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Hood Angle Raw",
-              "_title": "Hood Angle Raw"
-            }
-          },
-          "9,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/!Ball in Intake!",
-              "_title": "!Ball in Intake!",
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "0,4": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/!Ball Storage!",
-              "_title": "!Ball Storage!",
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "1,4": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/!Ball Shooter!",
-              "_title": "!Ball Shooter!",
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "2,4": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Distance to Target",
-              "_title": "Distance to Target"
-            }
-          },
-          "3,4": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Center Displacement",
-              "_title": "Center Displacement"
-            }
-          },
-          "4,4": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Is Auto Start?",
-              "_title": "Is Auto Start?"
-            }
-          },
-          "5,4": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Left Motor Pos Inches",
-              "_title": "Left Motor Pos Inches"
-            }
-          },
-          "8,4": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Right Motor Pos Inches",
-              "_title": "Right Motor Pos Inches"
-            }
-          },
-          "9,4": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Left Motor Pos Meters",
-              "_title": "Left Motor Pos Meters"
-            }
-          },
-          "0,5": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Right Motor Pos Meters",
-              "_title": "Right Motor Pos Meters"
-            }
-          },
-          "1,5": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Odometry Values Meters",
-              "_title": "Odometry Values Meters"
             }
           }
         }
@@ -773,46 +611,6 @@
         "hgap": 16.0,
         "vgap": 16.0,
         "tiles": {
-          "8,6": {
-            "size": [
-              2,
-              2
-            ],
-            "content": {
-              "_type": "Gyro",
-              "_title": "Gyro",
-              "Visuals/Major tick spacing": 45.0,
-              "Visuals/Starting angle": 180.0,
-              "Visuals/Show tick mark ring": true,
-              "Visuals/Counter clockwise": false
-            }
-          },
-          "8,5": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Simple Dial",
-              "_title": "Simple Dial",
-              "Range/Min": 0.0,
-              "Range/Max": 100.0,
-              "Visuals/Show value": true
-            }
-          },
-          "8,0": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Simple Dial",
-              "_title": "Simple Dial",
-              "Range/Min": 0.0,
-              "Range/Max": 100.0,
-              "Visuals/Show value": true
-            }
-          },
           "0,0": {
             "size": [
               4,
@@ -863,21 +661,6 @@
               "Range/Min": 0.0,
               "Range/Max": 20000.0,
               "Visuals/Show value": true
-            }
-          },
-          "7,1": {
-            "size": [
-              3,
-              3
-            ],
-            "content": {
-              "_type": "Gyro",
-              "_source0": "network_table:///SmartDashboard/Pigeon Gyro",
-              "_title": "SmartDashboard/Pigeon Gyro",
-              "Visuals/Major tick spacing": 45.0,
-              "Visuals/Starting angle": 180.0,
-              "Visuals/Show tick mark ring": true,
-              "Visuals/Counter clockwise": false
             }
           },
           "4,3": {
@@ -1010,15 +793,73 @@
               "Colors/Color when true": "#7CFC00FF",
               "Colors/Color when false": "#8B0000FF"
             }
+          },
+          "8,6": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Gyro",
+              "_source0": "network_table:///SmartDashboard/Turret Angle",
+              "_title": "SmartDashboard/Turret Angle",
+              "Visuals/Major tick spacing": 45.0,
+              "Visuals/Starting angle": 180.0,
+              "Visuals/Show tick mark ring": true,
+              "Visuals/Counter clockwise": false
+            }
+          },
+          "7,1": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "Gyro",
+              "_source0": "network_table:///SmartDashboard/Pigeon Gyro",
+              "_title": "SmartDashboard/Pigeon Gyro",
+              "Visuals/Major tick spacing": 45.0,
+              "Visuals/Starting angle": 180.0,
+              "Visuals/Show tick mark ring": true,
+              "Visuals/Counter clockwise": false
+            }
+          },
+          "8,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Simple Dial",
+              "_source0": "network_table:///SmartDashboard/Avg Speed MPH",
+              "_title": "SmartDashboard/Avg Speed MPH",
+              "Range/Min": 0.0,
+              "Range/Max": 100.0,
+              "Visuals/Show value": true
+            }
+          },
+          "8,5": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Simple Dial",
+              "_source0": "network_table:///SmartDashboard/Hood Angle Raw",
+              "_title": "SmartDashboard/Hood Angle Raw",
+              "Range/Min": 0.0,
+              "Range/Max": 66.0,
+              "Visuals/Show value": true
+            }
           }
         }
       }
     }
   ],
   "windowGeometry": {
-    "x": -7.199999809265137,
-    "y": -7.199999809265137,
-    "width": 1550.4000244140625,
-    "height": 878.4000244140625
+    "x": 40.0,
+    "y": 142.39999389648438,
+    "width": 1547.199951171875,
+    "height": 1481.5999755859375
   }
 }

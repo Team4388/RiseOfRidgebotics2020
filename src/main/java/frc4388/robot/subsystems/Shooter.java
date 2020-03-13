@@ -54,7 +54,7 @@ public class Shooter extends SubsystemBase {
     m_shooterFalcon.setNeutralMode(NeutralMode.Coast);
     m_shooterFalcon.setInverted(true);
     m_shooterFalcon.configOpenloopRamp(1, ShooterConstants.SHOOTER_TIMEOUT_MS);
-    //m_shooterFalcon.configClosedloopRamp(1.0, ShooterConstants.SHOOTER_TIMEOUT_MS);
+    m_shooterFalcon.configClosedloopRamp(0.75, ShooterConstants.SHOOTER_TIMEOUT_MS);
     setShooterGains();
 
     m_shooterFalcon.configPeakOutputReverse(0, ShooterConstants.SHOOTER_TIMEOUT_MS);
