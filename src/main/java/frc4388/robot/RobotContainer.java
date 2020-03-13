@@ -269,6 +269,8 @@ public class RobotContainer {
     }
 
     public void buildAutos() {
+        resetOdometry(new Pose2d(0, 0, new Rotation2d(180)));
+
         String[] sixBallAutoMiddlePaths = new String[]{
             "SixBallMidComplete"
         };
@@ -300,10 +302,12 @@ public class RobotContainer {
         m_fiveBallAutoMiddle = new FiveBallAutoMiddle(m_robotDrive, buildPaths(fiveBallAutoMiddlePaths));
 
         String[] tenBallAutoMiddlePaths = new String[]{
+            "SixBallMidComplete",
             "TenBallMidComplete"
         };
 
-        m_tenBallAutoMiddle = new TenBallAutoMiddle(m_robotDrive, buildPaths(tenBallAutoMiddlePaths));
+        m_tenBallAutoMiddle = new TenBallAutoMiddle(m_robotShooterHood, m_robotStorage, m_robotIntake, m_robotShooter,
+                m_robotShooterAim, m_robotDrive,buildPaths(tenBallAutoMiddlePaths));
     }
 
     /**
@@ -321,12 +325,12 @@ public class RobotContainer {
         try {
             SmartDashboard.putNumber("Trajectory Total Time", m_totalTimeAuto);
 
-            return m_sixBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+            //return m_sixBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_eightBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_driveOffLineForward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-            //return m_driveOffLineBackward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+            //return m_driveOffLinfeBackward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_fiveBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-            //return m_tenBallAutoMiddle.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+            return m_tenBallAutoMiddle.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
 
         } catch (Exception e) {
             System.err.println("ERROR");
