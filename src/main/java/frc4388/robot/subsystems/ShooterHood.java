@@ -88,6 +88,11 @@ public class ShooterHood extends SubsystemBase {
     m_angleAdjustPIDController.setReference(targetAngle, ControlType.kPosition);
   }
 
+  public void runHood(double input)
+  {
+    m_angleAdjustMotor.set(input);
+  }
+
   public void resetGyroAngleAdj(){
     m_angleEncoder.setPosition(0);
 }
