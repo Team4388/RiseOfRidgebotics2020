@@ -49,6 +49,7 @@ import frc4388.robot.commands.climber.RunLevelerWithJoystick;
 import frc4388.robot.commands.drive.DriveStraightToPositionMM;
 import frc4388.robot.commands.drive.DriveWithJoystick;
 import frc4388.robot.commands.drive.PlaySongDrive;
+import frc4388.robot.commands.drive.SkipSong;
 import frc4388.robot.commands.drive.TurnDegrees;
 import frc4388.robot.commands.intake.RunIntakeWithTriggers;
 import frc4388.robot.commands.shooter.CalibrateShooter;
@@ -136,7 +137,7 @@ public class RobotContainer {
     public RobotContainer() {
         /* Passing Drive and Pneumatics Subsystems */
         m_robotPneumatics.passRequiredSubsystem(m_robotDrive);
-        m_robotDrive.passRequiredSubsystem(m_robotPneumatics);
+        m_robotDrive.passRequiredSubsystem(m_robotPneumatics, m_robotShooter);
 
         m_robotShooter.passRequiredSubsystem(m_robotShooterHood, m_robotShooterAim);
         m_robotShooterHood.passRequiredSubsystem(m_robotShooter);
@@ -184,8 +185,8 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Test Buttons */
         // A driver test button
-        new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-            .whileHeld(new InstantCommand(() -> m_robotDrive.tankDriveVelocity(1, -1), m_robotDrive));
+        /*new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
+            .whileHeld(new InstantCommand(() -> m_robotDrive.tankDriveVelocity(1, -1), m_robotDrive));*/
 
         // B driver test button
         new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
@@ -289,7 +290,7 @@ public class RobotContainer {
 
         // Meg
         new JoystickButton(getButtonFox(), ButtonFox.MIDDLE_SWITCH)
-            .whenPressed(new PlaySongDrive(m_robotDrive))
+            .whileHeld(new PlaySongDrive(m_robotDrive, m_robotShooter))
             .whenReleased(new InterruptSubystem(m_robotDrive));
 
         // Shooter Manual
@@ -298,22 +299,21 @@ public class RobotContainer {
             .whenReleased(new ShooterManual(false));
 
         // Goal Shooter Position
-        new JoystickButton(getButtonFox(), ButtonFox.LEFT_BUTTON)
-            .whileHeld(new ShooterGoalPosition(m_robotShooter, m_robotShooterHood, m_robotShooterAim))
-            .whenReleased(new InterruptSubystem(m_robotShooter))
-            .whenReleased(new InterruptSubystem(m_robotShooterHood))
-            .whenReleased(new InterruptSubystem(m_robotShooterAim));
+        new JoystickButton(getButtonFox(), ButtonFox.RIGHT_BUTTON)
+            .whileHeld(new PlaySongDrive(m_robotDrive, m_robotShooter))
+            .whenReleased(new InterruptSubystem(m_robotDrive));
 
         // Trench Shooter Position
-        new JoystickButton(getButtonFox(), ButtonFox.RIGHT_BUTTON)
+        new JoystickButton(getButtonFox(), ButtonFox.LEFT_BUTTON)
             .whileHeld(new ShooterTrenchPosition(m_robotShooter, m_robotShooterHood, m_robotShooterAim))
             .whenReleased(new InterruptSubystem(m_robotShooter))
             .whenReleased(new InterruptSubystem(m_robotShooterHood))
             .whenReleased(new InterruptSubystem(m_robotShooterAim));
+            //.whenPressed(new SkipSong(m_robotDrive, 1));
     }
 
     public void buildAutos() {
-        resetOdometry(new Pose2d(0, 0, new Rotation2d(180)));
+        //resetOdometry(new Pose2d(0, 0, new Rotation2d(180)));
 
         String[] sixBallAutoMiddlePaths = new String[]{
             "SixBallMidComplete"

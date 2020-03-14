@@ -54,6 +54,7 @@ public class Drive extends SubsystemBase {
 
   /* Pneumatics Subsystem */
   public Pneumatics m_pneumaticsSubsystem;
+  Shooter m_shooter;
 
   /* Low Gear Gains */
   public static Gains m_gainsDistanceLow = DriveConstants.DRIVE_DISTANCE_GAINS_LOW;
@@ -96,7 +97,8 @@ public class Drive extends SubsystemBase {
   SendableChooser<String> m_songChooser = new SendableChooser<String>();
 
   /* Misc */
-  String m_currentSong = "";
+  public String m_currentSong = "";
+  public String[] songsStrings;
 
   /**
    * Add your docs here.
@@ -283,11 +285,12 @@ public class Drive extends SubsystemBase {
     /* Create chooser to choose song to play */
     File songsDir = new File(Filesystem.getDeployDirectory().getAbsolutePath() + "/songs");
     System.err.println(songsDir.getPath());
-    String[] songsStrings = songsDir.list();
+    songsStrings = songsDir.list();
     for (String songString : songsStrings) {
       m_songChooser.addOption(songString, songsDir.getAbsolutePath() + "/" + songString);
     }
     Shuffleboard.getTab("Songs").add(m_songChooser);
+    selectSong(songsStrings[0]);
 
     /* Start counting time */
     m_lastTimeMs = System.currentTimeMillis();
@@ -306,8 +309,10 @@ public class Drive extends SubsystemBase {
    * 
    * @param subsystem Subsystem needed.
    */
-  public void passRequiredSubsystem(Pneumatics subsystem) {
+  public void passRequiredSubsystem(Pneumatics subsystem, Shooter shooter) {
     m_pneumaticsSubsystem = subsystem;
+    m_shooter = shooter;
+    m_orchestra.addInstrument(m_shooter.m_shooterFalcon);
   }
 
   public void updateTime() {
@@ -913,6 +918,7 @@ public class Drive extends SubsystemBase {
       if (m_currentSong != m_songChooser.getSelected()){
         m_currentSong = m_songChooser.getSelected();
         selectSong(m_currentSong);
+
         //System.err.println(m_currentSong);
       }
     } catch (Exception e) {
@@ -920,4 +926,6 @@ public class Drive extends SubsystemBase {
       // e.printStackTrace(System.err);
     }
   }
+
+
 }

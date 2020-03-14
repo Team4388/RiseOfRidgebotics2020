@@ -34,6 +34,7 @@ public class JoystickManualButton extends Button {
 
     m_joystick = joystick;
     m_buttonNumber = buttonNumber;
+    m_buttonType = buttonType;
   }
 
   /**
