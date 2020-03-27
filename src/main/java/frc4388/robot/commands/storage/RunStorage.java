@@ -5,39 +5,32 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc4388.robot.commands.drive;
+package frc4388.robot.commands.storage;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc4388.robot.subsystems.Drive;
-import frc4388.robot.subsystems.Shooter;
+import frc4388.robot.Constants.StorageConstants;
+import frc4388.robot.subsystems.Storage;
 
-public class PlaySongDrive extends CommandBase {
-  private Drive m_drive;
-  
+public class RunStorage extends CommandBase {
+  Storage m_storage;
   /**
-   * Creates a new PlaySongDrive.
+   * Creates a new RunStorage.
    */
-  public PlaySongDrive(Drive subsystem, Shooter shooter) {
+  public RunStorage(Storage subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_drive = subsystem;
-    addRequirements(m_drive, shooter);
+    m_storage = subsystem;
+    addRequirements(m_storage);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_drive.m_rightFrontMotor.set(0);
-    m_drive.m_leftFrontMotor.set(0);
-    m_drive.m_rightBackMotor.set(0);
-    m_drive.m_leftBackMotor.set(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drive.playSong();
-    //System.err.println("Playing " + m_drive.m_orchestra.isPlaying());
-    //m_drive.m_driveTrain.feedWatchdog();
+    m_storage.runStorage(StorageConstants.STORAGE_SPEED);
   }
 
   // Called once the command ends or is interrupted.

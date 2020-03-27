@@ -8,7 +8,7 @@
 package frc4388.robot.commands.auto;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc4388.robot.commands.drive.GotoCoordinates;
+import frc4388.robot.commands.drive.GotoCoordinatesRobotRelative;
 import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Pneumatics;
 
@@ -30,15 +30,15 @@ public class AutoPath1FromCenter extends SequentialCommandGroup {
 
     addCommands(  new Wait(m_drive, 0, 1), 
                   //shoot pre-loaded 3 balls
-                  new GotoCoordinates(m_drive, m_pneumatics, 75, 44, -90),
+                  new GotoCoordinatesRobotRelative(m_drive, m_pneumatics, 75, 44, -90),
                   //Start Intake Ball 1
-                  new GotoCoordinates(m_drive, m_pneumatics, 0, 12),
-                  new GotoCoordinates(m_drive, m_pneumatics, 0, 28),
+                  new GotoCoordinatesRobotRelative(m_drive, m_pneumatics, 0, 12),
+                  new GotoCoordinatesRobotRelative(m_drive, m_pneumatics, 0, 28),
                   //Start Intake Ball 2
-                  new GotoCoordinates(m_drive, m_pneumatics, 0, 8),
-                  new GotoCoordinates(m_drive, m_pneumatics, 0, 28),
+                  new GotoCoordinatesRobotRelative(m_drive, m_pneumatics, 0, 8),
+                  new GotoCoordinatesRobotRelative(m_drive, m_pneumatics, 0, 28),
                   //Start Intake Ball 3
-                  new GotoCoordinates(m_drive, m_pneumatics, 0, 8),
+                  new GotoCoordinatesRobotRelative(m_drive, m_pneumatics, 0, 8),
                   new Wait(m_drive, 0, 2)
                   //Shoot 3 Balls
                   );

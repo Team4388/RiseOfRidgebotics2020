@@ -54,6 +54,7 @@ public class Drive extends SubsystemBase {
 
   /* Pneumatics Subsystem */
   public Pneumatics m_pneumaticsSubsystem;
+  Shooter m_shooter;
 
   /* Low Gear Gains */
   public static Gains m_gainsDistanceLow = DriveConstants.DRIVE_DISTANCE_GAINS_LOW;
@@ -66,6 +67,9 @@ public class Drive extends SubsystemBase {
   public static Gains m_gainsVelocityHigh = DriveConstants.DRIVE_VELOCITY_GAINS_HIGH;
   public static Gains m_gainsTurningHigh = DriveConstants.DRIVE_TURNING_GAINS_HIGH;
   public static Gains m_gainsMotionMagicHigh = DriveConstants.DRIVE_MOTION_MAGIC_GAINS_HIGH;
+
+  /* Back Motor Gains */
+  public static Gains m_gainsVelocityBack = DriveConstants.DRIVE_VELOCITY_GAINS_BACK;
 
   /* Timey Whimey */
   public long m_currentTimeMs = System.currentTimeMillis();
@@ -93,7 +97,8 @@ public class Drive extends SubsystemBase {
   SendableChooser<String> m_songChooser = new SendableChooser<String>();
 
   /* Misc */
-  String m_currentSong = "";
+  public String m_currentSong = "";
+  public String[] songsStrings;
 
   /**
    * Add your docs here.
@@ -105,7 +110,7 @@ public class Drive extends SubsystemBase {
     m_leftBackMotor.configFactoryDefault();
     m_rightBackMotor.configFactoryDefault();
     m_pigeon.configFactoryDefault();
-    resetGyroYaw();
+    resetGyroYaw(0);
 
     m_pigeonGyro = getGyroInterface();
 
@@ -145,20 +150,18 @@ public class Drive extends SubsystemBase {
 
     /* PID for Back Motor Control in Tank Drive Vel */
     m_rightBackMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
-    m_rightBackMotor.config_kF(DriveConstants.SLOT_VELOCITY, m_gainsVelocityLow.m_kF, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightBackMotor.config_kP(DriveConstants.SLOT_VELOCITY, m_gainsVelocityLow.m_kP, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightBackMotor.config_kI(DriveConstants.SLOT_VELOCITY, m_gainsVelocityLow.m_kI, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightBackMotor.config_kD(DriveConstants.SLOT_VELOCITY, m_gainsVelocityLow.m_kD, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_rightBackMotor.configClosedLoopPeakOutput(DriveConstants.SLOT_VELOCITY, m_gainsVelocityLow.m_kPeakOutput,
-        DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightBackMotor.config_kF(DriveConstants.SLOT_VELOCITY, m_gainsVelocityBack.m_kF, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightBackMotor.config_kP(DriveConstants.SLOT_VELOCITY, m_gainsVelocityBack.m_kP, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightBackMotor.config_kI(DriveConstants.SLOT_VELOCITY, m_gainsVelocityBack.m_kI, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightBackMotor.config_kD(DriveConstants.SLOT_VELOCITY, m_gainsVelocityBack.m_kD, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_rightBackMotor.configClosedLoopPeakOutput(DriveConstants.SLOT_VELOCITY, m_gainsVelocityBack.m_kPeakOutput, DriveConstants.DRIVE_TIMEOUT_MS);
 
     m_leftBackMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
-    m_leftBackMotor.config_kF(DriveConstants.SLOT_VELOCITY, m_gainsVelocityLow.m_kF, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_leftBackMotor.config_kP(DriveConstants.SLOT_VELOCITY, m_gainsVelocityLow.m_kP, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_leftBackMotor.config_kI(DriveConstants.SLOT_VELOCITY, m_gainsVelocityLow.m_kI, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_leftBackMotor.config_kD(DriveConstants.SLOT_VELOCITY, m_gainsVelocityLow.m_kD, DriveConstants.DRIVE_TIMEOUT_MS);
-    m_leftBackMotor.configClosedLoopPeakOutput(DriveConstants.SLOT_VELOCITY, m_gainsVelocityLow.m_kPeakOutput,
-        DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftBackMotor.config_kF(DriveConstants.SLOT_VELOCITY, m_gainsVelocityBack.m_kF, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftBackMotor.config_kP(DriveConstants.SLOT_VELOCITY, m_gainsVelocityBack.m_kP, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftBackMotor.config_kI(DriveConstants.SLOT_VELOCITY, m_gainsVelocityBack.m_kI, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftBackMotor.config_kD(DriveConstants.SLOT_VELOCITY, m_gainsVelocityBack.m_kD, DriveConstants.DRIVE_TIMEOUT_MS);
+    m_leftBackMotor.configClosedLoopPeakOutput(DriveConstants.SLOT_VELOCITY, m_gainsVelocityBack.m_kPeakOutput, DriveConstants.DRIVE_TIMEOUT_MS);
 
     /* Reset Sensors for WPI_TalonFXs */
     resetEncoders();
@@ -282,11 +285,12 @@ public class Drive extends SubsystemBase {
     /* Create chooser to choose song to play */
     File songsDir = new File(Filesystem.getDeployDirectory().getAbsolutePath() + "/songs");
     System.err.println(songsDir.getPath());
-    String[] songsStrings = songsDir.list();
+    songsStrings = songsDir.list();
     for (String songString : songsStrings) {
       m_songChooser.addOption(songString, songsDir.getAbsolutePath() + "/" + songString);
     }
     Shuffleboard.getTab("Songs").add(m_songChooser);
+    selectSong(songsStrings[0]);
 
     /* Start counting time */
     m_lastTimeMs = System.currentTimeMillis();
@@ -305,8 +309,10 @@ public class Drive extends SubsystemBase {
    * 
    * @param subsystem Subsystem needed.
    */
-  public void passRequiredSubsystem(Pneumatics subsystem) {
+  public void passRequiredSubsystem(Pneumatics subsystem, Shooter shooter) {
     m_pneumaticsSubsystem = subsystem;
+    m_shooter = shooter;
+    m_orchestra.addInstrument(m_shooter.m_shooterFalcon);
   }
 
   public void updateTime() {
@@ -333,8 +339,9 @@ public class Drive extends SubsystemBase {
     m_totalRightDistanceInches += ticksToInches(m_currentRightPosTicks - m_lastRightPosTicks);
     m_totalLeftDistanceInches += ticksToInches(m_currentLeftPosTicks - m_lastLeftPosTicks);
 
-    m_odometry.update(Rotation2d.fromDegrees(getHeading()), getDistanceInches(m_leftFrontMotor),
-        -getDistanceInches(m_rightFrontMotor));
+    m_odometry.update(Rotation2d.fromDegrees( getHeading()),
+                                              inchesToMeters(getDistanceInches(m_leftFrontMotor)),
+                                              -inchesToMeters(getDistanceInches(m_rightFrontMotor)));
   }
 
   /**
@@ -342,7 +349,7 @@ public class Drive extends SubsystemBase {
    * using the Differential Drive class to manage the two inputs
    */
   public void driveWithInput(double move, double steer) {
-    m_driveTrain.arcadeDrive(move, steer);
+    m_driveTrain.arcadeDrive(-move, steer);
     m_leftBackMotor.follow(m_leftFrontMotor);
     m_rightBackMotor.follow(m_rightFrontMotor);
   }
@@ -465,8 +472,6 @@ public class Drive extends SubsystemBase {
     m_rightBackMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
     m_leftBackMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
 
-    System.err.println(moveVelLeft);
-
     m_rightBackMotor.set(TalonFXControlMode.Velocity, moveVelRight);
     m_leftBackMotor.set(TalonFXControlMode.Velocity, moveVelLeft);
     m_leftFrontMotor.follow(m_leftBackMotor);
@@ -512,24 +517,25 @@ public class Drive extends SubsystemBase {
    */
   public void setOdometry(Pose2d pose) {
     resetEncoders();
+    resetGyroYaw(pose.getRotation().getDegrees());
     m_odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
   }
 
   /**
    * Resets the yaw of the pigeon
    */
-  public void resetGyroYaw() {
-    m_pigeon.setYaw(0);
-    m_pigeon.setAccumZAngle(0);
-    resetGyroAngles();
+  public void resetGyroYaw(double angle) {
+    m_pigeon.setYaw(angle);
+    m_pigeon.setAccumZAngle(angle);
+    resetGyroAngles(angle);
   }
 
   /**
    * Add docs here
    */
-  public void resetGyroAngles() {
-    m_lastAngleYaw = 0;
-    m_currentAngleYaw = 0;
+  public void resetGyroAngles(double angle) {
+    m_lastAngleYaw = angle;
+    m_currentAngleYaw = angle;
   }
 
   /**
@@ -574,7 +580,7 @@ public class Drive extends SubsystemBase {
       @Override
       public void reset() {
         // TODO Auto-generated method stub
-        resetGyroYaw();
+        resetGyroYaw(0);
       }
     
       @Override
@@ -871,8 +877,11 @@ public class Drive extends SubsystemBase {
       
       //SmartDashboard.putNumber("Right Motor Velocity Int Sensor", m_rightFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
       //SmartDashboard.putNumber("Left Motor Velocity Int Sensor", m_leftFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
-      //SmartDashboard.putNumber("Left Motor Pos Inches", getDistanceInches(m_rightFrontMotor));
-      //SmartDashboard.putNumber("Right Motor Pos Inches", getDistanceInches(m_leftFrontMotor));
+      SmartDashboard.putNumber("Left Motor Pos Inches", getDistanceInches(m_rightFrontMotor));
+      SmartDashboard.putNumber("Right Motor Pos Inches", getDistanceInches(m_leftFrontMotor));
+
+      SmartDashboard.putNumber("Left Motor Pos Meters", inchesToMeters(getDistanceInches(m_rightFrontMotor)));
+      SmartDashboard.putNumber("Right Motor Pos Meters", inchesToMeters(getDistanceInches(m_leftFrontMotor)));
 
       /*SmartDashboard.putNumber("Right Front Velocity", m_rightFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
       SmartDashboard.putNumber("Left Front Velocity", m_leftFrontMotor.getSensorCollection().getIntegratedSensorVelocity());
@@ -900,7 +909,7 @@ public class Drive extends SubsystemBase {
       //SmartDashboard.putNumber("PID 0 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_PRIMARY));
       //SmartDashboard.putNumber("PID 1 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_TURN));
 
-      //SmartDashboard.putString("Odometry Values Meters", getPose().toString());
+      SmartDashboard.putString("Odometry Values Meters", getPose().toString());
       //SmartDashboard.putNumber("Odometry Heading", getHeading());
 
       //SmartDashboard.putNumber("Time Seconds", m_currentTimeSec);
@@ -909,6 +918,7 @@ public class Drive extends SubsystemBase {
       if (m_currentSong != m_songChooser.getSelected()){
         m_currentSong = m_songChooser.getSelected();
         selectSong(m_currentSong);
+
         //System.err.println(m_currentSong);
       }
     } catch (Exception e) {
@@ -916,4 +926,6 @@ public class Drive extends SubsystemBase {
       // e.printStackTrace(System.err);
     }
   }
+
+
 }

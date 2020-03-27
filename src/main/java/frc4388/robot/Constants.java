@@ -22,6 +22,8 @@ import frc4388.utility.LEDPatterns;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    public static final int SELECTED_AUTO = 0;
+
     public static final class DriveConstants {
         /* Drive Train IDs */
         public static final int DRIVE_LEFT_FRONT_CAN_ID = 2;
@@ -47,7 +49,7 @@ public final class Constants {
         public static final double COS_MULTIPLIER_HIGH = 0.8; 
 
         /* Drive Train Characteristics */
-        public static final double MOTOR_ROT_PER_WHEEL_ROT_HIGH = 5.13;
+        public static final double MOTOR_ROT_PER_WHEEL_ROT_HIGH = 7.29;
         public static final double MOTOR_ROT_PER_WHEEL_ROT_LOW = 15;
         public static final double WHEEL_DIAMETER_INCHES = 6;
         public static final double TICKS_PER_GYRO_REV = 8192;
@@ -68,9 +70,11 @@ public final class Constants {
         public static final int DRIVE_CRUISE_VELOCITY_HIGH = 20000;
         public static final int DRIVE_ACCELERATION_HIGH = 7000;
 
+        public static final Gains DRIVE_VELOCITY_GAINS_BACK = new Gains(0.0, 0.0, 0.0, 0.05, 0, 1.0);
+
         /* Trajectory Constants */
-        public static final double MAX_SPEED_METERS_PER_SECOND = 3;
-        public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 3;
+        public static final double MAX_SPEED_METERS_PER_SECOND = 1.0;
+        public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 1.0;
         public static final double TRACK_WIDTH_METERS = 0.648;
         public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
  
@@ -167,7 +171,7 @@ public final class Constants {
         public static final int STORAGE_CAN_ID = 11;
         public static final double STORAGE_PARTIAL_BALL = 2;
         public static final double STORAGE_FULL_BALL = 7;
-        public static final double STORAGE_SPEED = 1.0;
+        public static final double STORAGE_SPEED = 0.5;
         public static final double STORAGE_TIMEOUT = 3000;
 
         /* Storage Characteristics */
@@ -220,5 +224,6 @@ public final class Constants {
     public static final class OIConstants {
         public static final int XBOX_DRIVER_ID = 0;
         public static final int XBOX_OPERATOR_ID = 1;
+        public static final int BUTTON_FOX_ID = 2;
     }
 }

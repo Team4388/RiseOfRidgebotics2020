@@ -9,35 +9,38 @@ package frc4388.robot.commands.drive;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.subsystems.Drive;
-import frc4388.robot.subsystems.Shooter;
 
-public class PlaySongDrive extends CommandBase {
-  private Drive m_drive;
+public class SkipSong extends CommandBase {
+  Drive m_drive;
+  int m_index;
   
   /**
-   * Creates a new PlaySongDrive.
+   * Creates a new SkipSong.
    */
-  public PlaySongDrive(Drive subsystem, Shooter shooter) {
+  public SkipSong(Drive m_robotDrive, int index) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_drive = subsystem;
-    addRequirements(m_drive, shooter);
+    m_drive = m_robotDrive;
+    m_index = index;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_drive.m_rightFrontMotor.set(0);
-    m_drive.m_leftFrontMotor.set(0);
-    m_drive.m_rightBackMotor.set(0);
-    m_drive.m_leftBackMotor.set(0);
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drive.playSong();
-    //System.err.println("Playing " + m_drive.m_orchestra.isPlaying());
-    //m_drive.m_driveTrain.feedWatchdog();
+    String[] songs = m_drive.songsStrings;
+    String song = m_drive.m_currentSong;
+
+    for (int i = 0; i < songs.length; i++) {
+      if (songs[i] == song) {
+        m_drive.selectSong(songs[i + m_index]);
+        break;
+      }
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -48,6 +51,6 @@ public class PlaySongDrive extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

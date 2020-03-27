@@ -10,6 +10,7 @@ package frc4388.robot;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -35,7 +36,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    SmartDashboard.putString("Auto?", "NAH");
+    SmartDashboard.putString("Is Auto Start?", "NAH");
   }
 
   /**
@@ -63,6 +64,9 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     m_robotContainer.setDriveNeutralMode(NeutralMode.Coast);
+    /* Builds Autos */
+    m_robotContainer.buildAutos();
+    SmartDashboard.putString("Is Auto Start?", "NAH");
   }
 
   @Override
@@ -74,11 +78,15 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     m_robotContainer.setDriveNeutralMode(NeutralMode.Brake);
-    m_robotContainer.setDriveGearState(false);
-    m_robotContainer.resetOdometry();
+    m_robotContainer.setDriveGearState(true);
+    m_robotContainer.resetOdometry(new Pose2d());
+
+    //m_robotContainer.resetGyroYawRobotContainer(0);
+
     //m_robotContainer.configDriveTrainSensors(FeedbackDevice.IntegratedSensor);
 
     /*
@@ -91,7 +99,7 @@ public class Robot extends TimedRobot {
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
-      System.err.println("Auto Start");
+      SmartDashboard.putString("Is Auto Start?", "YEA");
     }
   }
 
@@ -105,7 +113,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     m_robotContainer.setDriveNeutralMode(NeutralMode.Brake);
-    m_robotContainer.setDriveGearState(false);
+    m_robotContainer.setDriveGearState(true);
 
     m_robotContainer.shiftClimberRachet(false);
     //m_robotContainer.configDriveTrainSensors(FeedbackDevice.IntegratedSensor);

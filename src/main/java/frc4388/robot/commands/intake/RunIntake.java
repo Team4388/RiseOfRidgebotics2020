@@ -5,39 +5,32 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc4388.robot.commands.drive;
+package frc4388.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc4388.robot.subsystems.Drive;
-import frc4388.robot.subsystems.Shooter;
+import frc4388.robot.Constants.IntakeConstants;
+import frc4388.robot.subsystems.Intake;
 
-public class PlaySongDrive extends CommandBase {
-  private Drive m_drive;
-  
+public class RunIntake extends CommandBase {
+  Intake m_intake;
   /**
-   * Creates a new PlaySongDrive.
+   * Creates a new RunIntake.
    */
-  public PlaySongDrive(Drive subsystem, Shooter shooter) {
+  public RunIntake(Intake subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_drive = subsystem;
-    addRequirements(m_drive, shooter);
+    m_intake = subsystem;
+    addRequirements(m_intake);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_drive.m_rightFrontMotor.set(0);
-    m_drive.m_leftFrontMotor.set(0);
-    m_drive.m_rightBackMotor.set(0);
-    m_drive.m_leftBackMotor.set(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drive.playSong();
-    //System.err.println("Playing " + m_drive.m_orchestra.isPlaying());
-    //m_drive.m_driveTrain.feedWatchdog();
+    m_intake.runIntake(IntakeConstants.INTAKE_SPEED);
   }
 
   // Called once the command ends or is interrupted.

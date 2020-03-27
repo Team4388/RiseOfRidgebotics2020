@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.Constants.StorageConstants;
 import frc4388.robot.subsystems.Storage;
+import frc4388.robot.subsystems.Storage.StorageMode;
 
 public class ManageStoragePID extends CommandBase {
   Storage m_storage;
@@ -30,16 +31,13 @@ public class ManageStoragePID extends CommandBase {
   /* Used for intaking a ball. Keeps track off when the 2nd ball in storage has moved */
   boolean m_isStorageEmpty = true;
 
-  public enum StorageMode{IDLE, INTAKE, RESET};
-  StorageMode m_storageMode = StorageMode.IDLE;
   
   /**
    * Creates a new ManageStorage.
    */
-  public ManageStoragePID(Storage m_robotStorage, StorageMode storageMode) {
+  public ManageStoragePID(Storage m_robotStorage) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_storage = m_robotStorage;
-    m_storageMode = storageMode;
     addRequirements(m_storage);
   }
 
@@ -55,7 +53,7 @@ public class ManageStoragePID extends CommandBase {
 
     m_intakeStartPos = m_storage.getEncoderPosInches();
 
-    if (m_storageMode == StorageMode.RESET) {
+    if (m_storage.m_storageMode == StorageMode.RESET) {
       m_resetStartTime = System.currentTimeMillis();
     }
   }
@@ -73,11 +71,11 @@ public class ManageStoragePID extends CommandBase {
     SmartDashboard.putBoolean("!Ball Storage!", m_isBallInStorage);
     SmartDashboard.putBoolean("!Ball Shooter!", m_isBallInShooter);
 
-    if (m_storageMode == StorageMode.IDLE) {
+    if (m_storage.m_storageMode == StorageMode.IDLE) {
       runIdle();
-    } else if (m_storageMode == StorageMode.INTAKE) {
+    } else if (m_storage.m_storageMode == StorageMode.INTAKE) {
       runIntake();
-    } else if (m_storageMode == StorageMode.RESET) {
+    } else if (m_storage.m_storageMode == StorageMode.RESET) {
       runReset();
     }
   }
@@ -93,10 +91,10 @@ public class ManageStoragePID extends CommandBase {
 
       double error = (m_intakeStartPos + StorageConstants.STORAGE_FULL_BALL) - m_storage.getEncoderPosInches();
       if (m_storage.getEncoderVel() == 0 && Math.abs(error) < 0.5) {
-        m_storageMode = StorageMode.IDLE;
+        m_storage.changeStorageMode(StorageMode.IDLE);
       }
     } else {
-      m_storageMode = StorageMode.IDLE;
+      m_storage.changeStorageMode(StorageMode.IDLE);
     }
   }
 
@@ -108,7 +106,7 @@ public class ManageStoragePID extends CommandBase {
     m_storage.runStorage(0);
 
     if (m_isBallInIntake) {
-      m_storageMode = StorageMode.INTAKE;
+      m_storage.changeStorageMode(StorageMode.INTAKE);
       m_intakeStartPos = m_storage.getEncoderPosInches();
     }
     m_isStorageEmpty = !m_isBallInStorage;
@@ -123,10 +121,10 @@ public class ManageStoragePID extends CommandBase {
     m_storage.runStorage(-StorageConstants.STORAGE_SPEED);
 
     if (m_isBallInIntake) {
-      m_storageMode = StorageMode.INTAKE;
+      m_storage.changeStorageMode(StorageMode.INTAKE);
       m_intakeStartPos = m_storage.getEncoderPosInches();
     } else if (m_resetStartTime + StorageConstants.STORAGE_TIMEOUT < System.currentTimeMillis()) {
-      m_storageMode = StorageMode.IDLE;
+      m_storage.changeStorageMode(StorageMode.IDLE);
     }
     m_isStorageEmpty = !m_isBallInStorage;
   }
@@ -134,7 +132,7 @@ public class ManageStoragePID extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_storageMode = StorageMode.RESET;
+    m_storage.changeStorageMode(StorageMode.RESET);
   }
 
   // Returns true when the command should end.
