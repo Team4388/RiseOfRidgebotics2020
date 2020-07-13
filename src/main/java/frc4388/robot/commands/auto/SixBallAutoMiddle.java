@@ -10,8 +10,10 @@ package frc4388.robot.commands.auto;
 import java.nio.file.Path;
 
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc4388.robot.RobotContainer;
@@ -27,9 +29,24 @@ public class SixBallAutoMiddle extends SequentialCommandGroup {
   public SixBallAutoMiddle(Drive drive, RamseteCommand[] paths) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-
+    
+    /* TODO
+     * Flip line 41 to true, and test positive and negative directions with smart dash
+     * If those match to the picture on Ryan's phone, figure out what else could be wrong
+     * If they don't match, make them match
+     * Sincerly, Past Ryan and Keenan
+     */
     addCommands(
-      paths[0]
+      new InstantCommand(() -> drive.getPose(), drive),
+      new InstantCommand(() -> drive.SetHeading(true), drive),
+      new InstantCommand(() -> drive.updatePosition(), drive),
+      new InstantCommand(() -> drive.setOdometry(drive.savedOdometry), drive),
+      paths[0],
+      paths[1],
+      new InstantCommand(() -> drive.getPose(), drive),
+      new InstantCommand(() -> drive.SetHeading(false), drive),
+      new InstantCommand(() -> drive.updatePosition(), drive),
+      new InstantCommand(() -> drive.setOdometry(drive.savedOdometry), drive)
     );
   }
 }

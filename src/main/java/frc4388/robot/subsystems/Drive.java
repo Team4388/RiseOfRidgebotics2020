@@ -162,7 +162,7 @@ public class Drive extends SubsystemBase {
     m_leftBackMotor.config_kI(DriveConstants.SLOT_VELOCITY, m_gainsVelocityBack.m_kI, DriveConstants.DRIVE_TIMEOUT_MS);
     m_leftBackMotor.config_kD(DriveConstants.SLOT_VELOCITY, m_gainsVelocityBack.m_kD, DriveConstants.DRIVE_TIMEOUT_MS);
     m_leftBackMotor.configClosedLoopPeakOutput(DriveConstants.SLOT_VELOCITY, m_gainsVelocityBack.m_kPeakOutput, DriveConstants.DRIVE_TIMEOUT_MS);
-
+    
     /* Reset Sensors for WPI_TalonFXs */
     resetEncoders();
 
@@ -339,9 +339,15 @@ public class Drive extends SubsystemBase {
     m_totalRightDistanceInches += ticksToInches(m_currentRightPosTicks - m_lastRightPosTicks);
     m_totalLeftDistanceInches += ticksToInches(m_currentLeftPosTicks - m_lastLeftPosTicks);
 
-    m_odometry.update(Rotation2d.fromDegrees( getHeading()),
+    if (m_isFront) {
+      m_odometry.update(Rotation2d.fromDegrees( getHeading()),
+                                              inchesToMeters(getDistanceInches(m_rightFrontMotor)),
+                                              -inchesToMeters(getDistanceInches(m_leftFrontMotor)));
+    } else {
+      m_odometry.update(Rotation2d.fromDegrees( getHeading()),
                                               inchesToMeters(getDistanceInches(m_leftFrontMotor)),
                                               -inchesToMeters(getDistanceInches(m_rightFrontMotor)));
+    }
   }
 
   /**
@@ -461,8 +467,18 @@ public class Drive extends SubsystemBase {
     // m_currentAngleYaw+(360));
     // double targetGyro = (m_kinematicsTargetAngle / 360) *
     // DriveConstants.TICKS_PER_GYRO_REV;
-    double moveVelLeft = inchesToTicks(metersToInches(leftSpeed)) / DriveConstants.SECONDS_TO_TICK_TIME;
-    double moveVelRight = inchesToTicks(metersToInches(rightSpeed)) / DriveConstants.SECONDS_TO_TICK_TIME;
+    double moveVelRight;
+    double moveVelLeft;
+    if (m_isFront)
+    {
+      moveVelRight = -inchesToTicks(metersToInches(leftSpeed)) / DriveConstants.SECONDS_TO_TICK_TIME;
+      moveVelLeft = -inchesToTicks(metersToInches(rightSpeed)) / DriveConstants.SECONDS_TO_TICK_TIME;
+    }
+    else
+    {
+      moveVelLeft = inchesToTicks(metersToInches(leftSpeed)) / DriveConstants.SECONDS_TO_TICK_TIME;
+      moveVelRight = inchesToTicks(metersToInches(rightSpeed)) / DriveConstants.SECONDS_TO_TICK_TIME;
+    }
 
     // SmartDashboard.putNumber("Move Vel Left", moveVelLeft);
     // SmartDashboard.putNumber("Move Vel Right", moveVelRight);
@@ -478,6 +494,12 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.follow(m_rightBackMotor);
 
     m_driveTrain.feedWatchdog();
+  }
+
+  boolean m_isFront;
+  public void SetHeading (boolean isFront)
+  {
+    m_isFront = isFront;
   }
 
   /**
@@ -613,7 +635,14 @@ public class Drive extends SubsystemBase {
    * @return The robot's heading in degrees, from -180 to 180
    */
   public double getHeading() {
-    return Math.IEEEremainder(getGyroYaw(), 360);
+    if (m_isFront)
+    {
+      return Math.IEEEremainder(getGyroYaw()+180, 360);
+    }
+    else
+    {
+      return Math.IEEEremainder(getGyroYaw(), 360);
+    }
   }
 
   /**
@@ -627,13 +656,15 @@ public class Drive extends SubsystemBase {
     return turnRate;
   }
 
+  public Pose2d savedOdometry;
   /**
    * Returns the currently-estimated pose of the robot.
    * 
    * @return The pose.
    */
   public Pose2d getPose() {
-    return m_odometry.getPoseMeters();
+    savedOdometry = m_odometry.getPoseMeters();
+    return savedOdometry;
   }
 
   /**
@@ -910,7 +941,7 @@ public class Drive extends SubsystemBase {
       //SmartDashboard.putNumber("PID 1 Pos", m_rightFrontMotor.getSelectedSensorPosition(DriveConstants.PID_TURN));
 
       SmartDashboard.putString("Odometry Values Meters", getPose().toString());
-      //SmartDashboard.putNumber("Odometry Heading", getHeading());
+      SmartDashboard.putNumber("Odometry Heading", getHeading());
 
       //SmartDashboard.putNumber("Time Seconds", m_currentTimeSec);
       //SmartDashboard.putNumber("Delta Time", m_deltaTimeMs);
@@ -926,6 +957,4 @@ public class Drive extends SubsystemBase {
       // e.printStackTrace(System.err);
     }
   }
-
-
 }

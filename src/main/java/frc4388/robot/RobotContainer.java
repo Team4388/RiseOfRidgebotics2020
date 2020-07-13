@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -316,7 +317,9 @@ public class RobotContainer {
         //resetOdometry(new Pose2d(0, 0, new Rotation2d(180)));
 
         String[] sixBallAutoMiddlePaths = new String[]{
-            "SixBallMidComplete"
+            "SixBallMid0",
+            "SixBallMid1"
+            //"Unnamed_0"
         };
 
         m_sixBallAutoMiddle = new SixBallAutoMiddle(m_robotDrive, buildPaths(sixBallAutoMiddlePaths));
@@ -369,12 +372,12 @@ public class RobotContainer {
         try {
             SmartDashboard.putNumber("Trajectory Total Time", m_totalTimeAuto);
 
-            //return m_sixBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+            return m_sixBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_eightBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_driveOffLineForward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_driveOffLinfeBackward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_fiveBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-            return m_tenBallAutoMiddle.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+            //return m_tenBallAutoMiddle.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
 
         } catch (Exception e) {
             System.err.println("ERROR");
@@ -382,6 +385,7 @@ public class RobotContainer {
 
         return new InstantCommand();
     }
+
     TrajectoryConfig getTrajectoryConfig() {
         return new TrajectoryConfig(
             DriveConstants.MAX_SPEED_METERS_PER_SECOND,
@@ -432,7 +436,8 @@ public class RobotContainer {
                 SmartDashboard.putString("trajectoryPath Initial", trajectoryPath.toString());
 
                 Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-                initialTrajectory = trajectory;
+                //Transform2d transform = m_robotDrive.getPose().minus(trajectory.getInitialPose());
+                initialTrajectory = trajectory;//.transformBy(transform);
 
                 RamseteCommand ramseteCommand = getRamseteCommand(trajectory.relativeTo(initialTrajectory.getInitialPose()));
                 ramseteCommands[0] = ramseteCommand;
