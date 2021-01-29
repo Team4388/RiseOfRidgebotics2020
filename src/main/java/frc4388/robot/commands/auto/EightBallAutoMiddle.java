@@ -7,6 +7,7 @@
 
 package frc4388.robot.commands.auto;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc4388.robot.subsystems.Drive;
@@ -23,7 +24,17 @@ public class EightBallAutoMiddle extends SequentialCommandGroup {
     // super(new FooCommand(), new BarCommand());
     
     addCommands(
-      paths[0]
+      //new InstantCommand(() -> drive.getPose(), drive),
+      //new InstantCommand(() -> drive.SetHeading(true), drive),
+      //new InstantCommand(() -> drive.updatePosition(), drive),
+      //new InstantCommand(() -> drive.setOdometry(drive.savedOdometry), drive),
+      paths[0],
+      paths[1],
+      paths[2]//,
+      //new InstantCommand(() -> drive.getPose(), drive),
+      //new InstantCommand(() -> drive.SetHeading(false), drive),
+      //new InstantCommand(() -> drive.updatePosition(), drive),
+      //new InstantCommand(() -> drive.setOdometry(drive.savedOdometry), drive)
     );
   }
 }

@@ -30,12 +30,7 @@ public class SixBallAutoMiddle extends SequentialCommandGroup {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     
-    /* TODO
-     * Flip line 41 to true, and test positive and negative directions with smart dash
-     * If those match to the picture on Ryan's phone, figure out what else could be wrong
-     * If they don't match, make them match
-     * Sincerly, Past Ryan and Keenan
-     */
+
     addCommands(
       new InstantCommand(() -> drive.getPose(), drive),
       new InstantCommand(() -> drive.SetHeading(true), drive),

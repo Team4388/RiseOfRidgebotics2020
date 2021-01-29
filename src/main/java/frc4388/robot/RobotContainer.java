@@ -319,13 +319,14 @@ public class RobotContainer {
         String[] sixBallAutoMiddlePaths = new String[]{
             "SixBallMid0",
             "SixBallMid1"
-            //"Unnamed_0"
         };
 
         m_sixBallAutoMiddle = new SixBallAutoMiddle(m_robotDrive, buildPaths(sixBallAutoMiddlePaths));
 
         String[] eightBallAutoMiddlePaths = new String[]{
-            "EightBallMidComplete"
+            "EightBallMid0",
+            "EightBallMid1",
+            "EightBallMid2",
         };
 
         m_eightBallAutoMiddle = new EightBallAutoMiddle(m_robotDrive, buildPaths(eightBallAutoMiddlePaths));

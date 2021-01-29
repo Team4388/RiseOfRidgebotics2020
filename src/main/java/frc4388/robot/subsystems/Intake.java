@@ -55,7 +55,7 @@ public class Intake extends SubsystemBase {
    * @param input the percent output to run motor at
    */
   public void runIntake(double input) {
-    m_intakeMotor.set(input);
+    m_intakeMotor.set(input); //this is the speed changer
   }
 
   public void runExtender(double input){
