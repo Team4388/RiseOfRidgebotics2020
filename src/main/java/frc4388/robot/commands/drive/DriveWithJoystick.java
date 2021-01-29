@@ -94,7 +94,7 @@ public class DriveWithJoystick extends CommandBase {
     } 
   */
     
-    m_drive.driveWithInput(-moveOutput, steerOutput);
+    m_drive.driveWithInput(moveOutput, steerOutput);
   }
 
   // Called once the command ends or is interrupted.
