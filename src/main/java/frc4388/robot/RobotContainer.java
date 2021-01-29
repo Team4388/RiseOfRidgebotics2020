@@ -46,6 +46,7 @@ import frc4388.robot.commands.auto.Wait;
 import frc4388.robot.commands.climber.DisengageRachet;
 import frc4388.robot.commands.climber.RunClimberWithTriggers;
 import frc4388.robot.commands.climber.RunLevelerWithJoystick;
+import frc4388.robot.commands.drive.DriveStraightAtVelocityPID;
 import frc4388.robot.commands.drive.DriveStraightToPositionMM;
 import frc4388.robot.commands.drive.DriveWithJoystick;
 import frc4388.robot.commands.drive.TurnDegrees;
@@ -172,11 +173,11 @@ public class RobotContainer {
         /* Test Buttons */
         // A driver test button
         new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-            .whileHeld(new InstantCommand(() -> m_robotDrive.tankDriveVelocity(1, -1), m_robotDrive));
+            .whenPressed(new DriveStraightAtVelocityPID(m_robotDrive, 1000));
 
         // B driver test button
         new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
-            .whenPressed(new TurnDegrees(m_robotDrive, 90));
+            .whenPressed(new TurnDegrees(m_robotDrive, m_robotDrive.m_currentAngleYaw + 5));
         // Y driver test button
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
             .whenPressed(new Wait(m_robotDrive, 0, 0));
