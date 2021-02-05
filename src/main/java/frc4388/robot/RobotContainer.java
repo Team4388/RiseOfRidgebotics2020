@@ -169,8 +169,8 @@ public class RobotContainer {
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
         // runs the storage not
-        m_robotStorage.setDefaultCommand(new RunCommand(() -> m_robotStorage.runStorage(0), m_robotStorage));
-        //m_robotStorage.setDefaultCommand(new ManageStorage(m_robotStorage, StorageMode.IDLE));
+        //m_robotStorage.setDefaultCommand(new RunCommand(() -> m_robotStorage.runStorage(0), m_robotStorage));
+        m_robotStorage.setDefaultCommand(new ManageStorage(m_robotStorage, StorageMode.IDLE));
         //m_robotLime.setDefaultCommand(new RunCommand(() -> m_robotLime.limeOff(), m_robotLime));
     }
 
@@ -359,7 +359,7 @@ public class RobotContainer {
             //return m_driveOffLineBackward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_fiveBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_tenBallAutoMiddle.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
-            return new ParallelRaceGroup(m_sixBallAutoMiddle, new RunIntake(m_robotIntake));
+            return new ParallelRaceGroup(m_sixBallAutoMiddle, new RunIntake(m_robotIntake));//, new RunCommand(() -> m_robotStorage.runStorage(1), m_robotStorage));
         } catch (Exception e) {
             System.err.println("ERROR");
         }
