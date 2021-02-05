@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.DriveConstants;
+import frc4388.robot.Constants.IntakeConstants;
 import frc4388.robot.Constants.OIConstants;
 import frc4388.robot.commands.auto.DriveOffLineBackward;
 import frc4388.robot.commands.auto.DriveOffLineForward;
@@ -161,8 +162,8 @@ public class RobotContainer {
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
         // runs the storage not
-        //m_robotStorage.setDefaultCommand(new RunCommand(() -> m_robotStorage.runStorage(0), m_robotStorage));
-        m_robotStorage.setDefaultCommand(new ManageStorage(m_robotStorage, StorageMode.IDLE));
+        m_robotStorage.setDefaultCommand(new RunCommand(() -> m_robotStorage.runStorage(0), m_robotStorage));
+        //m_robotStorage.setDefaultCommand(new ManageStorage(m_robotStorage, StorageMode.IDLE));
         //m_robotLime.setDefaultCommand(new RunCommand(() -> m_robotLime.limeOff(), m_robotLime));
     }
 
@@ -230,7 +231,7 @@ public class RobotContainer {
             .whileHeld(new RunCommand(() -> m_robotIntake.runExtender(-0.5)))
             .whenReleased(new InstantCommand(() -> m_robotIntake.runExtender(0)));
 
-        // safety for climber and leveler
+         // safety for climber and leveler
         new JoystickButton(getOperatorJoystick(), XboxController.BACK_BUTTON)
             .whenPressed(new InstantCommand(() -> m_robotClimber.setSafetyPressed(), m_robotClimber))
             .whenReleased(new InstantCommand(() -> m_robotClimber.setSafetyNotPressed(), m_robotClimber));
@@ -332,8 +333,8 @@ public class RobotContainer {
         try {
             SmartDashboard.putNumber("Trajectory Total Time", m_totalTimeAuto);
 
-            //return m_sixBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-            return m_figureEight.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+            return m_sixBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+            //return m_figureEight.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_eightBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_driveOffLineForward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_driveOffLineBackward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
