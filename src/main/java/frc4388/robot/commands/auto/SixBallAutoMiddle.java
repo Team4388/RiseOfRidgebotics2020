@@ -12,9 +12,11 @@ import java.nio.file.Path;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc4388.robot.RobotContainer;
+import frc4388.robot.Constants.IntakeConstants;
 import frc4388.robot.commands.intake.RunIntake;
 import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Intake;
@@ -32,9 +34,7 @@ public class SixBallAutoMiddle extends SequentialCommandGroup {
     Intake m_intake = new Intake();
 
     addCommands(
-      paths[0],
-      new RunIntake(m_intake)//,
-      //paths[1]
+      paths[0]
     );
   }
 }
