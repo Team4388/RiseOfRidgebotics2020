@@ -37,6 +37,7 @@ import frc4388.robot.Constants.OIConstants;
 import frc4388.robot.commands.auto.DriveOffLineBackward;
 import frc4388.robot.commands.auto.DriveOffLineForward;
 import frc4388.robot.commands.auto.EightBallAutoMiddle;
+import frc4388.robot.commands.auto.FigureEight;
 import frc4388.robot.commands.auto.FiveBallAutoMiddle;
 import frc4388.robot.commands.auto.SixBallAutoMiddle;
 import frc4388.robot.commands.auto.TenBallAutoMiddle;
@@ -108,6 +109,8 @@ public class RobotContainer {
     double m_totalTimeAuto;
 
     SixBallAutoMiddle m_sixBallAutoMiddle;
+
+    FigureEight m_figureEight;
 
     EightBallAutoMiddle m_eightBallAutoMiddle;
 
@@ -270,11 +273,18 @@ public class RobotContainer {
     }
 
     public void buildAutos() {
+        System.out.println("BUILDING AUTOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOS");
         String[] sixBallAutoMiddlePaths = new String[]{
             "SixBallMidComplete"
         };
 
         m_sixBallAutoMiddle = new SixBallAutoMiddle(m_robotDrive, buildPaths(sixBallAutoMiddlePaths));
+
+        String[] figureEight = new String[]{
+            "FigureEight"
+        };
+
+        m_figureEight = new FigureEight(m_robotDrive, buildPaths(figureEight));
 
         String[] eightBallAutoMiddlePaths = new String[]{
             "EightBallMidComplete"
@@ -323,8 +333,9 @@ public class RobotContainer {
             SmartDashboard.putNumber("Trajectory Total Time", m_totalTimeAuto);
 
             //return m_sixBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+            return m_figureEight.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_eightBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-            return m_driveOffLineForward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+            //return m_driveOffLineForward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_driveOffLineBackward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_fiveBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_tenBallAutoMiddle.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
