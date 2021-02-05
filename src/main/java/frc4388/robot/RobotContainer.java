@@ -52,6 +52,7 @@ import frc4388.robot.commands.drive.DriveStraightAtVelocityPID;
 import frc4388.robot.commands.drive.DriveStraightToPositionMM;
 import frc4388.robot.commands.drive.DriveWithJoystick;
 import frc4388.robot.commands.drive.TurnDegrees;
+import frc4388.robot.commands.intake.RunIntake;
 import frc4388.robot.commands.intake.RunIntakeWithTriggers;
 import frc4388.robot.commands.shooter.CalibrateShooter;
 import frc4388.robot.commands.shooter.TrackTarget;
@@ -110,6 +111,10 @@ public class RobotContainer {
     double m_totalTimeAuto;
 
     SixBallAutoMiddle m_sixBallAutoMiddle;
+
+    SixBallAutoMiddle m_sixBallAuto0;
+
+    SixBallAutoMiddle m_sixBallAuto1;
 
     FigureEight m_figureEight;
 
@@ -281,6 +286,18 @@ public class RobotContainer {
 
         m_sixBallAutoMiddle = new SixBallAutoMiddle(m_robotDrive, buildPaths(sixBallAutoMiddlePaths));
 
+        String[] sixBallAutoMiddle0 = new String[]{
+            "SixBallMid0"
+        };
+
+        m_sixBallAuto0 = new SixBallAutoMiddle(m_robotDrive, buildPaths(sixBallAutoMiddle0));
+
+        String[] sixBallAutoMiddle1 = new String[]{
+            "SixBallMid1"
+        };
+
+        m_sixBallAuto1 = new SixBallAutoMiddle(m_robotDrive, buildPaths(sixBallAutoMiddle1));
+
         String[] figureEight = new String[]{
             "FigureEight"
         };
@@ -333,7 +350,7 @@ public class RobotContainer {
         try {
             SmartDashboard.putNumber("Trajectory Total Time", m_totalTimeAuto);
 
-            return m_sixBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+            return m_sixBallAutoMiddle.andThen(m_sixBallAuto1);
             //return m_figureEight.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_eightBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_driveOffLineForward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));

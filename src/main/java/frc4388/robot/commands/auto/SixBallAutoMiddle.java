@@ -15,7 +15,9 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc4388.robot.RobotContainer;
+import frc4388.robot.commands.intake.RunIntake;
 import frc4388.robot.subsystems.Drive;
+import frc4388.robot.subsystems.Intake;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -27,9 +29,12 @@ public class SixBallAutoMiddle extends SequentialCommandGroup {
   public SixBallAutoMiddle(Drive drive, RamseteCommand[] paths) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
+    Intake m_intake = new Intake();
 
     addCommands(
-      paths[0]
+      paths[0],
+      new RunIntake(m_intake)//,
+      //paths[1]
     );
   }
 }
