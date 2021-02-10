@@ -281,7 +281,6 @@ public class RobotContainer {
     }
 
     public void buildAutos() {
-        System.out.println("BUILDING AUTOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOS");
         String[] sixBallAutoMiddlePaths = new String[]{
             "SixBallMidComplete"
         };
@@ -353,19 +352,22 @@ public class RobotContainer {
             SmartDashboard.putNumber("Trajectory Total Time", m_totalTimeAuto);
 
             //return m_sixBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-            //return m_figureEight.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-            //return m_eightBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-            //return m_driveOffLineForward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-            //return m_driveOffLineBackward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-            //return m_fiveBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-            //return m_tenBallAutoMiddle.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
-            return new SequentialCommandGroup(
+            // return m_figureEight.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+            // return m_eightBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+            // return m_driveOffLineForward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+            // return m_driveOffLineBackward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+            // return m_fiveBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+            // return m_tenBallAutoMiddle.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+             return new SequentialCommandGroup(
                 m_sixBallAuto0,
+                new InstantCommand(() -> resetOdometry(new Pose2d())),
+                //new Wait(m_robotDrive, 0.5, 0),
                 m_sixBallAuto1
-                /**new ParallelRaceGroup(
-                    m_sixBallAuto0,
-                    new RunIntake(m_robotIntake)
-                )**/); //ParallelRaceGroup(m_sixBallAuto0, new RunIntake(m_robotIntake));
+            //     /**new ParallelRaceGroup(
+            //         m_sixBallAuto0,
+            //         new RunIntake(m_robotIntake)
+            //     )**/); //ParallelRaceGroup(m_sixBallAuto0, new RunIntake(m_robotIntake));
+             );
         } catch (Exception e) {
             System.err.println("ERROR");
         }

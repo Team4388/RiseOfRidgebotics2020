@@ -8,6 +8,7 @@
 package frc4388.robot.commands.auto;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Wait extends CommandBase {
