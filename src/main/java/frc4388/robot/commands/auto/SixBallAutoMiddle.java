@@ -16,10 +16,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc4388.robot.RobotContainer;
-import frc4388.robot.Constants.IntakeConstants;
-import frc4388.robot.commands.intake.RunIntake;
 import frc4388.robot.subsystems.Drive;
-import frc4388.robot.subsystems.Intake;
+import frc4388.robot.RobotContainer;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -31,10 +31,11 @@ public class SixBallAutoMiddle extends SequentialCommandGroup {
   public SixBallAutoMiddle(Drive drive, RamseteCommand[] paths) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    Intake m_intake = new Intake();
+    RobotContainer m_robotContainer = new RobotContainer();
 
     addCommands(
-      paths[0]
+      paths[0],
+      new InstantCommand(() -> m_robotContainer.resetOdometry(new Pose2d(0, 0, new Rotation2d())))
     );
   }
 }
