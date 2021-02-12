@@ -85,7 +85,7 @@ public class Robot extends TimedRobot {
     
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-    m_robotContainer.setDriveNeutralMode(NeutralMode.Brake);
+    m_robotContainer.setDriveNeutralMode(NeutralMode.Coast);
     m_robotContainer.setDriveGearState(true);
 
     m_initialTime = System.currentTimeMillis();
