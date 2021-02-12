@@ -7,6 +7,7 @@
 
 package frc4388.robot;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -71,7 +72,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-  }
+    m_robotContainer.resetOdometry(new Pose2d());
+    }
 
   /**
    * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
@@ -83,7 +85,6 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.setDriveNeutralMode(NeutralMode.Brake);
     m_robotContainer.setDriveGearState(true);
-    m_robotContainer.resetOdometry(new Pose2d());
 
     //m_robotContainer.resetGyroYawRobotContainer(0);
 

@@ -18,8 +18,8 @@ import frc4388.robot.subsystems.Intake;
 public class RunExtenderOutIn extends CommandBase {
   private Intake m_intake;
 
-  CANSparkMax m_intakeMotor = new CANSparkMax(IntakeConstants.INTAKE_SPARK_ID, MotorType.kBrushless);
-  CANSparkMax m_extenderMotor = new CANSparkMax(IntakeConstants.EXTENDER_SPARK_ID, MotorType.kBrushless);
+  //CANSparkMax m_intakeMotor = new CANSparkMax(IntakeConstants.INTAKE_SPARK_ID, MotorType.kBrushless);
+  //CANSparkMax m_extenderMotor = new CANSparkMax(IntakeConstants.EXTENDER_SPARK_ID, MotorType.kBrushless);
   CANDigitalInput m_extenderForwardLimit;
   CANDigitalInput m_extenderReverseLimit;
 

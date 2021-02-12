@@ -28,15 +28,19 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.DriveConstants;
+import frc4388.robot.Constants.IntakeConstants;
 import frc4388.robot.Constants.OIConstants;
 import frc4388.robot.commands.auto.DriveOffLineBackward;
 import frc4388.robot.commands.auto.DriveOffLineForward;
 import frc4388.robot.commands.auto.EightBallAutoMiddle;
+import frc4388.robot.commands.auto.FigureEight;
 import frc4388.robot.commands.auto.FiveBallAutoMiddle;
 import frc4388.robot.commands.auto.SixBallAutoMiddle;
 import frc4388.robot.commands.auto.Slalom;
@@ -52,6 +56,7 @@ import frc4388.robot.commands.drive.DriveStraightAtVelocityPID;
 import frc4388.robot.commands.drive.DriveStraightToPositionMM;
 import frc4388.robot.commands.drive.DriveWithJoystick;
 import frc4388.robot.commands.drive.TurnDegrees;
+import frc4388.robot.commands.intake.RunIntake;
 import frc4388.robot.commands.intake.RunIntakeWithTriggers;
 import frc4388.robot.commands.shooter.CalibrateShooter;
 import frc4388.robot.commands.shooter.TrackTarget;
@@ -111,6 +116,12 @@ public class RobotContainer {
 
     SixBallAutoMiddle m_sixBallAutoMiddle;
 
+    SixBallAutoMiddle m_sixBallAuto0;
+
+    SixBallAutoMiddle m_sixBallAuto1;
+
+    FigureEight m_figureEight;
+
     EightBallAutoMiddle m_eightBallAutoMiddle;
 
     DriveOffLineForward m_driveOffLineForward;
@@ -164,8 +175,8 @@ public class RobotContainer {
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
         // runs the storage not
-        //m_robotStorage.setDefaultCommand(new RunCommand(() -> m_robotStorage.runStorage(0), m_robotStorage));
-        m_robotStorage.setDefaultCommand(new ManageStorage(m_robotStorage, StorageMode.IDLE));
+        m_robotStorage.setDefaultCommand(new RunCommand(() -> m_robotStorage.runStorage(0), m_robotStorage));
+        //m_robotStorage.setDefaultCommand(new ManageStorage(m_robotStorage, StorageMode.IDLE));
         //m_robotLime.setDefaultCommand(new RunCommand(() -> m_robotLime.limeOff(), m_robotLime));
     }
 
@@ -233,7 +244,7 @@ public class RobotContainer {
             .whileHeld(new RunCommand(() -> m_robotIntake.runExtender(-0.5)))
             .whenReleased(new InstantCommand(() -> m_robotIntake.runExtender(0)));
 
-        // safety for climber and leveler
+         // safety for climber and leveler
         new JoystickButton(getOperatorJoystick(), XboxController.BACK_BUTTON)
             .whenPressed(new InstantCommand(() -> m_robotClimber.setSafetyPressed(), m_robotClimber))
             .whenReleased(new InstantCommand(() -> m_robotClimber.setSafetyNotPressed(), m_robotClimber));
@@ -294,6 +305,24 @@ public class RobotContainer {
 
         m_barrel = new Barrel(m_robotDrive, buildPaths(barrel));
         
+        String[] sixBallAutoMiddle0 = new String[]{
+            "SixBallMid0"
+        };
+
+        m_sixBallAuto0 = new SixBallAutoMiddle(m_robotDrive, buildPaths(sixBallAutoMiddle0));
+
+        String[] sixBallAutoMiddle1 = new String[]{
+            "SixBallMid1"
+        };
+
+        m_sixBallAuto1 = new SixBallAutoMiddle(m_robotDrive, buildPaths(sixBallAutoMiddle1));
+
+        String[] figureEight = new String[]{
+            "FigureEight"
+        };
+
+        m_figureEight = new FigureEight(m_robotDrive, buildPaths(figureEight));
+
         String[] eightBallAutoMiddlePaths = new String[]{
             "EightBallMidComplete"
         };
@@ -348,7 +377,16 @@ public class RobotContainer {
             //return m_tenBallAutoMiddle.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_slalom.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             return m_barrel.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
-
+	    // return m_figureEight.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+             return new SequentialCommandGroup(
+                m_sixBallAuto0,
+                new InstantCommand(() -> resetOdometry(new Pose2d(0, 0, new Rotation2d()))),
+                m_sixBallAuto1
+            //     /**new ParallelRaceGroup(
+            //         m_sixBallAuto0,
+            //         new RunIntake(m_robotIntake)
+            //     )**/); //ParallelRaceGroup(m_sixBallAuto0, new RunIntake(m_robotIntake));
+             );
         } catch (Exception e) {
             System.err.println("ERROR");
         }
