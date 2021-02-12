@@ -26,6 +26,9 @@ public class Robot extends TimedRobot {
   Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+  double m_initialTime;
+  double m_currentTime;
+  double m_deltaTime;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -85,6 +88,8 @@ public class Robot extends TimedRobot {
     m_robotContainer.setDriveNeutralMode(NeutralMode.Brake);
     m_robotContainer.setDriveGearState(true);
 
+    m_initialTime = System.currentTimeMillis();
+
     //m_robotContainer.resetGyroYawRobotContainer(0);
 
     //m_robotContainer.configDriveTrainSensors(FeedbackDevice.IntegratedSensor);
@@ -108,6 +113,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
+    m_currentTime = System.currentTimeMillis();
+    m_deltaTime = m_currentTime - m_initialTime;
+    SmartDashboard.putNumber("Auto Path Time", (m_deltaTime)/1000);
   }
 
   @Override
