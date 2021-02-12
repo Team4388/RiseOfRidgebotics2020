@@ -39,9 +39,11 @@ import frc4388.robot.commands.auto.DriveOffLineForward;
 import frc4388.robot.commands.auto.EightBallAutoMiddle;
 import frc4388.robot.commands.auto.FiveBallAutoMiddle;
 import frc4388.robot.commands.auto.SixBallAutoMiddle;
+import frc4388.robot.commands.auto.Slalom;
 import frc4388.robot.commands.auto.TenBallAutoMiddle;
 import frc4388.robot.commands.InterruptSubystem;
 import frc4388.robot.commands.auto.AutoPath1FromCenter;
+import frc4388.robot.commands.auto.Barrel;
 import frc4388.robot.commands.auto.Wait;
 import frc4388.robot.commands.climber.DisengageRachet;
 import frc4388.robot.commands.climber.RunClimberWithTriggers;
@@ -119,6 +121,10 @@ public class RobotContainer {
 
     TenBallAutoMiddle m_tenBallAutoMiddle;
 
+    Slalom m_slalom;
+
+    Barrel m_barrel;
+
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -177,7 +183,7 @@ public class RobotContainer {
 
         // B driver test button
         new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
-            .whenPressed(new TurnDegrees(m_robotDrive, m_robotDrive.m_currentAngleYaw + 5));
+            .whenPressed(new TurnDegrees(m_robotDrive, 45));
         // Y driver test button
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
             .whenPressed(new Wait(m_robotDrive, 0, 0));
@@ -276,6 +282,18 @@ public class RobotContainer {
 
         m_sixBallAutoMiddle = new SixBallAutoMiddle(m_robotDrive, buildPaths(sixBallAutoMiddlePaths));
 
+        String[] slalom = new String[]{
+            "Slalom"
+        };
+
+        m_slalom = new Slalom(m_robotDrive, buildPaths(slalom));
+
+        String[] barrel = new String[]{
+            "Barrel"
+        };
+
+        m_barrel = new Barrel(m_robotDrive, buildPaths(barrel));
+        
         String[] eightBallAutoMiddlePaths = new String[]{
             "EightBallMidComplete"
         };
@@ -324,10 +342,12 @@ public class RobotContainer {
 
             //return m_sixBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_eightBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-            return m_driveOffLineForward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+            //return m_driveOffLineForward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_driveOffLineBackward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_fiveBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_tenBallAutoMiddle.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+            //return m_slalom.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+            return m_barrel.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
 
         } catch (Exception e) {
             System.err.println("ERROR");
@@ -453,6 +473,7 @@ public class RobotContainer {
     public IHandController getDriverController() {
         return m_driverXbox;
     }
+
 
     /**
      * Used for analog inputs like triggers and axises.

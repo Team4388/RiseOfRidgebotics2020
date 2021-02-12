@@ -38,6 +38,7 @@ public class TurnDegrees extends CommandBase {
   public void initialize() {
     m_targetAngleTicksIn = (m_targetAngle / 360) * DriveConstants.TICKS_PER_GYRO_REV;
     m_currentYawInTicks = (m_drive.getGyroYaw() / 360) * DriveConstants.TICKS_PER_GYRO_REV;
+    SmartDashboard.putNumber("Current Yaw Ticks", m_currentYawInTicks);
     m_targetAngleTicksOut = m_targetAngleTicksIn + m_currentYawInTicks;
 
     i = 0;
@@ -48,7 +49,7 @@ public class TurnDegrees extends CommandBase {
   public void execute() {
     m_currentYawInTicks = (m_drive.getGyroYaw() / 360) * DriveConstants.TICKS_PER_GYRO_REV;
 
-    m_drive.runTurningPID(m_targetAngleTicksOut);
+    m_drive.runTurningPID(m_targetAngleTicksIn);
 
     SmartDashboard.putNumber("Turning Error", Math.abs(m_currentYawInTicks - m_targetAngleTicksOut));
     SmartDashboard.putNumber("Turning Target", m_targetAngleTicksOut);
