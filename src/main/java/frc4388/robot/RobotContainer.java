@@ -378,15 +378,15 @@ public class RobotContainer {
             //return m_slalom.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             return m_barrel.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
 	    // return m_figureEight.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-             return new SequentialCommandGroup(
+             /*return new SequentialCommandGroup(
                 m_sixBallAuto0,
                 new InstantCommand(() -> resetOdometry(new Pose2d(0, 0, new Rotation2d()))),
                 m_sixBallAuto1
             //     /**new ParallelRaceGroup(
             //         m_sixBallAuto0,
             //         new RunIntake(m_robotIntake)
-            //     )**/); //ParallelRaceGroup(m_sixBallAuto0, new RunIntake(m_robotIntake));
-             );
+            //     )); //ParallelRaceGroup(m_sixBallAuto0, new RunIntake(m_robotIntake));
+             );*/
         } catch (Exception e) {
             System.err.println("ERROR");
         }
