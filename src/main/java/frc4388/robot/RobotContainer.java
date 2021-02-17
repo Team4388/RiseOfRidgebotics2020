@@ -44,6 +44,7 @@ import frc4388.robot.commands.auto.TenBallAutoMiddle;
 import frc4388.robot.commands.InterruptSubystem;
 import frc4388.robot.commands.auto.AutoPath1FromCenter;
 import frc4388.robot.commands.auto.Barrel;
+import frc4388.robot.commands.auto.BarrelMany;
 import frc4388.robot.commands.auto.Wait;
 import frc4388.robot.commands.climber.DisengageRachet;
 import frc4388.robot.commands.climber.RunClimberWithTriggers;
@@ -125,6 +126,7 @@ public class RobotContainer {
 
     Barrel m_barrel;
 
+    BarrelMany m_barrelMany;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -294,6 +296,12 @@ public class RobotContainer {
 
         m_barrel = new Barrel(m_robotDrive, buildPaths(barrel));
         
+        String[] barrelMany = new String[]{
+            "BarrelManyWaypoints"
+        };
+
+        m_barrelMany = new BarrelMany(m_robotDrive, buildPaths(barrelMany));
+        
         String[] eightBallAutoMiddlePaths = new String[]{
             "EightBallMidComplete"
         };
@@ -348,7 +356,7 @@ public class RobotContainer {
             //return m_tenBallAutoMiddle.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_slalom.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             return m_barrel.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
-
+            //return m_barrelMany.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
         } catch (Exception e) {
             System.err.println("ERROR");
         }
