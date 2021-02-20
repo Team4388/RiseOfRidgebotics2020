@@ -112,6 +112,10 @@ public class RobotContainer {
 
     SixBallAutoMiddle m_sixBallAutoMiddle;
 
+    SixBallAutoMiddle m_sixBallAutoMiddle0;
+
+    SixBallAutoMiddle m_sixBallAutoMiddle1;
+
     EightBallAutoMiddle m_eightBallAutoMiddle;
 
     DriveOffLineForward m_driveOffLineForward;
@@ -166,8 +170,8 @@ public class RobotContainer {
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
         // runs the storage not
-        //m_robotStorage.setDefaultCommand(new RunCommand(() -> m_robotStorage.runStorage(0), m_robotStorage));
-        m_robotStorage.setDefaultCommand(new ManageStorage(m_robotStorage, StorageMode.IDLE));
+        m_robotStorage.setDefaultCommand(new RunCommand(() -> m_robotStorage.runStorage(0), m_robotStorage));
+        //m_robotStorage.setDefaultCommand(new ManageStorage(m_robotStorage, StorageMode.IDLE));
         //m_robotLime.setDefaultCommand(new RunCommand(() -> m_robotLime.limeOff(), m_robotLime));
     }
 
@@ -284,6 +288,18 @@ public class RobotContainer {
 
         m_sixBallAutoMiddle = new SixBallAutoMiddle(m_robotDrive, buildPaths(sixBallAutoMiddlePaths));
 
+        String[] sixBallAutoMiddle0Paths = new String[]{
+            "SixBallMid0"
+        };
+
+        m_sixBallAutoMiddle0 = new SixBallAutoMiddle(m_robotDrive, buildPaths(sixBallAutoMiddle0Paths));
+
+        String[] sixBallAutoMiddle1Paths = new String[]{
+            "SixBallMid1"
+        };
+
+        m_sixBallAutoMiddle1 = new SixBallAutoMiddle(m_robotDrive, buildPaths(sixBallAutoMiddle1Paths));
+
         String[] slalom = new String[]{
             "Slalom"
         };
@@ -349,6 +365,7 @@ public class RobotContainer {
             SmartDashboard.putNumber("Trajectory Total Time", m_totalTimeAuto);
 
             //return m_sixBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+            //return m_sixBallAutoMiddle1.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_eightBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_driveOffLineForward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_driveOffLineBackward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
