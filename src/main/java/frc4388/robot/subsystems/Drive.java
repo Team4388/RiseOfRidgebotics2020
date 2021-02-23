@@ -454,13 +454,18 @@ public class Drive extends SubsystemBase {
     // m_currentAngleYaw+(360));
     // double targetGyro = (m_kinematicsTargetAngle / 360) *
     // DriveConstants.TICKS_PER_GYRO_REV;
-    double moveVelLeft = inchesToTicks(metersToInches(leftSpeed)) / DriveConstants.SECONDS_TO_TICK_TIME;
-    double moveVelRight = inchesToTicks(metersToInches(rightSpeed)) / DriveConstants.SECONDS_TO_TICK_TIME;
+    
+    //double moveVelLeft = inchesToTicks(metersToInches(leftSpeed)) / DriveConstants.SECONDS_TO_TICK_TIME;
+    //double moveVelRight = inchesToTicks(metersToInches(rightSpeed)) / DriveConstants.SECONDS_TO_TICK_TIME;
 
-    // SmartDashboard.putNumber("Move Vel Left", moveVelLeft);
+    double moveVelLeft = leftSpeed;
+    double moveVelRight = rightSpeed;
+    
+    // SmartDashboard.putNumber("Move Vel Left", moveVelLeft)
     // SmartDashboard.putNumber("Move Vel Right", moveVelRight);
 
     // runDriveVelocityPID(moveVel*2, targetGyro);
+    
 
     m_rightBackMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
     m_leftBackMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
@@ -469,6 +474,8 @@ public class Drive extends SubsystemBase {
     m_leftBackMotor.set(TalonFXControlMode.Velocity, moveVelLeft);
     m_leftFrontMotor.follow(m_leftBackMotor);
     m_rightFrontMotor.follow(m_rightBackMotor);
+
+    SmartDashboard.putNumber("TankDrive Speed", inchesToMeters(getVelocityInchesPerSecond(m_rightBackMotor)));
 
     m_driveTrain.feedWatchdog();
   }

@@ -184,8 +184,11 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Test Buttons */
         // A driver test button
+       // new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
+        //    .whenPressed(new DriveStraightAtVelocityPID(m_robotDrive, 1000));
+
         new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-            .whenPressed(new DriveStraightAtVelocityPID(m_robotDrive, 1000));
+            .whileHeld(new RunCommand(() -> m_robotDrive.tankDriveVelocity(6000, 6000), m_robotDrive));
 
         // B driver test button
         new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
