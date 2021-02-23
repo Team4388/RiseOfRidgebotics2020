@@ -378,7 +378,7 @@ public class RobotContainer {
             System.err.println("ERROR");
         }
 
-        return new InstantCommand();
+        return new InstantCommand();    
     }
     TrajectoryConfig getTrajectoryConfig() {
         return new TrajectoryConfig(
