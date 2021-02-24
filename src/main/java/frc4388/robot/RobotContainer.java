@@ -371,8 +371,8 @@ public class RobotContainer {
             //return m_driveOffLineBackward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_fiveBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_tenBallAutoMiddle.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
-            //return m_slalom.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
-            return m_barrel.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+            return m_slalom.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+            //return m_barrel.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_barrelMany.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
         } catch (Exception e) {
             System.err.println("ERROR");
