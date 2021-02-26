@@ -45,6 +45,7 @@ import frc4388.robot.commands.InterruptSubystem;
 import frc4388.robot.commands.auto.AutoPath1FromCenter;
 import frc4388.robot.commands.auto.Barrel;
 import frc4388.robot.commands.auto.BarrelMany;
+import frc4388.robot.commands.auto.Bounce;
 import frc4388.robot.commands.auto.Wait;
 import frc4388.robot.commands.climber.DisengageRachet;
 import frc4388.robot.commands.climber.RunClimberWithTriggers;
@@ -131,6 +132,8 @@ public class RobotContainer {
     Barrel m_barrel;
 
     BarrelMany m_barrelMany;
+
+    Bounce m_bounce;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -311,6 +314,12 @@ public class RobotContainer {
         };
 
         m_barrel = new Barrel(m_robotDrive, buildPaths(barrel));
+
+        String[] bounce = new String[]{
+            "Bounce"
+        };
+
+        m_bounce = new Bounce(m_robotDrive, buildPaths(bounce));
         
         String[] barrelMany = new String[]{
             "BarrelManyWaypoints"
@@ -371,9 +380,11 @@ public class RobotContainer {
             //return m_driveOffLineBackward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_fiveBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_tenBallAutoMiddle.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
-            return m_slalom.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+            //return m_slalom.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_barrel.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_barrelMany.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+            return m_bounce.andThen(()-> m_robotDrive.tankDriveVelocity(0,0));
+
         } catch (Exception e) {
             System.err.println("ERROR");
         }
