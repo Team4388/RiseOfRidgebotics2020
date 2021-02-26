@@ -112,7 +112,8 @@ public final class Constants {
   
     public static final class ShooterConstants {
         /* Motor IDs */
-        public static final int SHOOTER_FALCON_ID = 8;
+        public static final int SHOOTER_FALCON_BALLER_ID = 8;
+        public static final int SHOOTER_FALCON_BALLER_FOLLOWER_ID = 15;
         public static final int SHOOTER_ANGLE_ADJUST_ID = 10;
         public static final int SHOOTER_ROTATE_ID = 9;
 
@@ -156,7 +157,7 @@ public final class Constants {
     }
   
     public static final class LevelerConstants {
-        public static final int LEVELER_CAN_ID = 15;
+        public static final int LEVELER_CAN_ID = 30;
     }
 
     public static final class IntakeConstants {;

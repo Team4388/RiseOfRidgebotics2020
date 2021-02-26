@@ -312,7 +312,7 @@ public class Drive extends SubsystemBase {
   public void passRequiredSubsystem(Pneumatics subsystem, Shooter shooter) {
     m_pneumaticsSubsystem = subsystem;
     m_shooter = shooter;
-    m_orchestra.addInstrument(m_shooter.m_shooterFalcon);
+    m_orchestra.addInstrument(m_shooter.m_shooterFalconLeft);
   }
 
   public void updateTime() {
