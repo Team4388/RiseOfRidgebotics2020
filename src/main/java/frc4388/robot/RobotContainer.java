@@ -38,6 +38,7 @@ import frc4388.robot.commands.auto.DriveOffLineBackward;
 import frc4388.robot.commands.auto.DriveOffLineForward;
 import frc4388.robot.commands.auto.EightBallAutoMiddle;
 import frc4388.robot.commands.auto.FiveBallAutoMiddle;
+import frc4388.robot.commands.auto.SequentialTesting;
 import frc4388.robot.commands.auto.SixBallAutoMiddle;
 import frc4388.robot.commands.auto.Slalom;
 import frc4388.robot.commands.auto.TenBallAutoMiddle;
@@ -131,6 +132,8 @@ public class RobotContainer {
     Barrel m_barrel;
 
     BarrelMany m_barrelMany;
+
+    SequentialTesting m_sequentialTesting;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -350,6 +353,12 @@ public class RobotContainer {
         };
 
         m_tenBallAutoMiddle = new TenBallAutoMiddle(m_robotDrive, buildPaths(tenBallAutoMiddlePaths));
+
+        String[] sequentialTesting = new String[]{
+            "SequentialTesting"
+        };
+
+        m_sequentialTesting = new SequentialTesting(m_robotDrive, buildPaths(sequentialTesting));
     }
 
     /**
@@ -375,8 +384,10 @@ public class RobotContainer {
             //return m_fiveBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_tenBallAutoMiddle.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_slalom.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
-            return m_barrel.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+            //return m_barrel.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_barrelMany.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+            return m_sequentialTesting.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+
         } catch (Exception e) {
             System.err.println("ERROR");
         }
