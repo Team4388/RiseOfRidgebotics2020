@@ -46,6 +46,7 @@ import frc4388.robot.commands.InterruptSubystem;
 import frc4388.robot.commands.auto.AutoPath1FromCenter;
 import frc4388.robot.commands.auto.Barrel;
 import frc4388.robot.commands.auto.BarrelMany;
+import frc4388.robot.commands.auto.BarrelStart;
 import frc4388.robot.commands.auto.Wait;
 import frc4388.robot.commands.climber.DisengageRachet;
 import frc4388.robot.commands.climber.RunClimberWithTriggers;
@@ -130,6 +131,8 @@ public class RobotContainer {
     Slalom m_slalom;
 
     Barrel m_barrel;
+
+    BarrelStart m_barrelStart;
 
     BarrelMany m_barrelMany;
 
@@ -317,6 +320,12 @@ public class RobotContainer {
         };
 
         m_barrel = new Barrel(m_robotDrive, buildPaths(barrel));
+
+        String[] barrelStart = new String[]{
+            "BarrelStart"
+        };
+
+        m_barrelStart = new BarrelStart(m_robotDrive, buildPaths(barrelStart));
         
         String[] barrelMany = new String[]{
             "BarrelManyWaypoints"
@@ -384,7 +393,8 @@ public class RobotContainer {
             //return m_fiveBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_tenBallAutoMiddle.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_slalom.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
-            return m_barrel.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+            //return m_barrel.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+            return m_barrelStart.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_barrelMany.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_sequentialTesting.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
 
