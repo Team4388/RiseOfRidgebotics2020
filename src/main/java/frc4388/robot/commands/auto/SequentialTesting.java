@@ -23,8 +23,8 @@ public class SequentialTesting extends SequentialCommandGroup {
     // super(new FooCommand(), new BarCommand());
     addCommands(
       paths[0],
-      new Wait(drive, 1, 1),
-      paths[1]
+      new Wait(drive, 1, 1)
+      //paths[1]
     );
   }
 }
