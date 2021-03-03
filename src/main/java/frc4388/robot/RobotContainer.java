@@ -38,15 +38,12 @@ import frc4388.robot.commands.auto.DriveOffLineBackward;
 import frc4388.robot.commands.auto.DriveOffLineForward;
 import frc4388.robot.commands.auto.EightBallAutoMiddle;
 import frc4388.robot.commands.auto.FiveBallAutoMiddle;
-import frc4388.robot.commands.auto.SequentialTesting;
 import frc4388.robot.commands.auto.SixBallAutoMiddle;
 import frc4388.robot.commands.auto.Slalom;
 import frc4388.robot.commands.auto.TenBallAutoMiddle;
 import frc4388.robot.commands.InterruptSubystem;
 import frc4388.robot.commands.auto.AutoPath1FromCenter;
 import frc4388.robot.commands.auto.Barrel;
-import frc4388.robot.commands.auto.BarrelMany;
-import frc4388.robot.commands.auto.BarrelStart;
 import frc4388.robot.commands.auto.Wait;
 import frc4388.robot.commands.climber.DisengageRachet;
 import frc4388.robot.commands.climber.RunClimberWithTriggers;
@@ -132,12 +129,6 @@ public class RobotContainer {
 
     Barrel m_barrel;
 
-    BarrelStart m_barrelStart;
-
-    BarrelMany m_barrelMany;
-
-    SequentialTesting m_sequentialTesting;
-
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -168,7 +159,7 @@ public class RobotContainer {
         // runs the turret with joystick
         m_robotShooterAim.setDefaultCommand(new RunCommand(() -> m_robotShooterAim.runShooterWithInput(-m_operatorXbox.getLeftXAxis()), m_robotShooterAim));
         // moves the drum not
-        m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(1500), m_robotShooter));
+        m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(0), m_robotShooter));
         // drives climber with input from triggers on the opperator controller
         m_robotClimber.setDefaultCommand(new RunClimberWithTriggers(m_robotClimber, getDriverController()));
         // drives the leveler with an axis input from the driver controller
@@ -321,23 +312,8 @@ public class RobotContainer {
 
         m_barrel = new Barrel(m_robotDrive, buildPaths(barrel));
 
-        String[] barrelStart = new String[]{
-            "BarrelStart"
-        };
 
-        m_barrelStart = new BarrelStart(m_robotDrive, buildPaths(barrelStart));
-        
-        String[] barrelMany = new String[]{
-            "BarrelManyWaypoints"
-        };
-
-        m_barrelMany = new BarrelMany(m_robotDrive, buildPaths(barrelMany));
-        
-        String[] eightBallAutoMiddlePaths = new String[]{
-            "EightBallMidComplete"
-        };
-
-        m_eightBallAutoMiddle = new EightBallAutoMiddle(m_robotDrive, buildPaths(eightBallAutoMiddlePaths));
+        //m_eightBallAutoMiddle = new EightBallAutoMiddle(m_robotDrive, buildPaths(eightBallAutoMiddlePaths));
 
         String[] driveOffLineForwardPaths = new String[]{
             "DriveOffLineForward"
@@ -363,11 +339,6 @@ public class RobotContainer {
 
         m_tenBallAutoMiddle = new TenBallAutoMiddle(m_robotDrive, buildPaths(tenBallAutoMiddlePaths));
 
-        String[] sequentialTesting = new String[]{
-            "SequentialTesting"
-        };
-
-        m_sequentialTesting = new SequentialTesting(m_robotDrive, buildPaths(sequentialTesting));
     }
 
     /**
@@ -393,8 +364,8 @@ public class RobotContainer {
             //return m_fiveBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_tenBallAutoMiddle.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_slalom.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
-            //return m_barrel.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
-            return m_barrelStart.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+            return m_barrel.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+            //return m_barrelStart.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_barrelMany.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_sequentialTesting.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
 
