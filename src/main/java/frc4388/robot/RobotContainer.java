@@ -269,15 +269,14 @@ public class RobotContainer {
 
 
         //Run drum
-        new JoystickManualButton(getOperatorJoystick(), XboxController.B_BUTTON, false)
-            .whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotShooterHood, m_robotStorage), false)
+        new JoystickManualButton(getOperatorJoystick(), XboxController.A_BUTTON, false)
+            //.whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotShooterHood, m_robotStorage), false)
             //.whenReleased(new ManageStorage(m_robotStorage, StorageMode.RESET))
-            .whenReleased(new InstantCommand(() -> m_robotLime.limeOff()));
+            .whenPressed(new InstantCommand(() -> m_robotLime.limeOn()));
 
         //Run drum manual
         new JoystickManualButton(getOperatorJoystick(), XboxController.B_BUTTON, true)
-            .whileHeld(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(10000)))
-            .whenReleased(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(0)));
+            .whenPressed(new InstantCommand(() -> m_robotLime.limeOff()));
 
 
 
