@@ -238,12 +238,12 @@ public class RobotContainer {
         new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
             //.whileHeld(new RunCommand(() -> m_robotIntake.runExtender(0.5)))
             //.whenReleased(new InstantCommand(() -> m_robotIntake.runExtender(0)));
-            .whileHeld(new RunCommand(() -> m_robotShooterHood.runHood(0.5), m_robotShooterHood));
+            .whileHeld(new RunCommand(() -> m_robotShooterHood.runHood(0.2), m_robotShooterHood));
             
         new JoystickButton(getOperatorJoystick(), XboxController.Y_BUTTON)
             //.whileHeld(new RunCommand(() -> m_robotIntake.runExtender(-0.5)))
             //.whenReleased(new InstantCommand(() -> m_robotIntake.runExtender(0)));
-            .whileHeld(new RunCommand(() -> m_robotShooterHood.runHood(-0.5), m_robotShooterHood));
+            .whileHeld(new RunCommand(() -> m_robotShooterHood.runHood(-0.2), m_robotShooterHood));
 
         // safety for climber and leveler
         new JoystickButton(getOperatorJoystick(), XboxController.BACK_BUTTON)
@@ -257,7 +257,7 @@ public class RobotContainer {
             //.whenPressed(new StoragePrep(m_robotStorage))
             //.whenReleased(new InterruptSubystem(m_robotStorage))
             .whenReleased(new InstantCommand(() -> m_robotLime.limeOff()));
-            //.whileHeld(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(13000)));
+            //.whileHeld(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(11000)));
             //.whileHeld(new HoldTarget(m_robotShooter, m_robotShooterAim))
             //.whileHeld(new RunCommand(() -> m_robotShooter.runAngleAdjustPID(30)));
 
