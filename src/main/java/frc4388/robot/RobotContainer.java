@@ -205,8 +205,6 @@ public class RobotContainer {
         new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
             .whenPressed(new InstantCommand());
 
-
-
         /* Driver Buttons */
         // sets solenoids into high gear
         new JoystickButton(getDriverJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
@@ -388,7 +386,8 @@ public class RobotContainer {
             //return m_driveOffLineBackward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_slalom.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_barrel.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
-            return m_barrelStart.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+            //return m_barrelStart.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+            return new SequentialCommandGroup(new TankDriveVelocity(m_robotDrive, 1000, 1000, 3), new TankDriveVelocity(m_robotDrive, 3000, 3000, 1));
 
         } catch (Exception e) {
             System.err.println("ERROR");
