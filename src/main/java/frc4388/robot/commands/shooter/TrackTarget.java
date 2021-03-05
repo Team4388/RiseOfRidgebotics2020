@@ -69,7 +69,7 @@ public class TrackTarget extends CommandBase {
     yAngle = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
 
     // Finding Distance
-    distance = VisionConstants.TARGET_HEIGHT / Math.tan((VisionConstants.LIME_ANGLE + yAngle) * (Math.PI / 180));
+    distance = (VisionConstants.TARGET_HEIGHT) / Math.tan((VisionConstants.LIME_ANGLE + yAngle) * (Math.PI / 180));
     realDistance = (1.09 * distance) - 12.8;
 
 

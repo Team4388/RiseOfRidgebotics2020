@@ -236,12 +236,14 @@ public class RobotContainer {
 
         // extends or retracts the extender
         new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
-            .whileHeld(new RunCommand(() -> m_robotIntake.runExtender(0.5)))
-            .whenReleased(new InstantCommand(() -> m_robotIntake.runExtender(0)));
+            //.whileHeld(new RunCommand(() -> m_robotIntake.runExtender(0.5)))
+            //.whenReleased(new InstantCommand(() -> m_robotIntake.runExtender(0)));
+            .whileHeld(new RunCommand(() -> m_robotShooterHood.runHood(0.5), m_robotShooterHood));
             
         new JoystickButton(getOperatorJoystick(), XboxController.Y_BUTTON)
-            .whileHeld(new RunCommand(() -> m_robotIntake.runExtender(-0.5)))
-            .whenReleased(new InstantCommand(() -> m_robotIntake.runExtender(0)));
+            //.whileHeld(new RunCommand(() -> m_robotIntake.runExtender(-0.5)))
+            //.whenReleased(new InstantCommand(() -> m_robotIntake.runExtender(0)));
+            .whileHeld(new RunCommand(() -> m_robotShooterHood.runHood(-0.5), m_robotShooterHood));
 
         // safety for climber and leveler
         new JoystickButton(getOperatorJoystick(), XboxController.BACK_BUTTON)

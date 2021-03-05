@@ -212,7 +212,7 @@ public final class Constants {
     
     public static final class VisionConstants {
         public static final double FOV = 29.8; //Field of view of limelight
-        public static final double TARGET_HEIGHT = 71.5;
+        public static final double TARGET_HEIGHT = 67.5;
         public static final double LIME_ANGLE = 24.7;
         public static final double TURN_P_VALUE = 0.8;
         public static final double X_ANGLE_ERROR = 1.3;
