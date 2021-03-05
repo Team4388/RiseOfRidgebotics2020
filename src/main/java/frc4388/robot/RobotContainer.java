@@ -40,6 +40,7 @@ import frc4388.robot.commands.auto.EightBallAutoMiddle;
 import frc4388.robot.commands.auto.FiveBallAutoMiddle;
 import frc4388.robot.commands.auto.SixBallAutoMiddle;
 import frc4388.robot.commands.auto.Slalom;
+import frc4388.robot.commands.auto.TankDriveVelocity;
 import frc4388.robot.commands.auto.TenBallAutoMiddle;
 import frc4388.robot.commands.InterruptSubystem;
 import frc4388.robot.commands.auto.AutoPath1FromCenter;
@@ -191,7 +192,7 @@ public class RobotContainer {
         /* Test Buttons */
         // A driver test button
         new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-            .whenPressed(new DriveStraightAtVelocityPID(m_robotDrive, 1000));
+            .whenPressed(new TankDriveVelocity(m_robotDrive, 5000, 5000, 2));
 
         // B driver test button
         new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)

@@ -436,8 +436,8 @@ public class Drive extends SubsystemBase {
   /**
    * Controls the left and right sides of the drive with velocity targets.
    *
-   * @param leftSpeed  the commanded left speed
-   * @param rightSpeed the commanded right speed
+   * @param leftSpeed  the commanded left speed (currently measured in ticks/100 ms)
+   * @param rightSpeed the commanded right speed (currently measured in ticks/100 ms)
    */
   public void tankDriveVelocity(double leftSpeed, double rightSpeed) {
     // DifferentialDriveWheelSpeeds wheelSpeeds = new
@@ -454,8 +454,11 @@ public class Drive extends SubsystemBase {
     // m_currentAngleYaw+(360));
     // double targetGyro = (m_kinematicsTargetAngle / 360) *
     // DriveConstants.TICKS_PER_GYRO_REV;
-    double moveVelLeft = inchesToTicks(metersToInches(leftSpeed)) / DriveConstants.SECONDS_TO_TICK_TIME;
-    double moveVelRight = inchesToTicks(metersToInches(rightSpeed)) / DriveConstants.SECONDS_TO_TICK_TIME;
+    //double moveVelLeft = inchesToTicks(metersToInches(leftSpeed)) / DriveConstants.SECONDS_TO_TICK_TIME;
+    //double moveVelRight = inchesToTicks(metersToInches(rightSpeed)) / DriveConstants.SECONDS_TO_TICK_TIME;
+
+    double moveVelLeft = leftSpeed;
+    double moveVelRight = rightSpeed;
 
     // SmartDashboard.putNumber("Move Vel Left", moveVelLeft);
     // SmartDashboard.putNumber("Move Vel Right", moveVelRight);
