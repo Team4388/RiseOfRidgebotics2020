@@ -215,7 +215,7 @@ public final class Constants {
         public static final double TARGET_HEIGHT = 67.5;
         public static final double LIME_ANGLE = 24.7;
         public static final double TURN_P_VALUE = 0.8;
-        public static final double X_ANGLE_ERROR = 1.3;
+        public static final double X_ANGLE_ERROR = 0.5;
         public static final double MOTOR_DEAD_ZONE = 0.2;
         public static final double DISTANCE_ERROR_EQUATION_M = 1.1279;
         public static final double DISTANCE_ERROR_EQUATION_B = -15.0684;
