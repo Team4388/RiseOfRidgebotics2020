@@ -41,11 +41,13 @@ import frc4388.robot.commands.auto.FiveBallAutoMiddle;
 import frc4388.robot.commands.auto.SequentialTest;
 import frc4388.robot.commands.auto.SixBallAutoMiddle;
 import frc4388.robot.commands.auto.Slalom;
+import frc4388.robot.commands.auto.TankDriveVelocity;
 import frc4388.robot.commands.auto.TenBallAutoMiddle;
 import frc4388.robot.commands.InterruptSubystem;
 import frc4388.robot.commands.auto.AutoPath1FromCenter;
 import frc4388.robot.commands.auto.Barrel;
 import frc4388.robot.commands.auto.BarrelMany;
+import frc4388.robot.commands.auto.BarrelStart;
 import frc4388.robot.commands.auto.Bounce;
 import frc4388.robot.commands.auto.Wait;
 import frc4388.robot.commands.climber.DisengageRachet;
@@ -131,6 +133,8 @@ public class RobotContainer {
     Slalom m_slalom;
 
     Barrel m_barrel;
+
+    BarrelStart m_barrelStart;
 
     BarrelMany m_barrelMany;
 
@@ -317,6 +321,12 @@ public class RobotContainer {
         };
 
         m_barrel = new Barrel(m_robotDrive, buildPaths(barrel));
+        
+        String[] barrelStart = new String[]{
+            "BarrelStart"
+        };
+
+        m_barrelStart = new BarrelStart(m_robotDrive, buildPaths(barrelStart));
 
         String[] bounce = new String[]{
             "Bounce"
@@ -391,8 +401,12 @@ public class RobotContainer {
             //return m_fiveBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_tenBallAutoMiddle.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_slalom.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
-            return m_barrel.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
-            //return m_barrelStart.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+            //return new SequentialCommandGroup(m_driveOffLineForward, 
+            //                                  new InstantCommand(() -> resetOdometry(new Pose2d())), 
+            //                                  new TankDriveVelocity(m_robotDrive, 1000, 1000, 1));
+
+            //return m_barrel.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+            return m_barrelStart.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return new SequentialCommandGroup(new TankDriveVelocity(m_robotDrive, 1000, 1000, 3), new TankDriveVelocity(m_robotDrive, 3000, 3000, 1));
             //return m_sequentialTest.andThen(() -> m_robotDrive.tankDriveVelocity(0,0));
 
