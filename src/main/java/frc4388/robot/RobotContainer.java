@@ -329,7 +329,10 @@ public class RobotContainer {
         m_barrelStart = new BarrelStart(m_robotDrive, buildPaths(barrelStart));
 
         String[] bounce = new String[]{
-            "Bounce"
+            "Bounce1",
+            "Bounce2",
+            "Bounce3",
+            "Bounce4"
         };
 
         m_bounce = new Bounce(m_robotDrive, buildPaths(bounce));
@@ -401,13 +404,8 @@ public class RobotContainer {
             //return m_fiveBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_tenBallAutoMiddle.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_slalom.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
-            //return new SequentialCommandGroup(m_driveOffLineForward, 
-            //                                  new InstantCommand(() -> resetOdometry(new Pose2d())), 
-            //                                  new TankDriveVelocity(m_robotDrive, 1000, 1000, 1));
-
             //return m_barrel.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             return m_barrelStart.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
-            //return new SequentialCommandGroup(new TankDriveVelocity(m_robotDrive, 1000, 1000, 3), new TankDriveVelocity(m_robotDrive, 3000, 3000, 1));
             //return m_sequentialTest.andThen(() -> m_robotDrive.tankDriveVelocity(0,0));
 
         } catch (Exception e) {
@@ -416,27 +414,13 @@ public class RobotContainer {
 
         return new InstantCommand();    
     }
+
     TrajectoryConfig getTrajectoryConfig() {
         return new TrajectoryConfig(
             DriveConstants.MAX_SPEED_METERS_PER_SECOND,
             DriveConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
             // Add kinematics to ensure max speed is actually obeyed
             .setKinematics(DriveConstants.kDriveKinematics);
-    }
-
-    Trajectory getTrajectory(TrajectoryConfig config) {
-        Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-            // Start at the origin facing the +X direction
-            new Pose2d(2.9, -2.4, new Rotation2d(0)),
-            // Pass through these two interior waypoints, making an 's' curve path
-            List.of(
-                new Translation2d(4.1, -1.7)
-            ),
-            // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(5.1, -0.7, new Rotation2d(0)),
-            // Pass config
-            config);
-        return exampleTrajectory;
     }
 
     public RamseteCommand getRamseteCommand(Trajectory trajectory) {
@@ -466,8 +450,8 @@ public class RobotContainer {
                 SmartDashboard.putString("trajectoryPath Initial", trajectoryPath.toString());
 
                 Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-                initialTrajectory = trajectory;
 
+                initialTrajectory = trajectory;
                 RamseteCommand ramseteCommand = getRamseteCommand(trajectory.relativeTo(initialTrajectory.getInitialPose()));
                 ramseteCommands[0] = ramseteCommand;
                 times[0] = initialTrajectory.getTotalTimeSeconds();

@@ -21,7 +21,11 @@ public class Bounce extends SequentialCommandGroup {
   public Bounce(Drive drive, RamseteCommand[] paths) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    addCommands(paths[0]
+    addCommands(
+      paths[0],
+      paths[1],
+      paths[2],
+      paths[3]
     );
   }
 }
