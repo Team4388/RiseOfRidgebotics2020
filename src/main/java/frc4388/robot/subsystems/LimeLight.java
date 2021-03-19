@@ -14,6 +14,8 @@ public class LimeLight extends SubsystemBase {
   /**
    * Creates a new LimeLight.
    */
+  public String galacticSearchPath;
+
   public LimeLight() {
 
   }
@@ -26,6 +28,24 @@ public class LimeLight extends SubsystemBase {
   public void limeOn(){
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0);
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
+  }
+  
+  public void changePipeline(int pipelineId)
+  {
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(pipelineId);
+  }
+
+  public double getV()
+  {
+    return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0);
+  }
+  public double getX()
+  {
+    return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
+  }
+  public double getY()
+  {
+    return NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
   }
 
   @Override

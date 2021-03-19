@@ -8,7 +8,6 @@
 package frc4388.robot;
 
 import java.nio.file.Path;
-import java.util.List;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
@@ -18,55 +17,44 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Transform2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.DriveConstants;
 import frc4388.robot.Constants.OIConstants;
-import frc4388.robot.commands.auto.DriveOffLineBackward;
-import frc4388.robot.commands.auto.DriveOffLineForward;
-import frc4388.robot.commands.auto.EightBallAutoMiddle;
-import frc4388.robot.commands.auto.FiveBallAutoMiddle;
-import frc4388.robot.commands.auto.SequentialTest;
-import frc4388.robot.commands.auto.SixBallAutoMiddle;
-import frc4388.robot.commands.auto.Slalom;
-import frc4388.robot.commands.auto.TankDriveVelocity;
-import frc4388.robot.commands.auto.TenBallAutoMiddle;
 import frc4388.robot.commands.InterruptSubystem;
-import frc4388.robot.commands.auto.AutoPath1FromCenter;
 import frc4388.robot.commands.auto.Barrel;
 import frc4388.robot.commands.auto.BarrelMany;
 import frc4388.robot.commands.auto.BarrelStart;
 import frc4388.robot.commands.auto.Bounce;
+import frc4388.robot.commands.auto.DriveOffLineBackward;
+import frc4388.robot.commands.auto.DriveOffLineForward;
+import frc4388.robot.commands.auto.EightBallAutoMiddle;
+import frc4388.robot.commands.auto.FiveBallAutoMiddle;
+import frc4388.robot.commands.auto.GalacticSearch;
+import frc4388.robot.commands.auto.IdentifyPath;
+import frc4388.robot.commands.auto.SequentialTest;
+import frc4388.robot.commands.auto.SixBallAutoMiddle;
+import frc4388.robot.commands.auto.Slalom;
+import frc4388.robot.commands.auto.TenBallAutoMiddle;
 import frc4388.robot.commands.auto.Wait;
 import frc4388.robot.commands.climber.DisengageRachet;
 import frc4388.robot.commands.climber.RunClimberWithTriggers;
 import frc4388.robot.commands.climber.RunLevelerWithJoystick;
 import frc4388.robot.commands.drive.DriveStraightAtVelocityPID;
-import frc4388.robot.commands.drive.DriveStraightToPositionMM;
 import frc4388.robot.commands.drive.DriveWithJoystick;
 import frc4388.robot.commands.drive.TurnDegrees;
 import frc4388.robot.commands.intake.RunIntakeWithTriggers;
 import frc4388.robot.commands.shooter.CalibrateShooter;
-import frc4388.robot.commands.shooter.TrackTarget;
-import frc4388.robot.commands.shooter.TrimShooter;
 import frc4388.robot.commands.shooter.ShootPrepGroup;
 import frc4388.robot.commands.shooter.TrackTarget;
 import frc4388.robot.commands.shooter.TrimShooter;
-import frc4388.robot.commands.storage.ManageStorage;
-import frc4388.robot.commands.storage.StoragePrep;
-import frc4388.robot.commands.storage.ManageStorage.StorageMode;
 import frc4388.robot.subsystems.Camera;
 import frc4388.robot.subsystems.Climber;
 import frc4388.robot.subsystems.Drive;
@@ -110,6 +98,7 @@ public class RobotContainer {
     /* Controllers */
     private final XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
     private final XboxController m_operatorXbox = new XboxController(OIConstants.XBOX_OPERATOR_ID);
+    private final Joystick m_joystick = new Joystick(0);
 
     /* Autos */
     double m_totalTimeAuto;
@@ -141,6 +130,8 @@ public class RobotContainer {
     Bounce m_bounce;
 
     SequentialTest m_sequentialTest;
+
+    GalacticSearch m_galacticSearch;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -289,6 +280,11 @@ public class RobotContainer {
             .whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotShooterHood, m_robotStorage), false)
             //.whenReleased(new ManageStorage(m_robotStorage, StorageMode.RESET))
             .whenReleased(new InstantCommand(() -> m_robotLime.limeOff()));
+
+        new JoystickButton(m_joystick, 1)
+            .whenPressed(new IdentifyPath(m_robotLime))
+            .whenReleased(new InstantCommand(() -> m_robotLime.limeOff()));
+            //.whileHeld(new RunCommand(() -> System.out.println("pog")));
     }
 
     public void buildAutos() {
@@ -379,6 +375,14 @@ public class RobotContainer {
         };
 
         m_sequentialTest = new SequentialTest(this, buildPaths(sequentialTestPaths));
+
+        String[] galacticSearchPaths = new String[]{
+            "aRed",
+            "aBlue",
+            "bRed",
+            "bBlue"
+        };
+        m_galacticSearch = new GalacticSearch(m_robotLime, buildPaths(galacticSearchPaths));
     }
 
     /**
@@ -405,8 +409,9 @@ public class RobotContainer {
             //return m_tenBallAutoMiddle.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_slalom.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_barrel.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
-            return m_barrelStart.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+            //return m_barrelStart.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_sequentialTest.andThen(() -> m_robotDrive.tankDriveVelocity(0,0));
+            return new IdentifyPath(m_robotLime).andThen(() -> m_galacticSearch.andThen(() -> m_robotDrive.tankDriveVelocity(0,0)));
 
         } catch (Exception e) {
             System.err.println("ERROR");

@@ -214,6 +214,14 @@ public final class Constants {
         public static final double DISTANCE_ERROR_EQUATION_M = 1.1279;
         public static final double DISTANCE_ERROR_EQUATION_B = -15.0684;
         public static final double GRAV = 385.83;
+
+            //Galactic Search
+        public static final double searchError = 0.5;
+        public static final double bothCloseVisibleY = -16.7;
+        public static final double closeLeftVisibleY = -11.47;
+        public static final double closeRightVisibleY = -10.50;
+        public static final double farLeftVisibleX = -1.03;
+        public static final double farRightVisibleX = -2.37;
         }
 
     public static final class OIConstants {
