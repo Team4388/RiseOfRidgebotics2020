@@ -59,6 +59,7 @@ public class TrackTarget extends CommandBase {
     // Vision Processing Mode
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0);
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

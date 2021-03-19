@@ -7,6 +7,8 @@
 
 package frc4388.robot.commands.auto;
 
+import javax.lang.model.util.ElementScanner6;
+
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -20,6 +22,8 @@ public class IdentifyPath extends CommandBase {
   double yAngle;
   double target;
   public String path;
+  boolean closeVisible;
+  boolean finished;
 
   public IdentifyPath(LimeLight limeLight) {
     m_limeLight = limeLight;
@@ -32,6 +36,8 @@ public class IdentifyPath extends CommandBase {
   public void initialize() {
     m_limeLight.limeOn();
     path = "";
+    m_limeLight.changePipeline(1); //Dual Targetting Lowest
+    //closeVisible = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -40,11 +46,21 @@ public class IdentifyPath extends CommandBase {
     target = m_limeLight.getV();
     xAngle = m_limeLight.getX();
     yAngle = m_limeLight.getY();
-    m_limeLight.changePipeline(1); //Dual Targetting
 
       //Identify which of four paths
-    if (withinError(yAngle, VisionConstants.bothCloseVisibleY)) //BLUE PATHS
+    if (withinError(yAngle, VisionConstants.bothCloseVisibleY) && !closeVisible) //BLUE PATHS
     {
+      closeVisible = true;
+    }
+    else if (!withinError(yAngle, VisionConstants.bothCloseVisibleY)&& !closeVisible) // RED PATHS
+    {
+      closeVisible = false;
+    }
+
+
+    if (closeVisible)
+    {
+      m_limeLight.changePipeline(2); //Dual Targetting Highest
       if(withinError(xAngle, VisionConstants.farLeftVisibleX)) //A PATH
       {
         path = "A_BLUE";
@@ -54,20 +70,22 @@ public class IdentifyPath extends CommandBase {
         path = "B_BLUE";
       }
     }
-
-    else // RED PATHS
+    else
     {
+      //m_limeLight.changePipeline(1); //Dual Targetting Lowest
       if(withinError(yAngle, VisionConstants.closeLeftVisibleY)) //A PATH
       {
         path = "A_RED";
       }
-      if(withinError(yAngle, VisionConstants.closeRightVisibleY)) //B PATH
+      else if(withinError(yAngle, VisionConstants.closeRightVisibleY)) //B PATH
       {
         path = "B_RED";
       }
     }
 
-    
+    System.out.println(path);
+    SmartDashboard.putString("GalacticSearchPath", path);
+    SmartDashboard.putBoolean("CloseVisible", closeVisible);
 
   }
 
