@@ -12,6 +12,7 @@ import javax.lang.model.util.ElementScanner6;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc4388.robot.Constants.VisionConstants;
 import frc4388.robot.subsystems.LimeLight;
 
@@ -34,10 +35,8 @@ public class IdentifyPath extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_limeLight.limeOn();
     path = "";
-    m_limeLight.changePipeline(1); //Dual Targetting Lowest
-    //closeVisible = false;
+    closeVisible = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -46,46 +45,46 @@ public class IdentifyPath extends CommandBase {
     target = m_limeLight.getV();
     xAngle = m_limeLight.getX();
     yAngle = m_limeLight.getY();
-
-      //Identify which of four paths
-    if (withinError(yAngle, VisionConstants.bothCloseVisibleY) && !closeVisible) //BLUE PATHS
-    {
-      closeVisible = true;
-    }
-    else if (!withinError(yAngle, VisionConstants.bothCloseVisibleY)&& !closeVisible) // RED PATHS
-    {
-      closeVisible = false;
-    }
-
-
-    if (closeVisible)
-    {
-      m_limeLight.changePipeline(2); //Dual Targetting Highest
-      if(withinError(xAngle, VisionConstants.farLeftVisibleX)) //A PATH
+    m_limeLight.limeOn();
+        //Identify which of four paths
+      m_limeLight.changePipeline(1);//Dual Targetting Lowest
+      if (withinError(yAngle, VisionConstants.bothCloseVisibleY) && !closeVisible) //BLUE PATHS
       {
-        path = "A_BLUE";
+        closeVisible = true;
       }
-      if(withinError(xAngle, VisionConstants.farRightVisibleX)) //B PATH
+      else if (!withinError(yAngle, VisionConstants.bothCloseVisibleY) && !closeVisible) // RED PATHS
       {
-        path = "B_BLUE";
+        closeVisible = false;
       }
-    }
-    else
-    {
-      //m_limeLight.changePipeline(1); //Dual Targetting Lowest
-      if(withinError(yAngle, VisionConstants.closeLeftVisibleY)) //A PATH
-      {
-        path = "A_RED";
-      }
-      else if(withinError(yAngle, VisionConstants.closeRightVisibleY)) //B PATH
-      {
-        path = "B_RED";
-      }
-    }
 
+      if (closeVisible)
+      {
+         m_limeLight.changePipeline(2); //Dual Targetting Highest
+        if(withinError(xAngle, VisionConstants.farLeftVisibleX)) //A PATH
+        {
+          path = "A_BLUE";
+        }
+        if(withinError(xAngle, VisionConstants.farRightVisibleX)) //B PATH
+        {
+          path = "B_BLUE";
+        }
+      }
+
+      else{
+        m_limeLight.changePipeline(1); //Dual Targetting Lowest
+        if(withinError(yAngle, VisionConstants.closeLeftVisibleY)) //A PATH
+        {
+          path = "A_RED";
+        }
+        else if(withinError(yAngle, VisionConstants.closeRightVisibleY)) //B PATH
+        {
+          path = "B_RED";
+        }
+      }
+
+      SmartDashboard.putBoolean("CloseVisible", closeVisible);
+      System.out.println("If you see this message a bunch of times in a row, IdentifyPath.java is stuck trying to find the path for GalacticSearch");
     System.out.println(path);
-    SmartDashboard.putString("GalacticSearchPath", path);
-    SmartDashboard.putBoolean("CloseVisible", closeVisible);
 
   }
 
@@ -112,6 +111,7 @@ public class IdentifyPath extends CommandBase {
     {
       SmartDashboard.putString("GalacticSearchPath", path);
       m_limeLight.galacticSearchPath = path;
+      m_limeLight.limeOff();
       return true;
     }
     return false;

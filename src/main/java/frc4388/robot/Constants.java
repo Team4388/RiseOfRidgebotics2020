@@ -218,11 +218,10 @@ public final class Constants {
             //Galactic Search
         public static final double searchError = 0.5;
         public static final double bothCloseVisibleY = -17.69;
-        public static final double closeLeftVisibleY = -12.78;
-        public static final double closeRightVisibleY = -11.77;
-        public static final double farLeftVisibleX = 1.13;
-        public static final double farRightVisibleX = 4.47;
-        public static final double bothCloseHiddenErrorCheckY = -5.29;
+        public static final double closeLeftVisibleY = -12.57;
+        public static final double closeRightVisibleY = -11.35;
+        public static final double farLeftVisibleX = 3.58;
+        public static final double farRightVisibleX = 7.04;
         }
 
     public static final class OIConstants {

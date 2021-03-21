@@ -282,9 +282,7 @@ public class RobotContainer {
             .whenReleased(new InstantCommand(() -> m_robotLime.limeOff()));
 
         new JoystickButton(m_joystick, 1)
-            .whenPressed(new IdentifyPath(m_robotLime))
-            .whenReleased(new InstantCommand(() -> m_robotLime.limeOff()));
-            //.whileHeld(new RunCommand(() -> System.out.println("pog")));
+            .whenPressed(new IdentifyPath(m_robotLime));
     }
 
     public void buildAutos() {
