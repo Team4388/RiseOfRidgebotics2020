@@ -331,10 +331,20 @@ public class Drive extends SubsystemBase {
 
     m_totalRightDistanceInches += ticksToInches(m_currentRightPosTicks - m_lastRightPosTicks);
     m_totalLeftDistanceInches += ticksToInches(m_currentLeftPosTicks - m_lastLeftPosTicks);
+    updateOdometry(false);
+  }
 
-    m_odometry.update(Rotation2d.fromDegrees( getHeading()),
+  public void updateOdometry(boolean reversed) {
+    if (reversed) {
+      m_odometry.update(Rotation2d.fromDegrees( getHeading()-180),
+                                              -inchesToMeters(getDistanceInches(m_rightFrontMotor)),
+                                              inchesToMeters(getDistanceInches(m_leftFrontMotor)));
+    }
+    else {
+      m_odometry.update(Rotation2d.fromDegrees( getHeading()),
                                               inchesToMeters(getDistanceInches(m_leftFrontMotor)),
                                               -inchesToMeters(getDistanceInches(m_rightFrontMotor)));
+    }
   }
 
   /**
