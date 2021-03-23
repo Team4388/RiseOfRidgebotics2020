@@ -185,8 +185,10 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Test Buttons */
         // A driver test button
-        /*new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-            .whileHeld(new InstantCommand(() -> m_robotDrive.tankDriveVelocity(1, -1), m_robotDrive));*/
+        new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
+            .whileHeld(new ShooterTrenchPosition(m_robotShooter, m_robotShooterHood, m_robotShooterAim))
+            .whenReleased(new InterruptSubystem(m_robotShooter))
+            .whenReleased(new InterruptSubystem(m_robotShooterHood));
 
         // B driver test button
         new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
@@ -231,7 +233,7 @@ public class RobotContainer {
             //.whenPressed(new ShootFullGroup(m_robotShooter, m_robotShooterAim, m_robotShooterHood, m_robotStorage), false);
             //.whenReleased(new ManageStorage(m_robotStorage, StorageMode.RESET));
             //.whenReleased(new RunCommand(() -> m_robotLime.limeOff()));
-            .whenPressed(new RunCommand(() -> m_robotStorage.runStorage(1), m_robotStorage))
+            .whenPressed(new RunCommand(() -> m_robotStorage.runStorage(0.3), m_robotStorage))
             .whenReleased(new InterruptSubystem(m_robotStorage));
 
         // extends or retracts the extender
@@ -268,6 +270,7 @@ public class RobotContainer {
         //Calibrates turret and hood
         new JoystickButton(getOperatorJoystick(), XboxController.START_BUTTON)
             .whileHeld(new CalibrateShooter(m_robotShooter, m_robotShooterAim, m_robotShooterHood));
+
 
 
         //Run drum

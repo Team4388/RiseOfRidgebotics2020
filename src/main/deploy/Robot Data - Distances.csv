@@ -1,6 +1,7 @@
 Distance (in),Hood Ext. (u),Drum Velocity (u/ds),Center Displacment (deg)
 0,16,6000,0,
 65.9,16,6000,0,
+103,19,6600,1,
 126.6,20.25,7000,0,
 180,24,8000,0,
 185.85,26.5, 9000,1.1,
