@@ -332,7 +332,7 @@ public class RobotContainer {
             "Bounce"
         };
 
-        m_bounce = new Bounce(m_robotDrive, buildPaths(bounce));
+        m_bounce = new Bounce(m_robotDrive, this, buildPaths(bounce));
         
         String[] barrelMany = new String[]{
             "BarrelManyWaypoints"
@@ -406,7 +406,7 @@ public class RobotContainer {
             //                                  new TankDriveVelocity(m_robotDrive, 1000, 1000, 1));
 
             //return m_barrel.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
-            return m_barrelStart.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+            return m_barrelStart.andThen(()-> m_robotDrive.tankDriveVelocity(1, 1));
             //return new SequentialCommandGroup(new TankDriveVelocity(m_robotDrive, 1000, 1000, 3), new TankDriveVelocity(m_robotDrive, 3000, 3000, 1));
             //return m_sequentialTest.andThen(() -> m_robotDrive.tankDriveVelocity(0,0));
 
