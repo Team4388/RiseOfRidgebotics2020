@@ -35,7 +35,7 @@ public class ShooterGoalPosition extends CommandBase {
   @Override
   public void execute() {
     m_shooter.runDrumShooterVelocityPID(5000);
-    m_hood.runAngleAdjustPID(3);
+    m_hood.runAngleAdjustPID(4);
     m_aim.runshooterRotatePID(-26.5);
   }
 

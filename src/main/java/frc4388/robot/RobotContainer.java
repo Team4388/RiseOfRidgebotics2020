@@ -191,8 +191,8 @@ public class RobotContainer {
             .whenReleased(new InterruptSubystem(m_robotShooterHood));
 
         // B driver test button
-        new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
-            .whenPressed(new TurnDegrees(m_robotDrive, 90));
+        /*new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
+            .whenPressed(new TurnDegrees(m_robotDrive, 90));*/
         // Y driver test button
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
             .whenPressed(new Wait(m_robotDrive, 0, 0));
