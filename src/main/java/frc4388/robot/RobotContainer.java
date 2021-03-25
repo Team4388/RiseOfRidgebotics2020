@@ -317,13 +317,13 @@ public class RobotContainer {
         m_slalom = new Slalom(m_robotDrive, buildPaths(slalom));
 
         String[] barrel = new String[]{
-            "Barrel"
+            "BarrelStart"
         };
 
         m_barrel = new Barrel(m_robotDrive, buildPaths(barrel));
         
         String[] barrelStart = new String[]{
-            "BarrelStart"
+            "Barrel"
         };
 
         m_barrelStart = new BarrelStart(m_robotDrive, buildPaths(barrelStart));

@@ -26,9 +26,8 @@ public class BarrelStart extends SequentialCommandGroup {
     // super(new FooCommand(), new BarCommand());
     addCommands(
       paths[0],
-      new Wait(drive, 0.01, 1),
-      new TankDriveVelocity(drive, 3, 3, 1)
-      //new InstantCommand(() -> drive.tankDriveVelocity(7, 7)).withTimeout(7) //my life be like oooooo aaaaaa ooooo aaaa
+      //new Wait(drive, 0.01, 1),
+      new TankDriveVelocity(drive, 3, 3, 1) //my life be like oooooo aaaaaa ooooo aaaa
     );
     
   }
