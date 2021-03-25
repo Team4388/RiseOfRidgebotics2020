@@ -182,7 +182,7 @@ public class RobotContainer {
         // runs the storage not
         m_robotStorage.setDefaultCommand(new RunCommand(() -> m_robotStorage.runStorage(0), m_robotStorage));
         //m_robotStorage.setDefaultCommand(new ManageStorage(m_robotStorage, StorageMode.IDLE));
-        //m_robotLime.setDefaultCommand(new RunCommand(() -> m_robotLime.limeOff(), m_robotLime));
+        m_robotLime.setDefaultCommand(new RunCommand(() -> m_robotLime.limeOff(), m_robotLime));
     }
 
     /**
@@ -329,7 +329,10 @@ public class RobotContainer {
         m_barrelStart = new BarrelStart(m_robotDrive, buildPaths(barrelStart));
 
         String[] bounce = new String[]{
-            "Bounce"
+            "Bounce1",
+            "Bounce2",
+            "Bounce3",
+            "Bounce4"
         };
 
         m_bounce = new Bounce(m_robotDrive, this, buildPaths(bounce));
@@ -401,14 +404,7 @@ public class RobotContainer {
             //return m_fiveBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_tenBallAutoMiddle.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_slalom.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
-            //return new SequentialCommandGroup(m_driveOffLineForward, 
-            //                                  new InstantCommand(() -> resetOdometry(new Pose2d())), 
-            //                                  new TankDriveVelocity(m_robotDrive, 1000, 1000, 1));
-
-            //return m_barrel.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
-            return m_barrelStart.andThen(()-> m_robotDrive.tankDriveVelocity(1, 1));
-            //return new SequentialCommandGroup(new TankDriveVelocity(m_robotDrive, 1000, 1000, 3), new TankDriveVelocity(m_robotDrive, 3000, 3000, 1));
-            //return m_sequentialTest.andThen(() -> m_robotDrive.tankDriveVelocity(0,0));
+            return m_barrelStart.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
 
         } catch (Exception e) {
             System.err.println("ERROR");

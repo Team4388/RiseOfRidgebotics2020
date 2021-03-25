@@ -29,7 +29,15 @@ public class Bounce extends SequentialCommandGroup {
       paths[0],
       new InstantCommand(() -> drive.switchReversed(true)),
       new InstantCommand(() -> robotContainer.resetOdometry(new Pose2d())),
-      paths[1]
+      paths[1],
+      new InstantCommand(() -> drive.switchReversed(false)),
+      new InstantCommand(() -> robotContainer.resetOdometry(new Pose2d())),
+      paths[2],
+      new InstantCommand(() -> drive.switchReversed(true)),
+      new InstantCommand(() -> robotContainer.resetOdometry(new Pose2d())),
+      paths[3],
+      new InstantCommand(() -> drive.switchReversed(false)),
+      new InstantCommand(() -> robotContainer.resetOdometry(new Pose2d()))
     );
   }
 }
