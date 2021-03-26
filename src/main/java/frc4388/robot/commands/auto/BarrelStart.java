@@ -27,7 +27,7 @@ public class BarrelStart extends SequentialCommandGroup {
     addCommands(
       paths[0],
       //new Wait(drive, 0.01, 1),
-      new TankDriveVelocity(drive, 3, 3, 1) //my life be like oooooo aaaaaa ooooo aaaa
+      new TankDriveVelocity(drive, 5, 5, 1.2) //my life be like oooooo aaaaaa ooooo aaaa
     );
     
   }

@@ -15,10 +15,10 @@ public class TankDriveVelocity extends CommandBase {
   double m_leftTargetVel;
   double m_rightTargetVel;
 
-  double m_targetTime;
-  double m_firstTimeSec;
-  double m_currentTimeSec;
-  double m_diffSec;
+  long m_targetTime;
+  long m_firstTime;
+  long m_currentTime;
+  long m_diffTime;
 
   /**
    * Creates a new TankDriveVelocity.
@@ -28,24 +28,24 @@ public class TankDriveVelocity extends CommandBase {
     m_drive = subsystem;
     m_leftTargetVel = leftTargetVel;
     m_rightTargetVel = rightTargetVel;
-    m_targetTime = targetTime;
+    m_targetTime = (long) (targetTime * 1000);
     addRequirements(subsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_firstTimeSec = (System.currentTimeMillis() / 1000);
-    m_diffSec = 0;
+    m_firstTime = System.currentTimeMillis();
+    m_diffTime = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_currentTimeSec = (System.currentTimeMillis() / 1000);
-    m_diffSec = m_currentTimeSec - m_firstTimeSec;
+    m_currentTime = System.currentTimeMillis();
+    m_diffTime = m_currentTime - m_firstTime;
     
-    if (m_diffSec < m_targetTime) {
+    if (m_diffTime < m_targetTime) {
       m_drive.tankDriveVelocity(m_leftTargetVel, m_rightTargetVel);
     }
 
@@ -59,7 +59,7 @@ public class TankDriveVelocity extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (m_diffSec >= m_targetTime) {
+    if (m_diffTime >= m_targetTime) {
       return true;
     }
     return false;
