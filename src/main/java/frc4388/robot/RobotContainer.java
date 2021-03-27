@@ -233,7 +233,7 @@ public class RobotContainer {
             //.whenPressed(new ShootFullGroup(m_robotShooter, m_robotShooterAim, m_robotShooterHood, m_robotStorage), false);
             //.whenReleased(new ManageStorage(m_robotStorage, StorageMode.RESET));
             //.whenReleased(new RunCommand(() -> m_robotLime.limeOff()));
-            .whenPressed(new RunCommand(() -> m_robotStorage.runStorage(0.3), m_robotStorage))
+            .whenPressed(new RunCommand(() -> m_robotStorage.runStorage(0.5), m_robotStorage))
             .whenReleased(new InterruptSubystem(m_robotStorage));
 
         // extends or retracts the extender
