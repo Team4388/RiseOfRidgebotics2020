@@ -105,7 +105,7 @@ public class RobotContainer {
     /* Cameras */
     private final Camera m_robotCameraFront = new Camera("front", 0, 160, 120, 40);
     private final Camera m_robotCameraBack = new Camera("back", 1, 160, 120, 40);
-    private final LimeLight m_robotLime = new LimeLight();
+    public final LimeLight m_robotLime = new LimeLight();
 
     /* Controllers */
     private final XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
