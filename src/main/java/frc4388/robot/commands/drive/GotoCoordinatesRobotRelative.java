@@ -46,7 +46,7 @@ public class GotoCoordinatesRobotRelative extends SequentialCommandGroup {
     addCommands(  new TurnDegrees(m_drive, m_currentAngle),
                   new Wait(m_drive, 0, 0),
                   new DriveStraightToPositionPID(m_drive, m_pneumatics, m_hypotDist), 
-                  new TurnDegrees(m_drive, m_endAngle - m_currentAngle));
+                  new TurnDegrees(m_drive, (m_endAngle - m_currentAngle) % 360));
   }
 
   public GotoCoordinatesRobotRelative(Drive subsystem, Pneumatics subsystem2, double xTarget, double yTarget) {

@@ -195,14 +195,14 @@ public class RobotContainer {
         /* Test Buttons */
         // A driver test button
         new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-            .whenPressed(new DriveStraightAtVelocityPID(m_robotDrive, 1000));
+            .whileHeld(new DriveStraightAtVelocityPID(m_robotDrive, 5000));
 
         // B driver test button
         new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
-            .whenPressed(new TurnDegrees(m_robotDrive, 45));
+            .whileHeld(new RunCommand(() -> m_robotDrive.runDriveVelocityPID(2000, 45), m_robotDrive));
         // Y driver test button
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
-            .whenPressed(new Wait(m_robotDrive, 0, 0));
+            .whenPressed(new InstantCommand(() -> m_robotDrive.runTurningPID(1000), m_robotDrive));
 
         // X driver test button
         new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
@@ -403,14 +403,14 @@ public class RobotContainer {
             //return m_driveOffLineBackward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_fiveBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_tenBallAutoMiddle.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
-            //return m_slalom.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
-            return m_barrelStart.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+            return m_slalom.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+            //return m_barrelStart.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
 
         } catch (Exception e) {
             System.err.println("ERROR");
         }
 
-        return new InstantCommand();    
+        return new InstantCommand();
     }
     TrajectoryConfig getTrajectoryConfig() {
         return new TrajectoryConfig(
