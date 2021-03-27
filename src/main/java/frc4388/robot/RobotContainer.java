@@ -353,7 +353,7 @@ public class RobotContainer {
             "DriveOffLineForward"
         };
 
-        m_driveOffLineForward = new DriveOffLineForward(m_robotDrive, buildPaths(driveOffLineForwardPaths));
+        m_driveOffLineForward = new DriveOffLineForward(m_robotDrive, this, buildPaths(driveOffLineForwardPaths));
 
         String[] driveOffLineBackwardPaths = new String[]{
             "DriveOffLineBackward"
@@ -399,13 +399,13 @@ public class RobotContainer {
             //return m_sixBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_sixBallAutoMiddle1.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_eightBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-            //return m_driveOffLineForward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+            return m_driveOffLineForward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_driveOffLineBackward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_fiveBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_tenBallAutoMiddle.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
-            return m_slalom.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+            //return m_slalom.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_barrelStart.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
-
+            //return m_bounce.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
         } catch (Exception e) {
             System.err.println("ERROR");
         }

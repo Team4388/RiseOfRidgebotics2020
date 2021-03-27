@@ -7,8 +7,11 @@
 
 package frc4388.robot.commands.auto;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc4388.robot.RobotContainer;
 import frc4388.robot.subsystems.Drive;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -18,11 +21,13 @@ public class DriveOffLineForward extends SequentialCommandGroup {
   /**
    * Creates a new DriveOffLineForward.
    */
-  public DriveOffLineForward(Drive drive, RamseteCommand[] paths) {
+  public DriveOffLineForward(Drive drive, RobotContainer robotContainer, RamseteCommand[] paths) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
 
     addCommands(
+      new InstantCommand(() -> drive.switchReversed(true)),
+      new InstantCommand(() -> robotContainer.resetOdometry(new Pose2d())),
       paths[0]
     );
   }
