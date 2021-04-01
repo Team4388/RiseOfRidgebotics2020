@@ -380,7 +380,7 @@ public class RobotContainer {
             "bRed",
             "bBlue"
         };
-        m_galacticSearch = new GalacticSearch(m_robotLime, buildPaths(galacticSearchPaths));
+        m_galacticSearch = new GalacticSearch(m_robotLime, m_robotIntake, buildPaths(galacticSearchPaths));
     }
 
     /**

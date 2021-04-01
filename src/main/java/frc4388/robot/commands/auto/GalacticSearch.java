@@ -9,6 +9,8 @@ package frc4388.robot.commands.auto;
 
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc4388.robot.commands.intake.RunIntake;
+import frc4388.robot.subsystems.Intake;
 import frc4388.robot.subsystems.LimeLight;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -18,22 +20,22 @@ public class GalacticSearch extends SequentialCommandGroup {
   /**
    * Creates a new GalacticSearch.
    */
-  public GalacticSearch(LimeLight m_limeLight, RamseteCommand[] paths) {
+  public GalacticSearch(LimeLight m_limeLight, Intake m_intake, RamseteCommand[] paths) {
     if (m_limeLight.galacticSearchPath == "A_RED")
     {
-      addCommands(paths[0]);
+      addCommands(new SequentialCommandGroup(paths[0], new RunIntake(m_intake)));
     }
     else if (m_limeLight.galacticSearchPath == "A_BLUE")
     {
-      addCommands(paths[1]);
+      addCommands(new SequentialCommandGroup(paths[1], new RunIntake(m_intake)));
     }
     else if (m_limeLight.galacticSearchPath == "B_RED")
     {
-      addCommands(paths[2]);
+      addCommands(new SequentialCommandGroup(paths[2], new RunIntake(m_intake)));
     }
     else if (m_limeLight.galacticSearchPath == "B_BLUE")
     {
-      addCommands(paths[3]);
+      addCommands(new SequentialCommandGroup(paths[3], new RunIntake(m_intake)));
     }
   }
 }
