@@ -409,7 +409,7 @@ public class RobotContainer {
             //return m_barrel.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_barrelStart.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_sequentialTest.andThen(() -> m_robotDrive.tankDriveVelocity(0,0));
-            return new IdentifyPath(m_robotLime).andThen(() -> m_galacticSearch.andThen(() -> m_robotDrive.tankDriveVelocity(0,0)));
+            return m_galacticSearch.andThen(() -> m_robotDrive.tankDriveVelocity(0,0));
 
         } catch (Exception e) {
             System.err.println("ERROR");

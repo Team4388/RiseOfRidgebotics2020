@@ -7,6 +7,7 @@
 
 package frc4388.robot.commands.auto;
 
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc4388.robot.commands.intake.RunIntake;
@@ -21,21 +22,25 @@ public class GalacticSearch extends SequentialCommandGroup {
    * Creates a new GalacticSearch.
    */
   public GalacticSearch(LimeLight m_limeLight, Intake m_intake, RamseteCommand[] paths) {
-    if (m_limeLight.galacticSearchPath == "A_RED")
+    addCommands(
+      paths[0]
+    );
+   /* if (m_limeLight.galacticSearchPath == "A_RED")
     {
-      addCommands(new SequentialCommandGroup(paths[0], new RunIntake(m_intake)));
+      System.out.println(m_limeLight.galacticSearchPath +"YOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+      addCommands(new ParallelCommandGroup(paths[0], new RunIntake(m_intake)));
     }
     else if (m_limeLight.galacticSearchPath == "A_BLUE")
     {
-      addCommands(new SequentialCommandGroup(paths[1], new RunIntake(m_intake)));
+      addCommands(new ParallelCommandGroup(paths[1], new RunIntake(m_intake)));
     }
     else if (m_limeLight.galacticSearchPath == "B_RED")
     {
-      addCommands(new SequentialCommandGroup(paths[2], new RunIntake(m_intake)));
+      addCommands(new ParallelCommandGroup(paths[2], new RunIntake(m_intake)));
     }
     else if (m_limeLight.galacticSearchPath == "B_BLUE")
     {
-      addCommands(new SequentialCommandGroup(paths[3], new RunIntake(m_intake)));
-    }
+      addCommands(new ParallelCommandGroup(paths[3], new RunIntake(m_intake)));
+    }*/
   }
 }

@@ -25,6 +25,7 @@ public class IdentifyPath extends CommandBase {
   public String path;
   boolean closeVisible;
   boolean finished;
+  boolean pathFound;
 
   public IdentifyPath(LimeLight limeLight) {
     m_limeLight = limeLight;
@@ -37,6 +38,7 @@ public class IdentifyPath extends CommandBase {
   public void initialize() {
     path = "";
     closeVisible = false;
+    pathFound = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -46,51 +48,92 @@ public class IdentifyPath extends CommandBase {
     xAngle = m_limeLight.getX();
     yAngle = m_limeLight.getY();
     m_limeLight.limeOn();
-        //Identify which of four paths
-      m_limeLight.changePipeline(1);//Dual Targetting Lowest
-      if (withinError(yAngle, VisionConstants.bothCloseVisibleY) && !closeVisible) //BLUE PATHS
-      {
-        closeVisible = true;
-      }
-      else if (!withinError(yAngle, VisionConstants.bothCloseVisibleY) && !closeVisible) // RED PATHS
-      {
-        closeVisible = false;
-      }
+    //     //Identify which of four paths
+    //   m_limeLight.changePipeline(1);//Dual Targetting Lowest
+    //   if (withinError(yAngle, VisionConstants.bothCloseVisibleY) && !closeVisible) //BLUE PATHS
+    //   {
+    //     closeVisible = true;
+    //   }
+    //   else if (!withinError(yAngle, VisionConstants.bothCloseVisibleY) && !closeVisible) // RED PATHS
+    //   {
+    //     closeVisible = false;
+    //   }
 
-      if (closeVisible)
-      {
-         m_limeLight.changePipeline(2); //Dual Targetting Highest
-        if(withinError(xAngle, VisionConstants.farLeftVisibleX)) //A PATH
-        {
-          path = "A_BLUE";
-        }
-        if(withinError(xAngle, VisionConstants.farRightVisibleX)) //B PATH
-        {
-          path = "B_BLUE";
-        }
-      }
+    //   if (closeVisible)
+    //   {
+    //      m_limeLight.changePipeline(2); //Dual Targetting Highest
+    //     if(withinError(xAngle, VisionConstants.farLeftVisibleX)) //A PATH
+    //     {
+    //       path = "A_BLUE";
+    //     }
+    //     if(withinError(xAngle, VisionConstants.farRightVisibleX)) //B PATH
+    //     {
+    //       path = "B_BLUE";
+    //     }
+    //   }
 
-      else{
-        m_limeLight.changePipeline(1); //Dual Targetting Lowest
-        if(withinError(yAngle, VisionConstants.closeLeftVisibleY)) //A PATH
-        {
-          path = "A_RED";
-        }
-        else if(withinError(yAngle, VisionConstants.closeRightVisibleY)) //B PATH
-        {
-          path = "B_RED";
-        }
-      }
+    //   else{
+    //     m_limeLight.changePipeline(1); //Dual Targetting Lowest
+    //     if(withinError(yAngle, VisionConstants.closeLeftVisibleY)) //A PATH
+    //     {
+    //       path = "A_RED";
+    //     }
+    //     else if(withinError(yAngle, VisionConstants.closeRightVisibleY)) //B PATH
+    //     {
+    //       path = "B_RED";
+    //     }
+    //   }
 
-      SmartDashboard.putBoolean("CloseVisible", closeVisible);
-      System.out.println("If you see this message a bunch of times in a row, IdentifyPath.java is stuck trying to find the path for GalacticSearch");
-    System.out.println(path);
+    SmartDashboard.putBoolean("PathFound", pathFound);
+    //   System.out.println("If you see this message a bunch of times in a row, IdentifyPath.java is stuck trying to find the path for GalacticSearch");
+    // System.out.println(path);
+
+
+    m_limeLight.changePipeline(1);
+    if (withinCoords(VisionConstants.aBlue))
+    {
+      pathFound = true;
+      path = "A_BLUE";
+    }
+
+    m_limeLight.changePipeline(2);
+    if (withinCoords(VisionConstants.bBlue))
+    {
+      pathFound = true;
+      path = "B_BLUE";
+    }
+
+    m_limeLight.changePipeline(1);
+    if (withinCoords(VisionConstants.aRed))
+    {
+      pathFound = true;
+      path = "A_RED";
+    }
+
+    m_limeLight.changePipeline(1);
+    if (withinCoords(VisionConstants.bRed))
+    {
+      pathFound = true;
+      path = "B_RED";
+    }
 
   }
 
-  public boolean withinError(double angle, double input)
+  public boolean withinError(double angle, double goal)
   {
-    if(input > (angle - VisionConstants.searchError) && input < (angle + VisionConstants.searchError))
+    if(goal > (angle - VisionConstants.searchError) && goal < (angle + VisionConstants.searchError))
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+  public boolean withinCoords(double[] coords)
+  {
+    if (withinError(xAngle, coords[0]) && withinError(yAngle, coords[1]))
     {
       return true;
     }
