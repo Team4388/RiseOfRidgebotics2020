@@ -55,6 +55,8 @@ import frc4388.robot.commands.shooter.CalibrateShooter;
 import frc4388.robot.commands.shooter.ShootPrepGroup;
 import frc4388.robot.commands.shooter.TrackTarget;
 import frc4388.robot.commands.shooter.TrimShooter;
+import frc4388.robot.commands.storage.ManageStorage;
+import frc4388.robot.commands.storage.ManageStorage.StorageMode;
 import frc4388.robot.subsystems.Camera;
 import frc4388.robot.subsystems.Climber;
 import frc4388.robot.subsystems.Drive;
@@ -173,8 +175,8 @@ public class RobotContainer {
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
         // runs the storage not
-        m_robotStorage.setDefaultCommand(new RunCommand(() -> m_robotStorage.runStorage(0), m_robotStorage));
-        //m_robotStorage.setDefaultCommand(new ManageStorage(m_robotStorage, StorageMode.IDLE));
+        //m_robotStorage.setDefaultCommand(new RunCommand(() -> m_robotStorage.runStorage(0), m_robotStorage));
+        m_robotStorage.setDefaultCommand(new ManageStorage(m_robotStorage, StorageMode.IDLE));
         //m_robotLime.setDefaultCommand(new RunCommand(() -> m_robotLime.limeOff(), m_robotLime));
     }
 
@@ -294,10 +296,14 @@ public class RobotContainer {
             "GSC_BRED",
             "GSC_BBLUE"
         };
-        m_robotLime.identifyPath();
+        idenPath();
         m_galacticSearch = new GalacticSearch(m_robotLime, m_robotIntake, buildPaths(galacticSearchPaths));
     }
 
+    public void idenPath()
+    {
+        m_robotLime.identifyPath();
+    }
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *
@@ -308,7 +314,6 @@ public class RobotContainer {
         //TrajectoryConfig config = getTrajectoryConfig();
         //Trajectory trajectory = getTrajectory(config);
         //RamseteCommand ramseteCommand = getRamseteCommand(trajectory);
-
         // Run path following command, then stop at the end.
         try {
             SmartDashboard.putNumber("Trajectory Total Time", m_totalTimeAuto);

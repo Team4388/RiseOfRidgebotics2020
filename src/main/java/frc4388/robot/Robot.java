@@ -75,6 +75,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     m_robotContainer.resetOdometry(new Pose2d());
+    m_robotContainer.idenPath();
   }
 
   /**

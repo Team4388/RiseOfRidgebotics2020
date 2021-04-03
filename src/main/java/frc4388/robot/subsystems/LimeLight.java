@@ -50,31 +50,58 @@ public class LimeLight extends SubsystemBase {
     return NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
   }
 
+  int i = 0;
+  boolean onceThrough = false;
+  boolean pathFound = false;
   public void identifyPath(){
-    changePipeline(1);
-    if (withinCoords(VisionConstants.aBlue))
-    {
-      galacticSearchPath = "A_BLUE";
-    }
 
-    changePipeline(2);
-    if (withinCoords(VisionConstants.bBlue))
+    if (!onceThrough)
     {
-      galacticSearchPath = "B_BLUE";
-    }
+      changePipeline(2);
+      if (withinCoords(VisionConstants.aBlue))
+      {
+        pathFound = true;
+        galacticSearchPath = "A_BLUE";
+      }
 
-    changePipeline(1);
-    if (withinCoords(VisionConstants.aRed))
-    {
-      galacticSearchPath = "A_RED";
-    }
+      changePipeline(4);
+      if (withinCoords(VisionConstants.bBlue))
+      {
+        pathFound = true;
+        galacticSearchPath = "B_BLUE";
+      }
 
-    changePipeline(1);
-    if (withinCoords(VisionConstants.bRed))
-    {
-      galacticSearchPath = "B_RED";
+      changePipeline(1);
+      if (withinCoords(VisionConstants.aRed))
+      {
+        pathFound = true;
+        galacticSearchPath = "A_RED";
+      }
+
+      changePipeline(3);
+      if (withinCoords(VisionConstants.bRed))
+      {
+        pathFound = true;
+        galacticSearchPath = "B_RED";
+      }
+
+      if (pathFound == false)
+      {
+        galacticSearchPath = "PathNotFound";
+      }
+      SmartDashboard.putString("GalacticSearchPath", galacticSearchPath);
+      onceThrough = true;
     }
-    SmartDashboard.putString("GalacticSearchPath", galacticSearchPath);
+    else{
+      i++;
+      SmartDashboard.putNumber("Counter", i);
+    }
+    if (i >= 50)
+    {
+      i=0;
+      pathFound = false;
+      onceThrough = false;
+    }
   }
 
 public boolean withinError(double angle, double goal)
