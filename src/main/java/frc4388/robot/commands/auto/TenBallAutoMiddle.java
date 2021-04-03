@@ -18,6 +18,7 @@ import frc4388.robot.commands.shooter.ShootPrepGroup;
 import frc4388.robot.commands.storage.RunStorage;
 import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Intake;
+import frc4388.robot.subsystems.LimeLight;
 import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.ShooterAim;
 import frc4388.robot.subsystems.ShooterHood;
@@ -30,7 +31,7 @@ public class TenBallAutoMiddle extends SequentialCommandGroup {
   /**
    * Creates a new TenBallAutoMiddle.
    */
-  public TenBallAutoMiddle(ShooterHood shooterHood, Storage storage, Intake intake, Shooter shooter, ShooterAim shooterAim, Drive drive, RamseteCommand[] paths) {
+  public TenBallAutoMiddle(ShooterHood shooterHood, Storage storage, Intake intake, Shooter shooter, ShooterAim shooterAim, Drive drive, LimeLight m_limeLight, RamseteCommand[] paths) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     addCommands(
@@ -46,10 +47,10 @@ public class TenBallAutoMiddle extends SequentialCommandGroup {
         new Wait(drive, 4, 0),
         new PrepChecker(shooter, shooterAim),
         new RunCommand(() -> intake.runExtender(IntakeConstants.EXTENDER_SPEED), intake),
-        new ShootPrepGroup(shooter, shooterAim, shooterHood, storage)
+        new ShootPrepGroup(shooter, shooterAim, shooterHood, storage, m_limeLight)
       ),
       new ParallelDeadlineGroup(
-        new ShootPrepGroup(shooter, shooterAim, shooterHood, storage),
+        new ShootPrepGroup(shooter, shooterAim, shooterHood, storage, m_limeLight),
         new RunStorage(storage)
       )
       //paths[0],

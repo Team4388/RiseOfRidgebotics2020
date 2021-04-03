@@ -39,24 +39,30 @@ public class TrackTarget extends CommandBase {
   public double m_hoodTrim;
   public double m_turretTrim;
 
+  LimeLight m_limeLight;
+
   /**
    * Uses the Limelight to track the target
    * @param shooterSubsystem The Shooter subsystem
    * @param aimSubsystem The ShooterAim subsystem
    */
-  public TrackTarget(ShooterAim aimSubsystem) {
+  public TrackTarget(ShooterAim aimSubsystem, LimeLight limeLight) {
     m_shooterAim = aimSubsystem;
     m_shooter = m_shooterAim.m_shooterSubsystem;
     m_shooterHood = m_shooter.m_shooterHoodSubsystem;
+    m_limeLight = limeLight;
     addRequirements(m_shooterAim);
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1);
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(0);
+    //NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1);
+    //NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(0);
+    m_limeLight.limeOff();
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     // Vision Processing Mode
+    //NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0);
+    //NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0);
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
   }

@@ -173,7 +173,7 @@ public class RobotContainer {
         // runs the storage not
         //m_robotStorage.setDefaultCommand(new RunCommand(() -> m_robotStorage.runStorage(0), m_robotStorage));
         m_robotStorage.setDefaultCommand(new ManageStorage(m_robotStorage));
-        //m_robotLime.setDefaultCommand(new RunCommand(() -> m_robotLime.limeOff(), m_robotLime));
+        m_robotLime.setDefaultCommand(new RunCommand(() -> m_robotLime.limeOff(), m_robotLime));
     }
 
     /**
@@ -233,7 +233,7 @@ public class RobotContainer {
             //.whenPressed(new ShootFullGroup(m_robotShooter, m_robotShooterAim, m_robotShooterHood, m_robotStorage), false);
             //.whenReleased(new ManageStorage(m_robotStorage, StorageMode.RESET));
             //.whenReleased(new RunCommand(() -> m_robotLime.limeOff()));
-            .whenPressed(new RunCommand(() -> m_robotStorage.runStorage(0.5), m_robotStorage))
+            .whenPressed(new RunCommand(() -> m_robotStorage.runStorage(1), m_robotStorage))
             .whenReleased(new InterruptSubystem(m_robotStorage));
 
         // extends or retracts the extender
@@ -254,7 +254,7 @@ public class RobotContainer {
 
         // starts tracking target
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
-            .whileHeld(new TrackTarget(m_robotShooterAim))
+            .whileHeld(new TrackTarget(m_robotShooterAim, m_robotLime))
             .whileHeld(new RunCommand(() -> m_robotShooterHood.runAngleAdjustPID(m_robotShooterHood.addFireAngle())))
             .whenReleased(new InstantCommand(() -> m_robotLime.limeOff()));
 
@@ -274,15 +274,15 @@ public class RobotContainer {
 
 
         //Run drum
-        new JoystickManualButton(getOperatorJoystick(), XboxController.B_BUTTON, false)
-            .whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotShooterHood, m_robotStorage), false)
+        new JoystickButton(getOperatorJoystick(), XboxController.B_BUTTON)
+            .whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotShooterHood, m_robotStorage, m_robotLime), false)
             //.whenReleased(new ManageStorage(m_robotStorage, StorageMode.RESET))
             .whenReleased(new InstantCommand(() -> m_robotLime.limeOff()));
 
         //Run drum manual
-        new JoystickManualButton(getOperatorJoystick(), XboxController.B_BUTTON, true)
+        /*new JoystickManualButton(getOperatorJoystick(), XboxController.B_BUTTON, true)
             .whileHeld(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(10000)))
-            .whenReleased(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(0)));
+            .whenReleased(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(0)));*/
 
 
 
@@ -356,7 +356,7 @@ public class RobotContainer {
         };
 
         m_tenBallAutoMiddle = new TenBallAutoMiddle(m_robotShooterHood, m_robotStorage, m_robotIntake, m_robotShooter,
-                m_robotShooterAim, m_robotDrive,buildPaths(tenBallAutoMiddlePaths));
+                m_robotShooterAim, m_robotDrive, m_robotLime, buildPaths(tenBallAutoMiddlePaths));
     }
 
     /**
