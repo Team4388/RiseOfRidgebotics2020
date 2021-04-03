@@ -222,10 +222,10 @@ public final class Constants {
         public static final double closeRightVisibleY = -11.35;
         public static final double farLeftVisibleX = 3.58;
         public static final double farRightVisibleX = 7.04;*/
-        public static final double[] aRed = {-3.9, 0.8};
-        public static final double[] bRed = {5.4, 5};
-        public static final double[] aBlue = {9.27, 7};
-        public static final double[] bBlue = {4.9, 8.6};
+        public static final double[] aRed = {-3.1, 1.8};
+        public static final double[] bRed = {-6.3, 5.4};
+        public static final double[] aBlue = {9.3, 9.3};
+        public static final double[] bBlue = {4.4, 9.2};
         }
 
     public static final class OIConstants {

@@ -100,6 +100,8 @@ public class RobotContainer {
     private final XboxController m_operatorXbox = new XboxController(OIConstants.XBOX_OPERATOR_ID);
     private final Joystick m_joystick = new Joystick(0);
 
+    public boolean isGS = false;
+
     /* Autos */
     double m_totalTimeAuto;
 
@@ -286,100 +288,13 @@ public class RobotContainer {
     }
 
     public void buildAutos() {
-        String[] sixBallAutoMiddlePaths = new String[]{
-            "SixBallMidComplete"
-        };
-
-        m_sixBallAutoMiddle = new SixBallAutoMiddle(m_robotDrive, buildPaths(sixBallAutoMiddlePaths));
-
-        String[] sixBallAutoMiddle0Paths = new String[]{
-            "SixBallMid0"
-        };
-
-        m_sixBallAutoMiddle0 = new SixBallAutoMiddle(m_robotDrive, buildPaths(sixBallAutoMiddle0Paths));
-
-        String[] sixBallAutoMiddle1Paths = new String[]{
-            "SixBallMid1"
-        };
-
-        m_sixBallAutoMiddle1 = new SixBallAutoMiddle(m_robotDrive, buildPaths(sixBallAutoMiddle1Paths));
-
-        String[] slalom = new String[]{
-            "Slalom"
-        };
-
-        m_slalom = new Slalom(m_robotDrive, buildPaths(slalom));
-
-        String[] barrel = new String[]{
-            "Barrel"
-        };
-
-        m_barrel = new Barrel(m_robotDrive, buildPaths(barrel));
-        
-        String[] barrelStart = new String[]{
-            "BarrelStart"
-        };
-
-        m_barrelStart = new BarrelStart(m_robotDrive, buildPaths(barrelStart));
-
-        String[] bounce = new String[]{
-            "Bounce1",
-            "Bounce2",
-            "Bounce3",
-            "Bounce4"
-        };
-
-        m_bounce = new Bounce(m_robotDrive, buildPaths(bounce));
-        
-        String[] barrelMany = new String[]{
-            "BarrelManyWaypoints"
-        };
-
-        m_barrelMany = new BarrelMany(m_robotDrive, buildPaths(barrelMany));
-        
-        String[] eightBallAutoMiddlePaths = new String[]{
-            "EightBallMidComplete"
-        };
-
-        m_eightBallAutoMiddle = new EightBallAutoMiddle(m_robotDrive, buildPaths(eightBallAutoMiddlePaths));
-
-        String[] driveOffLineForwardPaths = new String[]{
-            "DriveOffLineForward"
-        };
-
-        m_driveOffLineForward = new DriveOffLineForward(m_robotDrive, buildPaths(driveOffLineForwardPaths));
-
-        String[] driveOffLineBackwardPaths = new String[]{
-            "DriveOffLineBackward"
-        };
-
-        m_driveOffLineBackward = new DriveOffLineBackward(m_robotDrive, buildPaths(driveOffLineBackwardPaths));
-        
-        String[] fiveBallAutoMiddlePaths = new String[]{
-            "FiveBallMidComplete"
-        };
-
-        m_fiveBallAutoMiddle = new FiveBallAutoMiddle(m_robotDrive, buildPaths(fiveBallAutoMiddlePaths));
-
-        String[] tenBallAutoMiddlePaths = new String[]{
-            "TenBallMidComplete"
-        };
-
-        m_tenBallAutoMiddle = new TenBallAutoMiddle(m_robotDrive, buildPaths(tenBallAutoMiddlePaths));
-    
-        String[] sequentialTestPaths = new String[]{
-            "Seq1",
-            "Seq2"
-        };
-
-        m_sequentialTest = new SequentialTest(this, buildPaths(sequentialTestPaths));
-
         String[] galacticSearchPaths = new String[]{
-            "aRed",
-            "aBlue",
-            "bRed",
-            "bBlue"
+            "GSC_ARED",
+            "GSC_ABLUE",
+            "GSC_BRED",
+            "GSC_BBLUE"
         };
+        m_robotLime.identifyPath();
         m_galacticSearch = new GalacticSearch(m_robotLime, m_robotIntake, buildPaths(galacticSearchPaths));
     }
 
@@ -397,7 +312,6 @@ public class RobotContainer {
         // Run path following command, then stop at the end.
         try {
             SmartDashboard.putNumber("Trajectory Total Time", m_totalTimeAuto);
-
             //return m_sixBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_sixBallAutoMiddle1.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_eightBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
