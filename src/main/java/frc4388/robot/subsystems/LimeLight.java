@@ -8,7 +8,9 @@
 package frc4388.robot.subsystems;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc4388.robot.Constants.VisionConstants;
 
 public class LimeLight extends SubsystemBase {
   /**
@@ -47,6 +49,57 @@ public class LimeLight extends SubsystemBase {
   {
     return NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
   }
+
+  public void identifyPath(){
+    changePipeline(1);
+    if (withinCoords(VisionConstants.aBlue))
+    {
+      galacticSearchPath = "A_BLUE";
+    }
+
+    changePipeline(2);
+    if (withinCoords(VisionConstants.bBlue))
+    {
+      galacticSearchPath = "B_BLUE";
+    }
+
+    changePipeline(1);
+    if (withinCoords(VisionConstants.aRed))
+    {
+      galacticSearchPath = "A_RED";
+    }
+
+    changePipeline(1);
+    if (withinCoords(VisionConstants.bRed))
+    {
+      galacticSearchPath = "B_RED";
+    }
+    SmartDashboard.putString("GalacticSearchPath", galacticSearchPath);
+  }
+
+public boolean withinError(double angle, double goal)
+{
+  if(goal > (angle - VisionConstants.searchError) && goal < (angle + VisionConstants.searchError))
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+public boolean withinCoords(double[] coords)
+{
+  if (withinError(getX(), coords[0]) && withinError(getY(), coords[1]))
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
 
   @Override
   public void periodic() {

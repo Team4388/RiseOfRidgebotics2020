@@ -47,7 +47,7 @@ public class IdentifyPath extends CommandBase {
     target = m_limeLight.getV();
     xAngle = m_limeLight.getX();
     yAngle = m_limeLight.getY();
-    m_limeLight.limeOn();
+    //m_limeLight.limeOn();
     //     //Identify which of four paths
     //   m_limeLight.changePipeline(1);//Dual Targetting Lowest
     //   if (withinError(yAngle, VisionConstants.bothCloseVisibleY) && !closeVisible) //BLUE PATHS
@@ -117,6 +117,7 @@ public class IdentifyPath extends CommandBase {
       path = "B_RED";
     }
 
+    path = "test";
   }
 
   public boolean withinError(double angle, double goal)
@@ -154,7 +155,7 @@ public class IdentifyPath extends CommandBase {
     {
       SmartDashboard.putString("GalacticSearchPath", path);
       m_limeLight.galacticSearchPath = path;
-      m_limeLight.limeOff();
+      //m_limeLight.limeOff();
       return true;
     }
     return false;
