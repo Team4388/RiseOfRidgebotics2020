@@ -9,7 +9,6 @@ package frc4388.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import frc4388.robot.commands.storage.StoragePrep;
-import frc4388.robot.subsystems.LimeLight;
 import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.ShooterAim;
 import frc4388.robot.subsystems.ShooterHood;
@@ -25,9 +24,9 @@ public class ShootPrepGroup extends ParallelDeadlineGroup {
    * @param m_shooterAim The ShooterAim subsystem
    * @param m_storage The Storage subsytem
    */
-  public ShootPrepGroup(Shooter m_shooter, ShooterAim m_shooterAim, ShooterHood m_shooterHood, Storage m_storage, LimeLight m_limeLight) { 
+  public ShootPrepGroup(Shooter m_shooter, ShooterAim m_shooterAim, ShooterHood m_shooterHood, Storage m_storage) { 
     super(
-      new TrackTarget(m_shooterAim, m_limeLight),
+      new TrackTarget(m_shooterAim),
       new ShooterVelocityControlPID(m_shooter),
       new HoodPositionPID(m_shooterHood)
     );
