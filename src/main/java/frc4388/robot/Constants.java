@@ -223,10 +223,10 @@ public final class Constants {
         public static final double farLeftVisibleX = 3.58;
         public static final double farRightVisibleX = 7.04;*/
 
-        public static final double[] aRed = {-2.3, 0.6};
-        public static final double[] bRed = {-7.6, 4.3};
+        public static final double[] aRed = {-4.0, 6.7};
+        public static final double[] bRed = {7.0, -2.6};
         public static final double[] aBlue = {9.9, 9.0};
-        public static final double[] bBlue = {4.8, 8.8};
+        public static final double[] bBlue = {5.5, 13.3};
 
         }
 
