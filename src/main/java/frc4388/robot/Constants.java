@@ -216,15 +216,15 @@ public final class Constants {
         public static final double GRAV = 385.83;
 
             //Galactic Search
-        public static final double searchError = 1;
+        public static final double searchError = 2;
         /*public static final double bothCloseVisibleY = -17.69;
         public static final double closeLeftVisibleY = -12.57;
         public static final double closeRightVisibleY = -11.35;
         public static final double farLeftVisibleX = 3.58;
         public static final double farRightVisibleX = 7.04;*/
 
-        public static final double[] aRed = {-4.0, 6.7};
-        public static final double[] bRed = {7.0, -2.6};
+        public static final double[] aRed = {1.6, -11.7};
+        public static final double[] bRed = {2.5, -5.5};
         public static final double[] aBlue = {9.9, 9.0};
         public static final double[] bBlue = {5.5, 13.3};
 
