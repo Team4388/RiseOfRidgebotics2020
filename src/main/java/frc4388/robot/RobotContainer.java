@@ -65,7 +65,6 @@ import frc4388.robot.commands.shooter.ShooterVelocityControlPID;
 import frc4388.robot.commands.shooter.TrackTarget;
 import frc4388.robot.commands.shooter.TrimShooter;
 import frc4388.robot.commands.storage.ManageStorage;
-import frc4388.robot.commands.storage.ManageStorage.StorageMode;
 import frc4388.robot.commands.storage.StoragePrep;
 import frc4388.robot.subsystems.Camera;
 import frc4388.robot.subsystems.Climber;
