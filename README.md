@@ -1,2 +1,2 @@
-# Robot-Essentials
- Basic code for any Ridgebotics robot project
+# Rise-of-Ridgebotics
+The codebase which never lost us a single match

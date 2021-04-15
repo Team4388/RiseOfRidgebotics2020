@@ -5,44 +5,36 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc4388.robot.commands.drive;
+package frc4388.robot.commands.shooter;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc4388.robot.subsystems.Drive;
-import frc4388.robot.subsystems.Shooter;
+import frc4388.robot.RobotContainer;
 
-public class PlaySongDrive extends CommandBase {
-  private Drive m_drive;
-  
+public class ShooterManual extends CommandBase {
+  public boolean isManual = false;
   /**
-   * Creates a new PlaySongDrive.
+   * Creates a new ShooterManual.
    */
-  public PlaySongDrive(Drive subsystem, Shooter shooter) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    m_drive = subsystem;
-    addRequirements(m_drive, shooter);
+  public ShooterManual(boolean man) {
+    isManual = man;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_drive.m_rightFrontMotor.set(0);
-    m_drive.m_leftFrontMotor.set(0);
-    m_drive.m_rightBackMotor.set(0);
-    m_drive.m_leftBackMotor.set(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drive.playSong();
-    //System.err.println("Playing " + m_drive.m_orchestra.isPlaying());
-    //m_drive.m_driveTrain.feedWatchdog();
+    RobotContainer.m_isShooterManual = isManual;
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    RobotContainer.m_isShooterManual = isManual;
   }
 
   // Returns true when the command should end.

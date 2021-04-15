@@ -54,7 +54,7 @@ public class Shooter extends SubsystemBase {
     m_shooterFalcon.setNeutralMode(NeutralMode.Coast);
     m_shooterFalcon.setInverted(true);
     m_shooterFalcon.configOpenloopRamp(1, ShooterConstants.SHOOTER_TIMEOUT_MS);
-    m_shooterFalcon.configClosedloopRamp(1.0, ShooterConstants.SHOOTER_TIMEOUT_MS);
+    m_shooterFalcon.configClosedloopRamp(0.75, ShooterConstants.SHOOTER_TIMEOUT_MS);
     setShooterGains();
 
     m_shooterFalcon.configPeakOutputReverse(0, ShooterConstants.SHOOTER_TIMEOUT_MS);
@@ -83,17 +83,15 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     try{
-    SmartDashboard.putNumber("Drum Velocity", m_shooterFalcon.getSelectedSensorVelocity());
+      SmartDashboard.putNumber("Drum Velocity", m_shooterFalcon.getSelectedSensorVelocity());
 
-    SmartDashboard.putNumber("Drum Velocity CSV", m_fireVel);
+      SmartDashboard.putNumber("Drum Velocity CSV", m_fireVel);
 
-    SmartDashboard.putNumber("Shooter Temp C", m_shooterFalcon.getTemperature());
+      SmartDashboard.putNumber("Shooter Temp C", m_shooterFalcon.getTemperature());
 
-    SmartDashboard.putNumber("Shooter Current", m_shooterFalcon.getSupplyCurrent());
+      SmartDashboard.putNumber("Shooter Current", m_shooterFalcon.getSupplyCurrent());
 
-    //SmartDashboard.putNumber("Hood Position", m_shooter.getAnglePosition());
-
-    SmartDashboard.putBoolean("Drum Ready" , m_isDrumReady);
+      SmartDashboard.putBoolean("Drum Ready" , m_isDrumReady);
     }
 
     catch(Exception e)
