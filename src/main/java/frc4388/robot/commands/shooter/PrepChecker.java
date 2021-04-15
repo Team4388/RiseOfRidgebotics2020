@@ -5,39 +5,34 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc4388.robot.commands.drive;
+package frc4388.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Shooter;
+import frc4388.robot.subsystems.ShooterAim;
 
-public class PlaySongDrive extends CommandBase {
-  private Drive m_drive;
-  
+public class PrepChecker extends CommandBase {
+  Shooter m_shooter;
+  ShooterAim m_shooterAim;
+
   /**
-   * Creates a new PlaySongDrive.
+   * Creates a new PrepChecker.
    */
-  public PlaySongDrive(Drive subsystem, Shooter shooter) {
+  public PrepChecker(Shooter shooter, ShooterAim shooterAim) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_drive = subsystem;
-    addRequirements(m_drive, shooter);
+    m_shooter = shooter;
+    m_shooterAim = shooterAim;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_drive.m_rightFrontMotor.set(0);
-    m_drive.m_leftFrontMotor.set(0);
-    m_drive.m_rightBackMotor.set(0);
-    m_drive.m_leftBackMotor.set(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drive.playSong();
-    //System.err.println("Playing " + m_drive.m_orchestra.isPlaying());
-    //m_drive.m_driveTrain.feedWatchdog();
+
   }
 
   // Called once the command ends or is interrupted.
@@ -48,6 +43,10 @@ public class PlaySongDrive extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (m_shooterAim.m_isAimReady && m_shooter.m_isDrumReady) {
+      return true;
+    }
+
     return false;
   }
 }

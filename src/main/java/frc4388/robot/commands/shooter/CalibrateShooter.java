@@ -7,6 +7,7 @@
 
 package frc4388.robot.commands.shooter;
 
+import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -59,6 +60,10 @@ public class CalibrateShooter extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (m_shooterAim.m_shooterRotateMotor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen).get() &&
+      m_shooterHood.m_angleAdjustMotor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen).get()) {
+      return true;
+    }
     return false;
   }
 }
