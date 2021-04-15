@@ -8,44 +8,37 @@
 package frc4388.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc4388.robot.Constants.ShooterConstants;
-import frc4388.robot.subsystems.Shooter;
+import frc4388.robot.subsystems.Leveler;
+import frc4388.robot.subsystems.ShooterHood;
+import frc4388.utility.controller.IHandController;
 
-public class ShooterVelocityControlPID extends CommandBase {
-  Shooter m_shooter;
-  double m_targetVel;
-  double m_actualVel;
-  
+public class RunHoodWithJoystick extends CommandBase {
+  private ShooterHood m_hood;
+  private IHandController m_controller;
+
   /**
-   * Runs the drum at a velocity
-   * @param subsystem The Shooter subsytem
+   * Creates a new RunLevelerWithJoystick to control the leveler with an Xbox controller.
+   * @param subsystem pass the Hood subsystem from {@link frc4388.robot.RobotContainer#RobotContainer() RobotContainer}
+   * @param controller pass the Operator {@link frc4388.utility.controller.IHandController#getClass() IHandController} using the
+   * {@link frc4388.robot.RobotContainer#getOperatorJoystick() getOperatorJoystick()} method in
+   * {@link frc4388.robot.RobotContainer#RobotContainer() RobotContainer}
    */
-  public ShooterVelocityControlPID(Shooter subsystem) {
-    m_shooter = subsystem;
-    addRequirements(m_shooter);
+  public RunHoodWithJoystick(ShooterHood subsystem, IHandController controller) {
+    m_hood = subsystem;
+    m_controller = controller;
+    addRequirements(m_hood);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //Tells whether the target velocity has been reached
-    m_actualVel = m_shooter.m_shooterFalcon.getSelectedSensorPosition();
-    m_targetVel = m_shooter.addFireVel();
-    double error = m_actualVel - m_targetVel;
-    if (Math.abs(error) < ShooterConstants.DRUM_VELOCITY_BOUND){
-      m_shooter.m_isDrumReady = true;
-      m_shooter.runDrumShooterVelocityPID(m_targetVel);
-    }
-    else{
-      m_shooter.m_isDrumReady = false;
-      m_shooter.runDrumShooterVelocityPID(m_targetVel);
-    }
+    double input = m_controller.getRightYAxis();
+    m_hood.runHood(input);
   }
 
   // Called once the command ends or is interrupted.

@@ -60,6 +60,10 @@ public class XboxController implements IHandController
 		m_stick = new Joystick(portNumber);
 	}
 
+	public void setJoystick(Joystick joy) {
+		m_stick = joy;
+	}
+
 	/**
      * @return Joystick for Xbox Controller
      */

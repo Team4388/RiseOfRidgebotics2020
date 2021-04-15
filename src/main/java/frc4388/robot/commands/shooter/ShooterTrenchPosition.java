@@ -5,39 +5,38 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc4388.robot.commands.drive;
+package frc4388.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Shooter;
+import frc4388.robot.subsystems.ShooterAim;
+import frc4388.robot.subsystems.ShooterHood;
 
-public class PlaySongDrive extends CommandBase {
-  private Drive m_drive;
-  
+public class ShooterTrenchPosition extends CommandBase {
+  Shooter m_shooter;
+  ShooterHood m_hood;
+  ShooterAim m_aim;
   /**
-   * Creates a new PlaySongDrive.
+   * Creates a new ShooterTrenchPosition.
    */
-  public PlaySongDrive(Drive subsystem, Shooter shooter) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    m_drive = subsystem;
-    addRequirements(m_drive, shooter);
+  public ShooterTrenchPosition(Shooter shooterSub, ShooterHood hoodSub, ShooterAim aimSub) {
+    m_shooter = shooterSub;
+    m_hood = hoodSub;
+    m_aim = aimSub;
+    addRequirements(m_shooter,m_hood,m_aim);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_drive.m_rightFrontMotor.set(0);
-    m_drive.m_leftFrontMotor.set(0);
-    m_drive.m_rightBackMotor.set(0);
-    m_drive.m_leftBackMotor.set(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drive.playSong();
-    //System.err.println("Playing " + m_drive.m_orchestra.isPlaying());
-    //m_drive.m_driveTrain.feedWatchdog();
+    m_shooter.runDrumShooterVelocityPID(5000);
+    m_hood.runAngleAdjustPID(3);
+    m_aim.runshooterRotatePID(-26.5);
   }
 
   // Called once the command ends or is interrupted.

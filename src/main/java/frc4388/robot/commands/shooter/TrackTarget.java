@@ -111,6 +111,7 @@ public class TrackTarget extends CommandBase {
       
       m_shooter.m_fireVel = fireVel;
       m_shooterHood.m_fireAngle = fireAngle;// + m_shooter.shooterTrims.m_hoodTrim;
+      m_shooterAim.m_targetDistance = distance;
     }
   }
 
