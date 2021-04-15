@@ -17,18 +17,17 @@ import frc4388.robot.subsystems.Drive;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class DriveOffLineForward extends SequentialCommandGroup {
+public class SequentialTest extends SequentialCommandGroup {
   /**
-   * Creates a new DriveOffLineForward.
+   * Creates a new SequentialTest.
    */
-  public DriveOffLineForward(Drive drive, RobotContainer robotContainer, RamseteCommand[] paths) {
+  public SequentialTest(RobotContainer m_robotContainer, RamseteCommand[] paths) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-
     addCommands(
-      new InstantCommand(() -> drive.switchReversed(true)),
-      new InstantCommand(() -> robotContainer.resetOdometry(new Pose2d())),
-      paths[0]
+      paths[0],
+      new InstantCommand(() -> m_robotContainer.resetOdometry(new Pose2d())),
+      paths[1]
     );
   }
 }

@@ -26,6 +26,9 @@ public class Robot extends TimedRobot {
   Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+  double m_initialTime;
+  double m_currentTime;
+  double m_deltaTime;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -67,10 +70,12 @@ public class Robot extends TimedRobot {
     /* Builds Autos */
     m_robotContainer.buildAutos();
     SmartDashboard.putString("Is Auto Start?", "NAH");
+    m_robotContainer.m_robotLime.limeOff();
   }
 
   @Override
   public void disabledPeriodic() {
+    m_robotContainer.resetOdometry(new Pose2d());
   }
 
   /**
@@ -78,12 +83,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-    m_robotContainer.setDriveNeutralMode(NeutralMode.Brake);
+    m_robotContainer.setDriveNeutralMode(NeutralMode.Coast);
     m_robotContainer.setDriveGearState(true);
-    m_robotContainer.resetOdometry(new Pose2d());
+
+    m_initialTime = System.currentTimeMillis();
 
     //m_robotContainer.resetGyroYawRobotContainer(0);
 
@@ -108,6 +113,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
+    m_currentTime = System.currentTimeMillis();
+    m_deltaTime = m_currentTime - m_initialTime;
+    SmartDashboard.putNumber("Auto Path Time", (m_deltaTime)/1000);
   }
 
   @Override
