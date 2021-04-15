@@ -196,7 +196,7 @@ public class RobotContainer {
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
         // runs the storage not
-        m_robotStorage.setDefaultCommand(new ManageStorage(m_robotStorage, StorageMode.IDLE));
+        m_robotStorage.setDefaultCommand(new ManageStorage(m_robotStorage));
         m_robotLime.setDefaultCommand(new RunCommand(() -> m_robotLime.limeOff(), m_robotLime));
     }
 
@@ -417,7 +417,7 @@ public class RobotContainer {
             "TenBallMidComplete"
         };
 
-        m_tenBallAutoMiddle = new TenBallAutoMiddle(m_robotDrive, buildPaths(tenBallAutoMiddlePaths));
+        //m_tenBallAutoMiddle = new TenBallAutoMiddle(m_robotDrive, buildPaths(tenBallAutoMiddlePaths));
     
         String[] sequentialTestPaths = new String[]{
             "Seq1",
