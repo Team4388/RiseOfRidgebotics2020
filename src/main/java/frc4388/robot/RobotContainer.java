@@ -141,6 +141,7 @@ public class RobotContainer {
 
     TenBallAutoMiddle m_tenBallAutoMiddle;
 
+
     Slalom m_slalom;
 
     Barrel m_barrel;
@@ -198,6 +199,7 @@ public class RobotContainer {
         // runs the storage not
         m_robotStorage.setDefaultCommand(new ManageStorage(m_robotStorage));
         m_robotLime.setDefaultCommand(new RunCommand(() -> m_robotLime.limeOff(), m_robotLime));
+
     }
 
     /**
@@ -208,12 +210,12 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         /* Test Buttons */
+      
         // A driver test button
         new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
             .whileHeld(new ShooterTrenchPosition(m_robotShooter, m_robotShooterHood, m_robotShooterAim))
             .whenReleased(new InterruptSubystem(m_robotShooter))
             .whenReleased(new InterruptSubystem(m_robotShooterHood));
-
 
         // B driver test button
         new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
@@ -434,6 +436,7 @@ public class RobotContainer {
         };
 
         m_sequentialTest = new SequentialTest(this, buildPaths(sequentialTestPaths));
+
     }
 
     /**
@@ -461,6 +464,7 @@ public class RobotContainer {
             //return m_slalom.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_barrelStart.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_bounce.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+
         } catch (Exception e) {
             System.err.println("ERROR");
         }

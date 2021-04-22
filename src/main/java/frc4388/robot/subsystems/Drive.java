@@ -345,7 +345,8 @@ public class Drive extends SubsystemBase {
 
   public void updateOdometry(boolean reversed){
     if (reversed){
-      m_odometry.update(Rotation2d.fromDegrees( -getHeading()-180),
+
+      m_odometry.update(Rotation2d.fromDegrees( -getGyroYaw()-180),
                                               -inchesToMeters(getDistanceInches(m_rightFrontMotor)),
                                               inchesToMeters(getDistanceInches(m_leftFrontMotor)));
     }
