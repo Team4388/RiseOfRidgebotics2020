@@ -76,6 +76,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     m_robotContainer.resetOdometry(new Pose2d());
+    m_robotContainer.idenPath();
   }
 
   /**
@@ -83,6 +84,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    //m_robotContainer.buildAutos();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     m_robotContainer.setDriveNeutralMode(NeutralMode.Coast);
@@ -105,6 +107,9 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
       SmartDashboard.putString("Is Auto Start?", "YEA");
+    }
+    else{
+
     }
   }
 

@@ -7,29 +7,21 @@
 
 package frc4388.robot.commands.auto;
 
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc4388.robot.RobotContainer;
-import frc4388.robot.subsystems.Drive;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class Bounce extends SequentialCommandGroup {
+public class RunPath extends SequentialCommandGroup {
   /**
-   * Creates a new Bounce.
+   * Creates a new RunPath.
    */
-  public Bounce(Drive drive, RobotContainer robotContainer, RamseteCommand[] paths) {
+  public RunPath(RamseteCommand path) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     addCommands(
-      paths[0],
-      paths[1],
-      paths[2],
-      paths[3]
+      path
     );
   }
 }

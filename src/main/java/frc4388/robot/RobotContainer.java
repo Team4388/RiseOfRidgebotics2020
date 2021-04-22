@@ -8,7 +8,6 @@
 package frc4388.robot;
 
 import java.nio.file.Path;
-import java.util.List;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
@@ -18,43 +17,37 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Transform2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.DriveConstants;
 import frc4388.robot.Constants.OIConstants;
-import frc4388.robot.commands.auto.DriveOffLineBackward;
-import frc4388.robot.commands.auto.DriveOffLineForward;
-import frc4388.robot.commands.auto.EightBallAutoMiddle;
-import frc4388.robot.commands.auto.FiveBallAutoMiddle;
-import frc4388.robot.commands.auto.SequentialTest;
-import frc4388.robot.commands.auto.SixBallAutoMiddle;
-import frc4388.robot.commands.auto.Slalom;
-import frc4388.robot.commands.auto.TankDriveVelocity;
-import frc4388.robot.commands.auto.TenBallAutoMiddle;
 import frc4388.robot.commands.InterruptSubystem;
-import frc4388.robot.commands.auto.AutoPath1FromCenter;
 import frc4388.robot.commands.auto.Barrel;
 import frc4388.robot.commands.auto.BarrelMany;
 import frc4388.robot.commands.auto.BarrelStart;
 import frc4388.robot.commands.auto.Bounce;
+import frc4388.robot.commands.auto.DriveOffLineBackward;
+import frc4388.robot.commands.auto.DriveOffLineForward;
+import frc4388.robot.commands.auto.EightBallAutoMiddle;
+import frc4388.robot.commands.auto.FiveBallAutoMiddle;
+import frc4388.robot.commands.auto.GalacticSearch;
+import frc4388.robot.commands.auto.IdentifyPath;
+import frc4388.robot.commands.auto.SequentialTest;
+import frc4388.robot.commands.auto.SixBallAutoMiddle;
+import frc4388.robot.commands.auto.Slalom;
+import frc4388.robot.commands.auto.TenBallAutoMiddle;
 import frc4388.robot.commands.auto.Wait;
 import frc4388.robot.commands.climber.DisengageRachet;
 import frc4388.robot.commands.climber.RunClimberWithTriggers;
 import frc4388.robot.commands.climber.RunLevelerWithJoystick;
 import frc4388.robot.commands.drive.DriveStraightAtVelocityPID;
-import frc4388.robot.commands.drive.DriveStraightToPositionMM;
 import frc4388.robot.commands.drive.DriveWithJoystick;
 import frc4388.robot.commands.drive.PlaySongDrive;
 import frc4388.robot.commands.drive.SkipSong;
@@ -117,6 +110,8 @@ public class RobotContainer {
     public final LimeLight m_robotLime = new LimeLight();
 
     /* Controllers */
+
+    public boolean isGS = false;
     private static XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
     private static XboxController m_operatorXbox = new XboxController(OIConstants.XBOX_OPERATOR_ID);
     private static XboxController m_buttonFox = new XboxController(OIConstants. BUTTON_FOX_ID);
@@ -141,7 +136,6 @@ public class RobotContainer {
 
     TenBallAutoMiddle m_tenBallAutoMiddle;
 
-
     Slalom m_slalom;
 
     Barrel m_barrel;
@@ -154,8 +148,9 @@ public class RobotContainer {
 
     SequentialTest m_sequentialTest;
 
-    public static boolean m_isShooterManual = false;
+    GalacticSearch m_galacticSearch;
 
+    public static boolean m_isShooterManual = false;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -210,7 +205,7 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         /* Test Buttons */
-      
+
         // A driver test button
         new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
             .whileHeld(new ShooterTrenchPosition(m_robotShooter, m_robotShooterHood, m_robotShooterAim))
@@ -269,7 +264,7 @@ public class RobotContainer {
             .whileHeld(new RunCommand(() -> m_robotIntake.runExtender(0.5)))
             .whenReleased(new InstantCommand(() -> m_robotIntake.runExtender(0)));
             //.whileHeld(new RunCommand(() -> m_robotShooterHood.runHood(0.2), m_robotShooterHood));
-            
+
         new JoystickButton(getOperatorJoystick(), XboxController.Y_BUTTON)
             .whileHeld(new RunCommand(() -> m_robotIntake.runExtender(-0.5)))
             .whenReleased(new InstantCommand(() -> m_robotIntake.runExtender(0)));
@@ -311,7 +306,6 @@ public class RobotContainer {
         new JoystickManualButton(getOperatorJoystick(), XboxController.B_BUTTON, true)
             .whileHeld(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(10000)))
             .whenReleased(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(0)));
-
 
 
 
@@ -377,7 +371,7 @@ public class RobotContainer {
         };
 
         m_barrel = new Barrel(m_robotDrive, buildPaths(barrel));
-        
+
         String[] barrelStart = new String[]{
             "Barrel"
         };
@@ -392,13 +386,13 @@ public class RobotContainer {
         };
 
         m_bounce = new Bounce(m_robotDrive, this, buildPaths(bounce));
-        
+
         String[] barrelMany = new String[]{
             "BarrelManyWaypoints"
         };
 
         m_barrelMany = new BarrelMany(m_robotDrive, buildPaths(barrelMany));
-        
+
         String[] eightBallAutoMiddlePaths = new String[]{
             "EightBallMidComplete"
         };
@@ -416,7 +410,7 @@ public class RobotContainer {
         };
 
         m_driveOffLineBackward = new DriveOffLineBackward(m_robotDrive, buildPaths(driveOffLineBackwardPaths));
-        
+
         String[] fiveBallAutoMiddlePaths = new String[]{
             "FiveBallMidComplete"
         };
@@ -427,18 +421,24 @@ public class RobotContainer {
             "SixBallMidComplete",
             "TenBallMidComplete"
         };
+        m_tenBallAutoMiddle = new TenBallAutoMiddle(m_robotShooterHood, m_robotStorage, m_robotIntake, m_robotShooter,
+                m_robotShooterAim, m_robotDrive,buildPaths(tenBallAutoMiddlePaths));
 
-        //m_tenBallAutoMiddle = new TenBallAutoMiddle(m_robotDrive, buildPaths(tenBallAutoMiddlePaths));
-    
-        String[] sequentialTestPaths = new String[]{
-            "Seq1",
-            "Seq2"
+        String[] galacticSearchPaths = new String[]{
+              "GSC_ARED",
+              "GSC_ABLUE",
+              "GSC_BRED",
+              "GSC_BBLUE"
         };
 
-        m_sequentialTest = new SequentialTest(this, buildPaths(sequentialTestPaths));
+        m_galacticSearch = new GalacticSearch(m_robotLime, m_robotIntake, buildPaths(galacticSearchPaths));
 
     }
 
+    public void idenPath()
+    {
+        m_robotLime.identifyPath();
+    }
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *
@@ -449,21 +449,21 @@ public class RobotContainer {
         //TrajectoryConfig config = getTrajectoryConfig();
         //Trajectory trajectory = getTrajectory(config);
         //RamseteCommand ramseteCommand = getRamseteCommand(trajectory);
-
         // Run path following command, then stop at the end.
         try {
             SmartDashboard.putNumber("Trajectory Total Time", m_totalTimeAuto);
-
             //return m_sixBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_sixBallAutoMiddle1.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_eightBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-            return m_driveOffLineForward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_driveOffLineBackward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_fiveBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_tenBallAutoMiddle.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_slalom.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+            //return m_barrel.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_barrelStart.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
-            //return m_bounce.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+            //return m_sequentialTest.andThen(() -> m_robotDrive.tankDriveVelocity(0,0));
+            return m_galacticSearch.andThen(() -> m_robotDrive.tankDriveVelocity(0,0));
+
 
         } catch (Exception e) {
             System.err.println("ERROR");
@@ -471,27 +471,13 @@ public class RobotContainer {
 
         return new InstantCommand();
     }
+
     TrajectoryConfig getTrajectoryConfig() {
         return new TrajectoryConfig(
             DriveConstants.MAX_SPEED_METERS_PER_SECOND,
             DriveConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
             // Add kinematics to ensure max speed is actually obeyed
             .setKinematics(DriveConstants.kDriveKinematics);
-    }
-
-    Trajectory getTrajectory(TrajectoryConfig config) {
-        Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-            // Start at the origin facing the +X direction
-            new Pose2d(2.9, -2.4, new Rotation2d(0)),
-            // Pass through these two interior waypoints, making an 's' curve path
-            List.of(
-                new Translation2d(4.1, -1.7)
-            ),
-            // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(5.1, -0.7, new Rotation2d(0)),
-            // Pass config
-            config);
-        return exampleTrajectory;
     }
 
     public RamseteCommand getRamseteCommand(Trajectory trajectory) {
@@ -517,12 +503,12 @@ public class RobotContainer {
                 String path = paths[0];
                 String trajectoryJSON = "paths/" + path + ".wpilib.json";
                 Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-                
+
                 SmartDashboard.putString("trajectoryPath Initial", trajectoryPath.toString());
 
                 Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-                initialTrajectory = trajectory;
 
+                initialTrajectory = trajectory;
                 RamseteCommand ramseteCommand = getRamseteCommand(trajectory.relativeTo(initialTrajectory.getInitialPose()));
                 ramseteCommands[0] = ramseteCommand;
                 times[0] = initialTrajectory.getTotalTimeSeconds();
@@ -565,7 +551,7 @@ public class RobotContainer {
     }
 
     /**
-     * 
+     *
      */
     public void shiftClimberRachet(boolean state) {
         m_robotClimber.shiftServo(state);
