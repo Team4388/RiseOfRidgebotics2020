@@ -189,7 +189,7 @@ public class RobotContainer {
         // runs the hood with joystick
         m_robotShooterHood.setDefaultCommand(new RunHoodWithJoystick(m_robotShooterHood, getOperatorController()));
         // moves the drum not
-        m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(0), m_robotShooter));
+        m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(12000), m_robotShooter));
         // drives climber with input from triggers on the opperator controller
         m_robotClimber.setDefaultCommand(new RunClimberWithTriggers(m_robotClimber, getDriverController()));
         // drives the leveler with an axis input from the driver controller
@@ -210,10 +210,17 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         /* Test Buttons */
+      
+        // A driver test button
+        new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
+            .whileHeld(new ShooterTrenchPosition(m_robotShooter, m_robotShooterHood, m_robotShooterAim))
+            .whenReleased(new InterruptSubystem(m_robotShooter))
+            .whenReleased(new InterruptSubystem(m_robotShooterHood));
 
         // B driver test button
         new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
             .whileHeld(new RunCommand(() -> m_robotDrive.runDriveVelocityPID(2000, 45), m_robotDrive));
+
         // Y driver test button
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
             .whenPressed(new InstantCommand(() -> m_robotDrive.runTurningPID(1000), m_robotDrive));
@@ -254,17 +261,19 @@ public class RobotContainer {
             //.whenPressed(new ShootFullGroup(m_robotShooter, m_robotShooterAim, m_robotShooterHood, m_robotStorage), false);
             //.whenReleased(new ManageStorage(m_robotStorage, StorageMode.RESET));
             //.whenReleased(new RunCommand(() -> m_robotLime.limeOff()));
-            .whenPressed(new RunCommand(() -> m_robotStorage.runStorage(1), m_robotStorage))
+            .whenPressed(new RunCommand(() -> m_robotStorage.runStorage(1.0), m_robotStorage))
             .whenReleased(new InterruptSubystem(m_robotStorage));
 
         // extends or retracts the extender
         new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
             .whileHeld(new RunCommand(() -> m_robotIntake.runExtender(0.5)))
             .whenReleased(new InstantCommand(() -> m_robotIntake.runExtender(0)));
+            //.whileHeld(new RunCommand(() -> m_robotShooterHood.runHood(0.2), m_robotShooterHood));
             
         new JoystickButton(getOperatorJoystick(), XboxController.Y_BUTTON)
             .whileHeld(new RunCommand(() -> m_robotIntake.runExtender(-0.5)))
             .whenReleased(new InstantCommand(() -> m_robotIntake.runExtender(0)));
+            //.whileHeld(new RunCommand(() -> m_robotShooterHood.runHood(-0.2), m_robotShooterHood));
 
         // safety for climber and leveler
         new JoystickButton(getOperatorJoystick(), XboxController.BACK_BUTTON)
@@ -275,10 +284,10 @@ public class RobotContainer {
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
             .whileHeld(new TrackTarget(m_robotShooterAim))
             .whileHeld(new RunCommand(() -> m_robotShooterHood.runAngleAdjustPID(m_robotShooterHood.addFireAngle())))
-            //.whenPressed(new StoragePrep(m_robotStorage))
-            //.whenReleased(new InterruptSubystem(m_robotStorage))
             .whenReleased(new InstantCommand(() -> m_robotLime.limeOff()));
-            //.whileHeld(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(13000)));
+
+            //.whileHeld(new RunCommand(() -> m_robotShooterAim.runshooterRotatePID()));
+            //.whileHeld(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(11000)));
             //.whileHeld(new HoldTarget(m_robotShooter, m_robotShooterAim))
             //.whileHeld(new RunCommand(() -> m_robotShooter.runAngleAdjustPID(30)));
 
@@ -289,6 +298,7 @@ public class RobotContainer {
         //Calibrates turret and hood
         new JoystickButton(getOperatorJoystick(), XboxController.START_BUTTON)
             .whileHeld(new CalibrateShooter(m_robotShooter, m_robotShooterAim, m_robotShooterHood));
+
 
 
         //Run drum

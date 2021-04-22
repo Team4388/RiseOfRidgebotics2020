@@ -34,9 +34,9 @@ public class ShooterTrenchPosition extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooter.runDrumShooterVelocityPID(5000);
-    m_hood.runAngleAdjustPID(3);
-    m_aim.runshooterRotatePID(-26.5);
+    m_shooter.runDrumShooterVelocityPID(5500);
+    m_hood.runAngleAdjustPID(11);
+    //m_aim.runshooterRotatePID(-28);
   }
 
   // Called once the command ends or is interrupted.
