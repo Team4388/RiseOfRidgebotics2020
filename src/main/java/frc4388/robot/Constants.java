@@ -36,7 +36,7 @@ public final class Constants {
         public static final boolean isRightMotorInverted = true;
         public static final boolean isLeftMotorInverted = false;
         public static final boolean isRightArcadeInverted = false;
-        public static final boolean isAuxPIDInverted = true;
+        public static final boolean isAuxPIDInverted = false;
 
         /* Drive Configuration */
         public static final int DRIVE_TIMEOUT_MS = 30; // Use for all motor config
@@ -112,7 +112,8 @@ public final class Constants {
   
     public static final class ShooterConstants {
         /* Motor IDs */
-        public static final int SHOOTER_FALCON_ID = 8;
+        public static final int SHOOTER_FALCON_BALLER_ID = 8;
+        public static final int SHOOTER_FALCON_BALLER_FOLLOWER_ID = 15;
         public static final int SHOOTER_ANGLE_ADJUST_ID = 10;
         public static final int SHOOTER_ROTATE_ID = 9;
 
@@ -120,7 +121,7 @@ public final class Constants {
         public static final int SHOOTER_SLOT_IDX = 0;
         public static final int SHOOTER_PID_LOOP_IDX = 1;
         public static final int SHOOTER_TIMEOUT_MS = 30;
-        public static final Gains DRUM_SHOOTER_GAINS = new Gains(1.5, 0.0, 100, 0.055, 0, 1.0);
+        public static final Gains DRUM_SHOOTER_GAINS = new Gains(0.34, 0.0, 0.0, 0.055, 0, 1.0); //Ff was 0.055
         //public static final Gains DRUM_SHOOTER_GAINS = new Gains(0.55, 0.0, 100, 0.0, 0, 1.0);
         public static final Gains SHOOTER_TURRET_GAINS = new Gains(0.6, 0.0, 0.0, 0.0, 0, 1.0);
         public static final Gains SHOOTER_ANGLE_GAINS = new Gains(0.05, 0.0, 0.0, 0.0, 0, 0.3);
@@ -156,7 +157,7 @@ public final class Constants {
     }
   
     public static final class LevelerConstants {
-        public static final int LEVELER_CAN_ID = 15;
+        public static final int LEVELER_CAN_ID = 30;
     }
 
     public static final class IntakeConstants {;
@@ -171,7 +172,7 @@ public final class Constants {
         public static final int STORAGE_CAN_ID = 11;
         public static final double STORAGE_PARTIAL_BALL = 2;
         public static final double STORAGE_FULL_BALL = 7;
-        public static final double STORAGE_SPEED = 0.5;
+        public static final double STORAGE_SPEED = 0.75;
         public static final double STORAGE_TIMEOUT = 3000;
 
         /* Storage Characteristics */
@@ -211,10 +212,10 @@ public final class Constants {
     
     public static final class VisionConstants {
         public static final double FOV = 29.8; //Field of view of limelight
-        public static final double TARGET_HEIGHT = 71.5;
+        public static final double TARGET_HEIGHT = 67.5;
         public static final double LIME_ANGLE = 24.7;
         public static final double TURN_P_VALUE = 0.8;
-        public static final double X_ANGLE_ERROR = 1.3;
+        public static final double X_ANGLE_ERROR = 0.5;
         public static final double MOTOR_DEAD_ZONE = 0.2;
         public static final double DISTANCE_ERROR_EQUATION_M = 1.1279;
         public static final double DISTANCE_ERROR_EQUATION_B = -15.0684;

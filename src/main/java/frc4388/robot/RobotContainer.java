@@ -107,7 +107,7 @@ public class RobotContainer {
     /* Cameras */
     private final Camera m_robotCameraFront = new Camera("front", 0, 160, 120, 40);
     private final Camera m_robotCameraBack = new Camera("back", 1, 160, 120, 40);
-    private final LimeLight m_robotLime = new LimeLight();
+    public final LimeLight m_robotLime = new LimeLight();
 
     /* Controllers */
 
@@ -184,7 +184,7 @@ public class RobotContainer {
         // runs the hood with joystick
         m_robotShooterHood.setDefaultCommand(new RunHoodWithJoystick(m_robotShooterHood, getOperatorController()));
         // moves the drum not
-        m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(0), m_robotShooter));
+        m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(12000), m_robotShooter));
         // drives climber with input from triggers on the opperator controller
         m_robotClimber.setDefaultCommand(new RunClimberWithTriggers(m_robotClimber, getDriverController()));
         // drives the leveler with an axis input from the driver controller
@@ -192,9 +192,9 @@ public class RobotContainer {
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
         // runs the storage not
-        //m_robotStorage.setDefaultCommand(new RunCommand(() -> m_robotStorage.runStorage(0), m_robotStorage));
         m_robotStorage.setDefaultCommand(new ManageStorage(m_robotStorage));
-        //m_robotLime.setDefaultCommand(new RunCommand(() -> m_robotLime.limeOff(), m_robotLime));
+        m_robotLime.setDefaultCommand(new RunCommand(() -> m_robotLime.limeOff(), m_robotLime));
+
     }
 
     /**
@@ -205,14 +205,20 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         /* Test Buttons */
+
         // A driver test button
+        new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
+            .whileHeld(new ShooterTrenchPosition(m_robotShooter, m_robotShooterHood, m_robotShooterAim))
+            .whenReleased(new InterruptSubystem(m_robotShooter))
+            .whenReleased(new InterruptSubystem(m_robotShooterHood));
 
         // B driver test button
         new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
-            .whenPressed(new TurnDegrees(m_robotDrive, 45));
+            .whileHeld(new RunCommand(() -> m_robotDrive.runDriveVelocityPID(2000, 45), m_robotDrive));
+
         // Y driver test button
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
-            .whenPressed(new Wait(m_robotDrive, 0, 0));
+            .whenPressed(new InstantCommand(() -> m_robotDrive.runTurningPID(1000), m_robotDrive));
 
         // X driver test button
         new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
@@ -250,17 +256,19 @@ public class RobotContainer {
             //.whenPressed(new ShootFullGroup(m_robotShooter, m_robotShooterAim, m_robotShooterHood, m_robotStorage), false);
             //.whenReleased(new ManageStorage(m_robotStorage, StorageMode.RESET));
             //.whenReleased(new RunCommand(() -> m_robotLime.limeOff()));
-            .whenPressed(new RunCommand(() -> m_robotStorage.runStorage(1), m_robotStorage))
+            .whenPressed(new RunCommand(() -> m_robotStorage.runStorage(1.0), m_robotStorage))
             .whenReleased(new InterruptSubystem(m_robotStorage));
 
         // extends or retracts the extender
         new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
             .whileHeld(new RunCommand(() -> m_robotIntake.runExtender(0.5)))
             .whenReleased(new InstantCommand(() -> m_robotIntake.runExtender(0)));
-            
+            //.whileHeld(new RunCommand(() -> m_robotShooterHood.runHood(0.2), m_robotShooterHood));
+
         new JoystickButton(getOperatorJoystick(), XboxController.Y_BUTTON)
             .whileHeld(new RunCommand(() -> m_robotIntake.runExtender(-0.5)))
             .whenReleased(new InstantCommand(() -> m_robotIntake.runExtender(0)));
+            //.whileHeld(new RunCommand(() -> m_robotShooterHood.runHood(-0.2), m_robotShooterHood));
 
         // safety for climber and leveler
         new JoystickButton(getOperatorJoystick(), XboxController.BACK_BUTTON)
@@ -271,10 +279,10 @@ public class RobotContainer {
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
             .whileHeld(new TrackTarget(m_robotShooterAim))
             .whileHeld(new RunCommand(() -> m_robotShooterHood.runAngleAdjustPID(m_robotShooterHood.addFireAngle())))
-            //.whenPressed(new StoragePrep(m_robotStorage))
-            //.whenReleased(new InterruptSubystem(m_robotStorage))
             .whenReleased(new InstantCommand(() -> m_robotLime.limeOff()));
-            //.whileHeld(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(13000)));
+
+            //.whileHeld(new RunCommand(() -> m_robotShooterAim.runshooterRotatePID()));
+            //.whileHeld(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(11000)));
             //.whileHeld(new HoldTarget(m_robotShooter, m_robotShooterAim))
             //.whileHeld(new RunCommand(() -> m_robotShooter.runAngleAdjustPID(30)));
 
@@ -285,6 +293,7 @@ public class RobotContainer {
         //Calibrates turret and hood
         new JoystickButton(getOperatorJoystick(), XboxController.START_BUTTON)
             .whileHeld(new CalibrateShooter(m_robotShooter, m_robotShooterAim, m_robotShooterHood));
+
 
 
         //Run drum
@@ -339,6 +348,51 @@ public class RobotContainer {
 
         m_sixBallAutoMiddle = new SixBallAutoMiddle(m_robotDrive, buildPaths(sixBallAutoMiddlePaths));
 
+        String[] sixBallAutoMiddle0Paths = new String[]{
+            "SixBallMid0"
+        };
+
+        m_sixBallAutoMiddle0 = new SixBallAutoMiddle(m_robotDrive, buildPaths(sixBallAutoMiddle0Paths));
+
+        String[] sixBallAutoMiddle1Paths = new String[]{
+            "SixBallMid1"
+        };
+
+        m_sixBallAutoMiddle1 = new SixBallAutoMiddle(m_robotDrive, buildPaths(sixBallAutoMiddle1Paths));
+
+        String[] slalom = new String[]{
+            "Slalom"
+        };
+
+        m_slalom = new Slalom(m_robotDrive, buildPaths(slalom));
+
+        String[] barrel = new String[]{
+            "BarrelStart"
+        };
+
+        m_barrel = new Barrel(m_robotDrive, buildPaths(barrel));
+
+        String[] barrelStart = new String[]{
+            "Barrel"
+        };
+
+        m_barrelStart = new BarrelStart(m_robotDrive, buildPaths(barrelStart));
+
+        String[] bounce = new String[]{
+            "Bounce1",
+            "Bounce2",
+            "Bounce3",
+            "Bounce4"
+        };
+
+        m_bounce = new Bounce(m_robotDrive, this, buildPaths(bounce));
+
+        String[] barrelMany = new String[]{
+            "BarrelManyWaypoints"
+        };
+
+        m_barrelMany = new BarrelMany(m_robotDrive, buildPaths(barrelMany));
+
         String[] eightBallAutoMiddlePaths = new String[]{
             "EightBallMidComplete"
         };
@@ -349,14 +403,14 @@ public class RobotContainer {
             "DriveOffLineForward"
         };
 
-        m_driveOffLineForward = new DriveOffLineForward(m_robotDrive, buildPaths(driveOffLineForwardPaths));
+        m_driveOffLineForward = new DriveOffLineForward(m_robotDrive, this, buildPaths(driveOffLineForwardPaths));
 
         String[] driveOffLineBackwardPaths = new String[]{
             "DriveOffLineBackward"
         };
 
         m_driveOffLineBackward = new DriveOffLineBackward(m_robotDrive, buildPaths(driveOffLineBackwardPaths));
-        
+
         String[] fiveBallAutoMiddlePaths = new String[]{
             "FiveBallMidComplete"
         };
@@ -367,17 +421,16 @@ public class RobotContainer {
             "SixBallMidComplete",
             "TenBallMidComplete"
         };
-
         m_tenBallAutoMiddle = new TenBallAutoMiddle(m_robotShooterHood, m_robotStorage, m_robotIntake, m_robotShooter,
                 m_robotShooterAim, m_robotDrive,buildPaths(tenBallAutoMiddlePaths));
-      
+
         String[] galacticSearchPaths = new String[]{
               "GSC_ARED",
               "GSC_ABLUE",
               "GSC_BRED",
               "GSC_BBLUE"
         };
-        idenPath();
+
         m_galacticSearch = new GalacticSearch(m_robotLime, m_robotIntake, buildPaths(galacticSearchPaths));
 
     }
@@ -402,8 +455,8 @@ public class RobotContainer {
             //return m_sixBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_sixBallAutoMiddle1.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_eightBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-            //return m_driveOffLineForward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-            //return m_driveOffLinfeBackward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+            return m_driveOffLineForward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+            //return m_driveOffLineBackward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_fiveBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_tenBallAutoMiddle.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_slalom.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
@@ -417,7 +470,7 @@ public class RobotContainer {
             System.err.println("ERROR");
         }
 
-        return new InstantCommand();    
+        return new InstantCommand();
     }
 
     TrajectoryConfig getTrajectoryConfig() {
@@ -451,7 +504,7 @@ public class RobotContainer {
                 String path = paths[0];
                 String trajectoryJSON = "paths/" + path + ".wpilib.json";
                 Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-                
+
                 SmartDashboard.putString("trajectoryPath Initial", trajectoryPath.toString());
 
                 Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
@@ -499,7 +552,7 @@ public class RobotContainer {
     }
 
     /**
-     * 
+     *
      */
     public void shiftClimberRachet(boolean state) {
         m_robotClimber.shiftServo(state);

@@ -70,24 +70,26 @@ public class TrackTarget extends CommandBase {
     yAngle = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
 
     // Finding Distance
-    distance = VisionConstants.TARGET_HEIGHT / Math.tan((VisionConstants.LIME_ANGLE + yAngle) * (Math.PI / 180));
+    distance = (VisionConstants.TARGET_HEIGHT) / Math.tan((VisionConstants.LIME_ANGLE + yAngle) * (Math.PI / 180));
     realDistance = (1.09 * distance) - 12.8;
 
 
     if (target == 1.0) { // If target in view
       // Aiming Left/Right
       xAngle = xAngle + m_shooter.m_shooterTable.getCenterDisplacement(realDistance);
-      turnAmount = (xAngle / VisionConstants.FOV) * VisionConstants.TURN_P_VALUE;
+      turnAmount = ((xAngle / VisionConstants.FOV) * VisionConstants.TURN_P_VALUE);
       if (Math.abs(xAngle) < VisionConstants.X_ANGLE_ERROR) {
         turnAmount = 0;
       } // Angle Error Zone
       // Deadzones
-      else if (turnAmount > 0 && turnAmount < VisionConstants.MOTOR_DEAD_ZONE) {
-        turnAmount = VisionConstants.MOTOR_DEAD_ZONE;
-      } else if (turnAmount < 0 && turnAmount > -VisionConstants.MOTOR_DEAD_ZONE) {
-        turnAmount = -VisionConstants.MOTOR_DEAD_ZONE;
+      else if (turnAmount > 0 && turnAmount < 0.1){// VisionConstants.MOTOR_DEAD_ZONE) {
+        turnAmount = 0.1;//VisionConstants.MOTOR_DEAD_ZONE;
+      } else if (turnAmount < 0 && turnAmount > -0.1){//-VisionConstants.MOTOR_DEAD_ZONE) {
+        turnAmount = -0.1;//-VisionConstants.MOTOR_DEAD_ZONE;
       }
+
       m_shooterAim.runShooterWithInput(-turnAmount);// - m_shooter.shooterTrims.m_turretTrim);
+      //m_shooterAim.runshooterRotatePID(targetAngle);
 
       SmartDashboard.putNumber("Distance to Target", realDistance);
       SmartDashboard.putNumber("Center Displacement", m_shooter.m_shooterTable.getCenterDisplacement(realDistance));

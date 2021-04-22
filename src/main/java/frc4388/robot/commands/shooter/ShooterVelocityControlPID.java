@@ -35,7 +35,7 @@ public class ShooterVelocityControlPID extends CommandBase {
   @Override
   public void execute() {
     //Tells whether the target velocity has been reached
-    m_actualVel = m_shooter.m_shooterFalcon.getSelectedSensorPosition();
+    m_actualVel = m_shooter.m_shooterFalconLeft.getSelectedSensorPosition();
     m_targetVel = m_shooter.addFireVel();
     double error = m_actualVel - m_targetVel;
     if (Math.abs(error) < ShooterConstants.DRUM_VELOCITY_BOUND){

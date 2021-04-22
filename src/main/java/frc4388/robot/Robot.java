@@ -70,6 +70,7 @@ public class Robot extends TimedRobot {
     /* Builds Autos */
     m_robotContainer.buildAutos();
     SmartDashboard.putString("Is Auto Start?", "NAH");
+    m_robotContainer.m_robotLime.limeOff();
   }
 
   @Override

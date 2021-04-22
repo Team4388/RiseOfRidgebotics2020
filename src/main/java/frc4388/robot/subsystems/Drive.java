@@ -46,6 +46,7 @@ public class Drive extends SubsystemBase {
   public WPI_TalonFX m_rightBackMotor = new WPI_TalonFX(DriveConstants.DRIVE_RIGHT_BACK_CAN_ID);
   public static PigeonIMU m_pigeon = new PigeonIMU(DriveConstants.PIGEON_ID);
   public static GyroBase m_pigeonGyro;
+  public boolean m_isReversed;
 
   /* Drive objects to manage Drive Train */
   public DifferentialDrive m_driveTrain;
@@ -312,7 +313,7 @@ public class Drive extends SubsystemBase {
   public void passRequiredSubsystem(Pneumatics subsystem, Shooter shooter) {
     m_pneumaticsSubsystem = subsystem;
     m_shooter = shooter;
-    m_orchestra.addInstrument(m_shooter.m_shooterFalcon);
+    m_orchestra.addInstrument(m_shooter.m_shooterFalconLeft);
   }
 
   public void updateTime() {
@@ -339,9 +340,27 @@ public class Drive extends SubsystemBase {
     m_totalRightDistanceInches += ticksToInches(m_currentRightPosTicks - m_lastRightPosTicks);
     m_totalLeftDistanceInches += ticksToInches(m_currentLeftPosTicks - m_lastLeftPosTicks);
 
-    m_odometry.update(Rotation2d.fromDegrees( getHeading()),
+    updateOdometry(m_isReversed);
+  }
+
+  public void updateOdometry(boolean reversed){
+    if (reversed){
+
+      m_odometry.update(Rotation2d.fromDegrees( -getGyroYaw()-180),
+                                              -inchesToMeters(getDistanceInches(m_rightFrontMotor)),
+                                              inchesToMeters(getDistanceInches(m_leftFrontMotor)));
+    }
+    else
+    {
+      m_odometry.update(Rotation2d.fromDegrees( getHeading()),
                                               inchesToMeters(getDistanceInches(m_leftFrontMotor)),
                                               -inchesToMeters(getDistanceInches(m_rightFrontMotor)));
+    }
+  }
+
+  public void switchReversed(boolean reversed)
+  {
+    m_isReversed = reversed;
   }
 
   /**
@@ -401,7 +420,7 @@ public class Drive extends SubsystemBase {
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_VELOCITY, DriveConstants.PID_PRIMARY);
     m_rightFrontMotor.selectProfileSlot(DriveConstants.SLOT_TURNING, DriveConstants.PID_TURN);
 
-    m_rightFrontMotor.set(TalonFXControlMode.Velocity, targetVel, DemandType.AuxPID, targetGyro);
+    m_rightFrontMotor.set(TalonFXControlMode.Velocity, targetVel, DemandType.AuxPID, targetGyro); 
     m_leftFrontMotor.follow(m_rightFrontMotor, FollowerType.AuxOutput1);
     m_leftBackMotor.follow(m_leftFrontMotor);
     m_rightBackMotor.follow(m_rightFrontMotor);
@@ -426,7 +445,7 @@ public class Drive extends SubsystemBase {
     m_rightBackMotor.follow(m_rightFrontMotor);
 
     m_driveTrain.feedWatchdog();
-
+  
   }
 
   /**

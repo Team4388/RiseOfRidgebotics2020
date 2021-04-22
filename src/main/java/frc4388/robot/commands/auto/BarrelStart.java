@@ -7,8 +7,10 @@
 
 package frc4388.robot.commands.auto;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.RobotContainer;
 import frc4388.robot.subsystems.Drive;
 
@@ -23,7 +25,10 @@ public class BarrelStart extends SequentialCommandGroup {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     addCommands(
-      paths[0]
+      paths[0],
+      //new Wait(drive, 0.01, 1),
+      new TankDriveVelocity(drive, 5, 5, 1.2) //my life be like oooooo aaaaaa ooooo aaaa
     );
+    
   }
 }
