@@ -36,7 +36,7 @@ public final class Constants {
         public static final boolean isRightMotorInverted = true;
         public static final boolean isLeftMotorInverted = false;
         public static final boolean isRightArcadeInverted = false;
-        public static final boolean isAuxPIDInverted = true;
+        public static final boolean isAuxPIDInverted = false;
 
         /* Drive Configuration */
         public static final int DRIVE_TIMEOUT_MS = 30; // Use for all motor config
