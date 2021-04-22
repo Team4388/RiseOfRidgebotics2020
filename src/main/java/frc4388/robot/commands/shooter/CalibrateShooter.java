@@ -61,7 +61,7 @@ public class CalibrateShooter extends CommandBase {
   @Override
   public boolean isFinished() {
     if (m_shooterAim.m_shooterRotateMotor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen).get() &&
-      m_shooterHood.m_angleAdjustMotor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen).get()) {
+      m_shooterHood.m_hoodDownLimit.get()) {
       return true;
     }
     return false;
