@@ -8,6 +8,8 @@
 package frc4388.robot;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
@@ -17,10 +19,12 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
@@ -446,27 +450,34 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // Create custom trajectories
-        //TrajectoryConfig config = getTrajectoryConfig();
-        //Trajectory trajectory = getTrajectory(config);
-        //RamseteCommand ramseteCommand = getRamseteCommand(trajectory);
+        TrajectoryConfig config = getTrajectoryConfig();
+
+        ArrayList<State> traj = new ArrayList<State>();
+        traj.add(new State(0.0, 0.0, 4.0, new Pose2d(3.2, 2.3, new Rotation2d(0)), 0.0));
+        traj.add(new State(0.25, 1.0, 4.0, new Pose2d(3.325, -2.3, new Rotation2d(0)), 0.0));
+        traj.add(new State(0.35355339059327373, 1.4142135623730951, -4.0, new Pose2d(3.45, -2.3, new Rotation2d(0)), 0.0));
+        traj.add(new State(0.45710678118654746, 1.0, -4.0, new Pose2d(3.575, -2.3, new Rotation2d(0)), 0.0));
+        traj.add(new State(0.7071067811865475, 0.0, -4.0, new Pose2d(3.7, -2.3, new Rotation2d(0)), 0.0));
+
+        Trajectory trajectory = new Trajectory(traj);// getTrajectory(config);
+        RamseteCommand ramseteCommand = getRamseteCommand(trajectory);
         // Run path following command, then stop at the end.
         try {
-            SmartDashboard.putNumber("Trajectory Total Time", m_totalTimeAuto);
-            //return m_sixBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-            //return m_sixBallAutoMiddle1.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-            //return m_eightBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-            //return m_driveOffLineBackward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-            //return m_fiveBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-            //return m_tenBallAutoMiddle.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
-            //return m_slalom.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
-            //return m_barrel.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
-            //return m_barrelStart.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
-            //return m_sequentialTest.andThen(() -> m_robotDrive.tankDriveVelocity(0,0));
-            return m_galacticSearch.andThen(() -> m_robotDrive.tankDriveVelocity(0,0));
-
-
+            return ramseteCommand;
+        //     SmartDashboard.putNumber("Trajectory Total Time", m_totalTimeAuto);
+        //     //return m_sixBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+        //     //return m_sixBallAutoMiddle1.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+        //     //return m_eightBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+        //     //return m_driveOffLineBackward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+        //     //return m_fiveBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
+        //     //return m_tenBallAutoMiddle.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+        //     //return m_slalom.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+        //     //return m_barrel.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+        //     //return m_barrelStart.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+        //     //return m_sequentialTest.andThen(() -> m_robotDrive.tankDriveVelocity(0,0));
+        //     return m_galacticSearch.andThen(() -> m_robotDrive.tankDriveVelocity(0,0));
         } catch (Exception e) {
-            System.err.println("ERROR");
+            System.err.println("ERROR in getAutonomousCommand (RobotContainer:451)");
         }
 
         return new InstantCommand();
