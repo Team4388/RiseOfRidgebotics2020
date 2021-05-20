@@ -462,8 +462,11 @@ public class RobotContainer {
         // traj.add(new State(0.45710678118654746, 1.0, -4.0, new Pose2d(3.575, -2.3, new Rotation2d(0)), 0.0));
         // traj.add(new State(0.7071067811865475, 0.0, -4.0, new Pose2d(3.7, -2.3, new Rotation2d(0)), 0.0));
         Trajectory traj = TrajectoryGenerator.generateTrajectory(
+            // start at origin facing +X direction
             new Pose2d(0, 0, new Rotation2d(0)),
+            // pass through two interior waypoints
             List.of(new Translation2d(1, 1), new Translation2d(2, -1)), 
+            // end 3 meters straight of initial position, facing forward
             new Pose2d(3, 0, new Rotation2d(0)), 
             config);
         
