@@ -20,9 +20,12 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -452,15 +455,20 @@ public class RobotContainer {
         // Create custom trajectories
         TrajectoryConfig config = getTrajectoryConfig();
 
-        ArrayList<State> traj = new ArrayList<State>();
-        traj.add(new State(0.0, 0.0, 4.0, new Pose2d(3.2, 2.3, new Rotation2d(0)), 0.0));
-        traj.add(new State(0.25, 1.0, 4.0, new Pose2d(3.325, -2.3, new Rotation2d(0)), 0.0));
-        traj.add(new State(0.35355339059327373, 1.4142135623730951, -4.0, new Pose2d(3.45, -2.3, new Rotation2d(0)), 0.0));
-        traj.add(new State(0.45710678118654746, 1.0, -4.0, new Pose2d(3.575, -2.3, new Rotation2d(0)), 0.0));
-        traj.add(new State(0.7071067811865475, 0.0, -4.0, new Pose2d(3.7, -2.3, new Rotation2d(0)), 0.0));
-
-        Trajectory trajectory = new Trajectory(traj);// getTrajectory(config);
-        RamseteCommand ramseteCommand = getRamseteCommand(trajectory);
+        // ArrayList<State> traj = new ArrayList<State>();
+        // traj.add(new State(0.0, 0.0, 4.0, new Pose2d(3.2, 2.3, new Rotation2d(0)), 0.0));
+        // traj.add(new State(0.25, 1.0, 4.0, new Pose2d(3.325, -2.3, new Rotation2d(0)), 0.0));
+        // traj.add(new State(0.35355339059327373, 1.4142135623730951, -4.0, new Pose2d(3.45, -2.3, new Rotation2d(0)), 0.0));
+        // traj.add(new State(0.45710678118654746, 1.0, -4.0, new Pose2d(3.575, -2.3, new Rotation2d(0)), 0.0));
+        // traj.add(new State(0.7071067811865475, 0.0, -4.0, new Pose2d(3.7, -2.3, new Rotation2d(0)), 0.0));
+        Trajectory traj = TrajectoryGenerator.generateTrajectory(
+            new Pose2d(0, 0, new Rotation2d(0)),
+            List.of(new Translation2d(1, 1), new Translation2d(2, -1)), 
+            new Pose2d(3, 0, new Rotation2d(0)), 
+            config);
+        
+        //Trajectory trajectory = new Trajectory(traj);// getTrajectory(config);
+        RamseteCommand ramseteCommand = getRamseteCommand(traj);
         // Run path following command, then stop at the end.
         try {
             return ramseteCommand;
