@@ -8,6 +8,7 @@
 package frc4388.robot;
 
 import java.nio.file.Path;
+import java.util.List;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
@@ -17,6 +18,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
@@ -41,6 +43,7 @@ import frc4388.robot.commands.auto.FiveBallAutoMiddle;
 import frc4388.robot.commands.auto.FiveBallBottom;
 import frc4388.robot.commands.auto.GalacticSearch;
 import frc4388.robot.commands.auto.IdentifyPath;
+import frc4388.robot.commands.auto.OffTheLine;
 import frc4388.robot.commands.auto.SequentialTest;
 import frc4388.robot.commands.auto.SixBallAutoMiddle;
 import frc4388.robot.commands.auto.SixBallTop;
@@ -120,6 +123,8 @@ public class RobotContainer {
     private static XboxController m_buttonFox = new XboxController(OIConstants. BUTTON_FOX_ID);
     private static XboxController m_manualXbox = new XboxController(3);
 
+    private final SendableChooser<Command> autoCommandChooser = new SendableChooser<>();
+
     /* Autos */
     double m_totalTimeAuto;
 
@@ -158,6 +163,8 @@ public class RobotContainer {
     EightBallMid m_eightBallMid;
 
     FiveBallBottom m_fiveBallBottom;
+
+    OffTheLine m_offTheLine;
 
     public static boolean m_isShooterManual = false;
 
@@ -463,6 +470,16 @@ public class RobotContainer {
         };
         m_fiveBallBottom = new FiveBallBottom(m_robotShooterHood, m_robotStorage, m_robotIntake, m_robotShooter, m_robotShooterAim, m_robotDrive, buildPaths(fiveBallBottomPaths));
 
+        String[] offTheLinePaths = new String[]{
+            "getOffLine1"
+        };
+        m_offTheLine = new OffTheLine(m_robotShooterHood, m_robotStorage, m_robotIntake, m_robotShooter, m_robotShooterAim, m_robotDrive, buildPaths(fiveBallBottomPaths));
+
+        Command[] autos = {m_sixBallTop, m_eightBallMid, m_fiveBallBottom, m_offTheLine};
+            autoCommandChooser.setDefaultOption("sixBallTop", m_sixBallTop);
+            for (int i = 1; i < autos.length; i++) {
+                autoCommandChooser.addOption(autos[i].toString().substring(2), autos[i]);
+            }
     }
 
     public void idenPath()
@@ -482,20 +499,28 @@ public class RobotContainer {
         // Run path following command, then stop at the end.
         try {
             SmartDashboard.putNumber("Trajectory Total Time", m_totalTimeAuto);
+
+            return autoCommandChooser.getSelected();
+
+                //Legacy Autos
             //return m_sixBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_sixBallAutoMiddle1.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_eightBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_fiveBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_tenBallAutoMiddle.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
 
+                //At Home Challenges Autos
             //return m_slalom.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_barrel.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_barrelStart.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_sequentialTest.andThen(() -> m_robotDrive.tankDriveVelocity(0,0));
             //return m_galacticSearch.andThen(() -> m_robotDrive.tankDriveVelocity(0,0));
+
+                //2021 Autos
             //return m_sixBallTop.andThen(() -> m_robotDrive.tankDriveVelocity(0,0));
             //return m_eightBallMid.andThen(() -> m_robotDrive.tankDriveVelocity(0,0));
-            return m_fiveBallBottom.andThen(() -> m_robotDrive.tankDriveVelocity(0,0));
+            //return m_fiveBallBottom.andThen(() -> m_robotDrive.tankDriveVelocity(0,0));
+            //return m_offTheLine.andThen(() -> m_robotDrive.tankDriveVelocity(0,0));
   
 
             /*
@@ -504,9 +529,10 @@ public class RobotContainer {
             6BallOffensive (Trench)
             6BallOffensive2
             8BallOffensive
-            5BallBottom*
-            8BallMid*
-            6BallTop*
+            5BallBottom *DONE*
+            8BallMid *DONE*
+            6BallTop *DONE*
+            OffTheLine *DONE*
             */
 
 
