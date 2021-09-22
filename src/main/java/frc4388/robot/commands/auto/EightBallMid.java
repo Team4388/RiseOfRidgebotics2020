@@ -35,20 +35,29 @@ public class EightBallMid extends SequentialCommandGroup {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     addCommands(
-      //TODO REWRITE
       //Shoot and Extend Intake
-      new CalibrateShooter(shooter, shooterAim, shooterHood),
-      new ParallelDeadlineGroup(
-        new Wait(drive,5),
-        new TrackTarget(shooterAim),
-        new RunCommand(() -> shooterHood.runAngleAdjustPID(shooterHood.addFireAngle())),
+      new ParallelCommandGroup(
+        new CalibrateShooter(shooter, shooterAim, shooterHood),
         new RunExtenderOutIn(intake)
       ),
-      //Intake and Path
+      //Intake and Path0 then shoot
       new ParallelDeadlineGroup(
         paths[0],
         new RunIntake(intake)
       ),
+      new ParallelDeadlineGroup(
+        new Wait(drive,5),
+        new TrackTarget(shooterAim),
+        new RunCommand(() -> shooterHood.runAngleAdjustPID(shooterHood.addFireAngle()))
+      ),
+
+      //Path1 and Intake, then path two
+      new ParallelDeadlineGroup(
+        paths[1],
+        new RunIntake(intake)
+      ),
+      paths[2],
+      
       //Shoot
       new ParallelDeadlineGroup(
         new Wait(drive,5),

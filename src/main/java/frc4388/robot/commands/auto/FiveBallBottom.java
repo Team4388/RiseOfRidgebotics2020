@@ -34,19 +34,19 @@ public class FiveBallBottom extends SequentialCommandGroup {
   public FiveBallBottom(ShooterHood shooterHood, Storage storage, Intake intake, Shooter shooter, ShooterAim shooterAim, Drive drive, RamseteCommand[] paths) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    //TODO Rewrite
     addCommands(
-      //Shoot and Extend Intake
-      new CalibrateShooter(shooter, shooterAim, shooterHood),
-      new ParallelDeadlineGroup(
-        new Wait(drive,5),
-        new TrackTarget(shooterAim),
-        new RunCommand(() -> shooterHood.runAngleAdjustPID(shooterHood.addFireAngle())),
+      //Extend Intake and calibrate
+      new ParallelCommandGroup(
+        new CalibrateShooter(shooter, shooterAim, shooterHood),
         new RunExtenderOutIn(intake)
       ),
-      //Intake and Path
+      //Intake and Paths
       new ParallelDeadlineGroup(
-        paths[0],
+        new SequentialCommandGroup(
+          paths[0],
+          paths[1],
+          paths[2]
+        ),
         new RunIntake(intake)
       ),
       //Shoot
