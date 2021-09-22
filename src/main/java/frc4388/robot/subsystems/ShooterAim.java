@@ -132,6 +132,7 @@ public class ShooterAim extends SubsystemBase {
     return m_targetDistance * Math.sin(getTargetAngleDegrees());
   }
 
+
   /**
    * Gets the angle of the Shooter relative to the inner port.
    * Use for tuning the Shooter Displacement

@@ -41,6 +41,7 @@ import frc4388.robot.commands.auto.GalacticSearch;
 import frc4388.robot.commands.auto.IdentifyPath;
 import frc4388.robot.commands.auto.SequentialTest;
 import frc4388.robot.commands.auto.SixBallAutoMiddle;
+import frc4388.robot.commands.auto.SixBallTop;
 import frc4388.robot.commands.auto.Slalom;
 import frc4388.robot.commands.auto.TenBallAutoMiddle;
 import frc4388.robot.commands.auto.Wait;
@@ -120,21 +121,21 @@ public class RobotContainer {
     /* Autos */
     double m_totalTimeAuto;
 
-    SixBallAutoMiddle m_sixBallAutoMiddle;
+    //SixBallAutoMiddle m_sixBallAutoMiddle;
 
-    SixBallAutoMiddle m_sixBallAutoMiddle0;
+    //SixBallAutoMiddle m_sixBallAutoMiddle0;
 
-    SixBallAutoMiddle m_sixBallAutoMiddle1;
+    //SixBallAutoMiddle m_sixBallAutoMiddle1;
 
-    EightBallAutoMiddle m_eightBallAutoMiddle;
+    //EightBallAutoMiddle m_eightBallAutoMiddle;
 
     DriveOffLineForward m_driveOffLineForward;
 
     DriveOffLineBackward m_driveOffLineBackward;
 
-    FiveBallAutoMiddle m_fiveBallAutoMiddle;
+    //FiveBallAutoMiddle m_fiveBallAutoMiddle;
 
-    TenBallAutoMiddle m_tenBallAutoMiddle;
+    //TenBallAutoMiddle m_tenBallAutoMiddle;
 
     Slalom m_slalom;
 
@@ -149,6 +150,12 @@ public class RobotContainer {
     SequentialTest m_sequentialTest;
 
     GalacticSearch m_galacticSearch;
+
+    SixBallTop m_sixBallTop;
+
+    EightBallMid m_eightBallMid;
+
+    FiveBallBottom m_fiveBallBottom;
 
     public static boolean m_isShooterManual = false;
 
@@ -345,7 +352,7 @@ public class RobotContainer {
         String[] sixBallAutoMiddlePaths = new String[]{
             "SixBallMidComplete"
         };
-
+/*
         m_sixBallAutoMiddle = new SixBallAutoMiddle(m_robotDrive, buildPaths(sixBallAutoMiddlePaths));
 
         String[] sixBallAutoMiddle0Paths = new String[]{
@@ -359,7 +366,7 @@ public class RobotContainer {
         };
 
         m_sixBallAutoMiddle1 = new SixBallAutoMiddle(m_robotDrive, buildPaths(sixBallAutoMiddle1Paths));
-
+*/
         String[] slalom = new String[]{
             "Slalom"
         };
@@ -397,6 +404,7 @@ public class RobotContainer {
             "EightBallMidComplete"
         };
 
+        /*
         m_eightBallAutoMiddle = new EightBallAutoMiddle(m_robotDrive, buildPaths(eightBallAutoMiddlePaths));
 
         String[] driveOffLineForwardPaths = new String[]{
@@ -404,7 +412,7 @@ public class RobotContainer {
         };
 
         m_driveOffLineForward = new DriveOffLineForward(m_robotDrive, this, buildPaths(driveOffLineForwardPaths));
-
+*/
         String[] driveOffLineBackwardPaths = new String[]{
             "DriveOffLineBackward"
         };
@@ -415,6 +423,7 @@ public class RobotContainer {
             "FiveBallMidComplete"
         };
 
+        /*
         m_fiveBallAutoMiddle = new FiveBallAutoMiddle(m_robotDrive, buildPaths(fiveBallAutoMiddlePaths));
 
         String[] tenBallAutoMiddlePaths = new String[]{
@@ -424,14 +433,33 @@ public class RobotContainer {
         m_tenBallAutoMiddle = new TenBallAutoMiddle(m_robotShooterHood, m_robotStorage, m_robotIntake, m_robotShooter,
                 m_robotShooterAim, m_robotDrive,buildPaths(tenBallAutoMiddlePaths));
 
+        */
         String[] galacticSearchPaths = new String[]{
               "GSC_ARED",
               "GSC_ABLUE",
               "GSC_BRED",
               "GSC_BBLUE"
         };
-
         m_galacticSearch = new GalacticSearch(m_robotLime, m_robotIntake, buildPaths(galacticSearchPaths));
+
+        String[] sixBallTopPaths = new String[]{
+            "6BallTop"
+        };
+
+        m_sixBallTop = new SixBallTop(m_robotShooterHood, m_robotStorage, m_robotIntake, m_robotShooter, m_robotShooterAim, m_robotDrive, buildPaths(sixBallTopPaths));
+
+        String[] eightBallMidPaths = new String[]{
+            "2BallOffensive",
+            "LoopFrom2BallOffensive"
+        };
+        m_eightBallMid = new EightBallMid(m_robotShooterHood, m_robotStorage, m_robotIntake, m_robotShooter, m_robotShooterAim, m_robotDrive, buildPaths(eightBallMidPaths));
+
+        String[] fiveBallBottomPaths = new String[]{
+            "5BallBottom1",
+            "5BallBottom2",
+            "5BallBottom3"
+        };
+        m_fiveBallBottom = new FiveBallBottom(m_robotShooterHood, m_robotStorage, m_robotIntake, m_robotShooter, m_robotShooterAim, m_robotDrive, buildPaths(fiveBallBottomPaths));
 
     }
 
@@ -455,14 +483,29 @@ public class RobotContainer {
             //return m_sixBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_sixBallAutoMiddle1.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_eightBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
-            //return m_driveOffLineBackward.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_fiveBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_tenBallAutoMiddle.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+
             //return m_slalom.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_barrel.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_barrelStart.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_sequentialTest.andThen(() -> m_robotDrive.tankDriveVelocity(0,0));
-            return m_galacticSearch.andThen(() -> m_robotDrive.tankDriveVelocity(0,0));
+            //return m_galacticSearch.andThen(() -> m_robotDrive.tankDriveVelocity(0,0));
+            //return m_sixBallTop.andThen(() -> m_robotDrive.tankDriveVelocity(0,0));
+            //return m_eightBallMid.andThen(() -> m_robotDrive.tankDriveVelocity(0,0));
+            return m_fiveBallBottom.andThen(() -> m_robotDrive.tankDriveVelocity(0,0));
+  
+
+            /*
+            TODO
+            11BallTop
+            6BallOffensive (Trench)
+            6BallOffensive2
+            8BallOffensive
+            5BallBottom*
+            8BallMid*
+            6BallTop*
+            */
 
 
         } catch (Exception e) {

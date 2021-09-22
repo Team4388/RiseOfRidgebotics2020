@@ -46,9 +46,9 @@ public class RunExtenderOutIn extends CommandBase {
   @Override
   public void execute() {
     if (m_intake.isExtended){
-      m_intake.runExtender(0.3);
+      m_intake.runExtender(0.5);
     } else {
-      m_intake.runExtender(-0.3);
+      m_intake.runExtender(-0.5);
     }
 
   }

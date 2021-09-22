@@ -11,6 +11,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc4388.robot.Constants.ShooterConstants;
 import frc4388.robot.Constants.VisionConstants;
 import frc4388.robot.subsystems.LimeLight;
 import frc4388.robot.subsystems.Shooter;
@@ -114,6 +115,19 @@ public class TrackTarget extends CommandBase {
       m_shooter.m_fireVel = fireVel;
       m_shooterHood.m_fireAngle = fireAngle;// + m_shooter.shooterTrims.m_hoodTrim;
       m_shooterAim.m_targetDistance = distance;
+    }
+    else{
+      //Sweeping
+      double turn = -0.5;
+      if (m_shooterAim.getShooterRotatePosition() > ShooterConstants.TURRET_RIGHT_SOFT_LIMIT - 1)
+      {
+        turn = -0.5;
+      }
+      if (m_shooterAim.getShooterRotatePosition() < ShooterConstants.TURRET_LEFT_SOFT_LIMIT + 1)
+      {
+        turn = 0.5;
+      }
+      m_shooterAim.runShooterWithInput(turn);
     }
   }
 

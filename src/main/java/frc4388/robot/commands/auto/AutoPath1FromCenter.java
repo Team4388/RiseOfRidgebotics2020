@@ -28,7 +28,7 @@ public class AutoPath1FromCenter extends SequentialCommandGroup {
     m_drive = subsystem;
     m_pneumatics = subsystem2;
 
-    addCommands(  new Wait(m_drive, 0, 1), 
+    addCommands(  new Wait(m_drive, 0), 
                   //shoot pre-loaded 3 balls
                   new GotoCoordinatesRobotRelative(m_drive, m_pneumatics, 75, 44, -90),
                   //Start Intake Ball 1
@@ -39,7 +39,7 @@ public class AutoPath1FromCenter extends SequentialCommandGroup {
                   new GotoCoordinatesRobotRelative(m_drive, m_pneumatics, 0, 28),
                   //Start Intake Ball 3
                   new GotoCoordinatesRobotRelative(m_drive, m_pneumatics, 0, 8),
-                  new Wait(m_drive, 0, 2)
+                  new Wait(m_drive, 0)
                   //Shoot 3 Balls
                   );
   }

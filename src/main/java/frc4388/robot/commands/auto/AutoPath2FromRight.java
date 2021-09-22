@@ -28,7 +28,7 @@ public class AutoPath2FromRight extends SequentialCommandGroup {
     m_drive = subsystem;
     m_pneumatics = subsystem2;
     
-    addCommands(  new Wait(m_drive, 0, 1),
+    addCommands(  new Wait(m_drive, 0),
                   new GotoCoordinatesRobotRelative(m_drive, m_pneumatics, 0, 77),
                   //Start Intake Ball 1
                   new GotoCoordinatesRobotRelative(m_drive, m_pneumatics, 0, 8),
@@ -48,7 +48,7 @@ public class AutoPath2FromRight extends SequentialCommandGroup {
                   //Move to 10th Ball
                   new GotoCoordinatesRobotRelative(m_drive, m_pneumatics, -6.34, 13.30),
                   //Shoot 5 more Balls (Total 10 Ball Autonomous Path)
-                  new Wait(m_drive, 0, 2)
+                  new Wait(m_drive, 0)
                   );
   }
 }

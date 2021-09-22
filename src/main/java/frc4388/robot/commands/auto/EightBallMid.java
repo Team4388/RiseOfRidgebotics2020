@@ -7,53 +7,54 @@
 
 package frc4388.robot.commands.auto;
 
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc4388.robot.Constants.IntakeConstants;
-import frc4388.robot.commands.shooter.CalibrateShooter;
-import frc4388.robot.commands.shooter.PrepChecker;
-import frc4388.robot.commands.shooter.ShootPrepGroup;
-import frc4388.robot.commands.storage.RunStorage;
-import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Intake;
 import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.ShooterAim;
 import frc4388.robot.subsystems.ShooterHood;
 import frc4388.robot.subsystems.Storage;
+import frc4388.robot.commands.intake.RunExtenderOutIn;
+import frc4388.robot.commands.intake.RunIntake;
+import frc4388.robot.commands.shooter.CalibrateShooter;
+import frc4388.robot.commands.shooter.TrackTarget;
+import frc4388.robot.subsystems.Drive;
+
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class TenBallAutoMiddle extends SequentialCommandGroup {
+public class EightBallMid extends SequentialCommandGroup {
   /**
-   * Creates a new TenBallAutoMiddle.
+   * Creates a new EightBallMid.
    */
-  public TenBallAutoMiddle(ShooterHood shooterHood, Storage storage, Intake intake, Shooter shooter, ShooterAim shooterAim, Drive drive, RamseteCommand[] paths) {
+  public EightBallMid(ShooterHood shooterHood, Storage storage, Intake intake, Shooter shooter, ShooterAim shooterAim, Drive drive, RamseteCommand[] paths) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     addCommands(
+      //TODO REWRITE
+      //Shoot and Extend Intake
+      new CalibrateShooter(shooter, shooterAim, shooterHood),
       new ParallelDeadlineGroup(
-        new Wait(drive, 0.1),
-        new CalibrateShooter(shooter, shooterAim, shooterHood)
+        new Wait(drive,5),
+        new TrackTarget(shooterAim),
+        new RunCommand(() -> shooterHood.runAngleAdjustPID(shooterHood.addFireAngle())),
+        new RunExtenderOutIn(intake)
       ),
+      //Intake and Path
       new ParallelDeadlineGroup(
-        new Wait(drive, 1),
-        new RunCommand(() -> shooterAim.runShooterWithInput(-0.75), shooterAim)
+        paths[0],
+        new RunIntake(intake)
       ),
+      //Shoot
       new ParallelDeadlineGroup(
-        new Wait(drive, 4),
-        new PrepChecker(shooter, shooterAim),
-        new RunCommand(() -> intake.runExtender(IntakeConstants.EXTENDER_SPEED), intake),
-        new ShootPrepGroup(shooter, shooterAim, shooterHood, storage)
-      ),
-      new ParallelDeadlineGroup(
-        new ShootPrepGroup(shooter, shooterAim, shooterHood, storage),
-        new RunStorage(storage)
+        new Wait(drive,5),
+        new TrackTarget(shooterAim),
+        new RunCommand(() -> shooterHood.runAngleAdjustPID(shooterHood.addFireAngle()))
       )
-      //paths[0],
-      //paths[1]
     );
   }
 }
