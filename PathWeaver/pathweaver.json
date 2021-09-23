@@ -5,5 +5,5 @@
   "maxAcceleration": 2.7,
   "trackWidth": 0.648,
   "gameName": "Infinite Recharge 2021",
-  "outputDir": "../src/main/deploy/paths"
+  "outputDir": ""
 }
