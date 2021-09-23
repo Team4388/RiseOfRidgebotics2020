@@ -200,7 +200,7 @@ public class RobotContainer {
         // runs the hood with joystick
         m_robotShooterHood.setDefaultCommand(new RunHoodWithJoystick(m_robotShooterHood, getOperatorController()));
         // moves the drum not
-        m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(12000), m_robotShooter));
+        m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(8000), m_robotShooter));
         // drives climber with input from triggers on the opperator controller
         m_robotClimber.setDefaultCommand(new RunClimberWithTriggers(m_robotClimber, getDriverController()));
         // drives the leveler with an axis input from the driver controller
@@ -210,7 +210,6 @@ public class RobotContainer {
         // runs the storage not
         m_robotStorage.setDefaultCommand(new ManageStorage(m_robotStorage));
         m_robotLime.setDefaultCommand(new RunCommand(() -> m_robotLime.limeOff(), m_robotLime));
-
     }
 
     /**
@@ -309,6 +308,11 @@ public class RobotContainer {
         //Calibrates turret and hood
         new JoystickButton(getOperatorJoystick(), XboxController.START_BUTTON)
             .whileHeld(new CalibrateShooter(m_robotShooter, m_robotShooterAim, m_robotShooterHood));
+
+        new JoystickButton(getOperatorJoystick(), XboxController.B_BUTTON)
+            .whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotShooterHood, m_robotStorage), false)
+            //.whenReleased(new ManageStorage(m_robotStorage, StorageMode.RESET))
+            .whenReleased(new InstantCommand(() -> m_robotLime.limeOff()));
 
 
 

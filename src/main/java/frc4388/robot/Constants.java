@@ -181,8 +181,8 @@ public final class Constants {
 
         /* Ball Indexes */
         public static final int BEAM_SENSOR_SHOOTER = 11;
-        public static final int BEAM_SENSOR_USELESS = 12;
-        public static final int BEAM_SENSOR_STORAGE = 13;
+        public static final int BEAM_SENSOR_USELESS = 12; //MIGHT CONFLICT WITH LINE 167
+        public static final int BEAM_SENSOR_STORAGE = 13; //MIGHT CONFLICT WITH LINE 168
         public static final int BEAM_SENSOR_INTAKE = 14;
 
         /* PID Gains */
