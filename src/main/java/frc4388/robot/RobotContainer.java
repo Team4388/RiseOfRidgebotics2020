@@ -290,12 +290,13 @@ public class RobotContainer {
             .whenPressed(new InstantCommand(() -> m_robotClimber.setSafetyPressed(), m_robotClimber))
             .whenReleased(new InstantCommand(() -> m_robotClimber.setSafetyNotPressed(), m_robotClimber));
 
+        /*
         // starts tracking target
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
             .whileHeld(new TrackTarget(m_robotShooterAim))
             .whileHeld(new RunCommand(() -> m_robotShooterHood.runAngleAdjustPID(m_robotShooterHood.addFireAngle())))
             .whenReleased(new InstantCommand(() -> m_robotLime.limeOff()));
-
+        */
             //.whileHeld(new RunCommand(() -> m_robotShooterAim.runshooterRotatePID()));
             //.whileHeld(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(11000)));
             //.whileHeld(new HoldTarget(m_robotShooter, m_robotShooterAim))
@@ -309,19 +310,20 @@ public class RobotContainer {
         new JoystickButton(getOperatorJoystick(), XboxController.START_BUTTON)
             .whileHeld(new CalibrateShooter(m_robotShooter, m_robotShooterAim, m_robotShooterHood));
 
-        new JoystickButton(getOperatorJoystick(), XboxController.B_BUTTON)
-            .whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotShooterHood, m_robotStorage), false)
+        new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
+            .whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotShooterHood), false)
             //.whenReleased(new ManageStorage(m_robotStorage, StorageMode.RESET))
             .whenReleased(new InstantCommand(() -> m_robotLime.limeOff()));
 
 
 
         //Run drum
+        /*
         new JoystickManualButton(getOperatorJoystick(), XboxController.B_BUTTON, false)
-            .whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotShooterHood, m_robotStorage), false)
+            .whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotShooterHood), false)
             //.whenReleased(new ManageStorage(m_robotStorage, StorageMode.RESET))
             .whenReleased(new InstantCommand(() -> m_robotLime.limeOff()));
-
+        */
         //Run drum manual
         new JoystickManualButton(getOperatorJoystick(), XboxController.B_BUTTON, true)
             .whileHeld(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(10000)))
@@ -454,19 +456,19 @@ public class RobotContainer {
               "GSC_BBLUE"
         };
         m_galacticSearch = new GalacticSearch(m_robotLime, m_robotIntake, buildPaths(galacticSearchPaths));
-
+        
         String[] sixBallTopPaths = new String[]{
             "6BallTop"
         };
 
         m_sixBallTop = new SixBallTop(m_robotShooterHood, m_robotStorage, m_robotIntake, m_robotShooter, m_robotShooterAim, m_robotDrive, buildPaths(sixBallTopPaths));
-
+        /*
         String[] eightBallMidPaths = new String[]{
             "2BallOffensive",
             "LoopFrom2BallOffensive"
         };
         m_eightBallMid = new EightBallMid(m_robotShooterHood, m_robotStorage, m_robotIntake, m_robotShooter, m_robotShooterAim, m_robotDrive, buildPaths(eightBallMidPaths));
-
+        
         String[] fiveBallBottomPaths = new String[]{
             "5BallBottom1",
             "5BallBottom2",
@@ -478,12 +480,13 @@ public class RobotContainer {
             "getOffLine1"
         };
         m_offTheLine = new OffTheLine(m_robotShooterHood, m_robotStorage, m_robotIntake, m_robotShooter, m_robotShooterAim, m_robotDrive, buildPaths(fiveBallBottomPaths));
-
+        
         Command[] autos = {m_sixBallTop, m_eightBallMid, m_fiveBallBottom, m_offTheLine};
             autoCommandChooser.setDefaultOption("sixBallTop", m_sixBallTop);
             for (int i = 1; i < autos.length; i++) {
                 autoCommandChooser.addOption(autos[i].toString().substring(2), autos[i]);
             }
+            */
     }
 
     public void idenPath()
@@ -504,7 +507,7 @@ public class RobotContainer {
         try {
             SmartDashboard.putNumber("Trajectory Total Time", m_totalTimeAuto);
 
-            return autoCommandChooser.getSelected();
+            //return autoCommandChooser.getSelected();
 
                 //Legacy Autos
             //return m_sixBallAutoMiddle.andThen(() -> m_robotDrive.tankDriveVelocity(0, 0));
@@ -515,7 +518,7 @@ public class RobotContainer {
 
                 //At Home Challenges Autos
             //return m_slalom.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
-            //return m_barrel.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
+            return m_barrel.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_barrelStart.andThen(()-> m_robotDrive.tankDriveVelocity(0, 0));
             //return m_sequentialTest.andThen(() -> m_robotDrive.tankDriveVelocity(0,0));
             //return m_galacticSearch.andThen(() -> m_robotDrive.tankDriveVelocity(0,0));
