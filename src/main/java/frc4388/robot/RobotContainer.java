@@ -311,7 +311,7 @@ public class RobotContainer {
             .whileHeld(new CalibrateShooter(m_robotShooter, m_robotShooterAim, m_robotShooterHood));
 
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
-            .whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotShooterHood), false)
+            .whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotShooterHood, m_robotStorage), false)
             //.whenReleased(new ManageStorage(m_robotStorage, StorageMode.RESET))
             .whenReleased(new InstantCommand(() -> m_robotLime.limeOff()));
 
