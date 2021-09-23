@@ -66,6 +66,9 @@ public class TrackTarget extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0);
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
     target = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0);
     xAngle = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
     yAngle = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
@@ -118,14 +121,14 @@ public class TrackTarget extends CommandBase {
     }
     else{
       //Sweeping
-      double turn = -0.5;
+      double turn = -0.0;
       if (m_shooterAim.getShooterRotatePosition() > ShooterConstants.TURRET_RIGHT_SOFT_LIMIT - 1)
       {
-        turn = -0.5;
+        turn = -0.0;
       }
       if (m_shooterAim.getShooterRotatePosition() < ShooterConstants.TURRET_LEFT_SOFT_LIMIT + 1)
       {
-        turn = 0.5;
+        turn = 0.0;
       }
       m_shooterAim.runShooterWithInput(turn);
     }
