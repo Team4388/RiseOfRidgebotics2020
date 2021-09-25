@@ -475,12 +475,13 @@ public class RobotContainer {
             "5BallBottom3"
         };
         m_fiveBallBottom = new FiveBallBottom(m_robotShooterHood, m_robotStorage, m_robotIntake, m_robotShooter, m_robotShooterAim, m_robotDrive, buildPaths(fiveBallBottomPaths));
-
+        */
+        /*
         String[] offTheLinePaths = new String[]{
             "getOffLine1"
         };
-        m_offTheLine = new OffTheLine(m_robotShooterHood, m_robotStorage, m_robotIntake, m_robotShooter, m_robotShooterAim, m_robotDrive, buildPaths(fiveBallBottomPaths));
-        
+        m_offTheLine = new OffTheLine(m_robotShooterHood, m_robotStorage, m_robotIntake, m_robotShooter, m_robotShooterAim, m_robotDrive, buildPaths(offTheLinePaths));
+        /*
         Command[] autos = {m_sixBallTop, m_eightBallMid, m_fiveBallBottom, m_offTheLine};
             autoCommandChooser.setDefaultOption("sixBallTop", m_sixBallTop);
             for (int i = 1; i < autos.length; i++) {
