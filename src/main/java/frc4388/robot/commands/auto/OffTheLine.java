@@ -30,14 +30,16 @@ public class OffTheLine extends SequentialCommandGroup {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     addCommands(
-      paths[0],
+      paths[0]
+
 
       //Shoot???
+      /*
       new ParallelDeadlineGroup(
         new Wait(drive,5),
         new TrackTarget(shooterAim),
         new RunCommand(() -> shooterHood.runAngleAdjustPID(shooterHood.addFireAngle()))
-      )
+      )*/
     );
   }
 }
