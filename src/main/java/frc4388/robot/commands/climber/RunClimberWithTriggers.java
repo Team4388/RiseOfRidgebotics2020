@@ -37,6 +37,7 @@ public class RunClimberWithTriggers extends CommandBase {
     double rightTrigger = m_controller.getRightTriggerAxis();
     double leftTrigger = m_controller.getLeftTriggerAxis();
     double output = 0;
+    /*
     if (rightTrigger < .5) {
       if(rightTrigger > leftTrigger) {
         output = rightTrigger;
@@ -49,6 +50,8 @@ public class RunClimberWithTriggers extends CommandBase {
     } else {
       output = rightTrigger;
     }
+    */
+    output = rightTrigger - leftTrigger;
     m_climber.runClimber(output);
   }
 
