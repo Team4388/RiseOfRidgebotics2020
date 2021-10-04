@@ -315,6 +315,11 @@ public class RobotContainer {
             //.whenReleased(new ManageStorage(m_robotStorage, StorageMode.RESET))
             .whenReleased(new InstantCommand(() -> m_robotLime.limeOff()));
 
+        // new JoystickButton(getOperatorJoystick(), XboxController.LEFT_RIGHT_DPAD_AXIS)
+        //     .whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotShooterHood, m_robotStorage), false)
+        //     //.whenReleased(new ManageStorage(m_robotStorage, StorageMode.RESET))
+        //     .whenReleased(new InstantCommand(() -> m_robotLime.limeOff()));
+
 
 
         //Run drum
@@ -476,7 +481,7 @@ public class RobotContainer {
         };
         m_fiveBallBottom = new FiveBallBottom(m_robotShooterHood, m_robotStorage, m_robotIntake, m_robotShooter, m_robotShooterAim, m_robotDrive, buildPaths(fiveBallBottomPaths));
         */
-        /*
+        
         String[] offTheLinePaths = new String[]{
             "getOffLine1"
         };

@@ -36,8 +36,15 @@ public class RunLevelerWithJoystick extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double input = m_controller.getRightXAxis();
-    m_leveler.runLeveler(input);
+    double input = m_controller.getDpadAngle();
+    if (input == 90)
+    {
+      m_leveler.runLeveler(0.5);
+    }
+    else if (input == 270)
+    {
+      m_leveler.runLeveler(-0.5);
+    }
   }
 
   // Called once the command ends or is interrupted.
