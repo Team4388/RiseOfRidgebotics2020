@@ -57,15 +57,8 @@ public class CSV<R> {
     }
 
     /**
-     * Creates a new {@code CSV} instance and prepares for populating the fields of
-     * objects created by the given generator. Fields of primitive types is not
-     * supported.
-     * 
-     * @param generator a parameterless supplier which produces a new object with
-     *                  any number of fields corresponding to header names from a
-     *                  CSV file. The first character of the names from the header
-     *                  in the CSV file will be made lowercase and invalid
-     *                  characters will be removed to match Java naming conventions.
+     * Creates a new {@code CSV} instance and prepares for populating the fields of objects created by the given generator. Private fields and fields of primitive types are not supported.
+     * @param generator a parameterless supplier which produces a new object with any number of fields corresponding to header names from a CSV file. The first character of the names from the header in the CSV file will be made lowercase and invalid characters will be removed to match Java naming conventions.
      * @see #read(Path)
      */
     @SuppressWarnings("unchecked")
@@ -76,8 +69,7 @@ public class CSV<R> {
         this.generator = generator;
         this.setters = new HashMap<>();
         for (final Field field : clazz.getFields()) {
-            final Function<String, ?> parser = Modifier.isStatic(field.getModifiers()) ? null
-                    : fieldParsers.computeIfAbsent(field.getType(), CSV::getTypeParser);
+            final Function<String, ?> parser = Modifier.isStatic(field.getModifiers()) ? null : fieldParsers.computeIfAbsent(field.getType(), CSV::getTypeParser);
             if (parser != null)
                 this.setters.put(field.getName(), (final R obj, final String rawValue) -> {
                     try {
@@ -90,11 +82,7 @@ public class CSV<R> {
     }
 
     /**
-     * Reads and parses the contents of the given CSV file, and returns an array
-     * filled with populated objects created with the previously given generator.
-     * Cells are parsed using their corresponding field's {@code valueOf(String)}
-     * function.
-     *
+     * Reads and parses the contents of the given CSV file, and returns an array filled with populated objects created with the previously given generator. Cells are parsed using their corresponding field's {@code valueOf(String)} function.
      * @param path the path to a CSV file
      * @return the parsed data from the CSV file
      * @throws IOException if an I/O error occurs opening the file
@@ -102,34 +90,27 @@ public class CSV<R> {
     @SuppressWarnings("unchecked")
     public R[] read(final Path path) throws IOException {
         try (final BufferedReader reader = Files.newBufferedReader(path)) {
-            final BiConsumer<R, String>[] fieldSetters = Stream.of(headerSanitizer(reader.readLine()).split(","))
-                    .map(this::nameProcessor).map(setters::get).toArray(BiConsumer[]::new);
+            final BiConsumer<R, String>[] fieldSetters = Stream.of(headerSanitizer(reader.readLine()).split(",")).map(this::nameProcessor).map(setters::get).toArray(BiConsumer[]::new);
             final Stream<String> lines = reader.lines();
-            return lines.filter(Predicate.not(String::isBlank))
-                    .map(line -> deserializeRecordString(line, fieldSetters, generator.get()))
-                    .toArray(this.arrayGenerator);
+            return lines.filter(Predicate.not(String::isBlank)).map(line -> deserializeRecordString(line, fieldSetters, generator.get())).toArray(this.arrayGenerator);
         }
     }
 
     @SuppressWarnings("unchecked")
     private static Function<String, ?> getTypeParser(final Class<?> type) {
         try {
-            return type.isAssignableFrom(String.class) ? Function.identity()
-                    : MethodHandleProxies.asInterfaceInstance(Function.class, MethodHandles.publicLookup()
-                            .findStatic(type, "valueOf", MethodType.methodType(type, String.class)));
+            return type.isAssignableFrom(String.class) ? Function.identity() : MethodHandleProxies.asInterfaceInstance(Function.class, MethodHandles.publicLookup().findStatic(type, "valueOf", MethodType.methodType(type, String.class)));
         } catch (final NoSuchMethodException | IllegalAccessException e) {
             return null;
         }
     }
 
-    private static <R> R deserializeRecordString(final String recordString,
-            final BiConsumer<R, String>[] fieldParseSetters, final R object) {
+    private static <R> R deserializeRecordString(final String recordString, final BiConsumer<R, String>[] fieldParseSetters, final R object) {
         final int recordStringLength = recordString.length();
         int fieldBeginIndex = 0, tryFieldEndFromIndex = 0, i = 0;
         while (tryFieldEndFromIndex < recordStringLength && i < fieldParseSetters.length) {
             final int tryFieldEndIndex = recordString.indexOf(',', tryFieldEndFromIndex);
-            String field = recordString
-                    .substring(fieldBeginIndex, tryFieldEndIndex == -1 ? recordStringLength : tryFieldEndIndex).strip();
+            String field = recordString.substring(fieldBeginIndex, tryFieldEndIndex == -1 ? recordStringLength : tryFieldEndIndex).strip();
             if (!field.isEmpty() && (tryFieldEndFromIndex != fieldBeginIndex || field.charAt(0) == '"')) {
                 final int fieldLength = field.length();
                 if (countTrailing(field, '"') % 2 == 0) {
@@ -157,35 +138,20 @@ public class CSV<R> {
 
     public static class ReflectionTable {
         public static <T> String create(final T[] objects) {
-            final Field[] fields = Stream.of(objects).flatMap(object -> Stream.of(object.getClass().getFields()))
-                    .distinct().toArray(Field[]::new);
+            final Field[] fields = Stream.of(objects).flatMap(object -> Stream.of(object.getClass().getFields())).distinct().toArray(Field[]::new);
             final List<List<ReflectionTable>> rows = new ArrayList<>();
             rows.add(Stream.of(fields).map(ReflectionTable::new).collect(Collectors.toList()));
-            rows.addAll(Stream.of(objects).map(
-                    obj -> Stream.of(fields).map(field -> new ReflectionTable(obj, field)).collect(Collectors.toList()))
-                    .collect(Collectors.toList()));
-            final int[] columnWidths = rows.stream()
-                    .map(row -> row.stream().map(cell -> cell.string).mapToInt(String::length).toArray())
-                    .reduce(new int[fields.length], (result, row) -> IntStream.range(0, row.length)
-                            .map(i -> Math.max(result[i], row[i])).toArray());
+            rows.addAll(Stream.of(objects).map(obj -> Stream.of(fields).map(field -> new ReflectionTable(obj, field)).collect(Collectors.toList())).collect(Collectors.toList()));
+            final int[] columnWidths = rows.stream().map(row -> row.stream().map(cell -> cell.string).mapToInt(String::length).toArray()).reduce(new int[fields.length], (result, row) -> IntStream.range(0, row.length).map(i -> Math.max(result[i], row[i])).toArray());
             IntStream.range(0, fields.length).forEach(i -> {
-                final var columnSummaryStatistics = rows.stream().skip(1)
-                        .mapToDouble(row -> row.get(i).getValue().doubleValue()).summaryStatistics();
-                rows.stream().skip(1).forEach(row -> row.get(i).colorByValue(columnSummaryStatistics.getMin(),
-                        columnSummaryStatistics.getMax()));
+                final var columnSummaryStatistics = rows.stream().skip(1).mapToDouble(row -> row.get(i).getValue().doubleValue()).summaryStatistics();
+                rows.stream().skip(1).forEach(row -> row.get(i).colorByValue(columnSummaryStatistics.getMin(), columnSummaryStatistics.getMax()));
             });
-            return rows.stream()
-                    .map(row -> IntStream.range(0, row.size())
-                            .mapToObj(i -> String.format(
-                                    MessageFormat.format("{0} %{1}{2}s {3}", row.get(i).escape,
-                                            row.get(i).padRight ? "-" : "", columnWidths[i], RESET_STYLE),
-                                    row.get(i).string))
-                            .collect(Collectors.joining("|")))
-                    .collect(Collectors.joining(LF));
+            return rows.stream().map(row -> IntStream.range(0, row.size()).mapToObj(i -> String.format(MessageFormat.format("{0} %{1}{2}s {3}", row.get(i).escape, row.get(i).padRight ? "-" : "", columnWidths[i], RESET_STYLE), row.get(i).string)).collect(Collectors.joining("|"))).collect(Collectors.joining(LF));
         }
 
-        private static final Color GRADIENT_MIN = new Color(0, 51, 0);
-        private static final Color GRADIENT_MAX = new Color(0, 255, 0);
+        private static final Color GRADIENT_MIN = new Color(0x00, 0x33, 0x00);
+        private static final Color GRADIENT_MAX = new Color(0x00, 0xFF, 0x00);
         private static final String CONTROL = "\033";
         private static final String CSI = "[";
         private static final String LF = "\n";
@@ -235,20 +201,15 @@ public class CSV<R> {
 
         private void colorByValue(final Number min, final Number max) {
             if (Objects.nonNull(value)) {
-                final double normal = (getValue().doubleValue() - min.doubleValue())
-                        / (max.doubleValue() - min.doubleValue());
-                final Color color = new Color(range(normal, GRADIENT_MIN.getRed(), GRADIENT_MAX.getRed()),
-                        range(normal, GRADIENT_MIN.getGreen(), GRADIENT_MAX.getGreen()),
-                        range(normal, GRADIENT_MIN.getBlue(), GRADIENT_MAX.getBlue()));
-                escape += (contrastRatio(color, Color.BLACK) > contrastRatio(Color.WHITE, color)
-                        ? colorTo24BitSGR(Color.BLACK, false)
-                        : colorTo24BitSGR(Color.WHITE, false)) + colorTo24BitSGR(color, true);
+                final double range = max.doubleValue() - min.doubleValue();
+                final double normal = range == 0 ? 0 : (getValue().doubleValue() - min.doubleValue()) / range;
+                final Color color = new Color(range(normal, GRADIENT_MIN.getRed(), GRADIENT_MAX.getRed()), range(normal, GRADIENT_MIN.getGreen(), GRADIENT_MAX.getGreen()), range(normal, GRADIENT_MIN.getBlue(), GRADIENT_MAX.getBlue()));
+                escape += (contrastRatio(color, Color.BLACK) > contrastRatio(Color.WHITE, color) ? colorTo24BitSGR(Color.BLACK, false) : colorTo24BitSGR(Color.WHITE, false)) + colorTo24BitSGR(color, true);
             }
         }
 
         private static String colorTo24BitSGR(final Color color, final boolean background) {
-            return CONTROL + CSI + (background ? BACKGROUND : FOREGROUND) + SEPARATOR + TRUECOLOR + SEPARATOR
-                    + color.getRed() + SEPARATOR + color.getGreen() + SEPARATOR + color.getBlue() + SGR;
+            return CONTROL + CSI + (background ? BACKGROUND : FOREGROUND) + SEPARATOR + TRUECOLOR + SEPARATOR + color.getRed() + SEPARATOR + color.getGreen() + SEPARATOR + color.getBlue() + SGR;
         }
 
         private static int range(final double normal, final int min, final int max) {
@@ -263,12 +224,9 @@ public class CSV<R> {
         /* https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef */
         private static float relativeLuminance(final Color color) {
             final float[] components = color.getRGBComponents(null);
-            final float r = components[0] <= 0.03928f ? components[0] / 12.92f
-                    : (float) Math.pow((components[0] + 0.055f) / 1.055f, 2.4f);
-            final float g = components[1] <= 0.03928f ? components[1] / 12.92f
-                    : (float) Math.pow((components[1] + 0.055f) / 1.055f, 2.4f);
-            final float b = components[2] <= 0.03928f ? components[2] / 12.92f
-                    : (float) Math.pow((components[2] + 0.055f) / 1.055f, 2.4f);
+            final float r = components[0] <= 0.03928f ? components[0] / 12.92f : (float) Math.pow((components[0] + 0.055f) / 1.055f, 2.4f);
+            final float g = components[1] <= 0.03928f ? components[1] / 12.92f : (float) Math.pow((components[1] + 0.055f) / 1.055f, 2.4f);
+            final float b = components[2] <= 0.03928f ? components[2] / 12.92f : (float) Math.pow((components[2] + 0.055f) / 1.055f, 2.4f);
             return 0.2126f * r + 0.7152f * g + 0.0722f * b;
         }
     }
