@@ -76,7 +76,7 @@ public class TrackTarget extends CommandBase {
 
     if (target == 1.0) { // If target in view
       // Aiming Left/Right
-      xAngle = xAngle + m_shooter.m_shooterTable.getCenterDisplacement(realDistance);
+      xAngle = xAngle + m_shooter.getCenterDisplacement(realDistance);
       turnAmount = ((xAngle / VisionConstants.FOV) * VisionConstants.TURN_P_VALUE);
       if (Math.abs(xAngle) < VisionConstants.X_ANGLE_ERROR) {
         turnAmount = 0;
@@ -92,7 +92,7 @@ public class TrackTarget extends CommandBase {
       //m_shooterAim.runshooterRotatePID(targetAngle);
 
       SmartDashboard.putNumber("Distance to Target", realDistance);
-      SmartDashboard.putNumber("Center Displacement", m_shooter.m_shooterTable.getCenterDisplacement(realDistance));
+      SmartDashboard.putNumber("Center Displacement", m_shooter.getCenterDisplacement(realDistance));
         //START Equation Code
       double yVel = Math.sqrt(2 * VisionConstants.GRAV * VisionConstants.TARGET_HEIGHT);
       double xVel = (distance * VisionConstants.GRAV) / (yVel);
@@ -102,8 +102,8 @@ public class TrackTarget extends CommandBase {
         //END Equation Code
 
         //START CSV Code
-      fireVel = m_shooter.m_shooterTable.getVelocity(realDistance);
-      fireAngle = m_shooter.m_shooterTable.getHood(realDistance); //Note: Ensure to follow because units are different
+      fireVel = m_shooter.getVelocity(realDistance);
+      fireAngle = m_shooter.getHood(realDistance); //Note: Ensure to follow because units are different
       //fireAngle = 33;
         //END CSV Code
 
