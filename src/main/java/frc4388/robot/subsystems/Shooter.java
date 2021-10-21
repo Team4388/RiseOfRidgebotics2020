@@ -84,19 +84,20 @@ public class Shooter extends SubsystemBase {
     m_shooterFalconRight.configClosedLoopPeriod(0, closedLoopTimeMs, ShooterConstants.SHOOTER_TIMEOUT_MS);
     m_shooterFalconRight.configSupplyCurrentLimit(ShooterConstants.SUPPLY_CURRENT_LIMIT_CONFIG, ShooterConstants.SHOOTER_TIMEOUT_MS);
 
-    try {
-      m_shooterTable = new CSV<>(ShooterTableEntry::new) {
-        private final Pattern parentheses = Pattern.compile("\\([^\\)]*+\\)");
+    m_shooterTable = new ShooterTableEntry[] {new ShooterTableEntry()};
+    // try {
+    //   m_shooterTable = new CSV<>(ShooterTableEntry::new) {
+    //     private final Pattern parentheses = Pattern.compile("\\([^\\)]*+\\)");
 
-        @Override
-        protected String headerSanitizer(final String header) {
-          return super.headerSanitizer(parentheses.matcher(header).replaceAll(""));
-        }
-      }.read(new File(Filesystem.getDeployDirectory(), "Robot Data - Distances.csv").toPath());
-      new Thread(() -> System.out.println(CSV.ReflectionTable.create(m_shooterTable))).start();
-    } catch (final IOException e) {
-      throw new RuntimeException(e);
-    }
+    //     @Override
+    //     protected String headerSanitizer(final String header) {
+    //       return super.headerSanitizer(parentheses.matcher(header).replaceAll(""));
+    //     }
+    //   }.read(new File(Filesystem.getDeployDirectory(), "Robot Data - Distances.csv").toPath());
+    //   new Thread(() -> System.out.println(CSV.ReflectionTable.create(m_shooterTable))).start();
+    // } catch (final IOException e) {
+    //   throw new RuntimeException(e);
+    // }
   }
 
   @Override

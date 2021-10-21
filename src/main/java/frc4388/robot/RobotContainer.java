@@ -8,6 +8,7 @@
 package frc4388.robot;
 
 import java.nio.file.Path;
+import java.util.function.Supplier;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 

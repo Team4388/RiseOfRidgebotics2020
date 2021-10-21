@@ -7,6 +7,8 @@
 
 package frc4388.robot;
 
+import java.util.function.Supplier;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -30,6 +32,11 @@ public class Robot extends TimedRobot {
   double m_currentTime;
   double m_deltaTime;
 
+  protected static Supplier<Boolean> lastIsTestMethod;
+  public static Boolean lastIsTest() {
+    return lastIsTestMethod.get();
+  }
+  
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -39,6 +46,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    Robot.lastIsTestMethod = this::isTest;
     SmartDashboard.putString("Is Auto Start?", "NAH");
   }
 

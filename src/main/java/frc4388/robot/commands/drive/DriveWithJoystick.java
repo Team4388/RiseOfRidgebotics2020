@@ -8,6 +8,7 @@
 package frc4388.robot.commands.drive;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc4388.robot.Robot;
 import frc4388.robot.Constants.DriveConstants;
 import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Pneumatics;
@@ -42,8 +43,16 @@ public class DriveWithJoystick extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double moveInput = m_controller.getLeftYAxis();
-    double steerInput = m_controller.getRightXAxis();
+    double moveInput; 
+    double steerInput;
+    if (Robot.lastIsTest()) {
+      moveInput = m_controller.getLeftYAxis() / 2;
+      steerInput = m_controller.getRightXAxis() / 2;
+    } else {
+      moveInput = m_controller.getLeftYAxis();
+      steerInput = m_controller.getRightXAxis();
+    }
+
     double moveOutput = 0;
     double steerOutput = 0;
     if (moveInput >= 0){
