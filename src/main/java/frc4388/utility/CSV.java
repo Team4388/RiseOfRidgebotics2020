@@ -57,8 +57,12 @@ public class CSV<R> {
     }
 
     /**
-     * Creates a new {@code CSV} instance and prepares for populating the fields of objects created by the given generator. Private fields and fields of primitive types are not supported.
-     * @param generator a parameterless supplier which produces a new object with any number of fields corresponding to header names from a CSV file. The first character of the names from the header in the CSV file will be made lowercase and invalid characters will be removed to match Java naming conventions.
+     * Creates a new {@code CSV} instance and prepares for populating the fields of objects created by
+     * the given generator. Private fields and fields of primitive types are not supported.
+     * @param generator a parameterless supplier which produces a new object with any number of fields
+     *                  corresponding to header names from a CSV file. The first character of the names
+     *                  from the header in the CSV file will be made lowercase and invalid characters
+     *                  will be removed to match Java naming conventions.
      * @see #read(Path)
      */
     @SuppressWarnings("unchecked")
@@ -82,7 +86,9 @@ public class CSV<R> {
     }
 
     /**
-     * Reads and parses the contents of the given CSV file, and returns an array filled with populated objects created with the previously given generator. Cells are parsed using their corresponding field's {@code valueOf(String)} function.
+     * Reads and parses the contents of the given CSV file, and returns an array filled with populated
+     * objects created with the previously given generator. Cells are parsed using their corresponding
+     * field's {@code valueOf(String)} function.
      * @param path the path to a CSV file
      * @return the parsed data from the CSV file
      * @throws IOException if an I/O error occurs opening the file
