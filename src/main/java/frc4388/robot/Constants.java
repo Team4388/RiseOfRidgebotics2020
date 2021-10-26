@@ -23,6 +23,26 @@ import frc4388.utility.LEDPatterns;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    public enum Mode {
+        COMPETITIVE, CASUAL;
+        private static Mode mode;
+        public static Mode get() {
+            return mode;
+        }
+        public static void set(Mode mode) {
+            Mode.mode = mode;
+            int i = mode.ordinal();
+            DriveConstants.DRIVE_WITH_JOYSTICK_FACTOR = DriveConstants.DRIVE_WITH_JOYSTICK_FACTOR_MODES[i];
+        }
+        public static void toggle() {
+            int i = mode.ordinal() + 1;
+            Mode[] values = values();
+            i = i >= values.length ? 0 : i;
+            mode = values[i];
+            System.out.println(mode);
+        }
+    }
+
     public static final int SELECTED_AUTO = 0;
 
     public static final class DriveConstants {
@@ -62,6 +82,9 @@ public final class Constants {
         public static final Gains DRIVE_MOTION_MAGIC_GAINS_LOW = new Gains(0.1, 0.0, 0, 0.025, 0, 1.0);
         public static final int DRIVE_CRUISE_VELOCITY = 30000;
         public static final int DRIVE_ACCELERATION = 23000;
+
+        private static final double[] DRIVE_WITH_JOYSTICK_FACTOR_MODES = { 1.0, 0.5 };
+        public static double DRIVE_WITH_JOYSTICK_FACTOR;
 
         public static final Gains DRIVE_DISTANCE_GAINS_HIGH = new Gains(0.1, 0.0, 0.0, 0.0, 0, 0.5);
         public static final Gains DRIVE_VELOCITY_GAINS_HIGH = new Gains(0.1, 0.0, 0.0, 0.0, 0, 1.0);

@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc4388.robot.Constants.Mode;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -31,11 +32,6 @@ public class Robot extends TimedRobot {
   double m_initialTime;
   double m_currentTime;
   double m_deltaTime;
-
-  protected static Supplier<Boolean> lastIsTestMethod;
-  public static Boolean lastIsTest() {
-    return lastIsTestMethod.get();
-  }
   
   /**
    * This function is run when the robot is first started up and should be
@@ -46,7 +42,6 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    Robot.lastIsTestMethod = this::isTest;
     SmartDashboard.putString("Is Auto Start?", "NAH");
   }
 
@@ -92,6 +87,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    Mode.set(Mode.COMPETITIVE);
     //m_robotContainer.buildAutos();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
@@ -133,6 +129,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    Mode.set(Mode.COMPETITIVE);
     m_robotContainer.setDriveNeutralMode(NeutralMode.Brake);
     m_robotContainer.setDriveGearState(true);
 
@@ -155,6 +152,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+  }
+
+  @Override
+  public void testInit() {
+    Mode.set(Mode.CASUAL);
   }
 
   /**

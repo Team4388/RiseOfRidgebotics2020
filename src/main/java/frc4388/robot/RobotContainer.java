@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.DriveConstants;
+import frc4388.robot.Constants.Mode;
 import frc4388.robot.Constants.OIConstants;
 import frc4388.robot.commands.InterruptSubystem;
 import frc4388.robot.commands.auto.Barrel;
@@ -225,7 +226,8 @@ public class RobotContainer {
         new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
             .whenPressed(new InstantCommand());
 
-
+        new JoystickButton(getDriverJoystick(), XboxController.START_BUTTON)
+            .whenPressed(new InstantCommand(Mode::toggle));
 
         /* Driver Buttons */
         // sets solenoids into high gear
