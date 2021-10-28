@@ -38,7 +38,7 @@ public final class Constants {
             int i = mode.ordinal() + 1;
             Mode[] values = values();
             i = i >= values.length ? 0 : i;
-            mode = values[i];
+            set(values[i]);
             System.out.println(mode);
         }
     }
@@ -83,7 +83,7 @@ public final class Constants {
         public static final int DRIVE_CRUISE_VELOCITY = 30000;
         public static final int DRIVE_ACCELERATION = 23000;
 
-        private static final double[] DRIVE_WITH_JOYSTICK_FACTOR_MODES = { 1.0, 0.5 };
+        private static final double[] DRIVE_WITH_JOYSTICK_FACTOR_MODES = { 1.0, 0.8 };
         public static double DRIVE_WITH_JOYSTICK_FACTOR;
 
         public static final Gains DRIVE_DISTANCE_GAINS_HIGH = new Gains(0.1, 0.0, 0.0, 0.0, 0, 0.5);
@@ -263,5 +263,9 @@ public final class Constants {
         public static final int XBOX_DRIVER_ID = 0;
         public static final int XBOX_OPERATOR_ID = 1;
         public static final int BUTTON_FOX_ID = 2;
+    }
+
+    public static final class MathConstants {
+        public static final double PI_2 = Math.PI / 2;
     }
 }

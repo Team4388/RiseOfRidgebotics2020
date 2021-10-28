@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.Constants;
 import frc4388.robot.Robot;
 import frc4388.robot.Constants.DriveConstants;
+import frc4388.robot.Constants.MathConstants;
 import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Pneumatics;
 import frc4388.utility.controller.IHandController;
@@ -44,34 +45,13 @@ public class DriveWithJoystick extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double moveInput = m_controller.getLeftYAxis(); 
-    double steerInput = m_controller.getRightXAxis();
+    double moveInput = m_controller.getLeftYAxis() * DriveConstants.DRIVE_WITH_JOYSTICK_FACTOR;
+    double steerInput = m_controller.getRightXAxis() * DriveConstants.DRIVE_WITH_JOYSTICK_FACTOR;
 
-    double moveOutput = 0;
-    double steerOutput = 0;
-    if (moveInput >= 0){
-      moveOutput = -Math.cos(1.571*moveInput)+1;
-    } else {
-      moveOutput = Math.cos(1.571*moveInput)-1;
-    }
-    moveOutput *= DriveConstants.DRIVE_WITH_JOYSTICK_FACTOR;
-    System.out.println(moveOutput);
-    double cosMultiplier;
-    double deadzone = .1;
-
-    if (m_pneumatics.m_isSpeedShiftHigh) {
-      cosMultiplier = DriveConstants.COS_MULTIPLIER_HIGH;
-    } else {
-      cosMultiplier = DriveConstants.COS_MULTIPLIER_LOW;
-    }
-
-    if (steerInput > 0){
-      steerOutput = -(cosMultiplier - deadzone) * Math.cos(1.571*steerInput) + cosMultiplier;
-    } else if (steerInput < 0) {
-      steerOutput = (cosMultiplier - deadzone) * Math.cos(1.571*steerInput) - cosMultiplier;
-    } else {
-      steerOutput = 0;
-    }
+    double moveOutput = (moveInput >= 0 ? -1 : 1) * (Math.cos(MathConstants.PI_2 * moveInput) - 1);
+    double cosMultiplier = m_pneumatics.m_isSpeedShiftHigh ? DriveConstants.COS_MULTIPLIER_HIGH : DriveConstants.COS_MULTIPLIER_LOW;
+    double deadzone = 0.1;
+    double steerOutput = (steerInput == 0 ? 0 : (steerInput > 0 ? -1 : 1)) * (Math.cos(MathConstants.PI_2 * steerInput) * (cosMultiplier - deadzone) + cosMultiplier);
 
     /*
     double outputLimit = 0.8;
