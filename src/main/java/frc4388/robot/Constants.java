@@ -7,6 +7,10 @@
 
 package frc4388.robot;
 
+import java.util.ArrayList;
+import java.util.Vector;
+import java.util.function.Consumer;
+
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
@@ -26,13 +30,20 @@ public final class Constants {
     public enum Mode {
         COMPETITIVE, CASUAL;
         private static Mode mode;
+        private static Vector<Consumer<Mode>> changeHandlers = new Vector<>();
+        public static void register(Consumer<Mode> changeHandler) {
+            changeHandlers.add(changeHandler);
+        }
         public static Mode get() {
             return mode;
         }
         public static void set(Mode mode) {
             Mode.mode = mode;
             int i = mode.ordinal();
+            // changeHandlers.forEach(c -> c.accept(mode));
             DriveConstants.DRIVE_WITH_JOYSTICK_FACTOR = DriveConstants.DRIVE_WITH_JOYSTICK_FACTOR_MODES[i];
+            IntakeConstants.INTAKE_SPEED = IntakeConstants.INTAKE_SPEED_MODES[i];
+            StorageConstants.STORAGE_SPEED = StorageConstants.STORAGE_SPEED_MODES[i];
         }
         public static void toggle() {
             int i = mode.ordinal() + 1;
@@ -184,7 +195,8 @@ public final class Constants {
 
     public static final class IntakeConstants {
         public static final double EXTENDER_SPEED = 0.3;
-        public static final double INTAKE_SPEED = 1.0;
+        private static final double[] INTAKE_SPEED_MODES = { 1.0, 0.5 };
+        public static double INTAKE_SPEED;
 
         public static final int INTAKE_SPARK_ID = 12;
         public static final int EXTENDER_SPARK_ID = 13;
@@ -194,7 +206,8 @@ public final class Constants {
         public static final int STORAGE_CAN_ID = 11;
         public static final double STORAGE_PARTIAL_BALL = 2;
         public static final double STORAGE_FULL_BALL = 7;
-        public static final double STORAGE_SPEED = 0.75;
+        private static final double[] STORAGE_SPEED_MODES = { 0.75, 0.50 };
+        public static double STORAGE_SPEED;
         public static final double STORAGE_TIMEOUT = 3000;
 
         /* Storage Characteristics */

@@ -158,54 +158,66 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
-        /* Passing Drive and Pneumatics Subsystems */
-        m_robotPneumatics.passRequiredSubsystem(m_robotDrive);
-        m_robotDrive.passRequiredSubsystem(m_robotPneumatics, m_robotShooter);
-
-        m_robotShooter.passRequiredSubsystem(m_robotShooterHood, m_robotShooterAim);
-        m_robotShooterHood.passRequiredSubsystem(m_robotShooter);
-        m_robotShooterAim.passRequiredSubsystem(m_robotShooter, m_robotDrive);
-
-        m_robotLeveler.passRequiredSubsystem(m_robotClimber);
-
-        configureButtonBindings();
-
-        /* Builds Autos */
-        //buildAutos();
-
-        /* Default Commands */
-        // drives the robot with a two-axis input from the driver controller
-
-        m_robotDrive.setDefaultCommand(new DriveWithJoystick(m_robotDrive, m_robotPneumatics, getDriverController()));
-        //m_robotDrive.setDefaultCommand(new DriveWithJoystickUsingDeadAssistPID(m_robotDrive, m_robotPneumatics, getDriverController()));
-
-        // drives intake with input from triggers on the opperator controller
-        m_robotIntake.setDefaultCommand(new RunIntakeWithTriggers(m_robotIntake, getOperatorController()));
-        // runs the turret with joystick
-        m_robotShooterAim.setDefaultCommand(new RunCommand(() -> m_robotShooterAim.runShooterWithInput(-m_operatorXbox.getLeftXAxis()), m_robotShooterAim));
-        // runs the hood with joystick
-        m_robotShooterHood.setDefaultCommand(new RunHoodWithJoystick(m_robotShooterHood, getOperatorController()));
-        // moves the drum not
-        m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(12000), m_robotShooter));
-        // drives climber with input from triggers on the opperator controller
-        m_robotClimber.setDefaultCommand(new RunClimberWithTriggers(m_robotClimber, getDriverController()));
-        // drives the leveler with an axis input from the driver controller
-        m_robotLeveler.setDefaultCommand(new RunLevelerWithJoystick(m_robotLeveler, getOperatorController()));
-        // continually sends updates to the Blinkin LED controller to keep the lights on
-        m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
-        // runs the storage not
-        m_robotStorage.setDefaultCommand(new ManageStorage(m_robotStorage));
-        m_robotLime.setDefaultCommand(new RunCommand(() -> m_robotLime.limeOff(), m_robotLime));
-
+        setControls(Mode.COMPETITIVE);
+        Constants.Mode.register(this::setControls);
     }
 
+    public void setControls(Mode mode) {
+        switch (mode) {
+            case COMPETITIVE:
+            System.out.println("COMP CONTROLS");
+                /* Passing Drive and Pneumatics Subsystems */
+                m_robotPneumatics.passRequiredSubsystem(m_robotDrive);
+                m_robotDrive.passRequiredSubsystem(m_robotPneumatics, m_robotShooter);
+
+                m_robotShooter.passRequiredSubsystem(m_robotShooterHood, m_robotShooterAim);
+                m_robotShooterHood.passRequiredSubsystem(m_robotShooter);
+                m_robotShooterAim.passRequiredSubsystem(m_robotShooter, m_robotDrive);
+
+                m_robotLeveler.passRequiredSubsystem(m_robotClimber);
+
+                configureButtonBindingsCompetitive();
+
+                /* Builds Autos */
+                //buildAutos();
+
+                /* Default Commands */
+                // drives the robot with a two-axis input from the driver controller
+
+                m_robotDrive.setDefaultCommand(new DriveWithJoystick(m_robotDrive, m_robotPneumatics, getDriverController()));
+                //m_robotDrive.setDefaultCommand(new DriveWithJoystickUsingDeadAssistPID(m_robotDrive, m_robotPneumatics, getDriverController()));
+
+                // drives intake with input from triggers on the opperator controller
+                m_robotIntake.setDefaultCommand(new RunIntakeWithTriggers(m_robotIntake, getOperatorController()));
+                // runs the turret with joystick
+                m_robotShooterAim.setDefaultCommand(new RunCommand(() -> m_robotShooterAim.runShooterWithInput(-m_operatorXbox.getLeftXAxis()), m_robotShooterAim));
+                // runs the hood with joystick
+                m_robotShooterHood.setDefaultCommand(new RunHoodWithJoystick(m_robotShooterHood, getOperatorController()));
+                // moves the drum not
+                m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(12000), m_robotShooter));
+                // drives climber with input from triggers on the opperator controller
+                m_robotClimber.setDefaultCommand(new RunClimberWithTriggers(m_robotClimber, getDriverController()));
+                // drives the leveler with an axis input from the driver controller
+                m_robotLeveler.setDefaultCommand(new RunLevelerWithJoystick(m_robotLeveler, getOperatorController()));
+                // continually sends updates to the Blinkin LED controller to keep the lights on
+                m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
+                // runs the storage not
+                m_robotStorage.setDefaultCommand(new ManageStorage(m_robotStorage));
+                m_robotLime.setDefaultCommand(new RunCommand(() -> m_robotLime.limeOff(), m_robotLime));
+                break;
+            case CASUAL:
+            System.out.println("CAS CONTROLS");
+                break;
+        }
+    }
+    
     /**
      * Use this method to define your button->command mappings. Buttons can be
      * created by instantiating a {@link GenericHID} or one of its subclasses
      * ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
      * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
-    private void configureButtonBindings() {
+    private void configureButtonBindingsCompetitive() {
         /* Test Buttons */
 
         // A driver test button

@@ -23,6 +23,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc4388.robot.Constants;
 import frc4388.robot.Constants.ShooterConstants;
 import frc4388.utility.CSV;
 import frc4388.utility.Trims;
@@ -36,7 +37,11 @@ public class Shooter extends SubsystemBase {
     public Double distance, hoodExt, drumVelocity, centerDisplacement;
   }
 
-  private ShooterTableEntry[] m_shooterTable;
+  private ShooterTableEntry[][] m_shooterTables;
+
+  public ShooterTableEntry[] getActiveShooterTable() {
+    return m_shooterTables[Constants.Mode.get().ordinal()];
+  }
 
   public boolean m_isDrumReady = false;
   public double m_fireVel;
@@ -84,20 +89,23 @@ public class Shooter extends SubsystemBase {
     m_shooterFalconRight.configClosedLoopPeriod(0, closedLoopTimeMs, ShooterConstants.SHOOTER_TIMEOUT_MS);
     m_shooterFalconRight.configSupplyCurrentLimit(ShooterConstants.SUPPLY_CURRENT_LIMIT_CONFIG, ShooterConstants.SHOOTER_TIMEOUT_MS);
 
-    m_shooterTable = new ShooterTableEntry[] {new ShooterTableEntry()};
-    // try {
-    //   m_shooterTable = new CSV<>(ShooterTableEntry::new) {
-    //     private final Pattern parentheses = Pattern.compile("\\([^\\)]*+\\)");
+    try {
+      CSV<ShooterTableEntry> csv = new CSV<>(ShooterTableEntry::new) {
+        private final Pattern parentheses = Pattern.compile("\\([^\\)]*+\\)");
 
-    //     @Override
-    //     protected String headerSanitizer(final String header) {
-    //       return super.headerSanitizer(parentheses.matcher(header).replaceAll(""));
-    //     }
-    //   }.read(new File(Filesystem.getDeployDirectory(), "Robot Data - Distances.csv").toPath());
-    //   new Thread(() -> System.out.println(CSV.ReflectionTable.create(m_shooterTable))).start();
-    // } catch (final IOException e) {
-    //   throw new RuntimeException(e);
-    // }
+        @Override
+        protected String headerSanitizer(final String header) {
+          return super.headerSanitizer(parentheses.matcher(header).replaceAll(""));
+        }
+      };
+      m_shooterTables = new ShooterTableEntry[][] {
+        csv.read(new File(Filesystem.getDeployDirectory(), "Robot Data - Distances.csv").toPath()),
+        csv.read(new File(Filesystem.getDeployDirectory(), "Robot Data - Distances Casual.csv").toPath())
+      };
+      new Thread(() -> System.out.println(CSV.ReflectionTable.create(getActiveShooterTable()))).start();
+    } catch (final IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Override
@@ -159,15 +167,15 @@ public class Shooter extends SubsystemBase {
   }
 
   public Double getCenterDisplacement(final Double distance) {
-    return linearInterpolate(m_shooterTable, distance, e -> e.distance, e -> e.centerDisplacement).doubleValue();
+    return linearInterpolate(getActiveShooterTable(), distance, e -> e.distance, e -> e.centerDisplacement).doubleValue();
   }
 
   public Double getVelocity(final Double distance) {
-    return linearInterpolate(m_shooterTable, distance, e -> e.distance, e -> e.drumVelocity).doubleValue();
+    return linearInterpolate(getActiveShooterTable(), distance, e -> e.distance, e -> e.drumVelocity).doubleValue();
   }
 
   public Double getHood(final Double distance) {
-    return linearInterpolate(m_shooterTable, distance, e -> e.distance, e -> e.hoodExt).doubleValue();
+    return linearInterpolate(getActiveShooterTable(), distance, e -> e.distance, e -> e.hoodExt).doubleValue();
   }
 
   private static <E> Number linearInterpolate(final E[] table, final Number lookupValue, final Function<E, Number> lookupGetter, final Function<E, Number> targetGetter) {
