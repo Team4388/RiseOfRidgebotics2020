@@ -165,7 +165,7 @@ public class RobotContainer {
     public void setControls(Mode mode) {
         switch (mode) {
             case COMPETITIVE:
-            System.out.println("COMP CONTROLS");
+                System.out.println("COMP CONTROLS");
                 /* Passing Drive and Pneumatics Subsystems */
                 m_robotPneumatics.passRequiredSubsystem(m_robotDrive);
                 m_robotDrive.passRequiredSubsystem(m_robotPneumatics, m_robotShooter);
@@ -206,7 +206,38 @@ public class RobotContainer {
                 m_robotLime.setDefaultCommand(new RunCommand(() -> m_robotLime.limeOff(), m_robotLime));
                 break;
             case CASUAL:
-            System.out.println("CAS CONTROLS");
+                System.out.println("CASUAL CONTROLS");
+                /* Passing Casual Mode Subsystems */
+                m_robotPneumatics.passRequiredSubsystem(m_robotDrive);
+                m_robotDrive.passRequiredSubsystem(m_robotPneumatics, m_robotShooter);
+
+                m_robotShooter.passRequiredSubsystem(m_robotShooterHood, m_robotShooterAim);
+                m_robotShooterHood.passRequiredSubsystem(m_robotShooter);
+                m_robotShooterAim.passRequiredSubsystem(m_robotShooter, m_robotDrive);  
+                
+                m_robotLeveler.passRequiredSubsystem(m_robotClimber);
+
+                configureButtonBindingsCasual();
+
+                 /* Default Commands */
+                // drives the robot with a two-axis input from the driver controller
+
+                m_robotDrive.setDefaultCommand(new DriveWithJoystick(m_robotDrive, m_robotPneumatics, getDriverController()));
+                //m_robotDrive.setDefaultCommand(new DriveWithJoystickUsingDeadAssistPID(m_robotDrive, m_robotPneumatics, getDriverController()));
+
+                // drives intake with input from triggers on the opperator controller
+                m_robotIntake.setDefaultCommand(new RunIntakeWithTriggers(m_robotIntake, getOperatorController()));
+                // runs the turret with joystick
+                m_robotShooterAim.setDefaultCommand(new RunCommand(() -> m_robotShooterAim.runShooterWithInput(-m_operatorXbox.getLeftXAxis()), m_robotShooterAim));
+                // runs the hood with joystick
+                m_robotShooterHood.setDefaultCommand(new RunHoodWithJoystick(m_robotShooterHood, getOperatorController()));
+                // moves the drum not
+                m_robotShooter.setDefaultCommand(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(0), m_robotShooter));
+                // continually sends updates to the Blinkin LED controller to keep the lights on
+                m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
+                // runs the storage not
+                m_robotStorage.setDefaultCommand(new ManageStorage(m_robotStorage));
+                m_robotLime.setDefaultCommand(new RunCommand(() -> m_robotLime.limeOff(), m_robotLime));
                 break;
         }
     }
@@ -253,9 +284,6 @@ public class RobotContainer {
         // Disengages the rachet to allow for a climb
         new JoystickButton(getDriverJoystick(), XboxController.BACK_BUTTON)
             .whileHeld(new DisengageRachet(m_robotClimber));
-
-
-
 
         /* Operator Buttons */
         // shoots until released
@@ -324,7 +352,141 @@ public class RobotContainer {
 
 
 
-        /* Button Fox */
+        /* Button Box */
+        // Storage Manual
+        new JoystickButton(getButtonFox(), ButtonFox.LEFT_SWITCH)
+            .whenPressed(new InstantCommand(() -> m_robotStorage.changeStorageMode(StorageMode.MANUAL)))
+            .whenReleased(new InstantCommand(() -> m_robotStorage.changeStorageMode(StorageMode.RESET)));
+
+        // Meg
+        new JoystickButton(getButtonFox(), ButtonFox.MIDDLE_SWITCH)
+            .whileHeld(new PlaySongDrive(m_robotDrive, m_robotShooter))
+            .whenReleased(new InterruptSubystem(m_robotDrive));
+
+        // Shooter Manual
+        new JoystickButton(getButtonFox(), ButtonFox.RIGHT_SWITCH)
+            .whileHeld(new ShooterManual(true))
+            .whenReleased(new ShooterManual(false));
+
+        // Goal Shooter Position
+        new JoystickButton(getButtonFox(), ButtonFox.RIGHT_BUTTON)
+            .whileHeld(new PlaySongDrive(m_robotDrive, m_robotShooter))
+            .whenReleased(new InterruptSubystem(m_robotDrive));
+
+        // Trench Shooter Position
+        new JoystickButton(getButtonFox(), ButtonFox.LEFT_BUTTON)
+            .whileHeld(new ShooterTrenchPosition(m_robotShooter, m_robotShooterHood, m_robotShooterAim))
+            .whenReleased(new InterruptSubystem(m_robotShooter))
+            .whenReleased(new InterruptSubystem(m_robotShooterHood))
+            .whenReleased(new InterruptSubystem(m_robotShooterAim));
+            //.whenPressed(new SkipSong(m_robotDrive, 1));
+    }
+
+    private void configureButtonBindingsCasual() {
+        /* Test Buttons */
+
+        // A driver test button
+        new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
+            .whileHeld(new ShooterTrenchPosition(m_robotShooter, m_robotShooterHood, m_robotShooterAim))
+            .whenReleased(new InterruptSubystem(m_robotShooter))
+            .whenReleased(new InterruptSubystem(m_robotShooterHood));
+
+        // B driver test button
+        new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
+            .whileHeld(new RunCommand(() -> m_robotDrive.runDriveVelocityPID(2000, 45), m_robotDrive));
+
+        // Y driver test button
+        new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
+            .whenPressed(new InstantCommand(() -> m_robotDrive.runTurningPID(1000), m_robotDrive));
+
+        // X driver test button
+        new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
+            .whenPressed(new InstantCommand());
+
+        new JoystickButton(getDriverJoystick(), XboxController.START_BUTTON)
+            .whenPressed(new InstantCommand(Mode::toggle));
+
+        /* Driver Buttons */
+        // sets solenoids into high gear
+        new JoystickButton(getDriverJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
+            .whenPressed(new InstantCommand(() -> m_robotPneumatics.setShiftState(true), m_robotDrive));
+
+        // sets solenoids into low gear
+        new JoystickButton(getDriverJoystick(), XboxController.LEFT_BUMPER_BUTTON)
+            .whenPressed(new InstantCommand(() -> m_robotPneumatics.setShiftState(false), m_robotDrive));
+
+        // Disengages the rachet to allow for a climb
+        new JoystickButton(getDriverJoystick(), XboxController.BACK_BUTTON)
+            .whileHeld(new DisengageRachet(m_robotClimber));
+
+        /* Operator Buttons */
+        // shoots until released
+        new JoystickButton(getOperatorJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
+            //.whileHeld(new ShootFullGroup(m_robotShooter, m_robotShooterAim, m_robotShooterHood, m_robotStorage), false);
+            //.whenReleased(new ManageStorage(m_robotStorage, StorageMode.RESET));
+            //.whenReleased(new RunCommand(() -> m_robotLime.limeOff()));
+            .whenPressed(new RunCommand(() -> m_robotStorage.runStorage(-1), m_robotStorage))
+            .whenReleased(new InterruptSubystem(m_robotStorage));
+
+        // shoots one ball
+        new JoystickButton(getOperatorJoystick(), XboxController.LEFT_BUMPER_BUTTON)
+            //.whenPressed(new ShootFullGroup(m_robotShooter, m_robotShooterAim, m_robotShooterHood, m_robotStorage), false);
+            //.whenReleased(new ManageStorage(m_robotStorage, StorageMode.RESET));
+            //.whenReleased(new RunCommand(() -> m_robotLime.limeOff()));
+            .whenPressed(new RunCommand(() -> m_robotStorage.runStorage(1.0), m_robotStorage))
+            .whenReleased(new InterruptSubystem(m_robotStorage));
+
+        // extends or retracts the extender
+        new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
+            .whileHeld(new RunCommand(() -> m_robotIntake.runExtender(0.5)))
+            .whenReleased(new InstantCommand(() -> m_robotIntake.runExtender(0)));
+            //.whileHeld(new RunCommand(() -> m_robotShooterHood.runHood(0.2), m_robotShooterHood));
+
+        new JoystickButton(getOperatorJoystick(), XboxController.Y_BUTTON)
+            .whileHeld(new RunCommand(() -> m_robotIntake.runExtender(-0.5)))
+            .whenReleased(new InstantCommand(() -> m_robotIntake.runExtender(0)));
+            //.whileHeld(new RunCommand(() -> m_robotShooterHood.runHood(-0.2), m_robotShooterHood));
+
+        // safety for climber and leveler
+        new JoystickButton(getOperatorJoystick(), XboxController.BACK_BUTTON)
+            .whenPressed(new InstantCommand(() -> m_robotClimber.setSafetyPressed(), m_robotClimber))
+            .whenReleased(new InstantCommand(() -> m_robotClimber.setSafetyNotPressed(), m_robotClimber));
+
+        // starts tracking target
+        new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
+            .whileHeld(new TrackTarget(m_robotShooterAim))
+            .whileHeld(new RunCommand(() -> m_robotShooterHood.runAngleAdjustPID(m_robotShooterHood.addFireAngle())))
+            .whenReleased(new InstantCommand(() -> m_robotLime.limeOff()));
+
+            //.whileHeld(new RunCommand(() -> m_robotShooterAim.runshooterRotatePID()));
+            //.whileHeld(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(11000)));
+            //.whileHeld(new HoldTarget(m_robotShooter, m_robotShooterAim))
+            //.whileHeld(new RunCommand(() -> m_robotShooter.runAngleAdjustPID(30)));
+
+        //Trims shooter
+        new JoystickButton(getOperatorJoystick(), XboxController.TOP_BOTTOM_DPAD_AXIS)
+            .whenPressed(new TrimShooter(m_robotShooter));
+
+        //Calibrates turret and hood
+        new JoystickButton(getOperatorJoystick(), XboxController.START_BUTTON)
+            .whileHeld(new CalibrateShooter(m_robotShooter, m_robotShooterAim, m_robotShooterHood));
+
+
+
+        //Run drum
+        new JoystickManualButton(getOperatorJoystick(), XboxController.B_BUTTON, false)
+            .whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotShooterHood, m_robotStorage), false)
+            //.whenReleased(new ManageStorage(m_robotStorage, StorageMode.RESET))
+            .whenReleased(new InstantCommand(() -> m_robotLime.limeOff()));
+
+        //Run drum manual
+        new JoystickManualButton(getOperatorJoystick(), XboxController.B_BUTTON, true)
+            .whileHeld(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(10000)))
+            .whenReleased(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(0)));
+
+
+
+        /* Button Box */
         // Storage Manual
         new JoystickButton(getButtonFox(), ButtonFox.LEFT_SWITCH)
             .whenPressed(new InstantCommand(() -> m_robotStorage.changeStorageMode(StorageMode.MANUAL)))
