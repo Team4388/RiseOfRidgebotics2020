@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -163,6 +164,7 @@ public class RobotContainer {
     }
 
     public void setControls(Mode mode) {
+        CommandScheduler.getInstance().clearButtons();
         switch (mode) {
             case COMPETITIVE:
                 System.out.println("COMP CONTROLS");
@@ -386,22 +388,7 @@ public class RobotContainer {
         /* Test Buttons */
 
         // A driver test button
-        new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-            .whileHeld(new ShooterTrenchPosition(m_robotShooter, m_robotShooterHood, m_robotShooterAim))
-            .whenReleased(new InterruptSubystem(m_robotShooter))
-            .whenReleased(new InterruptSubystem(m_robotShooterHood));
-
-        // B driver test button
-        new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
-            .whileHeld(new RunCommand(() -> m_robotDrive.runDriveVelocityPID(2000, 45), m_robotDrive));
-
-        // Y driver test button
-        new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
-            .whenPressed(new InstantCommand(() -> m_robotDrive.runTurningPID(1000), m_robotDrive));
-
-        // X driver test button
-        new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
-            .whenPressed(new InstantCommand());
+    
 
         new JoystickButton(getDriverJoystick(), XboxController.START_BUTTON)
             .whenPressed(new InstantCommand(Mode::toggle));
@@ -415,9 +402,8 @@ public class RobotContainer {
         new JoystickButton(getDriverJoystick(), XboxController.LEFT_BUMPER_BUTTON)
             .whenPressed(new InstantCommand(() -> m_robotPneumatics.setShiftState(false), m_robotDrive));
 
-        // Disengages the rachet to allow for a climb
-        new JoystickButton(getDriverJoystick(), XboxController.BACK_BUTTON)
-            .whileHeld(new DisengageRachet(m_robotClimber));
+        
+       
 
         /* Operator Buttons */
         // shoots until released
@@ -452,11 +438,8 @@ public class RobotContainer {
             .whenPressed(new InstantCommand(() -> m_robotClimber.setSafetyPressed(), m_robotClimber))
             .whenReleased(new InstantCommand(() -> m_robotClimber.setSafetyNotPressed(), m_robotClimber));
 
-        // starts tracking target
-        new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
-            .whileHeld(new TrackTarget(m_robotShooterAim))
-            .whileHeld(new RunCommand(() -> m_robotShooterHood.runAngleAdjustPID(m_robotShooterHood.addFireAngle())))
-            .whenReleased(new InstantCommand(() -> m_robotLime.limeOff()));
+        
+        
 
             //.whileHeld(new RunCommand(() -> m_robotShooterAim.runshooterRotatePID()));
             //.whileHeld(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(11000)));
@@ -473,15 +456,11 @@ public class RobotContainer {
 
 
 
-        //Run drum
-        new JoystickManualButton(getOperatorJoystick(), XboxController.B_BUTTON, false)
-            .whileHeld(new ShootPrepGroup(m_robotShooter, m_robotShooterAim, m_robotShooterHood, m_robotStorage), false)
-            //.whenReleased(new ManageStorage(m_robotStorage, StorageMode.RESET))
-            .whenReleased(new InstantCommand(() -> m_robotLime.limeOff()));
+        
 
         //Run drum manual
-        new JoystickManualButton(getOperatorJoystick(), XboxController.B_BUTTON, true)
-            .whileHeld(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(10000)))
+        new JoystickManualButton(getOperatorJoystick(), XboxController.A_BUTTON, true)
+            .whileHeld(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(6000)))
             .whenReleased(new RunCommand(() -> m_robotShooter.runDrumShooterVelocityPID(0)));
 
 
