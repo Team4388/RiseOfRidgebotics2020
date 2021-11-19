@@ -285,8 +285,4 @@ public final class Constants {
         public static final int XBOX_OPERATOR_ID = 1;
         public static final int BUTTON_FOX_ID = 2;
     }
-
-    public static final class MathConstants {
-        public static final double PI_2 = Math.PI / 2;
-    }
 }

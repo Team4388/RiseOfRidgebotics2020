@@ -8,10 +8,7 @@
 package frc4388.robot.commands.drive;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc4388.robot.Constants;
-import frc4388.robot.Robot;
 import frc4388.robot.Constants.DriveConstants;
-import frc4388.robot.Constants.MathConstants;
 import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.Pneumatics;
 import frc4388.utility.controller.IHandController;
@@ -47,38 +44,11 @@ public class DriveWithJoystick extends CommandBase {
   public void execute() {
     double moveInput = m_controller.getLeftYAxis() * DriveConstants.DRIVE_WITH_JOYSTICK_FACTOR;
     double steerInput = m_controller.getRightXAxis() * DriveConstants.DRIVE_WITH_JOYSTICK_FACTOR;
-
-    double moveOutput = (moveInput >= 0 ? -1 : 1) * (Math.cos(MathConstants.PI_2 * moveInput) - 1);
+    double moveOutput = Math.copySign(1 - Math.cos(Math.PI * moveInput / 2), moveInput);
     double cosMultiplier = m_pneumatics.m_isSpeedShiftHigh ? DriveConstants.COS_MULTIPLIER_HIGH : DriveConstants.COS_MULTIPLIER_LOW;
     double deadzone = 0.1;
-    double steerOutput = (steerInput == 0 ? 0 : (steerInput > 0 ? -1 : 1)) * (Math.cos(MathConstants.PI_2 * steerInput) * (cosMultiplier - deadzone) + cosMultiplier);
-
-    /*
-    double outputLimit = 0.8;
-
-    boolean isMoveOutputLimited = false;
-    boolean isSteerOutputLimited = false;
-    
-    if (m_pneumatics.m_isSpeedShiftHigh) {
-      if (isMoveOutputLimited) {
-        if (moveOutput > outputLimit) {
-          moveOutput = outputLimit;
-        } else if(moveOutput < -outputLimit) {
-          moveOutput = -outputLimit;
-        }
-      }
-
-      if (isSteerOutputLimited) {
-        if (steerOutput > outputLimit) {
-          steerOutput = outputLimit;
-        } else if(steerOutput < -outputLimit) {
-          steerOutput = -outputLimit;
-        }
-      }
-    } 
-  */
-    
-    m_drive.driveWithInput(moveOutput, steerOutput * .8);
+    double steerOutput = Math.copySign(Math.cos(Math.PI * steerInput / 2) * (deadzone - cosMultiplier) + cosMultiplier, steerInput);
+    m_drive.driveWithInput(moveOutput, steerOutput * 0.8);
   }
 
   // Called once the command ends or is interrupted.
