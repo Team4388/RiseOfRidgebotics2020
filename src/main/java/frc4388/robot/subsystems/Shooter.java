@@ -21,9 +21,11 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants;
+import frc4388.robot.Robot;
 import frc4388.robot.Constants.ShooterConstants;
 import frc4388.utility.CSV;
 import frc4388.utility.Trims;
@@ -102,7 +104,7 @@ public class Shooter extends SubsystemBase {
         csv.read(new File(Filesystem.getDeployDirectory(), "Robot Data - Distances.csv").toPath()),
         csv.read(new File(Filesystem.getDeployDirectory(), "Robot Data - Distances Casual.csv").toPath())
       };
-      new Thread(() -> System.out.println(CSV.ReflectionTable.create(getActiveShooterTable()))).start();
+      new Thread(() -> System.out.println(CSV.ReflectionTable.create(getActiveShooterTable(), RobotBase.isSimulation()))).start();
     } catch (final IOException e) {
       throw new RuntimeException(e);
     }

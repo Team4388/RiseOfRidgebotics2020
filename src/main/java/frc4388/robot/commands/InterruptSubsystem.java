@@ -5,20 +5,18 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc4388.robot.commands.climber;
+package frc4388.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc4388.robot.subsystems.Climber;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class DisengageRachet extends CommandBase {
-  Climber m_climber;
-  
+public class InterruptSubsystem extends CommandBase {
   /**
-   * Creates a new DisengageRachet command.
+   * Creates a new InterruptSubsystem.
    */
-  public DisengageRachet(Climber subsystem) {
+  public InterruptSubsystem(SubsystemBase subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_climber = subsystem;
+    addRequirements(subsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -29,10 +27,6 @@ public class DisengageRachet extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (m_climber.m_climberSafety) {
-      m_climber.shiftServo(false);
-      System.err.println("Disengage Rachet");
-    }
   }
 
   // Called once the command ends or is interrupted.

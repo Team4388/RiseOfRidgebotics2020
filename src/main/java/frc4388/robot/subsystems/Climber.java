@@ -27,7 +27,7 @@ public class Climber extends SubsystemBase {
   //Spark m_spark = new Spark(4);
 
   public boolean m_climberSafety = false;
-  public boolean m_isRachetEngaged = true;
+  public boolean m_isRatchetEngaged = true;
 
   /**
    * Creates a new Climber.
@@ -50,7 +50,7 @@ public class Climber extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putBoolean("Climber Safety", m_climberSafety);
-    SmartDashboard.putBoolean("Rachet", m_isRachetEngaged);
+    SmartDashboard.putBoolean("Rachet", m_isRatchetEngaged);
   }
 
   /**
@@ -80,7 +80,7 @@ public class Climber extends SubsystemBase {
   }
 
   /**
-   * @param shift true to enage rachet, false to disengage
+   * @param shift true to engage ratchet, false to disengage
    */
   public void shiftServo(boolean shift) {
     if (shift) {
@@ -88,6 +88,6 @@ public class Climber extends SubsystemBase {
     } else {
       m_servo.setPosition(0.56);
     }        
-    m_isRachetEngaged = shift;
+    m_isRatchetEngaged = shift;
   }
 }

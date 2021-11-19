@@ -7,14 +7,10 @@
 
 package frc4388.robot;
 
-import java.util.function.Supplier;
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
-import edu.wpi.first.wpilibj.smartdashboard.SendableBuilderImpl;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -46,11 +42,11 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    SmartDashboard.putString("Is Auto Start?", "NAH");
     Mode.set(Mode.COMPETITIVE);
     m_modeChooser.setDefaultOption(Mode.COMPETITIVE.name(), Mode.COMPETITIVE);
     m_modeChooser.addOption(Mode.CASUAL.name(), Mode.CASUAL);
     SmartDashboard.putData("Mode", m_modeChooser);
+    SmartDashboard.putString("Is Auto Start?", "NAH");
   }
 
   /**
@@ -141,7 +137,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.setDriveNeutralMode(NeutralMode.Brake);
     m_robotContainer.setDriveGearState(true);
 
-    m_robotContainer.shiftClimberRachet(false);
+    m_robotContainer.shiftClimberRatchet(false);
     //m_robotContainer.configDriveTrainSensors(FeedbackDevice.IntegratedSensor);
     
     // This makes sure that the autonomous stops running when
@@ -160,16 +156,5 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-  }
-
-  @Override
-  public void testInit() {
-  }
-
-  /**
-   * This function is called periodically during test mode.
-   */
-  @Override
-  public void testPeriodic() {
   }
 }
