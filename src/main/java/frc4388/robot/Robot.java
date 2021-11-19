@@ -13,6 +13,9 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SendableBuilderImpl;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -33,6 +36,7 @@ public class Robot extends TimedRobot {
   double m_currentTime;
   double m_deltaTime;
   
+  SendableChooser<Mode> m_modeChooser = new SendableChooser<>();
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -43,6 +47,10 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     SmartDashboard.putString("Is Auto Start?", "NAH");
+    Mode.set(Mode.COMPETITIVE);
+    m_modeChooser.setDefaultOption(Mode.COMPETITIVE.name(), Mode.COMPETITIVE);
+    m_modeChooser.addOption(Mode.CASUAL.name(), Mode.CASUAL);
+    SmartDashboard.putData("Mode", m_modeChooser);
   }
 
   /**
@@ -80,6 +88,8 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {
     m_robotContainer.resetOdometry(new Pose2d());
     m_robotContainer.idenPath();
+    if (m_modeChooser.getSelected() != Mode.get())
+      Mode.set(m_modeChooser.getSelected());
   }
 
   /**
@@ -87,7 +97,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    Mode.set(Mode.COMPETITIVE);
     //m_robotContainer.buildAutos();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
@@ -129,7 +138,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    Mode.set(Mode.COMPETITIVE);
     m_robotContainer.setDriveNeutralMode(NeutralMode.Brake);
     m_robotContainer.setDriveGearState(true);
 
@@ -156,7 +164,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
-    Mode.set(Mode.CASUAL);
   }
 
   /**

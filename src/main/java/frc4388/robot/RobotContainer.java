@@ -271,9 +271,6 @@ public class RobotContainer {
         new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
             .whenPressed(new InstantCommand());
 
-        new JoystickButton(getDriverJoystick(), XboxController.START_BUTTON)
-            .whenPressed(new InstantCommand(Mode::toggle));
-
         /* Driver Buttons */
         // sets solenoids into high gear
         new JoystickButton(getDriverJoystick(), XboxController.RIGHT_BUMPER_BUTTON)
@@ -389,9 +386,6 @@ public class RobotContainer {
 
         // A driver test button
     
-
-        new JoystickButton(getDriverJoystick(), XboxController.START_BUTTON)
-            .whenPressed(new InstantCommand(Mode::toggle));
 
         /* Driver Buttons */
         // sets solenoids into high gear

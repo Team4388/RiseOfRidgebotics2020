@@ -8,12 +8,14 @@
 package frc4388.robot;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.Vector;
 import java.util.function.Consumer;
 
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc4388.utility.Gains;
 import frc4388.utility.LEDPatterns;
 
@@ -29,18 +31,25 @@ import frc4388.utility.LEDPatterns;
 public final class Constants {
     public enum Mode {
         COMPETITIVE, CASUAL;
-        private static Mode mode;
+
+        private static Mode mode = Mode.COMPETITIVE;
         private static Vector<Consumer<Mode>> changeHandlers = new Vector<>();
+
         public static void register(Consumer<Mode> changeHandler) {
             changeHandlers.add(changeHandler);
         }
+
         public static Mode get() {
             return mode;
         }
+
         public static void set(Mode mode) {
-            Mode.mode = mode;
+            System.out.println(mode);
             int i = mode.ordinal();
-            // changeHandlers.forEach(c -> c.accept(mode));
+            Mode.mode = mode;
+            CommandScheduler.getInstance().disable();
+            changeHandlers.forEach(c -> c.accept(mode));
+            CommandScheduler.getInstance().enable();
             DriveConstants.DRIVE_WITH_JOYSTICK_FACTOR = DriveConstants.DRIVE_WITH_JOYSTICK_FACTOR_MODES[i];
             IntakeConstants.INTAKE_SPEED = IntakeConstants.INTAKE_SPEED_MODES[i];
             StorageConstants.STORAGE_SPEED = StorageConstants.STORAGE_SPEED_MODES[i];
@@ -50,7 +59,6 @@ public final class Constants {
             Mode[] values = values();
             i = i >= values.length ? 0 : i;
             set(values[i]);
-            System.out.println(mode);
         }
     }
 
