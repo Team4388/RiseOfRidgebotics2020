@@ -49,6 +49,7 @@ public final class Constants {
       changeHandlers.forEach(c -> c.accept(mode));
       CommandScheduler.getInstance().enable();
       DriveConstants.DRIVE_WITH_JOYSTICK_FACTOR = DriveConstants.DRIVE_WITH_JOYSTICK_FACTOR_MODES[i];
+      DriveConstants.STEER_WITH_JOYSTICK_FACTOR = DriveConstants.STEER_WITH_JOYSTICK_FACTOR_MODES[i];
       IntakeConstants.INTAKE_SPEED = IntakeConstants.INTAKE_SPEED_MODES[i];
       StorageConstants.STORAGE_SPEED = StorageConstants.STORAGE_SPEED_MODES[i];
     }
@@ -101,7 +102,9 @@ public final class Constants {
     public static final int DRIVE_CRUISE_VELOCITY = 30000;
     public static final int DRIVE_ACCELERATION = 23000;
 
-    private static final double[] DRIVE_WITH_JOYSTICK_FACTOR_MODES = { 1.0, 0.8 };
+    private static final double[] STEER_WITH_JOYSTICK_FACTOR_MODES = { 1.0, 0.9 };
+    public static double STEER_WITH_JOYSTICK_FACTOR;
+    private static final double[] DRIVE_WITH_JOYSTICK_FACTOR_MODES = { 1.0, 0.7 };
     public static double DRIVE_WITH_JOYSTICK_FACTOR;
 
     public static final Gains DRIVE_DISTANCE_GAINS_HIGH = new Gains(0.1, 0.0, 0.0, 0.0, 0, 0.5);

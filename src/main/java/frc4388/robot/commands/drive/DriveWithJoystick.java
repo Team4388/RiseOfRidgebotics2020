@@ -43,7 +43,7 @@ public class DriveWithJoystick extends CommandBase {
   @Override
   public void execute() {
     double moveInput = m_controller.getLeftYAxis() * DriveConstants.DRIVE_WITH_JOYSTICK_FACTOR;
-    double steerInput = m_controller.getRightXAxis() * DriveConstants.DRIVE_WITH_JOYSTICK_FACTOR;
+    double steerInput = m_controller.getRightXAxis() * DriveConstants.STEER_WITH_JOYSTICK_FACTOR;
     double moveOutput = Math.copySign(1 - Math.cos(Math.PI * moveInput / 2), moveInput);
     double cosMultiplier = m_pneumatics.m_isSpeedShiftHigh ? DriveConstants.COS_MULTIPLIER_HIGH : DriveConstants.COS_MULTIPLIER_LOW;
     double deadzone = 0.1;
