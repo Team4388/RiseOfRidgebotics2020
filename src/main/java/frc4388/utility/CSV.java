@@ -8,7 +8,6 @@
 package frc4388.utility;
 
 import java.awt.Color;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.invoke.MethodHandleProxies;
@@ -26,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
@@ -159,8 +157,8 @@ public class CSV<R> {
       return rows.stream().map(row -> IntStream.range(0, row.size()).mapToObj(i -> String.format(formatFormat.format(new Object[] { row.get(i).padRight ? "-" : "", columnWidths[i], row.get(i).escape, RESET_STYLE }), row.get(i).string)).collect(Collectors.joining("|"))).collect(Collectors.joining(LF));
     }
 
-    private static final Color GRADIENT_MIN = new Color(0x00, 0x33, 0x00);
-    private static final Color GRADIENT_MAX = new Color(0x00, 0xFF, 0x00);
+    private static final Color GRADIENT_MIN = new Color(0x00, 0x99, 0x00);
+    private static final Color GRADIENT_MAX = new Color(0x66, 0xFF, 0x66);
     private static final String CONTROL = "\033";
     private static final String CSI = "[";
     private static final String LF = "\n";

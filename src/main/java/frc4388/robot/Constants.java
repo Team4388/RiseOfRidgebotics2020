@@ -53,13 +53,6 @@ public final class Constants {
       IntakeConstants.INTAKE_SPEED = IntakeConstants.INTAKE_SPEED_MODES[i];
       StorageConstants.STORAGE_SPEED = StorageConstants.STORAGE_SPEED_MODES[i];
     }
-
-    public static void toggle() {
-      int i = mode.ordinal() + 1;
-      Mode[] values = values();
-      i = i >= values.length ? 0 : i;
-      set(values[i]);
-    }
   }
 
   public static final int SELECTED_AUTO = 0;
@@ -102,10 +95,10 @@ public final class Constants {
     public static final int DRIVE_CRUISE_VELOCITY = 30000;
     public static final int DRIVE_ACCELERATION = 23000;
 
-    private static final double[] STEER_WITH_JOYSTICK_FACTOR_MODES = { 1.0, 0.9 };
-    public static double STEER_WITH_JOYSTICK_FACTOR;
     private static final double[] DRIVE_WITH_JOYSTICK_FACTOR_MODES = { 1.0, 0.7 };
     public static double DRIVE_WITH_JOYSTICK_FACTOR;
+    private static final double[] STEER_WITH_JOYSTICK_FACTOR_MODES = { 1.0, 0.9 };
+    public static double STEER_WITH_JOYSTICK_FACTOR;
 
     public static final Gains DRIVE_DISTANCE_GAINS_HIGH = new Gains(0.1, 0.0, 0.0, 0.0, 0, 0.5);
     public static final Gains DRIVE_VELOCITY_GAINS_HIGH = new Gains(0.1, 0.0, 0.0, 0.0, 0, 1.0);
