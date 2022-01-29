@@ -275,6 +275,11 @@ public final class Constants {
     public static final double[] bBlue = { 5.5, 13.3 };
   }
 
+  // for vision odo proto
+  public static final class VOPConstants {
+    public static final double TARGET_HEIGHT = 1.d;
+  }
+
   public static final class OIConstants {
     public static final int XBOX_DRIVER_ID = 0;
     public static final int XBOX_OPERATOR_ID = 1;

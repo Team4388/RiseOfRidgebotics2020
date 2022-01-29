@@ -41,14 +41,36 @@ public class LimeLight extends SubsystemBase {
   {
     return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0);
   }
+
   public double getX()
   {
     return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
   }
+
   public double getY()
   {
     return NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
   }
+
+  // for VOP
+  public double[] getVArray()
+  {
+    double[] defaultValue = new double[0];
+    return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDoubleArray(defaultValue);
+  }
+
+  public double[] getXArray()
+  {
+    double[] defaultValue = new double[0];
+    return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDoubleArray(defaultValue);
+  }
+
+  public double[] getYArray()
+  {
+    double[] defaultValue = new double[0];
+    return NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDoubleArray(defaultValue);
+  }
+  // end VOP
 
   int i = 0;
   boolean onceThrough = false;
