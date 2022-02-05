@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpiutil.math.Matrix;
 import edu.wpi.first.wpiutil.math.Nat;
 import edu.wpi.first.wpiutil.math.Num;
 import edu.wpi.first.wpiutil.math.VecBuilder;
@@ -97,7 +96,7 @@ public class VisionUpdateOdometry extends CommandBase {
    * ax^2 - bxy + cy^2 - dx + fy - g = 0
    */
   public static double[] getEllipseRadii(double[] xPoints, double[] yPoints) {
-    double[][] matrix = new double[5][6];
+    double[][] matrix = new double[6][5];
 
     // Generate matrix
     for(int i = 0; i < 5; i++) {
@@ -109,7 +108,60 @@ public class VisionUpdateOdometry extends CommandBase {
       matrix[i][5] = 1.d;
     }
 
+    double[] coeficients = new double[6];
+    int pos = 1;
+    for(int i = 0; i < 6; i++) {
+      double[][] cofactor = new double[matrix.length - 1][matrix.length - 1];
+
+      int y = 0;
+      for(int row = 0; row < matrix.length; row++) { // I have reproduced the cofactor code because the matricies are structured differently
+        int x = 0;
+        for(int col = 0; col < matrix.length; col++) {
+          if(col != i) {
+            cofactor[y][x] = matrix[row][col];
+            x += 1;
+          }
+        }
+        y += 1;
+      }
+
+      coeficients[i] = pos * determinant(cofactor);
+      pos *= -1;
+    }
+    
     return null;
+  }
+
+  public static double determinant(double[][] matrix) {
+    if(matrix.length == 2) {
+      return (matrix[0][0] * matrix[1][1]) - (matrix[0][1] * matrix[1][0]);
+    } else {
+      double sum = 0;
+      int pos = 1;
+
+      for(int i = 0; i < matrix.length; i++) {
+        double[][] cofactor = new double[matrix.length - 1][matrix.length - 1];
+
+        int y = 0;
+        for(int row = 1; row < matrix.length; row++) {
+          int x = 0;
+          for(int col = 0; col < matrix.length; col++) {
+            if(col != i) {
+              cofactor[y][x] = matrix[row][col];
+              x += 1;
+            }
+          }
+          y += 1;
+        }
+
+
+        sum += pos * determinant(cofactor);
+
+        pos *= -1;
+      }
+
+      return sum;
+    }
   }
 
   // Returns true when the command should end.
