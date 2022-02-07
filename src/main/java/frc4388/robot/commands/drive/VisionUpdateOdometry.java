@@ -30,6 +30,9 @@ public class VisionUpdateOdometry extends CommandBase {
   private double xPos;
   private double yPos;
 
+  private Rotation2d rotation;
+  private Translation2d translate;
+
   /**
    * Uses the lime light to update odometry
    * @param limeLight  replace with Vision subsystem for integration with 2022
@@ -72,11 +75,13 @@ public class VisionUpdateOdometry extends CommandBase {
     distance *= VOPConstants.TARGET_HEIGHT; // replace with VisionConstants for 2022
 
     double[] ypr = new double[3];
-    Drive.m_pigeon.getYawPitchRoll(ypr);
+    Drive.m_pigeon.getYawPitchRoll(ypr); // Replace static reference to pigeon with SwerveDrive object for 2022
     double relativeAngle = Math.toDegrees(m_shooterAim.getShooterAngleDegrees() - ypr[0]);
+    rotation = new Rotation2d(ypr[0]);
 
     xPos = Math.cos(relativeAngle) * distance;
     yPos = Math.sin(relativeAngle) * distance;
+    translate = new Translation2d(xPos, yPos);
   }
 
   // http://www.lee-mac.com/5pointellipse.html
@@ -85,13 +90,13 @@ public class VisionUpdateOdometry extends CommandBase {
   // https://www.desmos.com/calculator/ounqguxjac
   // https://en.wikipedia.org/wiki/Five_points_determine_a_conic
 
-  /* solves the following matrix
-   *    | x0^2 x0y0 y0^2 x0 y0 1 |
-   *    | x1^2 x1y1 y1^2 x1 y1 1 |
-   * det| x2^2 x2y2 y2^2 x2 y2 1 | = 0
-   *    | x3^2 x3y3 y3^2 x3 y3 1 |
-   *    | x4^2 x4y4 y4^2 x4 y4 1 |
-   *    | x5^2 x5y5 y5^2 x5 y5 1 |
+  /* solves the determinant of the following matrix
+   * | x0^2 x0y0 y0^2 x0 y0 1 |
+   * | x1^2 x1y1 y1^2 x1 y1 1 |
+   * | x2^2 x2y2 y2^2 x2 y2 1 | = 0
+   * | x3^2 x3y3 y3^2 x3 y3 1 |
+   * | x4^2 x4y4 y4^2 x4 y4 1 |
+   * | x5^2 x5y5 y5^2 x5 y5 1 |
    * for conic equation
    * ax^2 - bxy + cy^2 - dx + fy - g = 0
    */
@@ -111,21 +116,9 @@ public class VisionUpdateOdometry extends CommandBase {
     double[] coeficients = new double[6];
     int pos = 1;
     for(int i = 0; i < 6; i++) {
-      double[][] cofactor = new double[matrix.length - 1][matrix.length - 1];
-
-      int y = 0;
-      for(int row = 0; row < matrix.length; row++) { // I have reproduced the cofactor code because the matricies are structured differently
-        int x = 0;
-        for(int col = 0; col < matrix.length; col++) {
-          if(col != i) {
-            cofactor[y][x] = matrix[row][col];
-            x += 1;
-          }
-        }
-        y += 1;
-      }
-
+      double[][] cofactor = cofactor(matrix, -1, i);
       coeficients[i] = pos * determinant(cofactor);
+    
       pos *= -1;
     }
     
@@ -140,21 +133,7 @@ public class VisionUpdateOdometry extends CommandBase {
       int pos = 1;
 
       for(int i = 0; i < matrix.length; i++) {
-        double[][] cofactor = new double[matrix.length - 1][matrix.length - 1];
-
-        int y = 0;
-        for(int row = 1; row < matrix.length; row++) {
-          int x = 0;
-          for(int col = 0; col < matrix.length; col++) {
-            if(col != i) {
-              cofactor[y][x] = matrix[row][col];
-              x += 1;
-            }
-          }
-          y += 1;
-        }
-
-
+        double[][] cofactor = cofactor(matrix, 0, i);
         sum += pos * determinant(cofactor);
 
         pos *= -1;
@@ -164,17 +143,37 @@ public class VisionUpdateOdometry extends CommandBase {
     }
   }
 
+  public static double[][] cofactor(double[][] matrix, int row, int col) {
+    double[][] cofactor = new double[matrix.length - 1][matrix.length - 1];
+
+    // comments mostly for decoration
+
+    // row count without the excluded row
+    int y = 0;
+    for(int r = 0; r < matrix.length; r++) {
+      // column count without the excluded column
+      int x = 0;
+      // doesn't add excluded row
+      if(r != row) {
+        for(int c = 0; c < matrix.length; c++) {
+          // doesn't add excluded column
+          if(c != col) {
+            cofactor[y][x] = matrix[r][c];
+            x++;
+          }
+        }
+        y++;
+      }
+    }
+
+    return cofactor;
+  }
+
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    Translation2d translate = new Translation2d(xPos, yPos);
-
-    double[] ypr = new double[3];
-    Drive.m_pigeon.getYawPitchRoll(ypr);
-    Rotation2d rotation = new Rotation2d(ypr[0]);
-
     Pose2d pose = new Pose2d(translate, rotation);
-    m_driveTrain.setOdometry(pose);
+    m_driveTrain.setOdometry(pose); // Replace with adding new pose to Kalman filter
 
     return false;
   }
