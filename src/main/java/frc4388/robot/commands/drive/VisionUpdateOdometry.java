@@ -122,7 +122,35 @@ public class VisionUpdateOdometry extends CommandBase {
       pos *= -1;
     }
     
-    return null;
+    double[] radii = new double[2];
+
+    // https://math.stackexchange.com/questions/280937/finding-the-angle-of-rotation-of-an-ellipse-from-its-general-equation-and-the-ot
+    double angle = Math.atan(coeficients[1] / (coeficients[0] - coeficients[2]));
+    angle /= 2.d;
+
+    // A' = Acos^2(angle) + Bcos(angle)sin(angle) + Csin^2(angle)
+    // B' = 0
+    // C' = Asin^2(angle) - Bcos(angle)sin(angle) + Ccos^2(angle)
+    // D' = Dcos(angle) + Esin(angle)
+    // E' = -Dsin(angle) + Ecos(angle)
+    // F' = F
+    double A_prime = coeficients[0] * Math.pow(Math.cos(angle), 2) + coeficients[1] * Math.cos(angle) * Math.sin(angle) + coeficients[2] * Math.pow(Math.sin(angle), 2);
+    double B_prime = 0;
+    double C_prime = coeficients[0] * Math.pow(Math.sin(angle), 2) + coeficients[1] * Math.cos(angle) * Math.sin(angle) + coeficients[2] * Math.pow(Math.cos(angle), 2);
+    double D_prime = coeficients[3] * Math.cos(angle) + coeficients[4] * Math.sin(angle);
+    double E_prime = -coeficients[3] * Math.sin(angle) + coeficients[4] * Math.cos(angle);
+    double F_prime = coeficients[5];
+
+    // r1^2 = (-4F'A'C'+C'D'^2+A'E'^2) / (4A'^2C')
+    radii[0] = -4 * F_prime * A_prime * C_prime + C_prime * Math.pow(D_prime, 2) + A_prime * Math.pow(E_prime, 2);
+    radii[0] /= 4 * Math.pow(A_prime, 2) * C_prime;
+    radii[0] = Math.sqrt(radii[0]);
+    // r2^2 = (-4F'A'C'+C'D'^2+A'E'^2) / (4A'C'^2)
+    radii[1] = -4 * F_prime * A_prime * C_prime + C_prime * Math.pow(D_prime, 2) + A_prime * Math.pow(E_prime, 2);
+    radii[1] = 4 * A_prime * Math.pow(C_prime, 2);
+    radii[1] = Math.sqrt(radii[1]);
+
+    return radii;
   }
 
   public static double determinant(double[][] matrix) {
