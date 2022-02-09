@@ -249,6 +249,8 @@ public final class Constants {
   }
 
   public static final class VisionConstants {
+    public static final String NAME = "limelight";
+
     public static final double FOV = 29.8; // Field of view of limelight
     public static final double TARGET_HEIGHT = 67.5;
     public static final double LIME_ANGLE = 24.7;

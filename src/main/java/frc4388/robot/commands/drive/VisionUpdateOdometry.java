@@ -1,10 +1,13 @@
 package frc4388.robot.commands.drive;
 
+import java.util.ArrayList;
+
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 
 import org.ejml.simple.SimpleMatrix;
 import org.opencv.core.Mat;
+import org.opencv.core.Point;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -21,9 +24,10 @@ import frc4388.robot.Constants.VisionConstants;
 import frc4388.robot.subsystems.Drive;
 import frc4388.robot.subsystems.LimeLight;
 import frc4388.robot.subsystems.ShooterAim;
+import frc4388.robot.subsystems.Vision;
 
 public class VisionUpdateOdometry extends CommandBase {
-  private LimeLight m_limeLight;
+  private Vision m_limeLight;
   private ShooterAim m_shooterAim;
   private Drive m_driveTrain;
 
@@ -39,30 +43,39 @@ public class VisionUpdateOdometry extends CommandBase {
    * @param shooterAim replace with Turret subsystem for integration with 2022
    * @param driveTrain replace with Swerve subsystem for integration with 2022
    */
-  public VisionUpdateOdometry(LimeLight limeLight, ShooterAim shooterAim, Drive driveTrain) {
+  public VisionUpdateOdometry(Vision limeLight, ShooterAim shooterAim, Drive driveTrain) {
     m_limeLight = limeLight;
     m_shooterAim = shooterAim;
     m_driveTrain = driveTrain;
     addRequirements(m_limeLight, m_shooterAim, m_driveTrain);
 
-    // Turn camera on but leave LEDs off
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1);
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(0);
+    // // Turn camera on but leave LEDs off
+    // NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1);
+    // NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(0);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     // Vision Processing Mode
-    m_limeLight.limeOn();
-    m_limeLight.changePipeline(0);
+    m_limeLight.setLEDs(true);
+    // m_limeLight.changePipeline(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double[] xPoints = m_limeLight.getXArray();
-    double[] yPoints = m_limeLight.getYArray();
+    ArrayList<Point> points = m_limeLight.getTargetPoints();
+    if(points.size() < 5)
+      System.out.println("not enough points");
+
+    double[] xPoints = new double[5];
+    double[] yPoints = new double[5];
+
+    for(int i = 0; i < 5; i++) {
+      xPoints[i] = points.get(i).x;
+      yPoints[i] = points.get(i).y;
+    }
 
     double[] ellipseRadii = getEllipseRadii(xPoints, yPoints);
 
@@ -82,13 +95,15 @@ public class VisionUpdateOdometry extends CommandBase {
     xPos = Math.cos(relativeAngle) * distance;
     yPos = Math.sin(relativeAngle) * distance;
     translate = new Translation2d(xPos, yPos);
+
+    Pose2d pose = new Pose2d(translate, rotation);
+    m_driveTrain.setOdometry(pose); // Replace with adding new pose to Kalman filter
   }
 
   // http://www.lee-mac.com/5pointellipse.html
   // https://math.stackexchange.com/questions/163920/how-to-find-an-ellipse-given-five-points
   // https://towardsdatascience.com/understanding-singular-value-decomposition-and-its-application-in-data-science-388a54be95d
-  // https://www.desmos.com/calculator/ounqguxjac
-  // https://en.wikipedia.org/wiki/Five_points_determine_a_conic
+  // https://www.desmos.com/calculatoroe_points_determine_a_conic
 
   /* solves the determinant of the following matrix
    * | x0^2 x0y0 y0^2 x0 y0 1 |
@@ -200,9 +215,6 @@ public class VisionUpdateOdometry extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    Pose2d pose = new Pose2d(translate, rotation);
-    m_driveTrain.setOdometry(pose); // Replace with adding new pose to Kalman filter
-
-    return false;
+    return true;
   }
 }

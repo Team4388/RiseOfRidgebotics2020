@@ -49,6 +49,8 @@ import frc4388.robot.commands.climber.RunClimberWithTriggers;
 import frc4388.robot.commands.climber.RunLevelerWithJoystick;
 import frc4388.robot.commands.drive.DriveWithJoystick;
 import frc4388.robot.commands.drive.PlaySongDrive;
+import frc4388.robot.commands.drive.SetShooterToOdo;
+import frc4388.robot.commands.drive.VisionUpdateOdometry;
 import frc4388.robot.commands.intake.RunIntakeWithTriggers;
 import frc4388.robot.commands.shooter.CalibrateShooter;
 import frc4388.robot.commands.shooter.RunHoodWithJoystick;
@@ -70,6 +72,7 @@ import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.ShooterAim;
 import frc4388.robot.subsystems.ShooterHood;
 import frc4388.robot.subsystems.Storage;
+import frc4388.robot.subsystems.Vision;
 import frc4388.robot.subsystems.Storage.StorageMode;
 import frc4388.utility.controller.ButtonFox;
 import frc4388.utility.controller.IHandController;
@@ -98,6 +101,7 @@ public class RobotContainer {
   private final Camera m_robotCameraFront = new Camera("front", 0, 160, 120, 40);
   private final Camera m_robotCameraBack = new Camera("back", 1, 160, 120, 40);
   public final LimeLight m_robotLime = new LimeLight();
+  public final Vision m_robotVision = new Vision();
 
   /* Controllers */
   public boolean isGS = false;
@@ -221,10 +225,20 @@ public class RobotContainer {
     // extends or retracts the extender
     new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON).whileHeld(new RunCommand(() -> m_robotIntake.runExtender(0.5))).whenReleased(new InstantCommand(() -> m_robotIntake.runExtender(0)));
     // .whileHeld(new RunCommand(() -> m_robotShooterHood.runHood(0.2), m_robotShooterHood));
-    new JoystickButton(getOperatorJoystick(), XboxController.Y_BUTTON).whileHeld(new RunCommand(() -> m_robotIntake.runExtender(-0.5))).whenReleased(new InstantCommand(() -> m_robotIntake.runExtender(0)));
-    // .whileHeld(new RunCommand(() -> m_robotShooterHood.runHood(-0.2), m_robotShooterHood));
-    // safety for climber and leveler
-    new JoystickButton(getOperatorJoystick(), XboxController.BACK_BUTTON).whenPressed(new InstantCommand(m_robotClimber::setSafetyPressed, m_robotClimber)).whenReleased(new InstantCommand(m_robotClimber::setSafetyNotPressed, m_robotClimber));
+
+    // VOP system testing
+    new JoystickButton(getOperatorJoystick(), XboxController.Y_BUTTON)
+    .whenPressed(new SetShooterToOdo(m_robotShooterAim, m_robotDrive));
+
+    new JoystickButton(getOperatorJoystick(), XboxController.BACK_BUTTON)
+    .whenPressed(new VisionUpdateOdometry(m_robotVision, m_robotShooterAim, m_robotDrive));
+
+    // new JoystickButton(getOperatorJoystick(), XboxController.Y_BUTTON).whileHeld(new RunCommand(() -> m_robotIntake.runExtender(-0.5))).whenReleased(new InstantCommand(() -> m_robotIntake.runExtender(0)));
+    // // .whileHeld(new RunCommand(() -> m_robotShooterHood.runHood(-0.2), m_robotShooterHood));
+    // // safety for climber and leveler
+    // new JoystickButton(getOperatorJoystick(), XboxController.BACK_BUTTON).whenPressed(new InstantCommand(m_robotClimber::setSafetyPressed, m_robotClimber)).whenReleased(new InstantCommand(m_robotClimber::setSafetyNotPressed, m_robotClimber));
+
+
     // starts tracking target
     new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON).whileHeld(new TrackTarget(m_robotShooterAim)).whileHeld(new RunCommand(() -> m_robotShooterHood.runAngleAdjustPID(m_robotShooterHood.addFireAngle()))).whenReleased(new InstantCommand(m_robotLime::limeOff));
     // .whileHeld(new RunCommand(() -> m_robotShooterAim.runshooterRotatePID()));
