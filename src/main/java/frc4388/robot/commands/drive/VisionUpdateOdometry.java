@@ -23,14 +23,14 @@ import edu.wpi.first.wpiutil.math.numbers.N5;
 import edu.wpi.first.wpiutil.math.numbers.N6;
 import frc4388.robot.Constants.VOPConstants;
 import frc4388.robot.Constants.VisionConstants;
-import frc4388.robot.subsystems.Drive;
+// import frc4388.robot.subsystems.Drive;
 // import frc4388.robot.subsystems.ShooterAim_1;
 import frc4388.robot.subsystems.Vision;
 
 public class VisionUpdateOdometry extends CommandBase {
   private Vision m_limeLight;
   // private ShooterAim_1 m_shooterAim;
-  private Drive m_driveTrain;
+  // private Drive m_driveTrain;
 
   private double xPos;
   private double yPos;
@@ -44,11 +44,11 @@ public class VisionUpdateOdometry extends CommandBase {
    * @param shooterAim replace with Turret subsystem for integration with 2022
    * @param driveTrain replace with Swerve subsystem for integration with 2022
    */
-  public VisionUpdateOdometry(Vision limeLight, Drive driveTrain) {
+  public VisionUpdateOdometry(Vision limeLight) {
     m_limeLight = limeLight;
     // m_shooterAim = shooterAim;
-    m_driveTrain = driveTrain;
-    addRequirements(m_limeLight, m_driveTrain);
+    // m_driveTrain = driveTrain;
+    addRequirements(m_limeLight);//, m_driveTrain);
 
     // // Turn camera on but leave LEDs off
     // NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1);
@@ -90,16 +90,16 @@ public class VisionUpdateOdometry extends CommandBase {
     System.out.println("Never gonna give you up: " + distance);
 
     double[] ypr = new double[3];
-    Drive.m_pigeon.getYawPitchRoll(ypr); // Replace static reference to pigeon with SwerveDrive object for 2022
-    double relativeAngle = Math.toDegrees(/*m_shooterAim.getShooterAngleDegrees()*/ - ypr[0]);
-    rotation = new Rotation2d(ypr[0]);
+    // Drive.m_pigeon.getYawPitchRoll(ypr); // Replace static reference to pigeon with SwerveDrive object for 2022
+    double relativeAngle = 0;//Math.toDegrees(/*m_shooterAim.getShooterAngleDegrees()*/ - ypr[0]);
+    rotation = new Rotation2d(0);
 
     xPos = Math.cos(relativeAngle) * distance;
     yPos = Math.sin(relativeAngle) * distance;
     translate = new Translation2d(xPos, yPos);
 
     Pose2d pose = new Pose2d(translate, rotation);
-    m_driveTrain.setOdometry(pose); // Replace with adding new pose to Kalman filter
+    // m_driveTrain.setOdometry(pose); // Replace with adding new pose to Kalman filter
     SmartDashboard.putNumber("x:", pose.getX());
     SmartDashboard.putNumber("y:", pose.getY());
     m_limeLight.setLEDs(false);

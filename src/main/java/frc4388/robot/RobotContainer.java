@@ -47,8 +47,8 @@ import frc4388.robot.Constants.OIConstants;
 // import frc4388.robot.commands.climber.DisengageRatchet;
 // import frc4388.robot.commands.climber.RunClimberWithTriggers;
 // import frc4388.robot.commands.climber.RunLevelerWithJoystick;
-import frc4388.robot.commands.drive.DriveWithJoystick;
-import frc4388.robot.commands.drive.PlaySongDrive;
+// import frc4388.robot.commands.drive.DriveWithJoystick;
+// import frc4388.robot.commands.drive.PlaySongDrive;
 // import frc4388.robot.commands.drive.SetShooterToOdo;
 import frc4388.robot.commands.drive.VisionUpdateOdometry;
 // import frc4388.robot.commands.intake.RunIntakeWithTriggers;
@@ -62,12 +62,12 @@ import frc4388.robot.commands.drive.VisionUpdateOdometry;
 // import frc4388.robot.commands.storage.ManageStorage;
 import frc4388.robot.subsystems.Camera;
 // import frc4388.robot.subsystems.Climber;
-import frc4388.robot.subsystems.Drive;
+// import frc4388.robot.subsystems.Drive;
 // import frc4388.robot.subsystems.Intake;
 import frc4388.robot.subsystems.LED;
 // import frc4388.robot.subsystems.Leveler;
 // import frc4388.robot.subsystems.LimeLight;
-import frc4388.robot.subsystems.Pneumatics;
+// import frc4388.robot.subsystems.Pneumatics;
 // import frc4388.robot.subsystems.Shooter_1;
 // import frc4388.robot.subsystems.ShooterAim_1;
 // import frc4388.robot.subsystems.ShooterHood_1;
@@ -86,7 +86,7 @@ import frc4388.utility.controller.XboxController;
  */
 public class RobotContainer {
   /* Subsystems */
-  private final Drive m_robotDrive = new Drive();
+  // private final Drive m_robotDrive = new Drive();
   // private final Pneumatics m_robotPneumatics = new Pneumatics();
   private final LED m_robotLED = new LED();
   // private final Intake m_robotIntake = new Intake();
@@ -194,11 +194,11 @@ public class RobotContainer {
     // A driver test button
     // new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON).whileHeld(new ShooterTrenchPosition(m_robotShooter, m_robotShooterHood, m_robotShooterAim)).whenReleased(new InterruptSubsystem(m_robotShooter)).whenReleased(new InterruptSubsystem(m_robotShooterHood));
     // B driver test button
-    new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON).whileHeld(new RunCommand(() -> m_robotDrive.runDriveVelocityPID(2000, 45), m_robotDrive));
-    // Y driver test button
-    new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON).whenPressed(new InstantCommand(() -> m_robotDrive.runTurningPID(1000), m_robotDrive));
-    // X driver test button
-    new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON).whenPressed(new InstantCommand());
+    // new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON).whileHeld(new RunCommand(() -> m_robotDrive.runDriveVelocityPID(2000, 45), m_robotDrive));
+    // // Y driver test button
+    // new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON).whenPressed(new InstantCommand(() -> m_robotDrive.runTurningPID(1000), m_robotDrive));
+    // // X driver test button
+    // new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON).whenPressed(new InstantCommand());
     /* Driver Buttons */
     // sets solenoids into high gear
     // new JoystickButton(getDriverJoystick(), XboxController.RIGHT_BUMPER_BUTTON).whenPressed(new InstantCommand(() -> m_robotPneumatics.setShiftState(true), m_robotDrive));
@@ -230,8 +230,8 @@ public class RobotContainer {
     // new JoystickButton(getOperatorJoystick(), XboxController.Y_BUTTON)
     // .whenPressed(new SetShooterToOdo(m_robotShooterAim, m_robotDrive));
 
-    // new JoystickButton(getOperatorJoystick(), XboxController.BACK_BUTTON)
-    // .whenPressed(new VisionUpdateOdometry(m_robotVision, m_robotShooterAim, m_robotDrive));
+    new JoystickButton(getOperatorJoystick(), XboxController.Y_BUTTON)
+    .whenPressed(new VisionUpdateOdometry(m_robotVision));//, m_robotShooterAim, m_robotDrive));
 
     // new JoystickButton(getOperatorJoystick(), XboxController.Y_BUTTON).whileHeld(new RunCommand(() -> m_robotIntake.runExtender(-0.5))).whenReleased(new InstantCommand(() -> m_robotIntake.runExtender(0)));
     // // .whileHeld(new RunCommand(() -> m_robotShooterHood.runHood(-0.2), m_robotShooterHood));
@@ -381,15 +381,15 @@ public class RobotContainer {
   }
 
   //TODO
-  TrajectoryConfig getTrajectoryConfig() {
-    return new TrajectoryConfig(DriveConstants.MAX_SPEED_METERS_PER_SECOND, DriveConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
-        // Add kinematics to ensure max speed is actually obeyed
-        .setKinematics(DriveConstants.kDriveKinematics);
-  }
+  // TrajectoryConfig getTrajectoryConfig() {
+  //   return new TrajectoryConfig(DriveConstants.MAX_SPEED_METERS_PER_SECOND, DriveConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
+  //       // Add kinematics to ensure max speed is actually obeyed
+  //       .setKinematics(DriveConstants.kDriveKinematics);
+  // }
 
-  public RamseteCommand getRamseteCommand(Trajectory trajectory) {
-    return new RamseteCommand(trajectory, m_robotDrive::getPose, new RamseteController(), DriveConstants.kDriveKinematics, m_robotDrive::tankDriveVelocity, m_robotDrive);
-  }
+  // public RamseteCommand getRamseteCommand(Trajectory trajectory) {
+  //   return new RamseteCommand(trajectory, m_robotDrive::getPose, new RamseteController(), DriveConstants.kDriveKinematics, m_robotDrive::tankDriveVelocity, m_robotDrive);
+  // }
 
   public RamseteCommand[] buildPaths(String[] paths) {
     RamseteCommand[] ramseteCommands = new RamseteCommand[paths.length];
@@ -407,8 +407,8 @@ public class RobotContainer {
 
         Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
         initialTrajectory = trajectory;
-        RamseteCommand ramseteCommand = getRamseteCommand(trajectory.relativeTo(initialTrajectory.getInitialPose()));
-        ramseteCommands[0] = ramseteCommand;
+        // RamseteCommand ramseteCommand = getRamseteCommand(trajectory.relativeTo(initialTrajectory.getInitialPose()));
+        // ramseteCommands[0] = ramseteCommand;
         times[0] = initialTrajectory.getTotalTimeSeconds();
       }
 
@@ -417,8 +417,8 @@ public class RobotContainer {
         String trajectoryJSON = "paths/" + path + ".wpilib.json";
         Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
         Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-        RamseteCommand ramseteCommand = getRamseteCommand(trajectory.relativeTo(initialTrajectory.getInitialPose()));
-        ramseteCommands[i] = ramseteCommand;
+        // RamseteCommand ramseteCommand = getRamseteCommand(trajectory.relativeTo(initialTrajectory.getInitialPose()));
+        // ramseteCommands[i] = ramseteCommand;
         times[i] = trajectory.getTotalTimeSeconds();
       }
     } catch (Exception e) {
@@ -435,9 +435,9 @@ public class RobotContainer {
    * Sets Motors to a NeutralMode.
    * @param mode NeutralMode to set motors to
    */
-  public void setDriveNeutralMode(NeutralMode mode) {
-    m_robotDrive.setDriveTrainNeutralMode(mode);
-  }
+  // public void setDriveNeutralMode(NeutralMode mode) {
+  //   m_robotDrive.setDriveTrainNeutralMode(mode);
+  // }
 
   /**
    * Sets the gear of the drivetrain
@@ -451,13 +451,13 @@ public class RobotContainer {
   //   m_robotClimber.shiftServo(state);
   // }
 
-  public void resetOdometry(Pose2d pose) {
-    m_robotDrive.setOdometry(pose);
-  }
+  // public void resetOdometry(Pose2d pose) {
+  //   m_robotDrive.setOdometry(pose);
+  // }
 
-  public void resetGyroYawRobotContainer(double angle) {
-    m_robotDrive.resetGyroYaw(angle);
-  }
+  // public void resetGyroYawRobotContainer(double angle) {
+  //   m_robotDrive.resetGyroYaw(angle);
+  // }
 
   /**
    * Used for analog inputs like triggers and axises.

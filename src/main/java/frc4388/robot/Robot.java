@@ -73,7 +73,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
-    m_robotContainer.setDriveNeutralMode(NeutralMode.Coast);
+    // m_robotContainer.setDriveNeutralMode(NeutralMode.Coast);
     /* Builds Autos */
     m_robotContainer.buildAutos();
     SmartDashboard.putString("Is Auto Start?", "NAH");
@@ -82,7 +82,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    m_robotContainer.resetOdometry(new Pose2d());
+    // m_robotContainer.resetOdometry(new Pose2d());
     // m_robotContainer.idenPath();
     if (m_modeChooser.getSelected() != Mode.get())
       Mode.set(m_modeChooser.getSelected());
@@ -96,7 +96,7 @@ public class Robot extends TimedRobot {
     //m_robotContainer.buildAutos();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-    m_robotContainer.setDriveNeutralMode(NeutralMode.Coast);
+    // m_robotContainer.setDriveNeutralMode(NeutralMode.Coast);
     // m_robotContainer.setDriveGearState(true);
 
     m_initialTime = System.currentTimeMillis();
@@ -134,7 +134,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    m_robotContainer.setDriveNeutralMode(NeutralMode.Brake);
+    // m_robotContainer.setDriveNeutralMode(NeutralMode.Brake);
     // m_robotContainer.setDriveGearState(true);
 
     // m_robotContainer.shiftClimberRatchet(false);

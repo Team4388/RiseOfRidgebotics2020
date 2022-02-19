@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+// import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc4388.utility.Gains;
 import frc4388.utility.LEDPatterns;
@@ -113,7 +113,7 @@ public final class Constants {
     public static final double MAX_SPEED_METERS_PER_SECOND = 1.0;
     public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 1.0;
     public static final double TRACK_WIDTH_METERS = 0.648;
-    public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
+    // public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
 
     /* Remote Sensors */
     public static final int REMOTE_0 = 0;
