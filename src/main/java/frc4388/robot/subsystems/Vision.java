@@ -7,52 +7,34 @@
 
 package frc4388.robot.subsystems;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.opencv.core.Point;
-import org.photonvision.PhotonCamera;
-import org.photonvision.common.hardware.VisionLEDMode;
-import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
-import org.photonvision.targeting.TargetCorner;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc4388.robot.Constants.VisionConstants;
 
 public class Vision extends SubsystemBase {
-  private PhotonCamera m_camera;
 
   public Vision() {
-    m_camera = new PhotonCamera(VisionConstants.NAME);
+    // TODO
   }
 
   public ArrayList<Point> getTargetPoints() {
-    PhotonPipelineResult result = m_camera.getLatestResult();
-
-    if(!result.hasTargets())
+    if(NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0) != 1)
       return null;
     
     ArrayList<Point> points = new ArrayList<>();
 
-    for(PhotonTrackedTarget target : result.getTargets()) {
-      List<TargetCorner> corners = target.getCorners();
-
-      double centerY = 0;
-      for(TargetCorner corner : corners) {
-        centerY += corner.y;
-      }
-      centerY /= corners.size();
-
-      for(TargetCorner corner : corners) {
-        if(corner.y <= centerY)
-          points.add(new Point(corner.x, corner.y));
-      }
+    double[] corners = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tcornxy").getDoubleArray(new double[0]);
+    for(int i = 0; i < corners.length; i += 2*2) {
+      points.add(new Point(corners[i], corners[i+1]));
     }
 
     return points;
   }
 
   public void setLEDs(boolean on) {
-    m_camera.setLED(on ? VisionLEDMode.kOn : VisionLEDMode.kOff);
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(on ? 0 : 1);
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(on ? 3 : 1);
   }
 }

@@ -1,0 +1,14 @@
+{
+  "CameraPublisher": {
+    "limelight": {
+      "open": true
+    },
+    "open": true
+  },
+  "NetworkTables Settings": {
+    "mode": "Client"
+  },
+  "limelight": {
+    "open": true
+  }
+}

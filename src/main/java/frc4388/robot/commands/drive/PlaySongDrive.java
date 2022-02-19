@@ -9,7 +9,6 @@ package frc4388.robot.commands.drive;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.subsystems.Drive;
-import frc4388.robot.subsystems.Shooter;
 
 public class PlaySongDrive extends CommandBase {
   private Drive m_drive;
@@ -17,10 +16,10 @@ public class PlaySongDrive extends CommandBase {
   /**
    * Creates a new PlaySongDrive.
    */
-  public PlaySongDrive(Drive subsystem, Shooter shooter) {
+  public PlaySongDrive(Drive subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = subsystem;
-    addRequirements(m_drive, shooter);
+    addRequirements(m_drive);
   }
 
   // Called when the command is initially scheduled.

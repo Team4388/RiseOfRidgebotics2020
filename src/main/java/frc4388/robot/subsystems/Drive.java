@@ -55,7 +55,7 @@ public class Drive extends SubsystemBase {
 
   /* Pneumatics Subsystem */
   public Pneumatics m_pneumaticsSubsystem;
-  Shooter m_shooter;
+  // Shooter_1 m_shooter;
 
   /* Low Gear Gains */
   public static Gains m_gainsDistanceLow = DriveConstants.DRIVE_DISTANCE_GAINS_LOW;
@@ -310,10 +310,10 @@ public class Drive extends SubsystemBase {
    * 
    * @param subsystem Subsystem needed.
    */
-  public void passRequiredSubsystem(Pneumatics subsystem, Shooter shooter) {
+  public void passRequiredSubsystem(Pneumatics subsystem) {
     m_pneumaticsSubsystem = subsystem;
-    m_shooter = shooter;
-    m_orchestra.addInstrument(m_shooter.m_shooterFalconLeft);
+    // m_shooter = shooter;
+    // m_orchestra.addInstrument(m_shooter.m_shooterFalconLeft);
   }
 
   public void updateTime() {

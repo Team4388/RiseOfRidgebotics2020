@@ -13,6 +13,8 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpiutil.math.Nat;
 import edu.wpi.first.wpiutil.math.Num;
@@ -22,13 +24,12 @@ import edu.wpi.first.wpiutil.math.numbers.N6;
 import frc4388.robot.Constants.VOPConstants;
 import frc4388.robot.Constants.VisionConstants;
 import frc4388.robot.subsystems.Drive;
-import frc4388.robot.subsystems.LimeLight;
-import frc4388.robot.subsystems.ShooterAim;
+// import frc4388.robot.subsystems.ShooterAim_1;
 import frc4388.robot.subsystems.Vision;
 
 public class VisionUpdateOdometry extends CommandBase {
   private Vision m_limeLight;
-  private ShooterAim m_shooterAim;
+  // private ShooterAim_1 m_shooterAim;
   private Drive m_driveTrain;
 
   private double xPos;
@@ -43,11 +44,11 @@ public class VisionUpdateOdometry extends CommandBase {
    * @param shooterAim replace with Turret subsystem for integration with 2022
    * @param driveTrain replace with Swerve subsystem for integration with 2022
    */
-  public VisionUpdateOdometry(Vision limeLight, ShooterAim shooterAim, Drive driveTrain) {
+  public VisionUpdateOdometry(Vision limeLight, Drive driveTrain) {
     m_limeLight = limeLight;
-    m_shooterAim = shooterAim;
+    // m_shooterAim = shooterAim;
     m_driveTrain = driveTrain;
-    addRequirements(m_limeLight, m_shooterAim, m_driveTrain);
+    addRequirements(m_limeLight, m_driveTrain);
 
     // // Turn camera on but leave LEDs off
     // NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1);
@@ -86,10 +87,11 @@ public class VisionUpdateOdometry extends CommandBase {
 
     double distance = 1.d / Math.tan(viewAngle);
     distance *= VOPConstants.TARGET_HEIGHT; // replace with VisionConstants for 2022
+    System.out.println("Never gonna give you up: " + distance);
 
     double[] ypr = new double[3];
     Drive.m_pigeon.getYawPitchRoll(ypr); // Replace static reference to pigeon with SwerveDrive object for 2022
-    double relativeAngle = Math.toDegrees(m_shooterAim.getShooterAngleDegrees() - ypr[0]);
+    double relativeAngle = Math.toDegrees(/*m_shooterAim.getShooterAngleDegrees()*/ - ypr[0]);
     rotation = new Rotation2d(ypr[0]);
 
     xPos = Math.cos(relativeAngle) * distance;
@@ -98,6 +100,9 @@ public class VisionUpdateOdometry extends CommandBase {
 
     Pose2d pose = new Pose2d(translate, rotation);
     m_driveTrain.setOdometry(pose); // Replace with adding new pose to Kalman filter
+    SmartDashboard.putNumber("x:", pose.getX());
+    SmartDashboard.putNumber("y:", pose.getY());
+    m_limeLight.setLEDs(false);
   }
 
   // http://www.lee-mac.com/5pointellipse.html

@@ -77,13 +77,13 @@ public class Robot extends TimedRobot {
     /* Builds Autos */
     m_robotContainer.buildAutos();
     SmartDashboard.putString("Is Auto Start?", "NAH");
-    m_robotContainer.m_robotLime.limeOff();
+    // m_robotContainer.m_robotLime.limeOff();
   }
 
   @Override
   public void disabledPeriodic() {
     m_robotContainer.resetOdometry(new Pose2d());
-    m_robotContainer.idenPath();
+    // m_robotContainer.idenPath();
     if (m_modeChooser.getSelected() != Mode.get())
       Mode.set(m_modeChooser.getSelected());
   }
@@ -97,7 +97,7 @@ public class Robot extends TimedRobot {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     m_robotContainer.setDriveNeutralMode(NeutralMode.Coast);
-    m_robotContainer.setDriveGearState(true);
+    // m_robotContainer.setDriveGearState(true);
 
     m_initialTime = System.currentTimeMillis();
 
@@ -135,9 +135,9 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     m_robotContainer.setDriveNeutralMode(NeutralMode.Brake);
-    m_robotContainer.setDriveGearState(true);
+    // m_robotContainer.setDriveGearState(true);
 
-    m_robotContainer.shiftClimberRatchet(false);
+    // m_robotContainer.shiftClimberRatchet(false);
     //m_robotContainer.configDriveTrainSensors(FeedbackDevice.IntegratedSensor);
     
     // This makes sure that the autonomous stops running when
