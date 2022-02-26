@@ -8,6 +8,7 @@ import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import org.ejml.simple.SimpleMatrix;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
+import org.opencv.core.Point3;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -59,50 +60,120 @@ public class VisionUpdateOdometry extends CommandBase {
   @Override
   public void initialize() {
     // Vision Processing Mode
-    m_limeLight.setLEDs(true);
-    // m_limeLight.changePipeline(0);
+    // m_limeLight.setLEDs(true);
+    // m_limeLight.changePipeline(5);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    ArrayList<Point> points = m_limeLight.getTargetPoints();
-    if(points.size() < 5)
-      System.out.println("not enough points");
+    m_limeLight.setLEDs(true);
+    m_limeLight.changePipeline(5);
 
-    double[] xPoints = new double[5];
-    double[] yPoints = new double[5];
+    ArrayList<Point> screenPoints = m_limeLight.getTargetPoints();
 
-    for(int i = 0; i < 5; i++) {
-      xPoints[i] = points.get(i).x;
-      yPoints[i] = points.get(i).y;
+    // Debug power off
+    m_limeLight.setLEDs(false);
+
+    if(screenPoints.size() < 3) {
+      System.err.println("Vision Update Odometry Error: Not enough points");
+      m_limeLight.setLEDs(false);
+      return;
     }
 
-    double[] ellipseRadii = getEllipseRadii(xPoints, yPoints);
+    ArrayList<Point3> points3d = get3dPoints(screenPoints);
+    ArrayList<Point> points = topView(points3d);
 
-    // https://www.desmos.com/calculator/qu0pe4rmiv
-    // https://math.stackexchange.com/questions/2388747/formula-for-ellipse-formed-from-projecting-a-tilted-circle-onto-the-xy-plane
-    // PI - acos((R_y / R_x)^2)
-    double viewAngle = Math.PI - Math.acos(Math.pow(ellipseRadii[1] / ellipseRadii[0], 2)); // TODO account for limelight angle of rotation
+    Point guess = averagePoint(points);
 
-    double distance = 1.d / Math.tan(viewAngle);
-    distance *= VOPConstants.TARGET_HEIGHT; // replace with VisionConstants for 2022
-    System.out.println("Never gonna give you up: " + distance);
+    for(int i = 0; i < 30; i++) {
+      guess = iterateGuess(guess, points);
+    }
 
-    double[] ypr = new double[3];
-    // Drive.m_pigeon.getYawPitchRoll(ypr); // Replace static reference to pigeon with SwerveDrive object for 2022
-    double relativeAngle = 0;//Math.toDegrees(/*m_shooterAim.getShooterAngleDegrees()*/ - ypr[0]);
-    rotation = new Rotation2d(0);
+    // TODO rotate guess for shooter & gyro
 
-    xPos = Math.cos(relativeAngle) * distance;
-    yPos = Math.sin(relativeAngle) * distance;
-    translate = new Translation2d(xPos, yPos);
+    SmartDashboard.putNumber("Vision ODO x: ", guess.x);
+    SmartDashboard.putNumber("Vision ODO y: ", guess.y);
 
-    Pose2d pose = new Pose2d(translate, rotation);
-    // m_driveTrain.setOdometry(pose); // Replace with adding new pose to Kalman filter
-    SmartDashboard.putNumber("x:", pose.getX());
-    SmartDashboard.putNumber("y:", pose.getY());
     m_limeLight.setLEDs(false);
+  }
+
+  public static ArrayList<Point3> get3dPoints(ArrayList<Point> points2d) {
+    ArrayList<Point3> points3d = new ArrayList<>();
+
+    for(Point point2d : points2d) {
+      double y_rot = point2d.y / VOPConstants.LIME_VIXELS;
+      y_rot *= Math.toRadians(VOPConstants.V_FOV);
+      y_rot -= Math.toRadians(VOPConstants.V_FOV) / 2;
+      y_rot += Math.toRadians(VisionConstants.LIME_ANGLE);
+
+      double x_rot = point2d.x / VOPConstants.LIME_HIXELS;
+      x_rot *= Math.toRadians(VOPConstants.H_FOV);
+      x_rot -= Math.toRadians(VOPConstants.H_FOV) / 2;
+
+      double z = VOPConstants.TARGET_HEIGHT / Math.tan(y_rot);
+      double x = z * Math.tan(x_rot);
+      double y = VOPConstants.TARGET_HEIGHT;
+
+      points3d.add(new Point3(x, y, z));
+    }
+
+    return points3d;
+  }
+
+  // Flattens 3d points from above
+  public static ArrayList<Point> topView(ArrayList<Point3> points3d) {
+    ArrayList<Point> points = new ArrayList<>();
+
+    for(Point3 point3d : points3d) {
+      points.add(new Point(point3d.x, point3d.z));
+    }
+
+    return points;
+  }
+
+  public static Point averagePoint(ArrayList<Point> points) {
+    Point average = new Point(0, 0);
+    for(Point point : points) {
+      average.x += point.x;
+      average.y += point.y;
+    }
+
+    average.x /= points.size();
+    average.y /= points.size();
+
+    return average;
+  }
+
+  // Fits center of circle to projected points
+  public static Point iterateGuess(Point guess, ArrayList<Point> circlePoints) {
+    Point totalDiff = new Point(0, 0);
+
+    for(Point circlePoint : circlePoints) {
+      double angle = Math.atan((guess.y - circlePoint.y) / (guess.x - circlePoint.x));
+      angle = correctQuadrent(angle, guess, circlePoint);
+
+      Point estimate = new Point();
+      estimate.x = VOPConstants.TARGET_RADIUS * Math.cos(angle) + guess.x;
+      estimate.y = VOPConstants.TARGET_RADIUS * Math.sin(angle) + guess.y;
+
+      Point diff = new Point(estimate.x - circlePoint.x, estimate.y - circlePoint.y);
+      totalDiff.x += diff.x;
+      totalDiff.y += diff.y;
+    }
+
+    totalDiff.x /= circlePoints.size();
+    totalDiff.y /= circlePoints.size();
+
+    return new Point(guess.x - totalDiff.x, guess.y - totalDiff.y);
+  }
+
+  public static double correctQuadrent(double angle, Point guess, Point circlePoint) {
+    if(circlePoint.x - guess.x < 0) {
+      return angle - Math.PI;
+    }
+
+    return angle;
   }
 
   // http://www.lee-mac.com/5pointellipse.html
