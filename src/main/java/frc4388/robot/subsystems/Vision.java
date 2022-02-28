@@ -7,70 +7,54 @@
 
 package frc4388.robot.subsystems;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.opencv.core.Point;
+import org.photonvision.PhotonCamera;
+import org.photonvision.common.hardware.VisionLEDMode;
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
+import org.photonvision.targeting.TargetCorner;
 
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.VOPConstants;
+import frc4388.robot.Constants.VisionConstants;
 
 public class Vision extends SubsystemBase {
+  private PhotonCamera m_camera;
+  // roborio ip & port: 10.43.88.2:1735
 
   public Vision() {
-    // TODO
+    m_camera = new PhotonCamera(VOPConstants.NAME);
   }
 
   public ArrayList<Point> getTargetPoints() {
-    if(NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0) != 1)
+    PhotonPipelineResult result = m_camera.getLatestResult();
+  
+    if(!result.hasTargets())
       return null;
     
     ArrayList<Point> points = new ArrayList<>();
 
-    double[] xCoord = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDoubleArray(new double[0]);
-    double[] yCoord = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDoubleArray(new double[0]);
-    double[] skew = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ts").getDoubleArray(new double[0]);
+    for(PhotonTrackedTarget target : result.getTargets()) {
+      List<TargetCorner> corners = target.getCorners();
 
-    double[] hSide = NetworkTableInstance.getDefault().getTable("limelight").getEntry("thor").getDoubleArray(new double[0]);
-    double[] vSide = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tvert").getDoubleArray(new double[0]);
+      double centerY = 0;
+      for(TargetCorner corner : corners) {
+        centerY += corner.y;
+      }
+      centerY /= corners.size();
 
-    // SmartDashboard.putNumberArray("Point array", corners);
-    for(int i = 0; i < xCoord.length; i += 2*4) {
-      Point center = new Point(xCoord[i], yCoord[i]);
-
-      center.x /= VOPConstants.H_FOV;
-      center.x += .5;
-      center.x *= VOPConstants.LIME_HIXELS;
-
-      center.y /= VOPConstants.V_FOV;
-      center.y += .5;
-      center.y *= VOPConstants.LIME_VIXELS;
-
-      double mag = Math.hypot(hSide[i]/2, vSide[i]/2);
-
-      Point tLeft = new Point(center.x - hSide[i]/2, center.y + vSide[i]/2);
-      double lAngle = Math.atan(-(vSide[i]/2) / (hSide[i]/2));
-      lAngle -= Math.toRadians(skew[i]);
-      tLeft = new Point(mag * Math.cos(lAngle), mag * Math.sin(lAngle));
-
-      Point tRight = new Point(center.x + hSide[i]/2, center.y + vSide[i]/2);
-      double rAngle = Math.atan((vSide[i]/2) / (hSide[i]/2));
-      rAngle -= Math.toRadians(skew[i]);
-      tRight = new Point(mag * Math.cos(rAngle), mag * Math.sin(rAngle));
-
-      points.add(tLeft);
-      points.add(tRight);
+      for(TargetCorner corner : corners) {
+        if(corner.y <= centerY)
+          points.add(new Point(corner.x, VOPConstants.LIME_VIXELS - corner.y));
+      }
     }
 
     return points;
   }
 
-  public void changePipeline(int pipelineId) {
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(pipelineId);
-  }
-
   public void setLEDs(boolean on) {
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(on ? 0 : 1);
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(on ? 3 : 1);
+    m_camera.setLED(on ? VisionLEDMode.kOn : VisionLEDMode.kOff);
   }
 }

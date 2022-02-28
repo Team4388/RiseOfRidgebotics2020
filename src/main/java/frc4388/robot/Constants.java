@@ -279,7 +279,9 @@ public final class Constants {
 
   // for vision odo proto
   public static final class VOPConstants {
-    public static final double TARGET_HEIGHT = 8*12 + 8 - 28;
+    public static final String NAME = "VOPCam";
+
+    public static final double TARGET_HEIGHT = 8*12 + 8 - (4*12 +7.5);
     public static final double TARGET_RADIUS = 4*12;
     public static final double H_FOV = 59.6;
     public static final double V_FOV = 49.7;
