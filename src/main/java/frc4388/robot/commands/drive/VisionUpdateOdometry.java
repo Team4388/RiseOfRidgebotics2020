@@ -26,10 +26,11 @@ import frc4388.robot.Constants.VOPConstants;
 import frc4388.robot.Constants.VisionConstants;
 // import frc4388.robot.subsystems.Drive;
 // import frc4388.robot.subsystems.ShooterAim_1;
-import frc4388.robot.subsystems.Vision;
+import frc4388.robot.subsystems.VisionOdometry;
+import frc4388.utility.VisionObscuredException;
 
 public class VisionUpdateOdometry extends CommandBase {
-  private Vision m_limeLight;
+  private VisionOdometry m_limeLight;
   // private ShooterAim_1 m_shooterAim;
   // private Drive m_driveTrain;
 
@@ -45,7 +46,7 @@ public class VisionUpdateOdometry extends CommandBase {
    * @param shooterAim replace with Turret subsystem for integration with 2022
    * @param driveTrain replace with Swerve subsystem for integration with 2022
    */
-  public VisionUpdateOdometry(Vision limeLight) {
+  public VisionUpdateOdometry(VisionOdometry limeLight) {
     m_limeLight = limeLight;
     // m_shooterAim = shooterAim;
     // m_driveTrain = driveTrain;
@@ -66,7 +67,7 @@ public class VisionUpdateOdometry extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
+  public void execute() throws VisionObscuredException {
     m_limeLight.setLEDs(true);
     // m_limeLight.changePipeline(5);
 
@@ -75,10 +76,9 @@ public class VisionUpdateOdometry extends CommandBase {
     // Debug power off
     m_limeLight.setLEDs(false);
 
-    if(!(screenPoints != null && screenPoints.size() >= 3)) {
-      System.err.println("Vision Update Odometry Error: Not enough points");
+    if(screenPoints.size() < 3) {
       m_limeLight.setLEDs(false);
-      return;
+      throw new VisionObscuredException("Not enough vision points available");
     }
 
     ArrayList<Point3> points3d = get3dPoints(screenPoints);

@@ -72,7 +72,8 @@ import frc4388.robot.subsystems.LED;
 // import frc4388.robot.subsystems.ShooterAim_1;
 // import frc4388.robot.subsystems.ShooterHood_1;
 // import frc4388.robot.subsystems.Storage;
-import frc4388.robot.subsystems.Vision;
+// import frc4388.robot.subsystems.Vision;
+import frc4388.robot.subsystems.VisionOdomotry;
 // import frc4388.robot.subsystems.Storage.StorageMode;
 import frc4388.utility.controller.ButtonFox;
 import frc4388.utility.controller.IHandController;
@@ -101,7 +102,7 @@ public class RobotContainer {
   private final Camera m_robotCameraFront = new Camera("front", 0, 160, 120, 40);
   private final Camera m_robotCameraBack = new Camera("back", 1, 160, 120, 40);
   // public final LimeLight m_robotLime = new LimeLight();
-  public final Vision m_robotVision = new Vision();
+  public final VisionOdomotry m_robotVision = new VisionOdomotry();
 
   /* Controllers */
   public boolean isGS = false;
@@ -231,7 +232,7 @@ public class RobotContainer {
     // .whenPressed(new SetShooterToOdo(m_robotShooterAim, m_robotDrive));
 
     new JoystickButton(getOperatorJoystick(), XboxController.Y_BUTTON)
-    .whenPressed(new VisionUpdateOdometry(m_robotVision));//, m_robotShooterAim, m_robotDrive));
+    .whenPressed(() -> m_robotVision.getVisionOdometry());
 
     // new JoystickButton(getOperatorJoystick(), XboxController.Y_BUTTON).whileHeld(new RunCommand(() -> m_robotIntake.runExtender(-0.5))).whenReleased(new InstantCommand(() -> m_robotIntake.runExtender(0)));
     // // .whileHeld(new RunCommand(() -> m_robotShooterHood.runHood(-0.2), m_robotShooterHood));
