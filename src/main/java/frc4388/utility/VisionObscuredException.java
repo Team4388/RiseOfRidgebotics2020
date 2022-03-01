@@ -3,12 +3,12 @@ package frc4388.utility;
 /** Exception that occurs if the limelight can't see enough points
  * @author Daniel Thomas McGrath
  */
-public class VisionObscuredException extends RuntimeException {
+public class VisionObscuredException extends Exception {
     /**
      * Creates new VisionObscuredException with error text 'null'
      */
     public VisionObscuredException() {
-        super();
+        super("Unable to see sufficient vision points");
     }
 
     /** Creates new VisionObscuredException with error text message
@@ -33,6 +33,6 @@ public class VisionObscuredException extends RuntimeException {
      * @param cause Root cause of error
      */
     public VisionObscuredException(Throwable cause) {
-        super(cause);
+        super("Unable to see sufficient vision points", cause);
     }
 }
