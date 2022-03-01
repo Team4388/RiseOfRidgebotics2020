@@ -217,7 +217,7 @@ public class VisionOdometry extends SubsystemBase {
   /** Corrects odometry guess for shooter angle
    * 
    * @param guess The current guess for the vision center
-   * @param gyroRotation The rotation to correct for
+   * @param shooterRotation The rotation to correct for
    * @return The corrected odometry point
    */
   public static final Point correctGuessForCenter(Point guess, double shooterRotation) {
