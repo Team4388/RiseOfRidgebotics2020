@@ -73,7 +73,7 @@ import frc4388.robot.subsystems.LED;
 // import frc4388.robot.subsystems.ShooterHood_1;
 // import frc4388.robot.subsystems.Storage;
 // import frc4388.robot.subsystems.Vision;
-import frc4388.robot.subsystems.VisionOdomotry;
+import frc4388.robot.subsystems.VisionOdometry;
 // import frc4388.robot.subsystems.Storage.StorageMode;
 import frc4388.utility.controller.ButtonFox;
 import frc4388.utility.controller.IHandController;
@@ -102,7 +102,7 @@ public class RobotContainer {
   private final Camera m_robotCameraFront = new Camera("front", 0, 160, 120, 40);
   private final Camera m_robotCameraBack = new Camera("back", 1, 160, 120, 40);
   // public final LimeLight m_robotLime = new LimeLight();
-  public final VisionOdomotry m_robotVision = new VisionOdomotry();
+  public final VisionOdometry m_robotVision = new VisionOdometry();
 
   /* Controllers */
   public boolean isGS = false;

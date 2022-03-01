@@ -288,6 +288,8 @@ public final class Constants {
     public static final double LIME_VIXELS = 960;
     public static final double LIME_HIXELS = 720;
 
+    public static final double LIMELIGHT_RADIUS = 1.d;
+    public static final double SHOOTER_CORRECTION = 1.d;
   }
 
   public static final class OIConstants {

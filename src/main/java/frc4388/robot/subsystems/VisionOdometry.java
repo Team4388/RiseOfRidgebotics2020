@@ -107,12 +107,14 @@ public class VisionOdometry extends SubsystemBase {
       guess = iterateGuess(guess, points);
     }
 
-    // TODO rotate guess for shooter & gyro
+    guess = correctGuessForCenter(guess, m_shooter.getShooterRotation());
+    guess = correctGuessForGyro(guess, m_drive.getRotation());
 
     SmartDashboard.putNumber("Vision ODO x: ", guess.x);
     SmartDashboard.putNumber("Vision ODO y: ", guess.y);
 
-    Pose2d odometryPose = new Pose2d(0, 0, new Rotation2d(0));
+    Rotation2d rotation = new Rotation2d(Math.toDegrees(m_drive.getRotation()));
+    Pose2d odometryPose = new Pose2d(guess.x, guess.y, rotation);
 
     return odometryPose;
   }
@@ -210,6 +212,47 @@ public class VisionOdometry extends SubsystemBase {
     totalDiff.y /= circlePoints.size();
 
     return new Point(guess.x - totalDiff.x, guess.y - totalDiff.y);
+  }
+
+  /** Corrects odometry guess for shooter angle
+   * 
+   * @param guess The current guess for the vision center
+   * @param gyroRotation The rotation to correct for
+   * @return The corrected odometry point
+   */
+  public static final Point correctGuessForCenter(Point guess, double shooterRotation) {
+    Point corrected = new Point(guess.x, guess.y);
+    corrected.y += VOPConstants.LIMELIGHT_RADIUS;
+
+    double dist = Math.hypot(guess.x, guess.y);
+    double angle = Math.tan(corrected.y / corrected.x);
+    angle += shooterRotation;
+
+    corrected.x = dist * Math.cos(angle);
+    corrected.y = dist * Math.sin(angle);
+
+    corrected.y += VOPConstants.SHOOTER_CORRECTION;
+    
+    return corrected;
+  }
+
+  /** Corrects odometry guess for gyro angle
+   * 
+   * @param guess The current guess for the vision center
+   * @param gyroRotation The rotation to correct for
+   * @return The corrected odometry point
+   */
+  public static final Point correctGuessForGyro(Point guess, double gyroRotation) {
+    Point corrected = new Point(guess.x, guess.y);
+
+    double dist = Math.hypot(guess.x, guess.y);
+    double angle = Math.tan(corrected.y / corrected.x);
+    angle += gyroRotation;
+
+    corrected.x = dist * Math.cos(angle);
+    corrected.y = dist * Math.sin(angle);
+    
+    return corrected;
   }
 
   /** Corrects the angle from the current center estimate to a point on the target rim

@@ -6,4 +6,8 @@ public class VOPShooter extends SubsystemBase {
     public VOPShooter() {
         
     }
+
+    public double getShooterRotation() {
+        return 0;
+    }
 }
